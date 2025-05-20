@@ -1,0 +1,147 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+default_platform(:ios)
+
+platform :ios do
+    BUNDLEID_PRODUCTION = "de.schlabertz.EVECompanion"
+    BUNDLEID_BETA = "de.schlabertz.EVECompanion.beta"
+    BUNDLEID_DEV = "de.schlabertz.EVECompanion.dev"
+    
+    DISPLAYNAME_PRODUCTION = "EVECompanion"
+    DISPLAYNAME_BETA = "#{DISPLAYNAME_PRODUCTION} Beta"
+    DISPLAYNAME_DEV = "#{DISPLAYNAME_PRODUCTION} Dev"
+    
+    PROFILE_BETA = "EVECompanion Beta Distribution"
+    PROFILE_PRODUCTION = "EVECompanion Production Distribution"
+
+    PLIST_PATH = "EVECompanion/Info.plist"
+    PROJECT_FILE = "EVECompanion.xcodeproj"
+    
+    APP_SCHEME = "EVECompanion"
+    
+    before_all do |lane, options|
+      ensure_git_status_clean
+    end
+
+    desc "Push a new beta build to TestFlight"
+    lane :beta do
+        build("beta")
+    end
+    
+    desc "Push a new build to the AppStore"
+    lane :production do
+        build("production")
+    end
+    
+    after_all do |lane, options|
+        reset_git_repo(
+            disregard_gitignore: false
+        )
+    end
+    
+    # environment can be "production" or "beta"
+    def build(environment)
+        if environment == "production"
+            bundleID = BUNDLEID_PRODUCTION
+            displayName = DISPLAYNAME_PRODUCTION
+            profile = PROFILE_PRODUCTION
+        elsif environment == "beta"
+            bundleID = BUNDLEID_BETA
+            displayName = DISPLAYNAME_BETA
+            profile = PROFILE_BETA
+        else
+            UI.user_error!("Unknown environment #{environment}")
+            return
+        end
+
+        # Add a "beta" badge for beta builds
+        if environment == "beta"
+            add_badge(dark: false)
+        end
+
+        version = get_version_number(
+            target: "EVECompanion"
+        )
+
+        latest_build_number = latest_testflight_build_number(
+            app_identifier: bundleID,
+            version: version,
+            initial_build_number: 0
+        )
+
+        new_build_number = latest_build_number + 1
+        
+        # Set the new bundle ID
+        update_app_identifier(
+            xcodeproj: PROJECT_FILE,
+            plist_path: PLIST_PATH, # Path to info plist file, relative to xcodeproj
+            app_identifier: bundleID # The App Identifier
+        )
+        
+        # Set the new Display Name
+        update_info_plist(
+            plist_path: PLIST_PATH,
+            display_name: displayName
+        )
+
+        # Delete pulse keys
+        update_info_plist(
+            plist_path: PLIST_PATH,
+            block: proc do |plist|
+                plist.delete("NSBonjourServices")
+            end
+        )
+
+        # Set the new build number
+        increment_build_number(
+            build_number: new_build_number,
+        )
+
+        # Load certificates and provisioning profiles
+        get_certificates
+        get_provisioning_profile(
+            app_identifier: bundleID
+        )
+
+        update_code_signing_settings(
+            use_automatic_signing: false,
+            path: PROJECT_FILE,
+            team_id: "H4K6BXTR7Y",
+            targets: "EVECompanion",
+            bundle_identifier: bundleID,
+            code_sign_identity: "iPhone Distribution",
+            profile_name: profile
+        )
+
+        build_app(
+            project: PROJECT_FILE,
+            scheme: APP_SCHEME,
+            clean: true,
+            export_method: "app-store"
+        )
+        
+        upload_to_testflight(
+            skip_waiting_for_build_processing: true
+        )
+        
+        buildNumber = get_build_number
+        
+        add_git_tag(
+            prefix: "#{environment}/v",
+            build_number: "#{version}-#{new_build_number}"
+        )
+        
+        push_git_tags
+    end
+
+end

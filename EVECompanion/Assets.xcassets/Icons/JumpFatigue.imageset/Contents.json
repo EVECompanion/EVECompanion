@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Icon_timer_jump_fatigue.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
