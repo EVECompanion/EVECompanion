@@ -51,7 +51,6 @@ internal enum ECKAPIScope: String, CaseIterable {
     case readCharacterMining = "esi-industry.read_character_mining.v1"
     case readTitles = "esi-characters.read_titles.v1"
     case readFWStats = "esi-characters.read_fw_stats.v1"
-    case readCharacterStats = "esi-characterstats.read.v1"
     
     static var allScopesString: String {
         return Self.allCases.map({ $0.rawValue }).joined(separator: " ")
