@@ -11,9 +11,15 @@ struct UniverseView: View {
     
     var body: some View {
         List {
-            row(for: .itemDatabase)
-            row(for: .incursions)
-            row(for: .sovereigntyCampaigns)
+            Section("Tranquility Server Status") {
+                ServerStatusView()
+            }
+            
+            Section {
+                row(for: .itemDatabase)
+                row(for: .incursions)
+                row(for: .sovereigntyCampaigns)
+            }
         }
         .navigationTitle("Universe")
         .navigationBarTitleDisplayMode(.inline)

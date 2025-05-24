@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct ECFormatters {
+public struct ECFormatters {
     
-    static func iskShort(_ isk: Double) -> String {
+    public static func iskShort(_ isk: Double) -> String {
         let formatter = NumberFormatter()
         
         if Int(isk / 1_000_000_000_000) > 0 {
@@ -28,14 +28,14 @@ struct ECFormatters {
         }
     }
     
-    static func iskLong(_ isk: Double) -> String {
+    public static func iskLong(_ isk: Double) -> String {
         let formatter = NumberFormatter()
         formatter.maximumFractionDigits = 2
         formatter.numberStyle = .decimal
         return formatter.string(for: isk) ?? isk.description
     }
     
-    static func securityStatus(_ securityStatus: Float) -> String {
+    public static func securityStatus(_ securityStatus: Float) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 2
@@ -43,7 +43,7 @@ struct ECFormatters {
         return formatter.string(for: securityStatus) ?? securityStatus.description
     }
     
-    static func skillPointsShort(_ skillPoints: Int) -> String {
+    public static func skillPointsShort(_ skillPoints: Int) -> String {
         let formatter = NumberFormatter()
         
         if Int(skillPoints / 1_000_000) > 0 {
@@ -56,14 +56,14 @@ struct ECFormatters {
         }
     }
     
-    static func skillPointsLong(_ skillPoints: Int) -> String {
+    public static func skillPointsLong(_ skillPoints: Int) -> String {
         let formatter = NumberFormatter()
         formatter.maximumFractionDigits = 0
         formatter.numberStyle = .decimal
         return formatter.string(for: skillPoints) ?? skillPoints.description
     }
     
-    static func skillLevel(level: Int, showUntrainedString: Bool = false) -> String {
+    public static func skillLevel(level: Int, showUntrainedString: Bool = false) -> String {
         switch level {
         case 0:
             return showUntrainedString ? "Untrained" : ""
@@ -82,7 +82,7 @@ struct ECFormatters {
         }
     }
     
-    static func remainingTime(remainingTime: TimeInterval) -> String {
+    public static func remainingTime(remainingTime: TimeInterval) -> String {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.day, .hour, .minute, .second]
         formatter.unitsStyle = .abbreviated
@@ -91,7 +91,7 @@ struct ECFormatters {
         return formatter.string(from: remainingTime) ?? ""
     }
     
-    static func timeInterval(timeInterval: TimeInterval) -> String {
+    public static func timeInterval(timeInterval: TimeInterval) -> String {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.day, .hour, .minute, .second]
         formatter.unitsStyle = .abbreviated
@@ -99,7 +99,7 @@ struct ECFormatters {
         return formatter.string(from: timeInterval) ?? ""
     }
     
-    static func dateFormatter(date: Date) -> String {
+    public static func dateFormatter(date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         formatter.timeStyle = .short
@@ -112,34 +112,54 @@ struct ECFormatters {
         return formatter.string(from: date)
     }
     
-    static func jumpRange(_ range: Double) -> String {
+    public static func jumpRange(_ range: Double) -> String {
         let formatter = NumberFormatter()
         formatter.maximumFractionDigits = 1
         formatter.numberStyle = .decimal
         return formatter.string(for: range) ?? range.description
     }
     
-    static func jumpDistance(_ range: Double) -> String {
+    public static func jumpDistance(_ range: Double) -> String {
         let formatter = NumberFormatter()
         formatter.maximumFractionDigits = 3
         formatter.numberStyle = .decimal
         return formatter.string(for: range) ?? range.description
     }
     
-    static func fuelConsumption(_ consumption: Int) -> String {
+    public static func fuelConsumption(_ consumption: Int) -> String {
         let formatter = NumberFormatter()
         formatter.maximumFractionDigits = 0
         formatter.numberStyle = .decimal
         return formatter.string(for: consumption) ?? consumption.description
     }
     
-    static func sdeSize(_ size: Double) -> String {
+    public static func sdeSize(_ size: Double) -> String {
         let formatter = ByteCountFormatter()
         formatter.countStyle = .file
         return formatter.string(for: size) ?? "unknown"
     }
     
-    static func attributeValue(_ value: Float) -> String {
+    public static func playerCount(_ playerCount: Int) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter.string(for: playerCount) ?? playerCount.description
+    }
+    
+    public static func serverTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .medium
+        
+        if let utcTimezone = TimeZone(identifier: "UTC") {
+            formatter.timeZone = utcTimezone
+        } else {
+            logger.error("Cannot get time zone object for UTC.")
+        }
+
+        return formatter.string(from: date)
+    }
+    
+    public static func attributeValue(_ value: Float) -> String {
         let formatter = NumberFormatter()
         formatter.maximumFractionDigits = 3
         formatter.usesGroupingSeparator = true
