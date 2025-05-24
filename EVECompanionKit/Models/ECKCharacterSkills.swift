@@ -52,6 +52,15 @@ public class ECKCharacterSkills: Decodable, Equatable, Hashable {
         return (skillSet[skillId] ?? -1) >= level
     }
     
+    internal func updateWithSkillQueue(_ queue: ECKCharacterSkillQueue) {
+        for skillLevel in skillLevels {
+            let finishedEntries = queue.finishedEntries.filter({ $0.skill == skillLevel.skill })
+            if let maxFinishedEntry = finishedEntries.max(by: { $0.finishLevel < $1.finishLevel }) {
+                skillLevel.trainedSkillLevel = maxFinishedEntry.finishLevel
+            }
+        }
+    }
+    
 }
 
 public class ECKCharacterSkillLevel: Decodable, Identifiable, Equatable, Hashable {
@@ -70,7 +79,7 @@ public class ECKCharacterSkillLevel: Decodable, Identifiable, Equatable, Hashabl
     public let activeSkillLevel: Int
     public let skill: ECKCharacterSkill
     public let skillPointsInSkill: Int
-    public let trainedSkillLevel: Int
+    public var trainedSkillLevel: Int
     
     public static let dummy1: ECKCharacterSkillLevel = .init(activeSkillLevel: 5,
                                                              skill: .dummy1,
@@ -126,6 +135,16 @@ public class ECKCharacterSkillQueue: Decodable, Equatable, Hashable {
             }
             
             return finishDate > Date()
+        })
+    }
+    
+    public var finishedEntries: [ECKCharacterSkillQueueEntry] {
+        return loadedEntries.filter({
+            guard let finishDate = $0.finishDate else {
+                return true
+            }
+            
+            return finishDate < Date()
         })
     }
     

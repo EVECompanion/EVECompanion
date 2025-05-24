@@ -108,7 +108,9 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
                                         try? skillqueueResponse,
                                         try? publicInfoResponse,
                                         try? mailboxResponse)
-                
+                if let skillqueue {
+                    self.skills?.updateWithSkillQueue(skillqueue)
+                }
                 self.initialDataLoadingState = .ready
             } catch {
                 logger.error("Error loading data: \(error)")
@@ -130,6 +132,10 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
             return
         }
         
+        if let skills {
+            skills.updateWithSkillQueue(skillqueueResponse)
+        }
+        
         self.skillqueue = skillqueueResponse
     }
     
@@ -141,6 +147,9 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
         
         let skillsResource = ECKCharacterSkillsResource(token: token)
         let skillsResponse = try? await ECKWebService().loadResource(resource: skillsResource).response
+        if let skillqueue {
+            skillsResponse?.updateWithSkillQueue(skillqueue)
+        }
         self.skills = skillsResponse
     }
     
