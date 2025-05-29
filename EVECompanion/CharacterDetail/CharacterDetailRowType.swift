@@ -22,6 +22,7 @@ enum CharacterDetailRowType {
     case industryJobs
     case jumpClones
     case planetaryColonies
+    case fittings
     
     var title: String {
         switch self {
@@ -50,6 +51,8 @@ enum CharacterDetailRowType {
             return "Jump Clones"
         case .planetaryColonies:
             return "Planetary Colonies"
+        case .fittings:
+            return "Fittings"
             
         }
     }
@@ -96,6 +99,9 @@ enum CharacterDetailRowType {
         case .planetaryColonies:
             return nil
             
+        case .fittings:
+            return nil
+            
         }
     }
     
@@ -126,6 +132,8 @@ enum CharacterDetailRowType {
             return "Neocom/JumpClones"
         case .planetaryColonies:
             return "Neocom/PlanetaryColonies"
+        case .fittings:
+            return "Neocom/Fitting"
             
         }
     }

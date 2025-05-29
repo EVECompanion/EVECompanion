@@ -28,6 +28,8 @@ enum AppScreen: Hashable {
     case jumpClones(manager: ECKJumpClonesManager)
     case planetaryColonies(ECKPlanetaryColonyManager)
     case planetaryColony(ECKPlanetaryColonyManager.ECKColony)
+    case fittingsList(ECKFittingManager)
+    case fittingDetail(ECKCharacterFitting)
     
     case itemByTypeId(Int)
     case item(ECKItem)
@@ -88,6 +90,10 @@ enum AppScreen: Hashable {
             return "planetaryColonies"
         case .planetaryColony:
             return "planetaryColony"
+        case .fittingsList:
+            return "fittingsList"
+        case .fittingDetail:
+            return "fittingDetail"
         }
     }
     
@@ -135,6 +141,12 @@ enum AppScreen: Hashable {
         case (.planetaryColony(let lhsColony), .planetaryColony(let rhsColony)):
             return lhsColony.colony.planet.planetId == rhsColony.colony.planet.planetId
             
+        case (.fittingsList(let lhsManager), .fittingsList(let rhsManager)):
+            return lhsManager.character == rhsManager.character
+            
+        case (.fittingDetail(let lhsFitting), .fittingDetail(let rhsFitting)):
+            return lhsFitting.id == rhsFitting.id
+            
         default:
             return false
             
@@ -181,6 +193,10 @@ enum AppScreen: Hashable {
             hasher.combine(manager.character)
         case .planetaryColony(let colony):
             hasher.combine(colony.colony)
+        case .fittingsList(let manager):
+            hasher.combine(manager.character)
+        case .fittingDetail(let fitting):
+            hasher.combine(fitting)
         case .universe:
             return
         case .itemDatabase:

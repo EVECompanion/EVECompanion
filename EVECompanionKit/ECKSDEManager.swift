@@ -311,6 +311,7 @@ public class ECKSDEManager {
                              mass: Float?,
                              volume: Float?,
                              capacity: Float?,
+                             radius: Float?,
                              iconId: Int?)
     
     static let dummyFetchedItem: FetchedItem = (typeId: 0,
@@ -319,10 +320,11 @@ public class ECKSDEManager {
                                                 mass: nil,
                                                 volume: nil,
                                                 capacity: nil,
+                                                radius: nil,
                                                 iconId: nil)
     
     internal func getItem(typeId: Int) -> FetchedItem {
-        let statement = try? connection?.prepare("SELECT typeID, typeName, description, mass, volume, capacity, iconID FROM invTypes WHERE typeID = ?", typeId)
+        let statement = try? connection?.prepare("SELECT typeID, typeName, description, mass, volume, capacity, radius, iconID FROM invTypes WHERE typeID = ?", typeId)
         
         let result = try? statement?.run().makeIterator().failableNext()
         
@@ -344,6 +346,7 @@ public class ECKSDEManager {
                     mass, 
                     volume, 
                     capacity, 
+                    radius,
                     iconID
                 FROM
                     invTypes
@@ -379,6 +382,7 @@ public class ECKSDEManager {
                     mass, 
                     volume, 
                     capacity, 
+                    radius,
                     iconID
                 FROM
                     invTypes
@@ -433,8 +437,15 @@ public class ECKSDEManager {
             capacity = nil
         }
         
+        let radius: Float?
+        if let radiusFloat = row[6] as? Float64 {
+            radius = Float(radiusFloat)
+        } else {
+            radius = nil
+        }
+        
         let iconID: Int?
-        if let iconIDInt = row[6] as? Int64 {
+        if let iconIDInt = row[7] as? Int64 {
             iconID = Int(iconIDInt)
         } else {
             iconID = nil
@@ -446,6 +457,7 @@ public class ECKSDEManager {
                 mass,
                 volume,
                 capacity,
+                radius,
                 iconID)
     }
     
@@ -879,13 +891,14 @@ public class ECKSDEManager {
         }
     }
     
-    public typealias ItemAttribute = (name: String, displayName: String, value: Float, unit: EVEUnit?)
+    public typealias ItemAttribute = (id: Int, name: String, displayName: String, value: Float, unit: EVEUnit?)
     public typealias ItemAttributeCategory = (name: String, attributes: [ItemAttribute])
     public typealias ItemAttributes = [ItemAttributeCategory]
     func itemAttributes(_ itemId: Int) -> ItemAttributes {
         do {
             let statement = try connection?.prepare("""
                 SELECT
+                    dgmAttributeTypes.attributeID,
                     dgmAttributeTypes.attributeName,
                     dgmAttributeTypes.displayName,
                     dgmTypeAttributes.valueFloat,
@@ -914,15 +927,16 @@ public class ECKSDEManager {
             var attributes: ItemAttributes = []
             
             for row in result {
-                guard let attributeName: String = row[0] as? String,
-                      let attributeDisplayName: String = row[1] as? String,
-                      let attributeValue: Float64 = row[2] as? Float64,
-                      let categoryName: String = row[3] as? String else {
+                guard let attributeId: Int64 = row[0] as? Int64,
+                      let attributeName: String = row[1] as? String,
+                      let attributeDisplayName: String = row[2] as? String,
+                      let attributeValue: Float64 = row[3] as? Float64,
+                      let categoryName: String = row[4] as? String else {
                           logger.info("Unexpected item attribute data \(row)")
                           continue
                 }
                 
-                let unitName: String? = row[4] as? String
+                let unitName: String? = row[5] as? String
                 
                 let unit: EVEUnit?
                 if let unitName {
@@ -931,7 +945,8 @@ public class ECKSDEManager {
                     unit = nil
                 }
                 
-                let attribute: ItemAttribute = (name: attributeName,
+                let attribute: ItemAttribute = (id: Int(attributeId),
+                                                name: attributeName,
                                                 displayName: attributeDisplayName,
                                                 value: Float(attributeValue),
                                                 unit: unit)
@@ -1163,6 +1178,52 @@ public class ECKSDEManager {
             return Float(value)
         } else {
             return nil
+        }
+    }
+    
+    typealias FetchedEffect = (effectId: Int, effectName: String, effectCategory: Int?, modifierInfo: String)
+    internal func getEffects(for typeId: Int) -> [FetchedEffect] {
+        do {
+            let statement = try connection?.prepare("""
+            SELECT
+                dgmEffects.effectID,
+                dgmEffects.effectName,
+                dgmEffects.effectCategory,
+                dgmEffects.modifierInfo
+            FROM
+                dgmTypeEffects
+                LEFT OUTER JOIN dgmEffects ON dgmTypeEffects.effectID = dgmEffects.effectID
+            WHERE
+                dgmTypeEffects.typeID = ?
+            """, typeId)
+            
+            guard let result = try statement?.run() else {
+                return []
+            }
+            
+            return result.compactMap { row -> FetchedEffect? in
+                guard let effectId: Int64 = row[0] as? Int64,
+                      let effectName: String = row[1] as? String,
+                      let modifierInfo: String = row[3] as? String else {
+                          logger.info("Unexpected effect data \(row)")
+                          return nil
+                }
+                
+                let effectCategory: Int?
+                if let category: Int64 = row[2] as? Int64 {
+                    effectCategory = Int(category)
+                } else {
+                    effectCategory = nil
+                }
+                
+                return (effectId: Int(effectId),
+                        effectName: effectName,
+                        effectCategory: effectCategory,
+                        modifierInfo: modifierInfo)
+            }
+        } catch {
+            logger.error("Error fetching effects for type \(typeId): \(error)")
+            return []
         }
     }
     
