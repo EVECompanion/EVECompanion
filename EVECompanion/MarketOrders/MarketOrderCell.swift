@@ -28,6 +28,7 @@ struct MarketOrderCell: View {
                     
                     Text("Price: \(ECFormatters.iskLong(order.price))")
                     Text("Quantity: \(order.volumeRemain)/\(order.volumeTotal)")
+                    Text("Total ISK: \(ECFormatters.iskLong(order.price * Double(order.volumeRemain)))")
                     Text("Issued: \(ECFormatters.dateFormatter(date: order.issued))")
                     
                     Spacer()

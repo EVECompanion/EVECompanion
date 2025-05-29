@@ -12,29 +12,52 @@ struct MarketOrdersView: View {
     
     @ObservedObject var character: ECKCharacter
     
+    var sellOrders: [ECKMarketOrder] {
+        return (character.marketOrders ?? []).filter({ $0.isBuyOrder == false })
+    }
+    
+    var buyOrders: [ECKMarketOrder] {
+        return (character.marketOrders ?? []).filter({ $0.isBuyOrder })
+    }
+    
     var body: some View {
         Group {
             switch character.marketOrdersLoadingState {
             case .ready,
                  .reloading:
                 List {
-                    
-                    Section("Sell Orders") {
-                        if (character.marketOrders ?? []).filter({ $0.isBuyOrder == false }).isEmpty {
+                    Section {
+                        if sellOrders.isEmpty {
                             Text("No sell orders")
                         } else {
-                            ForEach((character.marketOrders ?? []).filter({ $0.isBuyOrder == false })) { order in
+                            ForEach(sellOrders) { order in
                                 MarketOrderCell(order: order)
+                            }
+                        }
+                    } header: {
+                        VStack(alignment: .leading) {
+                            Text("Sell Orders")
+                            
+                            if sellOrders.isEmpty == false {
+                                Text("Total ISK: \(ECFormatters.iskLong(totalIsk(for: sellOrders)))")
                             }
                         }
                     }
                     
-                    Section("Buy Orders") {
-                        if (character.marketOrders ?? []).filter({ $0.isBuyOrder }).isEmpty {
+                    Section {
+                        if buyOrders.isEmpty {
                             Text("No buy orders")
                         } else {
-                            ForEach((character.marketOrders ?? []).filter({ $0.isBuyOrder })) { order in
+                            ForEach(buyOrders) { order in
                                 MarketOrderCell(order: order)
+                            }
+                        }
+                    } header: {
+                        VStack(alignment: .leading) {
+                            Text("Buy Orders")
+                            
+                            if buyOrders.isEmpty == false {
+                                Text("Total ISK: \(ECFormatters.iskLong(totalIsk(for: buyOrders)))")
                             }
                         }
                     }
@@ -60,6 +83,12 @@ struct MarketOrdersView: View {
         })
         .navigationTitle("Market Orders")
         .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    func totalIsk(for orders: [ECKMarketOrder]) -> Double {
+        return orders.reduce(0) { partialResult, order in
+            return partialResult + (order.price * Double(order.volumeRemain))
+        }
     }
     
 }
