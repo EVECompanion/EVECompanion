@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ECKAssetLocationFlag: String, Decodable, Sendable {
+public enum ECKItemLocationFlag: String, Decodable, Sendable {
     
     case unknown
     
@@ -101,7 +101,7 @@ public enum ECKAssetLocationFlag: String, Decodable, Sendable {
         let container = try decoder.singleValueContainer()
         let stringValue = try container.decode(String.self)
         
-        guard let value = ECKAssetLocationFlag(rawValue: stringValue) else {
+        guard let value = ECKItemLocationFlag(rawValue: stringValue) else {
             logger.warning("Unknown asset location flag \(stringValue)")
             self = .unknown
             return

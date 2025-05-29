@@ -21,7 +21,7 @@ public final class ECKAsset: Decodable, Identifiable {
     public let isBlueprintCopy: Bool?
     public let isSingleton: Bool
     public let itemId: Int
-    public let locationFlag: ECKAssetLocationFlag
+    public let locationFlag: ECKItemLocationFlag
     public internal(set) var location: ECKAssetLocation
     public let quantity: Int
     public let item: ECKItem
@@ -94,14 +94,14 @@ public final class ECKAsset: Decodable, Identifiable {
         self.itemId = try container.decode(Int.self, forKey: .itemId)
         self.item = try container.decode(ECKItem.self, forKey: .item)
         self.location = try ECKAssetLocation(from: decoder)
-        self.locationFlag = try container.decode(ECKAssetLocationFlag.self, forKey: .locationFlag)
+        self.locationFlag = try container.decode(ECKItemLocationFlag.self, forKey: .locationFlag)
         self.quantity = try container.decode(Int.self, forKey: .quantity)
     }
     
     init(isBlueprintCopy: Bool?, 
          isSingleton: Bool,
          itemId: Int,
-         locationFlag: ECKAssetLocationFlag,
+         locationFlag: ECKItemLocationFlag,
          location: ECKAssetLocation,
          quantity: Int,
          item: ECKItem,

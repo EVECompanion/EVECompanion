@@ -17,6 +17,7 @@ struct CharacterDetailView: View {
     @StateObject var industryJobsManager: ECKIndustryJobManager
     @StateObject var jumpClonesManager: ECKJumpClonesManager
     @StateObject var planetaryColoniesManager: ECKPlanetaryColonyManager
+    @StateObject var fittingManager: ECKFittingManager
     @Binding var selectedCharacter: CharacterSelection
     
     init(character: ECKCharacter, selectedCharacter: Binding<CharacterSelection>) {
@@ -26,6 +27,7 @@ struct CharacterDetailView: View {
         self._industryJobsManager = StateObject(wrappedValue: .init(character: character))
         self._jumpClonesManager = StateObject(wrappedValue: .init(character: character))
         self._planetaryColoniesManager = StateObject(wrappedValue: .init(character: character))
+        self._fittingManager = StateObject(wrappedValue: .init(character: character))
         self._selectedCharacter = selectedCharacter
     }
     
@@ -55,6 +57,10 @@ struct CharacterDetailView: View {
             
             Section("EVE Mail") {
                 row(for: .mail)
+            }
+            
+            Section("Fittings") {
+                row(for: .fittings)
             }
             
             Section("Inventory") {
@@ -136,6 +142,8 @@ struct CharacterDetailView: View {
             return .jumpClones(manager: jumpClonesManager)
         case .planetaryColonies:
             return .planetaryColonies(planetaryColoniesManager)
+        case .fittings:
+            return .fittingsList(fittingManager)
         }
     }
     

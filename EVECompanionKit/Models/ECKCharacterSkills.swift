@@ -22,7 +22,7 @@ public class ECKCharacterSkills: Decodable, Equatable, Hashable {
     static let dummy: ECKCharacterSkills = .init()
     
     // Key: SkillId, Value: SkillLevel
-    private lazy var skillSet: [Int: Int] = {
+    internal lazy var skillSet: [Int: Int] = {
         var result: [Int: Int] = [:]
         skillLevels.forEach { skillLevel in
             result[skillLevel.skill.skillId] = skillLevel.trainedSkillLevel
