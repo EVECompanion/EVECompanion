@@ -69,13 +69,14 @@ public class ECKSDEManager {
         NotificationCenter.default.post(.init(name: .sdeDeleted))
     }
     
-    public typealias FetchedAttribute = (attributeId: Int, attributeName: String)
-    let dummyFetchedAttribute: FetchedAttribute = (attributeId: 0, attributeName: "Unknown")
+    public typealias FetchedAttribute = (attributeId: Int, stackable: Bool, attributeName: String)
+    let dummyFetchedAttribute: FetchedAttribute = (attributeId: 0, stackable: false, attributeName: "Unknown")
     
     public func getAttribute(id: Int) -> FetchedAttribute {
         let statement = try? connection?.prepare("""
             SELECT
                 attributeID,
+                stackable,
                 attributeName
             FROM
                 dgmAttributeTypes
@@ -91,12 +92,15 @@ public class ECKSDEManager {
         }
         
         guard let attributeId: Int64 = result[0] as? Int64,
-              let attributeName: String = result[1] as? String else {
+              let stackable: Int64 = result[1] as? Int64,
+              let attributeName: String = result[2] as? String else {
             logger.error("Unexpected attribute data \(result)")
             return dummyFetchedAttribute
         }
         
-        return (attributeId: Int(attributeId), attributeName: attributeName)
+        return (attributeId: Int(attributeId),
+                stackable: Bool(truncating: stackable as NSNumber),
+                attributeName: attributeName)
     }
     
     typealias FetchedSkill = (skillId: Int,
@@ -778,14 +782,22 @@ public class ECKSDEManager {
         }
     }
     
-    typealias ItemCategory = (category: String, group: String)
-    static let dummyItemCategory: ItemCategory = (category: "Unknown", group: "Unknown")
+    typealias ItemCategory = (categoryId: Int,
+                              category: String,
+                              groupId: Int,
+                              group: String)
+    static let dummyItemCategory: ItemCategory = (categoryId: 0,
+                                                  category: "Unknown",
+                                                  groupId: 0,
+                                                  group: "Unknown")
     
     func itemCategory(_ itemId: Int) -> ItemCategory {
         do {
             let statement = try connection?.prepare("""
             SELECT
+                invCategories.categoryID,
                 invCategories.categoryName,
+                invGroups.groupID,
                 invGroups.groupName
             FROM
                 invTypes
@@ -799,13 +811,18 @@ public class ECKSDEManager {
                 return Self.dummyItemCategory
             }
             
-            guard let category: String = result[0] as? String,
-                  let group: String = result[1] as? String else {
+            guard let categoryId: Int64 = result[0] as? Int64,
+                  let category: String = result[1] as? String,
+                  let groupId: Int64 = result[2] as? Int64,
+                  let group: String = result[3] as? String else {
                 logger.error("Unexpected item category data \(result)")
                 return Self.dummyItemCategory
             }
             
-            return (category: category, group: group)
+            return (categoryId: Int(categoryId),
+                    category: category,
+                    groupId: Int(groupId),
+                    group: group)
         } catch {
             logger.error("Cannot get category for item \(itemId): \(error)")
             return Self.dummyItemCategory
@@ -891,7 +908,7 @@ public class ECKSDEManager {
         }
     }
     
-    public typealias ItemAttribute = (id: Int, name: String, displayName: String, value: Float, unit: EVEUnit?)
+    public typealias ItemAttribute = (id: Int, name: String, displayName: String, stackable: Bool, value: Float, unit: EVEUnit?)
     public typealias ItemAttributeCategory = (name: String, attributes: [ItemAttribute])
     public typealias ItemAttributes = [ItemAttributeCategory]
     func itemAttributes(_ itemId: Int) -> ItemAttributes {
@@ -901,6 +918,7 @@ public class ECKSDEManager {
                     dgmAttributeTypes.attributeID,
                     dgmAttributeTypes.attributeName,
                     dgmAttributeTypes.displayName,
+                    dgmAttributeTypes.stackable,
                     dgmTypeAttributes.valueFloat,
                     dgmAttributeCategories.categoryName,
                     eveUnits.unitName
@@ -931,12 +949,13 @@ public class ECKSDEManager {
                       let attributeName: String = row[1] as? String,
                       let attributeDisplayName: String = row[2] as? String,
                       let attributeValue: Float64 = row[3] as? Float64,
-                      let categoryName: String = row[4] as? String else {
+                      let stackable: Int64 = row[4] as? Int64,
+                      let categoryName: String = row[5] as? String else {
                           logger.info("Unexpected item attribute data \(row)")
                           continue
                 }
                 
-                let unitName: String? = row[5] as? String
+                let unitName: String? = row[6] as? String
                 
                 let unit: EVEUnit?
                 if let unitName {
@@ -948,6 +967,7 @@ public class ECKSDEManager {
                 let attribute: ItemAttribute = (id: Int(attributeId),
                                                 name: attributeName,
                                                 displayName: attributeDisplayName,
+                                                stackable: Bool(truncating: stackable as NSNumber),
                                                 value: Float(attributeValue),
                                                 unit: unit)
                 
@@ -1182,7 +1202,7 @@ public class ECKSDEManager {
     }
     
     typealias FetchedEffect = (effectId: Int, effectName: String, effectCategory: Int?, modifierInfo: String)
-    internal func getEffects(for typeId: Int) -> [FetchedEffect] {
+    internal func getEffects(for typeId: Int) -> [ECKDogmaEffect] {
         do {
             let statement = try connection?.prepare("""
             SELECT
@@ -1201,7 +1221,7 @@ public class ECKSDEManager {
                 return []
             }
             
-            return result.compactMap { row -> FetchedEffect? in
+            return result.compactMap { row -> ECKDogmaEffect? in
                 guard let effectId: Int64 = row[0] as? Int64,
                       let effectName: String = row[1] as? String,
                       let modifierInfo: String = row[3] as? String else {
@@ -1216,10 +1236,12 @@ public class ECKSDEManager {
                     effectCategory = nil
                 }
                 
-                return (effectId: Int(effectId),
-                        effectName: effectName,
-                        effectCategory: effectCategory,
-                        modifierInfo: modifierInfo)
+                let effect: FetchedEffect = (effectId: Int(effectId),
+                                             effectName: effectName,
+                                             effectCategory: effectCategory,
+                                             modifierInfo: modifierInfo)
+                
+                return .init(data: effect)
             }
         } catch {
             logger.error("Error fetching effects for type \(typeId): \(error)")

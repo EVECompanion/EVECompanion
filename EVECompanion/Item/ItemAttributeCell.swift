@@ -82,6 +82,7 @@ struct ItemAttributeCell: View {
         ItemAttributeCell(attribute: (id: 0,
                                       name: "Armor EM Damage Resistance",
                                       displayName: "Armor EM Damage Resistance",
+                                      stackable: false,
                                       value: 50,
                                       unit: EVEUnit("Percentage")))
     }

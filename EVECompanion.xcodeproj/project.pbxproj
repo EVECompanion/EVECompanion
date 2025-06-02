@@ -195,7 +195,6 @@
 		C9CB97B52C12526500366D1A /* SwiftPackageListUI in Frameworks */ = {isa = PBXBuildFile; productRef = C9CB97B42C12526400366D1A /* SwiftPackageListUI */; };
 		C9D006182D83815C00C26883 /* CapitalNavigationRouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D006172D83815C00C26883 /* CapitalNavigationRouteView.swift */; };
 		C9D094F12DE50DF500715479 /* ECKCharacterFitting+Calculate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D094F02DE50DF500715479 /* ECKCharacterFitting+Calculate.swift */; };
-		C9D094F42DE5106600715479 /* ECKFittingAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D094F32DE5106600715479 /* ECKFittingAttribute.swift */; };
 		C9D094F92DE73E7500715479 /* ECKCharacterFittingSkill.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D094F82DE73E7500715479 /* ECKCharacterFittingSkill.swift */; };
 		C9D094FC2DE7972500715479 /* ECKCharacterFitting+Calculate+Pass1.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D094FB2DE7972500715479 /* ECKCharacterFitting+Calculate+Pass1.swift */; };
 		C9D095002DE7975B00715479 /* ECKCharacterFitting+Calculate+Pass2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D094FF2DE7975B00715479 /* ECKCharacterFitting+Calculate+Pass2.swift */; };
@@ -203,7 +202,6 @@
 		C9D095042DE7976200715479 /* ECKCharacterFitting+Calculate+Pass4.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D095032DE7976200715479 /* ECKCharacterFitting+Calculate+Pass4.swift */; };
 		C9D095062DE7BA4F00715479 /* ECKDogmaEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D095052DE7BA4F00715479 /* ECKDogmaEffect.swift */; };
 		C9D095092DE7BA8A00715479 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = C9D095082DE7BA8A00715479 /* Yams */; };
-		C9D0950B2DE7BBF800715479 /* ECKFittingEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D0950A2DE7BBF800715479 /* ECKFittingEffect.swift */; };
 		C9D570A42C5B819500985587 /* ECKSDEUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D570A32C5B819500985587 /* ECKSDEUpdater.swift */; };
 		C9D570A62C5B836E00985587 /* ECKSDEVersionResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D570A52C5B836E00985587 /* ECKSDEVersionResource.swift */; };
 		C9D570A82C5B839600985587 /* ECKSDEVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D570A72C5B839600985587 /* ECKSDEVersion.swift */; };
@@ -467,14 +465,12 @@
 		C9CB97AF2C12516500366D1A /* package-list.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "package-list.json"; sourceTree = "<group>"; };
 		C9D006172D83815C00C26883 /* CapitalNavigationRouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalNavigationRouteView.swift; sourceTree = "<group>"; };
 		C9D094F02DE50DF500715479 /* ECKCharacterFitting+Calculate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacterFitting+Calculate.swift"; sourceTree = "<group>"; };
-		C9D094F32DE5106600715479 /* ECKFittingAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKFittingAttribute.swift; sourceTree = "<group>"; };
 		C9D094F82DE73E7500715479 /* ECKCharacterFittingSkill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterFittingSkill.swift; sourceTree = "<group>"; };
 		C9D094FB2DE7972500715479 /* ECKCharacterFitting+Calculate+Pass1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacterFitting+Calculate+Pass1.swift"; sourceTree = "<group>"; };
 		C9D094FF2DE7975B00715479 /* ECKCharacterFitting+Calculate+Pass2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacterFitting+Calculate+Pass2.swift"; sourceTree = "<group>"; };
 		C9D095012DE7975F00715479 /* ECKCharacterFitting+Calculate+Pass3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacterFitting+Calculate+Pass3.swift"; sourceTree = "<group>"; };
 		C9D095032DE7976200715479 /* ECKCharacterFitting+Calculate+Pass4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacterFitting+Calculate+Pass4.swift"; sourceTree = "<group>"; };
 		C9D095052DE7BA4F00715479 /* ECKDogmaEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKDogmaEffect.swift; sourceTree = "<group>"; };
-		C9D0950A2DE7BBF800715479 /* ECKFittingEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKFittingEffect.swift; sourceTree = "<group>"; };
 		C9D570A32C5B819500985587 /* ECKSDEUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSDEUpdater.swift; sourceTree = "<group>"; };
 		C9D570A52C5B836E00985587 /* ECKSDEVersionResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSDEVersionResource.swift; sourceTree = "<group>"; };
 		C9D570A72C5B839600985587 /* ECKSDEVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSDEVersion.swift; sourceTree = "<group>"; };
@@ -1092,9 +1088,7 @@
 		C9D094F72DE5110A00715479 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				C9D094F32DE5106600715479 /* ECKFittingAttribute.swift */,
 				C9D095052DE7BA4F00715479 /* ECKDogmaEffect.swift */,
-				C9D0950A2DE7BBF800715479 /* ECKFittingEffect.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1559,7 +1553,6 @@
 				C94257282C2A140800FAEE5C /* Array+Chunked.swift in Sources */,
 				C942571E2C29A9C500FAEE5C /* ECKAssetLocationFlag.swift in Sources */,
 				C9F055B62DE2F66D00340A05 /* ECKCharacterFitting.swift in Sources */,
-				C9D094F42DE5106600715479 /* ECKFittingAttribute.swift in Sources */,
 				C99750AE2C1494DC00DE5B96 /* ECKCharacterMarketOrdersResource.swift in Sources */,
 				C96F98A32BEFA74000DEC34F /* ECKCharacterContractResource.swift in Sources */,
 				C90082112DC60357007660AE /* ECKEmptySkillQueueNotificationRequest.swift in Sources */,
@@ -1617,7 +1610,6 @@
 				C92D17CD2C27611A00D6FF5A /* ECKJumpClone.swift in Sources */,
 				C9F055B42DE2F55500340A05 /* ECKFittingManager.swift in Sources */,
 				C96430922CC46A0200E8D6A6 /* ECKPlanet.swift in Sources */,
-				C9D0950B2DE7BBF800715479 /* ECKFittingEffect.swift in Sources */,
 				C92D17CF2C27635C00D6FF5A /* ECKJumpClonesManager.swift in Sources */,
 				C98169C22C11C2FB0033B932 /* ECKCharacterAttributesResource.swift in Sources */,
 				C96430822CC1AB7500E8D6A6 /* ECKPlanetaryColony.swift in Sources */,

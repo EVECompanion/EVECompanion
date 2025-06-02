@@ -32,7 +32,7 @@ struct ECImage: View {
                         .resizable()
                 }
             } else {
-                Image("Icons/UnknownImage")
+                Image("Icons/unknownImage")
                     .resizable()
             }
         }.onAppear(perform: {

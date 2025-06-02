@@ -14,13 +14,13 @@ struct FittingCell: View {
     
     var body: some View {
         HStack {
-            ECImage(id: fitting.ship.typeId, category: .types)
+            ECImage(id: fitting.ship.item.typeId, category: .types)
                 .frame(width: 40, height: 40)
             
             VStack(alignment: .leading) {
                 Text(fitting.name)
                 
-                Text(fitting.ship.name)
+                Text(fitting.ship.item.name)
                     .foregroundStyle(.secondary)
             }
         }

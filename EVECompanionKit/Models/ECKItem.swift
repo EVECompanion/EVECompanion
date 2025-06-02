@@ -33,7 +33,7 @@ public final class ECKItem: Decodable, Identifiable, @unchecked Sendable, Hashab
         return itemCategory.group
     }
     
-    private lazy var itemCategory: ECKSDEManager.ItemCategory = {
+    internal lazy var itemCategory: ECKSDEManager.ItemCategory = {
         return ECKSDEManager.shared.itemCategory(typeId)
     }()
     
