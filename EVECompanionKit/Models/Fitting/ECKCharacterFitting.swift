@@ -33,7 +33,7 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     public let fittingId: Int
     public var items: [ECKCharacterFittingItem]
     public let name: String
-    public let ship: ECKItem
+    public let ship: ECKCharacterFittingItem
     
     public static let dummyAvatar: ECKCharacterFitting = {
         return .init(description: "Just my avatar",
@@ -43,7 +43,7 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
                      ship: .init(typeId: 11567))
     }()
     
-    internal var attributes: [AttributeID: ECKFittingAttribute] = [:]
+    internal var attributes: [AttributeID: FittingAttribute] = [:]
     internal var skills: [ECKCharacterSkills] = []
     
     init(description: String,
@@ -55,7 +55,9 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
         self.fittingId = fittingId
         self.items = items
         self.name = name
-        self.ship = ship
+        self.ship = .init(flag: .ShipHangar,
+                          quantity: 1,
+                          item: ship)
     }
     
     public required init(from decoder: any Decoder) throws {
@@ -64,7 +66,10 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
         self.fittingId = try container.decode(Int.self, forKey: .fittingId)
         self.items = try container.decode([ECKCharacterFittingItem].self, forKey: .items)
         self.name = try container.decode(String.self, forKey: .name)
-        self.ship = try container.decode(ECKItem.self, forKey: .ship)
+        let ship = try container.decode(ECKItem.self, forKey: .ship)
+        self.ship = .init(flag: .ShipHangar,
+                          quantity: 1,
+                          item: ship)
     }
     
     public static func == (lhs: ECKCharacterFitting, rhs: ECKCharacterFitting) -> Bool {

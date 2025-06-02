@@ -19,7 +19,23 @@ public class ECKCharacterFittingItem: Decodable, Hashable {
     public let quantity: Int
     public let item: ECKItem
     
-    internal var attributes: [ECKCharacterFitting.AttributeID: ECKFittingAttribute] = [:]
+    public var charge: ECKCharacterFittingItem?
+    
+    internal var attributes: [ECKCharacterFitting.AttributeID: ECKCharacterFitting.FittingAttribute] = [:]
+    internal var maxState: ECKDogmaEffect.Category = .passive
+    
+    public required init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.flag = try container.decode(ECKItemLocationFlag.self, forKey: .flag)
+        self.quantity = try container.decode(Int.self, forKey: .quantity)
+        self.item = try container.decode(ECKItem.self, forKey: .item)
+    }
+    
+    init(flag: ECKItemLocationFlag, quantity: Int, item: ECKItem) {
+        self.flag = flag
+        self.quantity = quantity
+        self.item = item
+    }
     
     public static func == (lhs: ECKCharacterFittingItem, rhs: ECKCharacterFittingItem) -> Bool {
         return lhs.flag == rhs.flag

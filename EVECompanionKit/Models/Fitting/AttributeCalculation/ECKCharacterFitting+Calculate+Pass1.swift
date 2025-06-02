@@ -11,7 +11,7 @@ extension ECKCharacterFitting {
     
     /// Collect DGM Attributes of hull and modules. (pass 1 in reference)
     internal func pass1(skills: ECKCharacterSkills) {
-        pass1CollectAttributes(for: ship, attributesDict: &self.attributes)
+        pass1CollectAttributes(for: ship.item, attributesDict: &self.attributes)
         
         let allSkills = ECKSDEManager.shared.getAllSkills()
         
@@ -122,7 +122,7 @@ extension ECKCharacterFitting {
         }
     }
     
-    private func pass1CollectAttributes(for item: ECKItem, attributesDict: inout [AttributeID: ECKFittingAttribute]) {
+    private func pass1CollectAttributes(for item: ECKItem, attributesDict: inout [AttributeID: FittingAttribute]) {
         let attributes: [ECKSDEManager.ItemAttribute] = item.itemAttributeCategories.flatMap({ $0.attributes })
         
         for attribute in attributes {
