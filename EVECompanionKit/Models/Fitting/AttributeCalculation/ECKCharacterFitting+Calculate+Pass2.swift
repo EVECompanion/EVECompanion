@@ -20,8 +20,8 @@ extension ECKCharacterFitting {
             }
         }
         
-        for (index, skill) in (self.ship.item.skillRequirements ?? []).enumerated() {
-            let item = ECKCharacterFittingItem(flag: .Skill, quantity: 1, item: skill.skill)
+        for (index, skill) in skills.enumerated() {
+            let item = ECKCharacterFittingItem(flag: .Skill, quantity: 1, item: skill.item)
             item.collectEffects(object: .skill(index: index), into: &effects)
         }
         
@@ -38,7 +38,7 @@ extension ECKCharacterFitting {
             case .item(index: let index):
                 categoryId = items[index].item.itemCategory.categoryId
             case .skill(index: let index):
-                categoryId = (self.ship.item.skillRequirements ?? [])[index].skill.itemCategory.categoryId
+                categoryId = skills[index].item.itemCategory.categoryId
             case .structure:
                 continue
             case .target:
@@ -61,7 +61,7 @@ extension ECKCharacterFitting {
                 case .skill(index: let index):
                     target = .init(flag: .Skill,
                                    quantity: 1,
-                                   item: (ship.item.skillRequirements ?? [])[index].skill)
+                                   item: skills[index].item)
                 case .structure:
                     // TODO
                     continue
@@ -177,7 +177,7 @@ fileprivate extension ECKCharacterFittingItem {
                 return
             }
             
-            attribute = .init(value: defaultValue)
+            attribute = .init(id: attributeId, defaultValue: defaultValue)
             self.attributes[attributeId] = attribute
         }
         

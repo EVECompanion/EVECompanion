@@ -11,19 +11,23 @@ extension ECKCharacterFitting {
     
     /// Collect DGM Attributes of hull and modules. (pass 1 in reference)
     internal func pass1(skills: ECKCharacterSkills) {
-        pass1CollectAttributes(for: ship.item, attributesDict: &self.attributes)
+        pass1CollectAttributes(for: ship.item, attributesDict: &ship.attributes)
         
         let allSkills = ECKSDEManager.shared.getAllSkills()
         
         for skill in allSkills {
-            let skill = ECKCharacterFittingSkill(skill: skill)
-            pass1CollectAttributes(for: skill.skillItem, attributesDict: &skill.attributes)
+            let item = ECKCharacterFittingItem(flag: .Skill, quantity: 1, item: .init(typeId: skill.skillId))
+            pass1CollectAttributes(for: item.item, attributesDict: &item.attributes)
             
-            if let skillLevel = skills.skillSet[skill.skill.skillId] {
-                skill.attributes[Self.attributeSkillLevelId] = .init(value: Float(skillLevel))
+            if let skillLevel = skills.skillSet[item.item.typeId] {
+                item.attributes[Self.attributeSkillLevelId] = .init(id: Self.attributeSkillLevelId,
+                                                                    defaultValue: Float(skillLevel))
             } else {
-                skill.attributes[Self.attributeSkillLevelId] = .init(value: 0)
+                item.attributes[Self.attributeSkillLevelId] = .init(id: Self.attributeSkillLevelId,
+                                                                    defaultValue: 0)
             }
+            
+            self.skills.append(item)
         }
         
         for item in items {
@@ -126,24 +130,25 @@ extension ECKCharacterFitting {
         let attributes: [ECKSDEManager.ItemAttribute] = item.itemAttributeCategories.flatMap({ $0.attributes })
         
         for attribute in attributes {
-            attributesDict[attribute.id] = .init(value: attribute.value)
+            attributesDict[attribute.id] = .init(id: attribute.id, defaultValue: attribute.value)
         }
         
         if let mass = item.mass {
-            attributesDict[Self.attributeMassId] = .init(value: mass)
+            attributesDict[Self.attributeMassId] = .init(id: Self.attributeMassId, defaultValue: mass)
         }
         
         if let capacity = item.capacity {
-            attributesDict[Self.attributeCapacityId] = .init(value: capacity)
+            attributesDict[Self.attributeCapacityId] = .init(id: Self.attributeCapacityId, defaultValue: capacity)
         }
         
         if let volume = item.volume {
-            attributesDict[Self.attributeVolumeId] = .init(value: volume)
+            attributesDict[Self.attributeVolumeId] = .init(id: Self.attributeVolumeId, defaultValue: volume)
         }
         
-        if let radius = item.radius {
-            attributesDict[Self.attributeRadiusId] = .init(value: radius)
-        }
+        // TODO
+//        if let radius = item.radius {
+//            attributesDict[Self.attributeRadiusId] = .init(id: Self.attributeRadiusId, defaultValue: radius)
+//        }
     }
     
 }

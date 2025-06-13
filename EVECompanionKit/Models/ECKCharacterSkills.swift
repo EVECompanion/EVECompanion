@@ -15,11 +15,19 @@ public class ECKCharacterSkills: Decodable, Equatable, Hashable {
         case unallocatedSP = "unallocated_sp"
     }
     
-    public let skillLevels: [ECKCharacterSkillLevel]
-    public let totalSP: Int
-    public let unallocatedSP: Int?
+    public var skillLevels: [ECKCharacterSkillLevel]
+    public var totalSP: Int
+    public var unallocatedSP: Int?
     
     static let dummy: ECKCharacterSkills = .init()
+    
+    public static let empty: ECKCharacterSkills = {
+        let res = ECKCharacterSkills()
+        res.skillLevels = []
+        res.totalSP = 0
+        res.unallocatedSP = nil
+        return res
+    }()
     
     // Key: SkillId, Value: SkillLevel
     internal lazy var skillSet: [Int: Int] = {

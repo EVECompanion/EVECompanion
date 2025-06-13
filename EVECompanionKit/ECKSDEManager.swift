@@ -69,15 +69,16 @@ public class ECKSDEManager {
         NotificationCenter.default.post(.init(name: .sdeDeleted))
     }
     
-    public typealias FetchedAttribute = (attributeId: Int, stackable: Bool, attributeName: String)
-    let dummyFetchedAttribute: FetchedAttribute = (attributeId: 0, stackable: false, attributeName: "Unknown")
+    public typealias FetchedAttribute = (attributeId: Int, stackable: Bool, attributeName: String, highIsGood: Bool)
+    let dummyFetchedAttribute: FetchedAttribute = (attributeId: 0, stackable: false, attributeName: "Unknown", highIsGood: false)
     
     public func getAttribute(id: Int) -> FetchedAttribute {
         let statement = try? connection?.prepare("""
             SELECT
                 attributeID,
                 stackable,
-                attributeName
+                attributeName,
+                highIsGood
             FROM
                 dgmAttributeTypes
             WHERE
@@ -93,14 +94,18 @@ public class ECKSDEManager {
         
         guard let attributeId: Int64 = result[0] as? Int64,
               let stackable: Int64 = result[1] as? Int64,
-              let attributeName: String = result[2] as? String else {
+              let attributeName: String = result[2] as? String,
+              let highIsGoodInt = result[3] as? Int64 else {
             logger.error("Unexpected attribute data \(result)")
             return dummyFetchedAttribute
         }
         
+        let highIsGood = Bool(truncating: highIsGoodInt as NSNumber)
+        
         return (attributeId: Int(attributeId),
                 stackable: Bool(truncating: stackable as NSNumber),
-                attributeName: attributeName)
+                attributeName: attributeName,
+                highIsGood: highIsGood)
     }
     
     typealias FetchedSkill = (skillId: Int,
@@ -315,7 +320,6 @@ public class ECKSDEManager {
                              mass: Float?,
                              volume: Float?,
                              capacity: Float?,
-                             radius: Float?,
                              iconId: Int?)
     
     static let dummyFetchedItem: FetchedItem = (typeId: 0,
@@ -324,11 +328,10 @@ public class ECKSDEManager {
                                                 mass: nil,
                                                 volume: nil,
                                                 capacity: nil,
-                                                radius: nil,
                                                 iconId: nil)
     
     internal func getItem(typeId: Int) -> FetchedItem {
-        let statement = try? connection?.prepare("SELECT typeID, typeName, description, mass, volume, capacity, radius, iconID FROM invTypes WHERE typeID = ?", typeId)
+        let statement = try? connection?.prepare("SELECT typeID, typeName, description, mass, volume, capacity, iconID FROM invTypes WHERE typeID = ?", typeId)
         
         let result = try? statement?.run().makeIterator().failableNext()
         
@@ -350,7 +353,6 @@ public class ECKSDEManager {
                     mass, 
                     volume, 
                     capacity, 
-                    radius,
                     iconID
                 FROM
                     invTypes
@@ -386,7 +388,6 @@ public class ECKSDEManager {
                     mass, 
                     volume, 
                     capacity, 
-                    radius,
                     iconID
                 FROM
                     invTypes
@@ -441,15 +442,8 @@ public class ECKSDEManager {
             capacity = nil
         }
         
-        let radius: Float?
-        if let radiusFloat = row[6] as? Float64 {
-            radius = Float(radiusFloat)
-        } else {
-            radius = nil
-        }
-        
         let iconID: Int?
-        if let iconIDInt = row[7] as? Int64 {
+        if let iconIDInt = row[6] as? Int64 {
             iconID = Int(iconIDInt)
         } else {
             iconID = nil
@@ -461,7 +455,6 @@ public class ECKSDEManager {
                 mass,
                 volume,
                 capacity,
-                radius,
                 iconID)
     }
     
@@ -945,31 +938,14 @@ public class ECKSDEManager {
             var attributes: ItemAttributes = []
             
             for row in result {
-                guard let attributeId: Int64 = row[0] as? Int64,
-                      let attributeName: String = row[1] as? String,
-                      let attributeDisplayName: String = row[2] as? String,
-                      let attributeValue: Float64 = row[3] as? Float64,
-                      let stackable: Int64 = row[4] as? Int64,
-                      let categoryName: String = row[5] as? String else {
-                          logger.info("Unexpected item attribute data \(row)")
-                          continue
+                guard let attribute = parseItemAttributeRow(row: row) else {
+                    continue
                 }
                 
-                let unitName: String? = row[6] as? String
-                
-                let unit: EVEUnit?
-                if let unitName {
-                    unit = EVEUnit(unitName)
-                } else {
-                    unit = nil
+                guard let categoryName: String = row[5] as? String else {
+                    logger.error("Item Attribute \(attribute.id) has no category.")
+                    continue
                 }
-                
-                let attribute: ItemAttribute = (id: Int(attributeId),
-                                                name: attributeName,
-                                                displayName: attributeDisplayName,
-                                                stackable: Bool(truncating: stackable as NSNumber),
-                                                value: Float(attributeValue),
-                                                unit: unit)
                 
                 if let existingAttributeCategory = attributes.enumerated().first(where: { $0.element.name == categoryName }) {
                     attributes[existingAttributeCategory.offset] = (name: categoryName,
@@ -984,6 +960,103 @@ public class ECKSDEManager {
             logger.error("Cannot get attributes for item \(itemId): \(error)")
             return []
         }
+    }
+    
+    func itemAttribute(_ attributeId: Int) -> ItemAttribute? {
+        do {
+            let statement = try connection?.prepare("""
+                SELECT
+                    dgmAttributeTypes.attributeID,
+                    dgmAttributeTypes.attributeName,
+                    dgmAttributeTypes.displayName,
+                    dgmAttributeTypes.stackable,
+                    dgmAttributeTypes.defaultValue,
+                    dgmAttributeCategories.categoryName,
+                    eveUnits.unitName
+                FROM
+                    dgmAttributeTypes
+                    INNER JOIN dgmAttributeCategories ON dgmAttributeTypes.categoryID = dgmAttributeCategories.categoryID
+                    INNER JOIN eveUnits ON dgmAttributeTypes.unitID = eveUnits.unitID
+                WHERE
+                    dgmAttributeTypes.published = 1
+                    AND dgmAttributeTypes.attributeID = ?
+                """, attributeId)
+            
+            guard let result = try statement?.makeIterator().failableNext() else {
+                logger.error("Cannot get item attribute \(attributeId)")
+                return nil
+            }
+            
+            return parseItemAttributeRow(row: result)
+        } catch {
+            logger.error("Cannot get item attribute \(attributeId): \(error)")
+            return nil
+        }
+    }
+    
+    func itemAttribute(attributeId: Int, typeId: Int) -> ItemAttribute? {
+        do {
+            let statement = try connection?.prepare("""
+                SELECT
+                    dgmAttributeTypes.attributeID,
+                    dgmAttributeTypes.attributeName,
+                    dgmAttributeTypes.displayName,
+                    dgmAttributeTypes.stackable,
+                    dgmTypeAttributes.valueFloat,
+                    dgmAttributeCategories.categoryName,
+                    eveUnits.unitName
+                FROM
+                    dgmTypeAttributes
+                    INNER JOIN dgmAttributeTypes ON dgmTypeAttributes.attributeID = dgmAttributeTypes.attributeID
+                    INNER JOIN dgmAttributeCategories ON dgmAttributeTypes.categoryID = dgmAttributeCategories.categoryID
+                    INNER JOIN eveUnits ON dgmAttributeTypes.unitID = eveUnits.unitID
+                WHERE
+                    dgmTypeAttributes.typeID = ?
+                    AND dgmTypeAttributes.attributeID = ?
+                ORDER BY
+                    dgmAttributeCategories.categoryID,
+                    dgmAttributeTypes.attributeID
+                """, typeId, attributeId)
+            
+            guard let result = try statement?.makeIterator().failableNext() else {
+                logger.error("Cannot get item attribute \(attributeId)")
+                return nil
+            }
+            
+            return parseItemAttributeRow(row: result)
+        } catch {
+            logger.error("Cannote get item attribute \(attributeId) for \(typeId): \(error)")
+            return nil
+        }
+    }
+    
+    private func parseItemAttributeRow(row: [(any Binding)?]) -> ItemAttribute? {
+        guard let attributeId: Int64 = row[0] as? Int64,
+              let attributeName: String = row[1] as? String,
+              let attributeDisplayName: String = row[2] as? String,
+              let stackable: Int64 = row[3] as? Int64,
+              let attributeValue: Float64 = row[4] as? Float64 else {
+                  logger.info("Unexpected item attribute data \(row)")
+                  return nil
+        }
+        
+        let unitName: String? = row[6] as? String
+        
+        let unit: EVEUnit?
+        if let unitName {
+            unit = EVEUnit(unitName)
+        } else {
+            unit = nil
+        }
+        
+        let attribute: ItemAttribute = (id: Int(attributeId),
+                                        name: attributeName,
+                                        displayName: attributeDisplayName,
+                                        stackable: Bool(truncating: stackable as NSNumber),
+                                        value: Float(attributeValue),
+                                        unit: unit)
+        
+        return attribute
     }
     
     func marketGroup(id: Int) -> ECKMarketGroup? {

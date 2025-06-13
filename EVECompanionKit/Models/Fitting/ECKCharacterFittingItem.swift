@@ -22,6 +22,7 @@ public class ECKCharacterFittingItem: Decodable, Hashable {
     public var charge: ECKCharacterFittingItem?
     
     internal var attributes: [ECKCharacterFitting.AttributeID: ECKCharacterFitting.FittingAttribute] = [:]
+    internal var state: ECKDogmaEffect.Category = .passive
     internal var maxState: ECKDogmaEffect.Category = .passive
     
     public required init(from decoder: any Decoder) throws {

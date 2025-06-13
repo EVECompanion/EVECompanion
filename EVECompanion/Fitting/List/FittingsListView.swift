@@ -18,7 +18,8 @@ struct FittingsListView: View {
             case .ready,
                  .reloading:
                 List(fittingManager.fittings) { fitting in
-                    NavigationLink(value: AppScreen.fittingDetail(fitting)) {
+                    NavigationLink(value: AppScreen.fittingDetail(fittingManager.character,
+                                                                  fitting)) {
                         FittingCell(fitting: fitting)
                     }
                 }

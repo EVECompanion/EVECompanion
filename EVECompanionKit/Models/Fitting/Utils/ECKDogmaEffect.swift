@@ -58,10 +58,16 @@ class ECKDogmaEffect {
         self.id = data.effectId
         self.name = data.effectName
         self.category = .init(rawValue: data.effectCategory)
+        
+        guard data.modifierInfo != "null\n...\n" else {
+            self.modifierInfo = []
+            return
+        }
+        
         do {
             let decodedInfo = try Yams.load(yaml: data.modifierInfo)
             guard let modifierInfo = decodedInfo as? [[String: Any]] else {
-                logger.error("Cannot read modifier info from \(String(describing: decodedInfo))")
+                logger.warning("Cannot read modifier info from \(String(describing: decodedInfo))")
                 self.modifierInfo = []
                 return
             }
