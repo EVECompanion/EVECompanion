@@ -43,8 +43,24 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
                      ship: .init(typeId: 11567))
     }()
     
-    internal var attributes: [AttributeID: FittingAttribute] = [:]
-    internal var skills: [ECKCharacterSkills] = []
+    public var fittingAttributes: [(attribute: ECKSDEManager.ItemAttribute, fittingAttribute: FittingAttribute)] {
+        var fittingAttributes: [FittingAttribute] = Array(ship.attributes.values)
+        fittingAttributes.sort(by: { $0.id < $1.id })
+        let result: [(attribute: ECKSDEManager.ItemAttribute, fittingAttribute: FittingAttribute)] = fittingAttributes.map { fittingAttribute in
+            let attribute = ECKSDEManager.shared.itemAttribute(fittingAttribute.id)
+            return (attribute: attribute, fittingAttribute: fittingAttribute)
+        }.compactMap { attributes in
+            guard let attribute = attributes.attribute else {
+                return nil
+            }
+            
+            return (attribute: attribute, fittingAttribute: attributes.fittingAttribute)
+        }
+        
+        return result
+    }
+    
+    internal var skills: [ECKCharacterFittingItem] = []
     
     init(description: String,
          fittingId: Int,

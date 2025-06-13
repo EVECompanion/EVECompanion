@@ -21,20 +21,20 @@ extension ECKCharacterFitting {
         case targetId
         
         init?(rawValue: String?) {
-            switch rawValue {
-            case "ItemID":
+            switch rawValue?.lowercased() {
+            case "itemid":
                 self = .itemId
-            case "ShipID":
+            case "shipid":
                 self = .shipId
-            case "CharID":
+            case "charid":
                 self = .charId
-            case "OtherID":
+            case "otherid":
                 self = .otherId
-            case "StructureID":
+            case "structureid":
                 self = .structureId
-            case "Target":
+            case "target":
                 self = .target
-            case "TargetID":
+            case "targetid":
                 self = .targetId
             default:
                 logger.warning("Cannot decode unknown modifier domain \(String(describing: rawValue))")
@@ -112,7 +112,7 @@ extension ECKCharacterFitting {
         case target
     }
     
-    internal enum ModifierOperation: Int {
+    internal enum ModifierOperation: Int, CaseIterable {
         case preAssign = -1
         case preMul = 0
         case preDiv = 1
@@ -123,10 +123,33 @@ extension ECKCharacterFitting {
         case postPercent = 6
         case postAssign = 7
         
+        var hasPenalty: Bool {
+            switch self {
+            case .preAssign:
+                return false
+            case .preMul:
+                return true
+            case .preDiv:
+                return true
+            case .modAdd:
+                return false
+            case .modSub:
+                return false
+            case .postMul:
+                return true
+            case .postDiv:
+                return true
+            case .postPercent:
+                return true
+            case .postAssign:
+                return false
+            }
+        }
+        
         init?(rawValue: Int?) {
             switch rawValue {
             case -1:
-                self = .preMul
+                self = .preAssign
             case 0:
                 self = .preMul
             case 1:
@@ -155,12 +178,14 @@ extension ECKCharacterFitting {
     
     public class FittingAttribute {
         
+        public let id: Int
         let baseValue: Float
-        let value: Float?
+        public var value: Float?
         var effects: [FittingEffect]
         
-        init(value: Float) {
-            self.baseValue = value
+        init(id: Int, defaultValue: Float) {
+            self.id = id
+            self.baseValue = defaultValue
             self.value = nil
             self.effects = []
         }
@@ -187,11 +212,17 @@ extension ECKCharacterFitting {
         }
     }
     
-    internal func calculateAttributes(skills: ECKCharacterSkills) {
+    public func calculateAttributes(skills: ECKCharacterSkills) {
+        self.ship.attributes.removeAll()
+        self.items.forEach({ $0.attributes.removeAll() })
+        self.skills.removeAll()
+        
         pass1(skills: skills)
         pass2()
         pass3()
         pass4()
+        
+        self.objectWillChange.send()
     }
     
 }

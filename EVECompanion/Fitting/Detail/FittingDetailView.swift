@@ -20,8 +20,10 @@ struct FittingDetailView: View {
     
     @ObservedObject var fitting: ECKCharacterFitting
     @State private var selectedTab: FittingDetailTab = .info
+    private let character: ECKCharacter
     
-    init(fitting: ECKCharacterFitting) {
+    init(character: ECKCharacter, fitting: ECKCharacterFitting) {
+        self.character = character
         self.fitting = fitting
     }
     
@@ -38,7 +40,7 @@ struct FittingDetailView: View {
             .padding(.horizontal, 10)
 
             TabView(selection: $selectedTab) {
-                FittingDetailInfoView(fitting: fitting)
+                FittingDetailInfoView(character: character, fitting: fitting)
                     .tag(FittingDetailTab.info)
                 
                 Text("Module Stuff")
@@ -54,5 +56,5 @@ struct FittingDetailView: View {
 }
 
 #Preview {
-    CoordinatorView(initialScreen: .fittingDetail(.dummyAvatar))
+    CoordinatorView(initialScreen: .fittingDetail(.dummy, .dummyAvatar))
 }

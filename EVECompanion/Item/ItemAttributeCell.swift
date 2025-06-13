@@ -11,11 +11,16 @@ import EVECompanionKit
 struct ItemAttributeCell: View {
     
     let attribute: ECKSDEManager.ItemAttribute
+    let fittingAttribute: ECKCharacterFitting.FittingAttribute?
+    
+    var value: Float {
+        return fittingAttribute?.value ?? attribute.value
+    }
     
     var body: some View {
         if let unit = attribute.unit,
            case .typeId = unit {
-            let item = ECKItem(typeId: Int(attribute.value))
+            let item = ECKItem(typeId: Int(value))
             NavigationLink(value: AppScreen.item(item)) {
                 HStack {
                     Text(attribute.displayName)
@@ -32,11 +37,11 @@ struct ItemAttributeCell: View {
             HStack {
                 Text(attribute.displayName)
                 Spacer()
-                Text(ECKSDEManager.shared.groupName(for: Int(attribute.value)))
+                Text(ECKSDEManager.shared.groupName(for: Int(value)))
             }
         } else if let unit = attribute.unit,
                   case .attributeId = unit {
-            let attribute = ECKSDEManager.shared.getAttribute(id: Int(attribute.value))
+            let attribute = ECKSDEManager.shared.getAttribute(id: Int(value))
             HStack {
                 if let imageName = imageName(attributeId: Int(attribute.attributeId)) {
                     Image(imageName)
@@ -50,9 +55,9 @@ struct ItemAttributeCell: View {
                 Text(attribute.displayName)
                 Spacer()
                 if let unit = attribute.unit {
-                    Text(unit.formatted(attribute.value))
+                    Text(unit.formatted(value))
                 } else {
-                    Text(ECFormatters.attributeValue(attribute.value))
+                    Text(ECFormatters.attributeValue(value))
                 }
             }
         }
@@ -84,7 +89,8 @@ struct ItemAttributeCell: View {
                                       displayName: "Armor EM Damage Resistance",
                                       stackable: false,
                                       value: 50,
-                                      unit: EVEUnit("Percentage")))
+                                      unit: EVEUnit("Percentage")),
+                          fittingAttribute: nil)
     }
     .listStyle(.plain)
 }
