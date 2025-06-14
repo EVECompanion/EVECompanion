@@ -21,8 +21,7 @@ extension ECKCharacterFitting {
         }
         
         for (index, skill) in skills.enumerated() {
-            let item = ECKCharacterFittingItem(flag: .Skill, quantity: 1, item: skill.item)
-            item.collectEffects(object: .skill(index: index), into: &effects)
+            skill.collectEffects(object: .skill(index: index), into: &effects)
         }
         
         for effect in effects {
@@ -59,9 +58,7 @@ extension ECKCharacterFitting {
                 case .item(index: let index):
                     target = items[index]
                 case .skill(index: let index):
-                    target = .init(flag: .Skill,
-                                   quantity: 1,
-                                   item: skills[index].item)
+                    target = skills[index]
                 case .structure:
                     // TODO
                     continue
