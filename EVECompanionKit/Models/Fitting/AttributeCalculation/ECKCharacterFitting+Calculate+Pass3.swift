@@ -140,8 +140,7 @@ extension ECKCharacterFitting {
                 case .item(index: let index):
                     source = items[index]
                 case .skill(index: let index):
-                    let skill = skills[index]
-                    source = .init(flag: .Skill, quantity: 1, item: skill.item)
+                    source = skills[index]
                 case .structure:
                     // TODO?
                     continue

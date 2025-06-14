@@ -13,19 +13,12 @@ extension ECKCharacterFitting {
     internal func pass1(skills: ECKCharacterSkills) {
         pass1CollectAttributes(for: ship.item, attributesDict: &ship.attributes)
         
-        let allSkills = ECKSDEManager.shared.getAllSkills()
-        
-        for skill in allSkills {
-            let item = ECKCharacterFittingItem(flag: .Skill, quantity: 1, item: .init(typeId: skill.skillId))
+        for skill in skills.skillLevels {
+            let item = ECKCharacterFittingItem(flag: .Skill, quantity: 1, item: .init(typeId: skill.skill.skillId))
             pass1CollectAttributes(for: item.item, attributesDict: &item.attributes)
             
-            if let skillLevel = skills.skillSet[item.item.typeId] {
-                item.attributes[Self.attributeSkillLevelId] = .init(id: Self.attributeSkillLevelId,
-                                                                    defaultValue: Float(skillLevel))
-            } else {
-                item.attributes[Self.attributeSkillLevelId] = .init(id: Self.attributeSkillLevelId,
-                                                                    defaultValue: 0)
-            }
+            item.attributes[Self.attributeSkillLevelId] = .init(id: Self.attributeSkillLevelId,
+                                                                defaultValue: Float(skill.trainedSkillLevel))
             
             self.skills.append(item)
         }
