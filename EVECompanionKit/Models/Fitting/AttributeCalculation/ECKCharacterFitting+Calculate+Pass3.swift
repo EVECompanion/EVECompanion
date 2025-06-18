@@ -23,6 +23,10 @@ extension ECKCharacterFitting {
     internal func pass3() {
         let cache = AttributesCache()
         
+        for (index, skill) in self.skills.enumerated() {
+            cache.skills[index]?[Self.attributeSkillLevelId] = skill.attributes[Self.attributeSkillLevelId]?.baseValue
+        }
+        
         calculateValues(ship: ship, itemObject: .ship, cache: cache)
         // TODO: Character value calculation
         for (index, item) in items.enumerated() {
@@ -46,6 +50,10 @@ extension ECKCharacterFitting {
             if let charge = item.charge {
                 storeCachedValues(for: charge, cache: cache.charge[index] ?? [:])
             }
+        }
+        
+        for (index, skill) in self.skills.enumerated() {
+            storeCachedValues(for: skill, cache: cache.skills[index] ?? [:])
         }
     }
     

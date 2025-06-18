@@ -19,6 +19,7 @@ extension ECKCharacterFitting {
             
             item.attributes[Self.attributeSkillLevelId] = .init(id: Self.attributeSkillLevelId,
                                                                 defaultValue: Float(skill.trainedSkillLevel))
+            item.attributes[Self.attributeSkillLevelId]?.value = Float(skill.trainedSkillLevel)
             
             self.skills.append(item)
         }
@@ -120,7 +121,7 @@ extension ECKCharacterFitting {
     }
     
     private func pass1CollectAttributes(for item: ECKItem, attributesDict: inout [AttributeID: FittingAttribute]) {
-        let attributes: [ECKSDEManager.ItemAttribute] = item.itemAttributeCategories.flatMap({ $0.attributes })
+        let attributes = ECKSDEManager.shared.itemAttributes(item.typeId, includeNonUIAttributes: true).flatMap({ $0.attributes })
         
         for attribute in attributes {
             attributesDict[attribute.id] = .init(id: attribute.id, defaultValue: attribute.value)

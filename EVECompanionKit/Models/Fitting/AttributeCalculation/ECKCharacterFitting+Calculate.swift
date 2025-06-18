@@ -193,17 +193,20 @@ extension ECKCharacterFitting {
     }
     
     class FittingEffect {
+        let effectId: Int
         let operation: ModifierOperation
         let penalty: Bool
         let source: ItemObject
         let sourceCategory: ECKDogmaEffect.Category
         let sourceAttributeId: Int
         
-        init(operation: ModifierOperation,
+        init(effectId: Int,
+             operation: ModifierOperation,
              penalty: Bool,
              source: ItemObject,
              sourceCategory: ECKDogmaEffect.Category,
              sourceAttributeId: Int) {
+            self.effectId = effectId
             self.operation = operation
             self.penalty = penalty
             self.source = source

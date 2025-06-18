@@ -143,6 +143,7 @@ extension ECKCharacterFitting {
 }
 
 struct ECKPass2Effect {
+    let effectId: Int
     let modifier: ECKCharacterFitting.Modifier
     let operation: ECKCharacterFitting.ModifierOperation
     let source: ECKCharacterFitting.ItemObject
@@ -163,6 +164,7 @@ fileprivate extension ECKCharacterFittingItem {
             32  // Subsystem
         ]
     }
+    
     func addEffect(attributeId: Int, sourceCategoryId: Int, effect: ECKPass2Effect) {
         
         var attribute: ECKCharacterFitting.FittingAttribute
@@ -181,7 +183,8 @@ fileprivate extension ECKCharacterFittingItem {
         let penalty = penaltyExemptCategories.contains(sourceCategoryId) == false
         && ECKSDEManager.shared.getAttribute(id: attributeId).stackable == false
         
-        let effect = ECKCharacterFitting.FittingEffect(operation: effect.operation,
+        let effect = ECKCharacterFitting.FittingEffect(effectId: effect.effectId,
+                                                       operation: effect.operation,
                                                        penalty: penalty,
                                                        source: effect.source,
                                                        sourceCategory: effect.sourceCategory,
@@ -255,7 +258,8 @@ fileprivate extension ECKCharacterFittingItem {
                     continue
                 }
                 
-                collectedEffects.append(.init(modifier: modifier,
+                collectedEffects.append(.init(effectId: effect.id,
+                                              modifier: modifier,
                                               operation: operation,
                                               source: object,
                                               sourceCategory: effect.category,

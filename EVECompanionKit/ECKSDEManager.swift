@@ -904,7 +904,7 @@ public class ECKSDEManager {
     public typealias ItemAttribute = (id: Int, name: String, displayName: String, stackable: Bool, value: Float, unit: EVEUnit?)
     public typealias ItemAttributeCategory = (name: String, attributes: [ItemAttribute])
     public typealias ItemAttributes = [ItemAttributeCategory]
-    func itemAttributes(_ itemId: Int) -> ItemAttributes {
+    func itemAttributes(_ itemId: Int, includeNonUIAttributes: Bool = false) -> ItemAttributes {
         do {
             let statement = try connection?.prepare("""
                 SELECT
@@ -918,14 +918,16 @@ public class ECKSDEManager {
                 FROM
                     dgmTypeAttributes
                     INNER JOIN dgmAttributeTypes ON dgmTypeAttributes.attributeID = dgmAttributeTypes.attributeID
-                    INNER JOIN dgmAttributeCategories ON dgmAttributeTypes.categoryID = dgmAttributeCategories.categoryID
-                    INNER JOIN eveUnits ON dgmAttributeTypes.unitID = eveUnits.unitID
+                    LEFT OUTER JOIN dgmAttributeCategories ON dgmAttributeTypes.categoryID = dgmAttributeCategories.categoryID
+                    LEFT OUTER JOIN eveUnits ON dgmAttributeTypes.unitID = eveUnits.unitID
                 WHERE
                     dgmTypeAttributes.typeID = ?
+                    \(includeNonUIAttributes ? "" : """
                     AND dgmAttributeTypes.attributeName IS NOT NULL
                     AND dgmAttributeTypes.published = 1
                     AND categoryName != "NULL"
                     AND dgmAttributeTypes.categoryID != 8
+                    """)
                 ORDER BY
                     dgmAttributeCategories.categoryID,
                     dgmAttributeTypes.attributeID
@@ -1032,13 +1034,14 @@ public class ECKSDEManager {
     
     private func parseItemAttributeRow(row: [(any Binding)?]) -> ItemAttribute? {
         guard let attributeId: Int64 = row[0] as? Int64,
-              let attributeName: String = row[1] as? String,
-              let attributeDisplayName: String = row[2] as? String,
               let stackable: Int64 = row[3] as? Int64,
               let attributeValue: Float64 = row[4] as? Float64 else {
                   logger.info("Unexpected item attribute data \(row)")
                   return nil
         }
+        
+        let attributeName: String = (row[1] as? String) ?? ""
+        let attributeDisplayName: String = (row[2] as? String) ?? ""
         
         let unitName: String? = row[6] as? String
         
