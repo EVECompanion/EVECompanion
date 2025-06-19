@@ -220,12 +220,16 @@ extension ECKCharacterFitting {
         self.items.forEach({ $0.attributes.removeAll() })
         self.skills.removeAll()
         
-        pass1(skills: skills)
-        pass2()
-        pass3()
-        pass4()
-        
-        self.objectWillChange.send()
+        Task {
+            pass1(skills: skills)
+            await pass2()
+            await pass3()
+            pass4()
+            
+            await MainActor.run {
+                self.objectWillChange.send()
+            }
+        }
     }
     
 }

@@ -20,60 +20,60 @@ extension ECKCharacterFitting {
         init() { }
     }
     
-    internal func pass3() {
+    internal func pass3() async {
         let cache = AttributesCache()
         
         for (index, skill) in self.skills.enumerated() {
             cache.skills[index]?[Self.attributeSkillLevelId] = skill.attributes[Self.attributeSkillLevelId]?.baseValue
         }
         
-        calculateValues(ship: ship, itemObject: .ship, cache: cache)
+        await calculateValues(ship: ship, itemObject: .ship, cache: cache)
         // TODO: Character value calculation
         for (index, item) in items.enumerated() {
-            calculateValues(ship: ship, itemObject: .item(index: index), cache: cache)
+            await calculateValues(ship: ship, itemObject: .item(index: index), cache: cache)
             if let charge = item.charge {
-                calculateValues(ship: ship, itemObject: .charge(index: index), cache: cache)
+                await calculateValues(ship: ship, itemObject: .charge(index: index), cache: cache)
             }
         }
         
         for (index, skill) in self.skills.enumerated() {
-            calculateValues(ship: ship,
-                            itemObject: .skill(index: index),
-                            cache: cache)
+            await calculateValues(ship: ship,
+                                  itemObject: .skill(index: index),
+                                  cache: cache)
         }
         
         // TODO
-        storeCachedValues(for: ship, cache: cache.ship)
+        await storeCachedValues(for: ship, cache: cache.ship)
         
         for (index, item) in items.enumerated() {
-            storeCachedValues(for: item, cache: cache.items[index] ?? [:])
+            await storeCachedValues(for: item, cache: cache.items[index] ?? [:])
             if let charge = item.charge {
-                storeCachedValues(for: charge, cache: cache.charge[index] ?? [:])
+                await storeCachedValues(for: charge, cache: cache.charge[index] ?? [:])
             }
         }
         
         for (index, skill) in self.skills.enumerated() {
-            storeCachedValues(for: skill, cache: cache.skills[index] ?? [:])
+            await storeCachedValues(for: skill, cache: cache.skills[index] ?? [:])
         }
     }
     
     private func calculateValues(ship: ECKCharacterFittingItem,
                                  itemObject: ECKCharacterFitting.ItemObject,
-                                 cache: AttributesCache) {
+                                 cache: AttributesCache) async {
         for attribute in ship.attributes.values {
-            calculateValue(for: attribute,
-                           ship: ship,
-                           attributeId: attribute.id,
-                           itemObject: itemObject,
-                           cache: cache)
+            await calculateValue(for: attribute,
+                                 ship: ship,
+                                 attributeId: attribute.id,
+                                 itemObject: itemObject,
+                                 cache: cache)
         }
     }
     
-    private func storeCachedValues(for item: ECKCharacterFittingItem, cache: [Int: Float]) {
+    private func storeCachedValues(for item: ECKCharacterFittingItem, cache: [Int: Float]) async {
         for (attributeId, value) in cache {
             if let attribute = item.attributes[attributeId] {
                 attribute.value = value
-            } else if let defaultValue = ECKSDEManager.shared.getAttributeDefaultValue(attributeId: attributeId) {
+            } else if let defaultValue = await ECKAttributeDefaultValueCache.shared.getDefaultValue(for: attributeId) {
                 let fittingAttribute = FittingAttribute(id: attributeId, defaultValue: defaultValue)
                 fittingAttribute.value = value
                 
@@ -90,7 +90,7 @@ extension ECKCharacterFitting {
                                 ship: ECKCharacterFittingItem,
                                 attributeId: Int,
                                 itemObject: ECKCharacterFitting.ItemObject,
-                                cache: AttributesCache) -> Float {
+                                cache: AttributesCache) async -> Float {
         
         var currentValue = attribute.baseValue
         
@@ -164,13 +164,13 @@ extension ECKCharacterFitting {
                 var sourceValue: Float
                 
                 if let sourceAttribute = source.attributes[effect.sourceAttributeId] {
-                    sourceValue = calculateValue(for: sourceAttribute,
-                                                 ship: ship,
-                                                 attributeId: effect.sourceAttributeId,
-                                                 itemObject: effect.source,
-                                                 cache: cache)
+                    sourceValue = await calculateValue(for: sourceAttribute,
+                                                       ship: ship,
+                                                       attributeId: effect.sourceAttributeId,
+                                                       itemObject: effect.source,
+                                                       cache: cache)
                 } else {
-                    guard let defaultValue = ECKSDEManager.shared.getAttributeDefaultValue(attributeId: effect.sourceAttributeId) else {
+                    guard let defaultValue = await ECKAttributeDefaultValueCache.shared.getDefaultValue(for: effect.sourceAttributeId) else {
                         continue
                     }
                     
@@ -245,7 +245,7 @@ extension ECKCharacterFitting {
                     negativePenaltyValues.sort()
                     
                     for (index, value) in negativePenaltyValues.enumerated() {
-                        currentValue *= 1.0 + value * pow(PENALTY_FACTOR, pow(Float(index), 2))
+                        currentValue *= 1.0 + value * pow(PENALTY_FACTOR, Float(Int(pow(Float(index), 2))))
                     }
                     
                 case .modAdd,

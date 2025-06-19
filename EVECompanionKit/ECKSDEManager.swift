@@ -944,10 +944,7 @@ public class ECKSDEManager {
                     continue
                 }
                 
-                guard let categoryName: String = row[5] as? String else {
-                    logger.error("Item Attribute \(attribute.id) has no category.")
-                    continue
-                }
+                let categoryName: String = row[5] as? String ?? ""
                 
                 if let existingAttributeCategory = attributes.enumerated().first(where: { $0.element.name == categoryName }) {
                     attributes[existingAttributeCategory.offset] = (name: categoryName,
