@@ -171,6 +171,7 @@
 		C9B079082C32C9A00059785D /* ECKTokenExpired.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B079072C32C9A00059785D /* ECKTokenExpired.swift */; };
 		C9B449F82BF3A66300968754 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B449F72BF3A66300968754 /* SingleAxisGeometryReader.swift */; };
 		C9B449FB2BF40B5700968754 /* SkillQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B449FA2BF40B5700968754 /* SkillQueueView.swift */; };
+		C9B638BC2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */; };
 		C9B64D482BF0D54C001EF221 /* UserDefaults+Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B64D472BF0D54C001EF221 /* UserDefaults+Keys.swift */; };
 		C9B885342D81C617005A32CA /* CapitalNavigationSolarSystemPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B885332D81C617005A32CA /* CapitalNavigationSolarSystemPickerView.swift */; };
 		C9B8853B2D8228C6005A32CA /* SolarSystemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B8853A2D8228C6005A32CA /* SolarSystemCell.swift */; };
@@ -444,6 +445,7 @@
 		C9B079072C32C9A00059785D /* ECKTokenExpired.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKTokenExpired.swift; sourceTree = "<group>"; };
 		C9B449F72BF3A66300968754 /* SingleAxisGeometryReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleAxisGeometryReader.swift; sourceTree = "<group>"; };
 		C9B449FA2BF40B5700968754 /* SkillQueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillQueueView.swift; sourceTree = "<group>"; };
+		C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKAttributeDefaultValueCache.swift; sourceTree = "<group>"; };
 		C9B64D472BF0D54C001EF221 /* UserDefaults+Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Keys.swift"; sourceTree = "<group>"; };
 		C9B885332D81C617005A32CA /* CapitalNavigationSolarSystemPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalNavigationSolarSystemPickerView.swift; sourceTree = "<group>"; };
 		C9B8853A2D8228C6005A32CA /* SolarSystemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolarSystemCell.swift; sourceTree = "<group>"; };
@@ -833,6 +835,7 @@
 				C92D17BD2C23348B00D6FF5A /* ECKIndustryJobManager.swift */,
 				C92D17CE2C27635C00D6FF5A /* ECKJumpClonesManager.swift */,
 				C91672C12BEAC734009EC580 /* ECKKeychain.swift */,
+				C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */,
 				C9DEF2ED2C14AEA000815AF0 /* ECKLogger.swift */,
 				C9DEDD342DADAA9000781E8A /* ECKMarketGroupManager.swift */,
 				C900820B2DC5FA4A007660AE /* ECKNotificationManager.swift */,
@@ -1629,6 +1632,7 @@
 				C90EFAD22CF9011000691A38 /* ECKImageManager.swift in Sources */,
 				C9FBF7582DACF285007FF7E7 /* ECKAppVariant.swift in Sources */,
 				C9F055AD2DE2502B00340A05 /* ECKServerStatusResource.swift in Sources */,
+				C9B638BC2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift in Sources */,
 				C95977802C28B56E0008F719 /* ECKAssetManager.swift in Sources */,
 				C9955A272C3525080045D925 /* ECKSovereigntyCampaignManager.swift in Sources */,
 				C95F604E2D860F820007A74A /* ECKCapitalJumpPathFinderError.swift in Sources */,

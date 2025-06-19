@@ -9,7 +9,7 @@ import Foundation
 
 extension ECKCharacterFitting {
     
-    internal func pass2() {
+    internal func pass2() async {
         var effects: [ECKPass2Effect] = []
         self.ship.collectEffects(object: .ship, into: &effects)
         // TODO: Implants/Boosters
@@ -27,7 +27,7 @@ extension ECKCharacterFitting {
         for effect in effects {
             let categoryId: Int
             
-            switch effect.target {
+            switch effect.source {
             case .ship:
                 categoryId = ship.item.itemCategory.categoryId
             case .character:
@@ -67,44 +67,44 @@ extension ECKCharacterFitting {
                     continue
                 }
                 
-                target.addEffect(attributeId: effect.targetAttributeId,
-                                 sourceCategoryId: categoryId,
-                                 effect: effect)
+                await target.addEffect(attributeId: effect.targetAttributeId,
+                                       sourceCategoryId: categoryId,
+                                       effect: effect)
             case .locationGroupModifier(groupId: let groupId):
                 if ship.item.itemCategory.groupId == groupId {
-                    ship.addEffect(attributeId: effect.targetAttributeId,
-                                   sourceCategoryId: categoryId,
-                                   effect: effect)
+                    await ship.addEffect(attributeId: effect.targetAttributeId,
+                                         sourceCategoryId: categoryId,
+                                         effect: effect)
                 }
                 
                 for item in items {
                     if item.item.itemCategory.groupId == groupId {
-                        item.addEffect(attributeId: effect.targetAttributeId,
-                                       sourceCategoryId: categoryId,
-                                       effect: effect)
+                        await item.addEffect(attributeId: effect.targetAttributeId,
+                                             sourceCategoryId: categoryId,
+                                             effect: effect)
                     }
                     
                     if let charge = item.charge,
                        charge.item.itemCategory.groupId == groupId {
-                        charge.addEffect(attributeId: effect.targetAttributeId,
-                                         sourceCategoryId: categoryId,
-                                         effect: effect)
+                        await charge.addEffect(attributeId: effect.targetAttributeId,
+                                               sourceCategoryId: categoryId,
+                                               effect: effect)
                     }
                 }
             case .locationModifier:
-                ship.addEffect(attributeId: effect.targetAttributeId,
-                               sourceCategoryId: categoryId,
-                               effect: effect)
+                await ship.addEffect(attributeId: effect.targetAttributeId,
+                                     sourceCategoryId: categoryId,
+                                     effect: effect)
                 
                 for item in items {
-                    item.addEffect(attributeId: effect.targetAttributeId,
-                                   sourceCategoryId: categoryId,
-                                   effect: effect)
-                    
-                    if let charge = item.charge {
-                        charge.addEffect(attributeId: effect.targetAttributeId,
+                    await item.addEffect(attributeId: effect.targetAttributeId,
                                          sourceCategoryId: categoryId,
                                          effect: effect)
+                    
+                    if let charge = item.charge {
+                        await charge.addEffect(attributeId: effect.targetAttributeId,
+                                               sourceCategoryId: categoryId,
+                                               effect: effect)
                     }
                 }
                 
@@ -114,25 +114,25 @@ extension ECKCharacterFitting {
                 for attributeId in [182, 183, 184, 1285, 1289, 1290] {
                     if let attribute = ship.attributes[attributeId],
                        Int(attribute.baseValue) == skillId {
-                        ship.addEffect(attributeId: effect.targetAttributeId,
-                                       sourceCategoryId: categoryId,
-                                       effect: effect)
+                        await ship.addEffect(attributeId: effect.targetAttributeId,
+                                             sourceCategoryId: categoryId,
+                                             effect: effect)
                     }
                     
                     for item in items {
                         if let attribute = item.attributes[attributeId],
                            Int(attribute.baseValue) == skillId {
-                            item.addEffect(attributeId: effect.targetAttributeId,
-                                           sourceCategoryId: categoryId,
-                                           effect: effect)
+                            await item.addEffect(attributeId: effect.targetAttributeId,
+                                                 sourceCategoryId: categoryId,
+                                                 effect: effect)
                         }
                         
                         if let charge = item.charge,
                            let attribute = charge.attributes[attributeId],
-                              Int(attribute.baseValue) == skillId {
-                            item.addEffect(attributeId: effect.targetAttributeId,
-                                           sourceCategoryId: categoryId,
-                                           effect: effect)
+                           Int(attribute.baseValue) == skillId {
+                            await item.addEffect(attributeId: effect.targetAttributeId,
+                                                 sourceCategoryId: categoryId,
+                                                 effect: effect)
                         }
                     }
                 }
@@ -165,13 +165,14 @@ fileprivate extension ECKCharacterFittingItem {
         ]
     }
     
-    func addEffect(attributeId: Int, sourceCategoryId: Int, effect: ECKPass2Effect) {
+    func addEffect(attributeId: Int, sourceCategoryId: Int, effect: ECKPass2Effect) async {
         
         var attribute: ECKCharacterFitting.FittingAttribute
         if let existingAttribute = self.attributes[attributeId] {
             attribute = existingAttribute
         } else {
-            guard let defaultValue = ECKSDEManager.shared.getAttributeDefaultValue(attributeId: attributeId) else {
+            
+            guard let defaultValue = await ECKAttributeDefaultValueCache.shared.getDefaultValue(for: attributeId) else {
                 logger.error("Cannot get default value for attribute ID \(attributeId)")
                 return
             }
