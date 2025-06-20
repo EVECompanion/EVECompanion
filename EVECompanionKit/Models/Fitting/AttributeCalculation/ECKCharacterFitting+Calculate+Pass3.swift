@@ -207,83 +207,83 @@ extension ECKCharacterFitting {
                 } else {
                     nonPenaltyValues.append(sourceValue)
                 }
-                
-                if nonPenaltyValues.isEmpty && positivePenaltyValues.isEmpty && negativePenaltyValues.isEmpty {
-                    continue
-                }
-                
-                switch operation {
-                case .preAssign,
-                     .postAssign:
-                    let attribute = ECKSDEManager.shared.getAttribute(id: attributeId)
-                    if attribute.highIsGood {
-                        currentValue = nonPenaltyValues.max(by: { lhs, rhs in
-                            return abs(lhs) < abs(rhs)
-                        })!
-                    } else {
-                        currentValue = nonPenaltyValues.min(by: { lhs, rhs in
-                            return abs(lhs) < abs(rhs)
-                        })!
-                    }
-                    
-                case .preMul,
-                     .preDiv,
-                     .postMul,
-                     .postDiv,
-                     .postPercent:
-                    for value in nonPenaltyValues {
-                        currentValue *= 1.0 + value
-                    }
-                    
-                    positivePenaltyValues.sort()
-                    positivePenaltyValues.reverse()
-                    
-                    for (index, value) in positivePenaltyValues.enumerated() {
-                        currentValue *= 1.0 + value * pow(PENALTY_FACTOR, pow(Float(index), 2))
-                    }
-                    
-                    negativePenaltyValues.sort()
-                    
-                    for (index, value) in negativePenaltyValues.enumerated() {
-                        currentValue *= 1.0 + value * pow(PENALTY_FACTOR, Float(Int(pow(Float(index), 2))))
-                    }
-                    
-                case .modAdd,
-                     .modSub:
-                    for value in nonPenaltyValues {
-                        currentValue += value
-                    }
-                }
             }
             
-            switch itemObject {
-            case .ship:
-                cache.ship[attributeId] = currentValue
-            case .character:
-                ()
-            case .charge(let index):
-                if cache.charge[index] != nil {
-                    cache.charge[index]?[attributeId] = currentValue
-                } else {
-                    cache.charge[index] = [attributeId: currentValue]
-                }
-            case .item(let index):
-                if cache.items[index] != nil {
-                    cache.items[index]?[attributeId] = currentValue
-                } else {
-                    cache.items[index] = [attributeId: currentValue]
-                }
-            case .skill(let index):
-                if cache.skills[index] != nil {
-                    cache.skills[index]?[attributeId] = currentValue
-                } else {
-                    cache.skills[index] = [attributeId: currentValue]
-                }
-            case .structure:
-                ()
-            case .target:
-                ()
+            if nonPenaltyValues.isEmpty && positivePenaltyValues.isEmpty && negativePenaltyValues.isEmpty {
+                continue
             }
+            
+            switch operation {
+            case .preAssign,
+                 .postAssign:
+                let attribute = ECKSDEManager.shared.getAttribute(id: attributeId)
+                if attribute.highIsGood {
+                    currentValue = nonPenaltyValues.max(by: { lhs, rhs in
+                        return abs(lhs) < abs(rhs)
+                    })!
+                } else {
+                    currentValue = nonPenaltyValues.min(by: { lhs, rhs in
+                        return abs(lhs) < abs(rhs)
+                    })!
+                }
+                
+            case .preMul,
+                 .preDiv,
+                 .postMul,
+                 .postDiv,
+                 .postPercent:
+                for value in nonPenaltyValues {
+                    currentValue *= 1.0 + value
+                }
+                
+                positivePenaltyValues.sort()
+                positivePenaltyValues.reverse()
+                
+                for (index, value) in positivePenaltyValues.enumerated() {
+                    currentValue *= 1.0 + value * exp(-pow(Float(index) / 2.67, 2.0))
+                }
+                
+                negativePenaltyValues.sort()
+                
+                for (index, value) in negativePenaltyValues.enumerated() {
+                    currentValue *= 1.0 + value * exp(-pow(Float(index) / 2.67, 2.0))
+                }
+                
+            case .modAdd,
+                 .modSub:
+                for value in nonPenaltyValues {
+                    currentValue += value
+                }
+            }
+        }
+        
+        switch itemObject {
+        case .ship:
+            cache.ship[attributeId] = currentValue
+        case .character:
+            ()
+        case .charge(let index):
+            if cache.charge[index] != nil {
+                cache.charge[index]?[attributeId] = currentValue
+            } else {
+                cache.charge[index] = [attributeId: currentValue]
+            }
+        case .item(let index):
+            if cache.items[index] != nil {
+                cache.items[index]?[attributeId] = currentValue
+            } else {
+                cache.items[index] = [attributeId: currentValue]
+            }
+        case .skill(let index):
+            if cache.skills[index] != nil {
+                cache.skills[index]?[attributeId] = currentValue
+            } else {
+                cache.skills[index] = [attributeId: currentValue]
+            }
+        case .structure:
+            ()
+        case .target:
+            ()
         }
         
         return currentValue
