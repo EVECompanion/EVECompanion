@@ -320,6 +320,7 @@ public class ECKSDEManager {
                              mass: Float?,
                              volume: Float?,
                              capacity: Float?,
+                             radius: Float?,
                              iconId: Int?)
     
     static let dummyFetchedItem: FetchedItem = (typeId: 0,
@@ -328,10 +329,11 @@ public class ECKSDEManager {
                                                 mass: nil,
                                                 volume: nil,
                                                 capacity: nil,
+                                                radius: nil,
                                                 iconId: nil)
     
     internal func getItem(typeId: Int) -> FetchedItem {
-        let statement = try? connection?.prepare("SELECT typeID, typeName, description, mass, volume, capacity, iconID FROM invTypes WHERE typeID = ?", typeId)
+        let statement = try? connection?.prepare("SELECT typeID, typeName, description, mass, volume, capacity, radius, iconID FROM invTypes WHERE typeID = ?", typeId)
         
         let result = try? statement?.run().makeIterator().failableNext()
         
@@ -353,6 +355,7 @@ public class ECKSDEManager {
                     mass, 
                     volume, 
                     capacity, 
+                    radius, 
                     iconID
                 FROM
                     invTypes
@@ -388,6 +391,7 @@ public class ECKSDEManager {
                     mass, 
                     volume, 
                     capacity, 
+                    radius, 
                     iconID
                 FROM
                     invTypes
@@ -442,8 +446,15 @@ public class ECKSDEManager {
             capacity = nil
         }
         
+        let radius: Float?
+        if let radiusFloat = row[6] as? Float64 {
+            radius = Float(radiusFloat)
+        } else {
+            radius = nil
+        }
+        
         let iconID: Int?
-        if let iconIDInt = row[6] as? Int64 {
+        if let iconIDInt = row[7] as? Int64 {
             iconID = Int(iconIDInt)
         } else {
             iconID = nil
@@ -455,6 +466,7 @@ public class ECKSDEManager {
                 mass,
                 volume,
                 capacity,
+                radius,
                 iconID)
     }
     

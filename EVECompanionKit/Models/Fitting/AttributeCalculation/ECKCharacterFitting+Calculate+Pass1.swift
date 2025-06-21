@@ -139,10 +139,9 @@ extension ECKCharacterFitting {
             attributesDict[Self.attributeVolumeId] = .init(id: Self.attributeVolumeId, defaultValue: volume)
         }
         
-        // TODO
-//        if let radius = item.radius {
-//            attributesDict[Self.attributeRadiusId] = .init(id: Self.attributeRadiusId, defaultValue: radius)
-//        }
+        if let radius = item.radius {
+            attributesDict[Self.attributeRadiusId] = .init(id: Self.attributeRadiusId, defaultValue: radius)
+        }
     }
     
 }
