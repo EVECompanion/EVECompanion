@@ -22,6 +22,7 @@ public final class ECKItem: Decodable, Identifiable, @unchecked Sendable, Hashab
     public let mass: Float?
     public let volume: Float?
     public let capacity: Float?
+    public let radius: Float?
     public let iconId: Int?
     
     public var category: String {
@@ -81,6 +82,7 @@ public final class ECKItem: Decodable, Identifiable, @unchecked Sendable, Hashab
         self.mass = itemData.mass
         self.volume = itemData.volume
         self.capacity = itemData.capacity
+        self.radius = itemData.radius
         self.iconId = itemData.iconId
     }
     

@@ -31,12 +31,12 @@ extension ECKCharacterFitting {
         // TODO: Character value calculation
         for (index, item) in items.enumerated() {
             await calculateValues(ship: ship, itemObject: .item(index: index), cache: cache)
-            if let charge = item.charge {
+            if item.charge != nil {
                 await calculateValues(ship: ship, itemObject: .charge(index: index), cache: cache)
             }
         }
         
-        for (index, skill) in self.skills.enumerated() {
+        for (index, _) in self.skills.enumerated() {
             await calculateValues(ship: ship,
                                   itemObject: .skill(index: index),
                                   cache: cache)
