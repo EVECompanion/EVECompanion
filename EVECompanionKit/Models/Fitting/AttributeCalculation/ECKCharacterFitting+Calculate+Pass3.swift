@@ -28,7 +28,7 @@ extension ECKCharacterFitting {
         }
         
         await calculateValues(ship: ship, itemObject: .ship, cache: cache)
-        // TODO: Character value calculation
+        // TODO: Implants/Boosters
         for (index, item) in items.enumerated() {
             await calculateValues(ship: ship, itemObject: .item(index: index), cache: cache)
             if item.charge != nil {
@@ -36,13 +36,12 @@ extension ECKCharacterFitting {
             }
         }
         
-        for (index, _) in self.skills.enumerated() {
+        for index in self.skills.indices {
             await calculateValues(ship: ship,
                                   itemObject: .skill(index: index),
                                   cache: cache)
         }
         
-        // TODO
         await storeCachedValues(for: ship, cache: cache.ship)
         
         for (index, item) in items.enumerated() {

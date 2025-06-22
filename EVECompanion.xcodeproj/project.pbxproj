@@ -172,6 +172,9 @@
 		C9B449F82BF3A66300968754 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B449F72BF3A66300968754 /* SingleAxisGeometryReader.swift */; };
 		C9B449FB2BF40B5700968754 /* SkillQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B449FA2BF40B5700968754 /* SkillQueueView.swift */; };
 		C9B638BC2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */; };
+		C9B638C12E088B3200E9F6F4 /* FittingDetailModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B638C02E088B3200E9F6F4 /* FittingDetailModulesView.swift */; };
+		C9B638C32E088B6200E9F6F4 /* FittingDetailDronesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B638C22E088B6200E9F6F4 /* FittingDetailDronesView.swift */; };
+		C9B638C62E08920C00E9F6F4 /* FittingResistancesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B638C52E08920C00E9F6F4 /* FittingResistancesView.swift */; };
 		C9B64D482BF0D54C001EF221 /* UserDefaults+Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B64D472BF0D54C001EF221 /* UserDefaults+Keys.swift */; };
 		C9B885342D81C617005A32CA /* CapitalNavigationSolarSystemPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B885332D81C617005A32CA /* CapitalNavigationSolarSystemPickerView.swift */; };
 		C9B8853B2D8228C6005A32CA /* SolarSystemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B8853A2D8228C6005A32CA /* SolarSystemCell.swift */; };
@@ -446,6 +449,9 @@
 		C9B449F72BF3A66300968754 /* SingleAxisGeometryReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleAxisGeometryReader.swift; sourceTree = "<group>"; };
 		C9B449FA2BF40B5700968754 /* SkillQueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillQueueView.swift; sourceTree = "<group>"; };
 		C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKAttributeDefaultValueCache.swift; sourceTree = "<group>"; };
+		C9B638C02E088B3200E9F6F4 /* FittingDetailModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDetailModulesView.swift; sourceTree = "<group>"; };
+		C9B638C22E088B6200E9F6F4 /* FittingDetailDronesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDetailDronesView.swift; sourceTree = "<group>"; };
+		C9B638C52E08920C00E9F6F4 /* FittingResistancesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingResistancesView.swift; sourceTree = "<group>"; };
 		C9B64D472BF0D54C001EF221 /* UserDefaults+Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Keys.swift"; sourceTree = "<group>"; };
 		C9B885332D81C617005A32CA /* CapitalNavigationSolarSystemPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalNavigationSolarSystemPickerView.swift; sourceTree = "<group>"; };
 		C9B8853A2D8228C6005A32CA /* SolarSystemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolarSystemCell.swift; sourceTree = "<group>"; };
@@ -1047,6 +1053,30 @@
 			path = SkillQueue;
 			sourceTree = "<group>";
 		};
+		C9B638BE2E088B1F00E9F6F4 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				C9B638C02E088B3200E9F6F4 /* FittingDetailModulesView.swift */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		C9B638BF2E088B2500E9F6F4 /* Drones */ = {
+			isa = PBXGroup;
+			children = (
+				C9B638C22E088B6200E9F6F4 /* FittingDetailDronesView.swift */,
+			);
+			path = Drones;
+			sourceTree = "<group>";
+		};
+		C9B638C42E0891FD00E9F6F4 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				C9B638C52E08920C00E9F6F4 /* FittingResistancesView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		C9B885322D81C60B005A32CA /* SolarSystemPicker */ = {
 			isa = PBXGroup;
 			children = (
@@ -1203,6 +1233,9 @@
 		C9F055C22DE34D5400340A05 /* Detail */ = {
 			isa = PBXGroup;
 			children = (
+				C9B638C42E0891FD00E9F6F4 /* Components */,
+				C9B638BF2E088B2500E9F6F4 /* Drones */,
+				C9B638BE2E088B1F00E9F6F4 /* Modules */,
 				C9F055C52DE3AAD700340A05 /* Info */,
 				C9F055C32DE34D5B00340A05 /* FittingDetailView.swift */,
 			);
@@ -1442,6 +1475,7 @@
 				C9B885342D81C617005A32CA /* CapitalNavigationSolarSystemPickerView.swift in Sources */,
 				C92F9C992D8A0F6300306DD7 /* CapitalNavigationTabView.swift in Sources */,
 				C9CA6BA02C14E2740057F290 /* IncursionsView.swift in Sources */,
+				C9B638C12E088B3200E9F6F4 /* FittingDetailModulesView.swift in Sources */,
 				C99528D12BEE0CEB00CA6E06 /* CharacterDetailView.swift in Sources */,
 				C99528D42BEE102E00CA6E06 /* EnvironmentValues.swift in Sources */,
 				C9F055C72DE3AAE100340A05 /* FittingDetailInfoView.swift in Sources */,
@@ -1466,6 +1500,7 @@
 				C996A5E82BF2B8340038277C /* ContractListCell.swift in Sources */,
 				C9E6F7E12DA45E7D00573E80 /* MarketGroupsView.swift in Sources */,
 				C9C87AD12D9E783A00EF5D45 /* ItemAttributeCell.swift in Sources */,
+				C9B638C32E088B6200E9F6F4 /* FittingDetailDronesView.swift in Sources */,
 				C952BC952BEC12C80070C504 /* CharacterListView.swift in Sources */,
 				C9955A2A2C3528370045D925 /* SovereigntyCampaignsView.swift in Sources */,
 				C98484012D7F7CFB0076016B /* CapitalNavigationView.swift in Sources */,
@@ -1496,6 +1531,7 @@
 				C9955A2C2C35297D0045D925 /* SovereigntyCampaignCell.swift in Sources */,
 				C959777E2C28B3680008F719 /* AssetsListView.swift in Sources */,
 				C952624F2BFA7B680014B5F5 /* MailCreateView.swift in Sources */,
+				C9B638C62E08920C00E9F6F4 /* FittingResistancesView.swift in Sources */,
 				C96430B12CC7AE0D00E8D6A6 /* PlanetaryColonyPinView.swift in Sources */,
 				C9FD52E12C01D25D0084E5E1 /* WalletJournalView.swift in Sources */,
 				C99750A82C14884600DE5B96 /* MarketOrdersView.swift in Sources */,

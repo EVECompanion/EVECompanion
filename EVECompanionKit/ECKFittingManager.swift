@@ -27,7 +27,11 @@ public class ECKFittingManager: ObservableObject {
     public func loadFittings() async {
         guard UserDefaults.standard.isDemoModeEnabled == false && isPreview == false else {
             self.fittings = [
-                // TODO
+                .init(description: "",
+                      fittingId: 0,
+                      items: [],
+                      name: "Avatar",
+                      ship: .init(typeId: 11567))
             ]
             self.loadingState = .ready
             return

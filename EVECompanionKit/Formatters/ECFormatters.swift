@@ -159,12 +159,41 @@ public struct ECFormatters {
         return formatter.string(from: date)
     }
     
-    public static func attributeValue(_ value: Float) -> String {
+    public static func attributeValue(_ value: Float, maximumFractionDigits: Int = 3) -> String {
         let formatter = NumberFormatter()
-        formatter.maximumFractionDigits = 3
+        formatter.maximumFractionDigits = maximumFractionDigits
         formatter.usesGroupingSeparator = true
         formatter.groupingSeparator = " "
         return formatter.string(for: value) ?? value.description
+    }
+    
+    public static func hitpointsValue(_ value: Float) -> String {
+        let formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 0
+        formatter.usesGroupingSeparator = true
+        formatter.groupingSeparator = " "
+        
+        let shortenedNumber: Float
+        let multiplier: String
+        switch value {
+        case 1_000_000_000...:
+            shortenedNumber = value / 1_000_000_000
+            multiplier = "B"
+        case 1_000_000...:
+            shortenedNumber = value / 1_000_000
+            multiplier = "M"
+        case 1_000...:
+            shortenedNumber = value / 1_000
+            multiplier = "K"
+        case 0...:
+            shortenedNumber = value
+            multiplier = ""
+        default:
+            shortenedNumber = value
+            multiplier = ""
+        }
+        
+        return (formatter.string(for: shortenedNumber) ?? value.description) + multiplier
     }
     
 }
