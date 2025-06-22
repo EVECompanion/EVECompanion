@@ -65,7 +65,7 @@ extension EVEUnit {
         case .megawatts:
             return ECFormatters.attributeValue(value) + " MW"
         case .inverseAbsolutePercent:
-            return ECFormatters.attributeValue(100 - (value * 100)) + "%"
+            return ECFormatters.attributeValue(100 - (value * 100), maximumFractionDigits: 1) + "%"
         case .modifierPercent:
             let result = ECFormatters.attributeValue(100 - (value * 100)) + "%"
             if value >= 1 {
@@ -83,7 +83,7 @@ extension EVEUnit {
         case .radiansPerSecond:
             return value.description
         case .hitpoints:
-            return ECFormatters.attributeValue(value) + " HP"
+            return ECFormatters.hitpointsValue(value) + " HP"
         case .capacitorUnits:
             return ECFormatters.attributeValue(value) + " GJ"
         case .groupId:

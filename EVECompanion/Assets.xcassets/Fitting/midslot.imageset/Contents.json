@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Icon_fit_medium.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

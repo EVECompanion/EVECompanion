@@ -20,13 +20,16 @@ struct FittingDetailInfoView: View {
     
     var body: some View {
         List {
+            if let resistances = fitting.resistances {
+                Section("Resistances") {
+                    FittingResistancesView(resistances: resistances)
+                }
+            }
+            
             ForEach(fitting.fittingAttributes, id: \.attribute.id) { attribute in
                 ItemAttributeCell(attribute: attribute.attribute,
                                   fittingAttribute: attribute.fittingAttribute)
             }
-        }
-        .task {
-            fitting.calculateAttributes(skills: character.skills ?? .empty)
         }
     }
     

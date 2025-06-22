@@ -33,8 +33,8 @@ struct FittingDetailView: View {
                 Text("Info").tag(FittingDetailTab.info)
                 Text("Modules").tag(FittingDetailTab.modules)
                 Text("Drones").tag(FittingDetailTab.drones)
-                Text("Implants").tag(FittingDetailTab.implants)
-                Text("Cargo").tag(FittingDetailTab.cargo)
+//                Text("Implants").tag(FittingDetailTab.implants)
+//                Text("Cargo").tag(FittingDetailTab.cargo)
             }
             .pickerStyle(.segmented)
             .padding(.horizontal, 10)
@@ -43,12 +43,19 @@ struct FittingDetailView: View {
                 FittingDetailInfoView(character: character, fitting: fitting)
                     .tag(FittingDetailTab.info)
                 
-                Text("Module Stuff")
+                FittingDetailModulesView(character: character, fitting: fitting)
                     .tag(FittingDetailTab.modules)
                 
+                FittingDetailDronesView(character: character, fitting: fitting)
+                    .tag(FittingDetailTab.drones)
+                
             }
+            .animation(.spring, value: selectedTab)
         }
         .tabViewStyle(.page)
+        .task {
+            fitting.calculateAttributes(skills: character.skills ?? .empty)
+        }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(fitting.name)
     }

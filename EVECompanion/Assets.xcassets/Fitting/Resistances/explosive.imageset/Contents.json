@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Icon_resist_exp.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
