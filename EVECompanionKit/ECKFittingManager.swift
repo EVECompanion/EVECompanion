@@ -45,7 +45,10 @@ public class ECKFittingManager: ObservableObject {
         
         let resource = ECKCharacterFittingsResource(token: character.token)
         do {
-            self.fittings = try await ECKWebService().loadResource(resource: resource).response
+            let esiFittings = try await ECKWebService().loadResource(resource: resource).response
+            self.fittings = esiFittings.map({ fitting in
+                return .init(fitting: fitting)
+            })
             loadingState = .ready
         } catch {
             logger.error("Error while fetching character fittings \(error)")

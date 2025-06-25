@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Icon_sensor_resolution.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

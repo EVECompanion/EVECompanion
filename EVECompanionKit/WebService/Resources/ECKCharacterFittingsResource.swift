@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKCharacterFittingsResource: ECKWebResource<[ECKCharacterFitting]> {
+class ECKCharacterFittingsResource: ECKWebResource<[ESIFitting]> {
     
     init(token: ECKToken) {
         super.init(host: .esi,

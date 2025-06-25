@@ -15,6 +15,11 @@ public class ECKCharacterFittingItem: Decodable, Hashable {
         case item = "type_id"
     }
     
+    // TODO: Remove this
+    public var id: UUID {
+        return UUID()
+    }
+    
     public let flag: ECKItemLocationFlag
     public let quantity: Int
     public let item: ECKItem
@@ -24,6 +29,24 @@ public class ECKCharacterFittingItem: Decodable, Hashable {
     internal var attributes: [ECKCharacterFitting.AttributeID: ECKCharacterFitting.FittingAttribute] = [:]
     internal var state: ECKDogmaEffect.Category = .online
     internal var maxState: ECKDogmaEffect.Category = .passive
+    
+    // TODO: Remove, Debug Only!
+    public var fittingAttributes: [(attribute: ECKSDEManager.ItemAttribute, fittingAttribute: ECKCharacterFitting.FittingAttribute)] {
+        var fittingAttributes: [ECKCharacterFitting.FittingAttribute] = Array(attributes.values)
+        fittingAttributes.sort(by: { $0.id < $1.id })
+        let result: [(attribute: ECKSDEManager.ItemAttribute, fittingAttribute: ECKCharacterFitting.FittingAttribute)] = fittingAttributes.map { fittingAttribute in
+            let attribute = ECKSDEManager.shared.itemAttribute(fittingAttribute.id)
+            return (attribute: attribute, fittingAttribute: fittingAttribute)
+        }.compactMap { attributes in
+            guard let attribute = attributes.attribute else {
+                return nil
+            }
+            
+            return (attribute: attribute, fittingAttribute: attributes.fittingAttribute)
+        }
+        
+        return result
+    }
     
     public required init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)

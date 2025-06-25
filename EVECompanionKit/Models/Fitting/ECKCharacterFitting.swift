@@ -16,11 +16,24 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     static let attributeLowSlotsId: Int = 12
     static let attributeMidSlotsId: Int = 13
     static let attributeHighSlotsId: Int = 14
+    static let attributePowerLoadId: Int = 15
+    static let attributePowerGridUsageId: Int = 30
     static let attributeCapacityId: Int = 38
+    static let attributeCpuLoadId: Int = 49
+    static let attributeCpuUsageId: Int = 50
+    static let attributeInertiaModifierId: Int = 70
+    static let attributeMaximumTargetingRange: Int = 76
+    static let attributeLauncherHardpointsId: Int = 101
+    static let attributeTurrentHardpointsId: Int = 102
     static let attributeStructureKineticResistId: Int = 109
     static let attributeStructureThermalResistId: Int = 110
     static let attributeStructureExplosiveResistId: Int = 111
     static let attributeStructureEMResistId: Int = 113
+    static let attributeMaximumLockedTargetsId: Int = 192
+    static let attributeRadarSensorStrengthId: Int = 208
+    static let attributeLadarSensorStrengthId: Int = 209
+    static let attributeMagnetometricSensorStrengthId: Int = 210
+    static let attributeGravimetricSensorStrengthId: Int = 211
     static let attributeShieldHPId: Int = 263
     static let attributeArmorHPId: Int = 265
     static let attributeArmorKineticResistId: Int = 269
@@ -34,14 +47,13 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     static let attributeVolumeId: Int = 161
     static let attributeRadiusId: Int = 162
     static let attributeSkillLevelId: Int = 280
-    
-    private enum CodingKeys: String, CodingKey {
-        case description
-        case fittingId = "fitting_id"
-        case items
-        case name
-        case ship = "ship_type_id"
-    }
+    static let attributeSignatureRadiusId: Int = 552
+    static let attributeScanResolutionId: Int = 564
+    static let attributeWarpSpeedMultiplierId: Int = 600
+    static let attributeRigSlotsId: Int = 1137
+    static let attributeRigSlotsId2: Int = 1154
+    static let attributeWarpSpeedId: Int = 1281
+    static let attributeSubsystemSlots: Int = 1367
     
     public var id: Int {
         return fittingId
@@ -49,9 +61,108 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     
     public let description: String
     public let fittingId: Int
-    public var items: [ECKCharacterFittingItem]
+    public var items: [ECKCharacterFittingItem] {
+        return highSlotModules
+        + midSlotModules
+        + lowSlotModules
+        + rigs
+        + subsystems
+    }
     public let name: String
     public let ship: ECKCharacterFittingItem
+    
+    public var highSlotModules: [ECKCharacterFittingItem]
+    public var midSlotModules: [ECKCharacterFittingItem]
+    public var lowSlotModules: [ECKCharacterFittingItem]
+    public var rigs: [ECKCharacterFittingItem]
+    public var subsystems: [ECKCharacterFittingItem]
+    
+    public var launcherHardPoints: Int {
+        return Int(ship.attributes[Self.attributeLauncherHardpointsId]?.value ?? 0)
+    }
+    
+    public var turretHardPoints: Int {
+        return Int(ship.attributes[Self.attributeTurrentHardpointsId]?.value ?? 0)
+    }
+    
+    public var lowSlots: Int {
+        return Int(ship.attributes[Self.attributeLowSlotsId]?.value ?? 0)
+    }
+    
+    public var midSlots: Int {
+        return Int(ship.attributes[Self.attributeMidSlotsId]?.value ?? 0)
+    }
+    
+    public var highSlots: Int {
+        return Int(ship.attributes[Self.attributeHighSlotsId]?.value ?? 0)
+    }
+    
+    public var rigSlots: Int {
+        return Int(ship.attributes[Self.attributeRigSlotsId]?.value ?? ship.attributes[Self.attributeRigSlotsId2]?.value ?? 0)
+    }
+    
+    public var subsystemSlots: Int {
+        return Int(ship.attributes[Self.attributeSubsystemSlots]?.value ?? 0)
+    }
+    
+    public var mass: Float? {
+        return ship.attributes[Self.attributeMassId]?.value
+    }
+    
+    public var inertiaModifier: Float? {
+        return ship.attributes[Self.attributeInertiaModifierId]?.value
+    }
+    
+    public var cargo: Float? {
+        return ship.attributes[Self.attributeCapacityId]?.value
+    }
+    
+    public var alignTime: Float? {
+        guard let mass,
+              let inertiaModifier else {
+            return nil
+        }
+        
+        return (log(2) * inertiaModifier * mass) / 500000
+    }
+    
+    public var maximumLockedTargets: Float? {
+        return ship.attributes[Self.attributeMaximumLockedTargetsId]?.value
+    }
+    
+    public var scanResolution: Float? {
+        return ship.attributes[Self.attributeScanResolutionId]?.value
+    }
+    
+    public var sensorStrength: Float? {
+        guard ship.attributes.isEmpty == false else {
+            return nil
+        }
+        
+        let radar = ship.attributes[Self.attributeRadarSensorStrengthId]?.value ?? 0
+        let ladar = ship.attributes[Self.attributeLadarSensorStrengthId]?.value ?? 0
+        let magnetometric = ship.attributes[Self.attributeMagnetometricSensorStrengthId]?.value ?? 0
+        let gravimetric = ship.attributes[Self.attributeGravimetricSensorStrengthId]?.value ?? 0
+        
+        return max(radar, ladar, magnetometric, gravimetric)
+    }
+    
+    public var maximumTargetingRange: Float? {
+        return ship.attributes[Self.attributeMaximumTargetingRange]?.value
+    }
+    
+    public var signatureRadius: Float? {
+        return ship.attributes[Self.attributeSignatureRadiusId]?.value
+    }
+    
+    public var warpSpeed: Float? {
+        guard let speed = ship.attributes[Self.attributeWarpSpeedId]?.value,
+              let multiplier = ship.attributes[Self.attributeWarpSpeedMultiplierId]?.value else {
+            return nil
+        }
+        
+        return speed * multiplier
+    }
     
     public static let dummyAvatar: ECKCharacterFitting = {
         let fitting = ECKCharacterFitting(description: "Just my avatar",
@@ -110,6 +221,14 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     
     internal var skills: [ECKCharacterFittingItem] = []
     
+    convenience init(fitting: ESIFitting) {
+        self.init(description: fitting.description,
+                  fittingId: fitting.fittingId,
+                  items: fitting.items,
+                  name: fitting.name,
+                  ship: fitting.ship)
+    }
+    
     init(description: String,
          fittingId: Int,
          items: [ECKCharacterFittingItem],
@@ -117,20 +236,203 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
          ship: ECKItem) {
         self.description = description
         self.fittingId = fittingId
-        self.items = items
+        
+        var highSlotItems: [ECKCharacterFittingItem] = []
+        var midSlotItems: [ECKCharacterFittingItem] = []
+        var lowSlotItems: [ECKCharacterFittingItem] = []
+        var rigs: [ECKCharacterFittingItem] = []
+        var subsystems: [ECKCharacterFittingItem] = []
+        for item in items {
+            switch item.flag {
+            case .unknown:
+                continue
+            case .AssetSafety:
+                continue
+            case .AutoFit:
+                continue
+            case .BoosterBay:
+                continue
+            case .Cargo:
+                continue
+            case .CorporationGoalDeliveries:
+                continue
+            case .CorpseBay:
+                continue
+            case .Deliveries:
+                continue
+            case .DroneBay:
+                // TODO
+                continue
+            case .FighterBay:
+                // TODO
+                continue
+            case .FighterTube0:
+                // TODO
+                continue
+            case .FighterTube1:
+                // TODO
+                continue
+            case .FighterTube2:
+                // TODO
+                continue
+            case .FighterTube3:
+                // TODO
+                continue
+            case .FighterTube4:
+                // TODO
+                continue
+            case .FleetHangar:
+                continue
+            case .FrigateEscapeBay:
+                continue
+            case .Hangar:
+                continue
+            case .HangarAll:
+                continue
+            case .HiSlot0:
+                highSlotItems.append(item)
+            case .HiSlot1:
+                highSlotItems.append(item)
+            case .HiSlot2:
+                highSlotItems.append(item)
+            case .HiSlot3:
+                highSlotItems.append(item)
+            case .HiSlot4:
+                highSlotItems.append(item)
+            case .HiSlot5:
+                highSlotItems.append(item)
+            case .HiSlot6:
+                highSlotItems.append(item)
+            case .HiSlot7:
+                highSlotItems.append(item)
+            case .HiddenModifiers:
+                continue
+            case .Implant:
+                // TODO
+                continue
+            case .LoSlot0:
+                lowSlotItems.append(item)
+            case .LoSlot1:
+                lowSlotItems.append(item)
+            case .LoSlot2:
+                lowSlotItems.append(item)
+            case .LoSlot3:
+                lowSlotItems.append(item)
+            case .LoSlot4:
+                lowSlotItems.append(item)
+            case .LoSlot5:
+                lowSlotItems.append(item)
+            case .LoSlot6:
+                lowSlotItems.append(item)
+            case .LoSlot7:
+                lowSlotItems.append(item)
+            case .Locked:
+                continue
+            case .MedSlot0:
+                midSlotItems.append(item)
+            case .MedSlot1:
+                midSlotItems.append(item)
+            case .MedSlot2:
+                midSlotItems.append(item)
+            case .MedSlot3:
+                midSlotItems.append(item)
+            case .MedSlot4:
+                midSlotItems.append(item)
+            case .MedSlot5:
+                midSlotItems.append(item)
+            case .MedSlot6:
+                midSlotItems.append(item)
+            case .MedSlot7:
+                midSlotItems.append(item)
+            case .MobileDepotHold:
+                continue
+            case .QuafeBay:
+                continue
+            case .RigSlot0:
+                rigs.append(item)
+            case .RigSlot1:
+                rigs.append(item)
+            case .RigSlot2:
+                rigs.append(item)
+            case .RigSlot3:
+                rigs.append(item)
+            case .RigSlot4:
+                rigs.append(item)
+            case .RigSlot5:
+                rigs.append(item)
+            case .RigSlot6:
+                rigs.append(item)
+            case .RigSlot7:
+                rigs.append(item)
+            case .ShipHangar:
+                continue
+            case .Skill:
+                continue
+            case .SpecializedAmmoHold:
+                continue
+            case .SpecializedAsteroidHold:
+                continue
+            case .SpecializedCommandCenterHold:
+                continue
+            case .SpecializedFuelBay:
+                continue
+            case .SpecializedGasHold:
+                continue
+            case .SpecializedIceHold:
+                continue
+            case .SpecializedIndustrialShipHold:
+                continue
+            case .SpecializedLargeShipHold:
+                continue
+            case .SpecializedMaterialBay:
+                continue
+            case .SpecializedMediumShipHold:
+                continue
+            case .SpecializedMineralHold:
+                continue
+            case .SpecializedOreHold:
+                continue
+            case .SpecializedPlanetaryCommoditiesHold:
+                continue
+            case .SpecializedSalvageHold:
+                continue
+            case .SpecializedShipHold:
+                continue
+            case .SpecializedSmallShipHold:
+                continue
+            case .StructureDeedBay:
+                continue
+            case .SubSystemBay:
+                // TODO?
+                continue
+            case .SubSystemSlot0:
+                subsystems.append(item)
+            case .SubSystemSlot1:
+                subsystems.append(item)
+            case .SubSystemSlot2:
+                subsystems.append(item)
+            case .SubSystemSlot3:
+                subsystems.append(item)
+            case .SubSystemSlot4:
+                subsystems.append(item)
+            case .SubSystemSlot5:
+                subsystems.append(item)
+            case .SubSystemSlot6:
+                subsystems.append(item)
+            case .SubSystemSlot7:
+                subsystems.append(item)
+            case .Unlocked:
+                continue
+            case .Wardrobe:
+                continue
+            }
+        }
+        self.highSlotModules = highSlotItems
+        self.midSlotModules = midSlotItems
+        self.lowSlotModules = lowSlotItems
+        self.rigs = rigs
+        self.subsystems = subsystems
         self.name = name
-        self.ship = .init(flag: .ShipHangar,
-                          quantity: 1,
-                          item: ship)
-    }
-    
-    public required init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.description = try container.decode(String.self, forKey: .description)
-        self.fittingId = try container.decode(Int.self, forKey: .fittingId)
-        self.items = try container.decode([ECKCharacterFittingItem].self, forKey: .items)
-        self.name = try container.decode(String.self, forKey: .name)
-        let ship = try container.decode(ECKItem.self, forKey: .ship)
         self.ship = .init(flag: .ShipHangar,
                           quantity: 1,
                           item: ship)
