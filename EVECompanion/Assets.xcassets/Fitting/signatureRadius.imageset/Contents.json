@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Icon_ship_sig.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

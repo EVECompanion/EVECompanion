@@ -175,6 +175,7 @@
 		C9B638C12E088B3200E9F6F4 /* FittingDetailModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B638C02E088B3200E9F6F4 /* FittingDetailModulesView.swift */; };
 		C9B638C32E088B6200E9F6F4 /* FittingDetailDronesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B638C22E088B6200E9F6F4 /* FittingDetailDronesView.swift */; };
 		C9B638C62E08920C00E9F6F4 /* FittingResistancesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B638C52E08920C00E9F6F4 /* FittingResistancesView.swift */; };
+		C9B638C82E091EC900E9F6F4 /* ESIFitting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B638C72E091EC900E9F6F4 /* ESIFitting.swift */; };
 		C9B64D482BF0D54C001EF221 /* UserDefaults+Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B64D472BF0D54C001EF221 /* UserDefaults+Keys.swift */; };
 		C9B885342D81C617005A32CA /* CapitalNavigationSolarSystemPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B885332D81C617005A32CA /* CapitalNavigationSolarSystemPickerView.swift */; };
 		C9B8853B2D8228C6005A32CA /* SolarSystemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B8853A2D8228C6005A32CA /* SolarSystemCell.swift */; };
@@ -452,6 +453,7 @@
 		C9B638C02E088B3200E9F6F4 /* FittingDetailModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDetailModulesView.swift; sourceTree = "<group>"; };
 		C9B638C22E088B6200E9F6F4 /* FittingDetailDronesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDetailDronesView.swift; sourceTree = "<group>"; };
 		C9B638C52E08920C00E9F6F4 /* FittingResistancesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingResistancesView.swift; sourceTree = "<group>"; };
+		C9B638C72E091EC900E9F6F4 /* ESIFitting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ESIFitting.swift; sourceTree = "<group>"; };
 		C9B64D472BF0D54C001EF221 /* UserDefaults+Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Keys.swift"; sourceTree = "<group>"; };
 		C9B885332D81C617005A32CA /* CapitalNavigationSolarSystemPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalNavigationSolarSystemPickerView.swift; sourceTree = "<group>"; };
 		C9B8853A2D8228C6005A32CA /* SolarSystemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolarSystemCell.swift; sourceTree = "<group>"; };
@@ -1208,6 +1210,7 @@
 				C9F055C82DE3B89F00340A05 /* ECKCharacterFitting+Stats.swift */,
 				C9F055B82DE2F79200340A05 /* ECKCharacterFittingItem.swift */,
 				C9D094F72DE5110A00715479 /* Utils */,
+				C9B638C72E091EC900E9F6F4 /* ESIFitting.swift */,
 			);
 			path = Fitting;
 			sourceTree = "<group>";
@@ -1613,6 +1616,7 @@
 				C91672AB2BEA01E1009EC580 /* ECKAPIError.swift in Sources */,
 				C91672B62BEA9CC0009EC580 /* ECKCreateTokenResource.swift in Sources */,
 				C9BA46662DAFAB5200396025 /* String.swift in Sources */,
+				C9B638C82E091EC900E9F6F4 /* ESIFitting.swift in Sources */,
 				C9D095042DE7976200715479 /* ECKCharacterFitting+Calculate+Pass4.swift in Sources */,
 				C96430882CC445CF00E8D6A6 /* ECKPlanetaryColonyManager.swift in Sources */,
 				C9B64D482BF0D54C001EF221 /* UserDefaults+Keys.swift in Sources */,

@@ -27,17 +27,18 @@ extension ECKCharacterFitting {
             cache.skills[index]?[Self.attributeSkillLevelId] = skill.attributes[Self.attributeSkillLevelId]?.baseValue
         }
         
-        await calculateValues(ship: ship, itemObject: .ship, cache: cache)
+        await calculateValues(item: ship, ship: ship, itemObject: .ship, cache: cache)
         // TODO: Implants/Boosters
         for (index, item) in items.enumerated() {
-            await calculateValues(ship: ship, itemObject: .item(index: index), cache: cache)
-            if item.charge != nil {
-                await calculateValues(ship: ship, itemObject: .charge(index: index), cache: cache)
+            await calculateValues(item: item, ship: ship, itemObject: .item(index: index), cache: cache)
+            if let charge = item.charge {
+                await calculateValues(item: charge, ship: ship, itemObject: .charge(index: index), cache: cache)
             }
         }
         
-        for index in self.skills.indices {
-            await calculateValues(ship: ship,
+        for (index, skill) in self.skills.enumerated() {
+            await calculateValues(item: skill,
+                                  ship: ship,
                                   itemObject: .skill(index: index),
                                   cache: cache)
         }
@@ -56,10 +57,11 @@ extension ECKCharacterFitting {
         }
     }
     
-    private func calculateValues(ship: ECKCharacterFittingItem,
+    private func calculateValues(item: ECKCharacterFittingItem,
+                                 ship: ECKCharacterFittingItem,
                                  itemObject: ECKCharacterFitting.ItemObject,
                                  cache: AttributesCache) async {
-        for attribute in ship.attributes.values {
+        for attribute in item.attributes.values {
             await calculateValue(for: attribute,
                                  ship: ship,
                                  attributeId: attribute.id,

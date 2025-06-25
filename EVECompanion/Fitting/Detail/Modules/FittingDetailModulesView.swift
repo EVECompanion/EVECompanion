@@ -20,7 +20,33 @@ struct FittingDetailModulesView: View {
     
     var body: some View {
         List {
-            
+            section(numberOfSlots: fitting.subsystemSlots, title: "Subsystems", icon: "Fitting/highslot") // TODO: Icon
+            section(numberOfSlots: fitting.highSlots, title: "High Slots", icon: "Fitting/highslot")
+            section(numberOfSlots: fitting.midSlots, title: "Mid Slots", icon: "Fitting/midslot")
+            section(numberOfSlots: fitting.lowSlots, title: "Low Slots", icon: "Fitting/lowslot")
+            section(numberOfSlots: fitting.rigSlots, title: "Rigs", icon: "Fitting/rigslot")
+        }
+    }
+    
+    @ViewBuilder
+    private func section(numberOfSlots: Int, title: String, icon: String) -> some View {
+        if numberOfSlots > 0 {
+            Section {
+                
+            } header: {
+                sectionHeader(text: title, icon: icon)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func sectionHeader(text: String, icon: String) -> some View {
+        Label {
+            Text(text)
+        } icon: {
+            Image(icon)
+                .resizable()
+                .frame(width: 40, height: 40)
         }
     }
     

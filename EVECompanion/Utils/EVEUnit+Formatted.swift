@@ -83,7 +83,7 @@ extension EVEUnit {
         case .radiansPerSecond:
             return value.description
         case .hitpoints:
-            return ECFormatters.hitpointsValue(value) + " HP"
+            return ECFormatters.shortenedValue(value, maximumFractionDigits: 0) + " HP"
         case .capacitorUnits:
             return ECFormatters.attributeValue(value) + " GJ"
         case .groupId:

@@ -167,9 +167,9 @@ public struct ECFormatters {
         return formatter.string(for: value) ?? value.description
     }
     
-    public static func hitpointsValue(_ value: Float) -> String {
+    public static func shortenedValue(_ value: Float, maximumFractionDigits: Int) -> String {
         let formatter = NumberFormatter()
-        formatter.maximumFractionDigits = 0
+        formatter.maximumFractionDigits = maximumFractionDigits
         formatter.usesGroupingSeparator = true
         formatter.groupingSeparator = " "
         

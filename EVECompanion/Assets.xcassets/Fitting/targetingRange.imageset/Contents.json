@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Icon_target_range.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
