@@ -29,6 +29,8 @@ struct FittingDetailView: View {
     
     var body: some View {
         VStack {
+            FittingStatsView(fitting: fitting)
+            
             Picker("", selection: $selectedTab) {
                 Text("Info").tag(FittingDetailTab.info)
                 Text("Modules").tag(FittingDetailTab.modules)
