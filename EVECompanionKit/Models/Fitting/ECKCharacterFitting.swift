@@ -13,12 +13,14 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     
     static let attributeMassId: Int = 4
     static let attributeStructureHPId: Int = 9
+    static let attributePowerOutput: Int = 11
     static let attributeLowSlotsId: Int = 12
     static let attributeMidSlotsId: Int = 13
     static let attributeHighSlotsId: Int = 14
     static let attributePowerLoadId: Int = 15
     static let attributePowerGridUsageId: Int = 30
     static let attributeCapacityId: Int = 38
+    static let attributeCpuOutputId: Int = 48
     static let attributeCpuLoadId: Int = 49
     static let attributeCpuUsageId: Int = 50
     static let attributeInertiaModifierId: Int = 70
@@ -103,6 +105,22 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     
     public var subsystemSlots: Int {
         return Int(ship.attributes[Self.attributeSubsystemSlots]?.value ?? 0)
+    }
+    
+    public var maxCPU: Float? {
+        return ship.attributes[Self.attributeCpuOutputId]?.value
+    }
+    
+    public var cpuLoad: Float? {
+        return ship.attributes[Self.attributeCpuLoadId]?.value
+    }
+    
+    public var powerOutput: Float? {
+        return ship.attributes[Self.attributePowerOutput]?.value
+    }
+    
+    public var powerLoad: Float? {
+        return ship.attributes[Self.attributePowerLoadId]?.value
     }
     
     public var mass: Float? {
@@ -242,7 +260,7 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
         var lowSlotItems: [ECKCharacterFittingItem] = []
         var rigs: [ECKCharacterFittingItem] = []
         var subsystems: [ECKCharacterFittingItem] = []
-        for item in items {
+        for item in items.sorted(by: { $0.flag.rawValue < $1.flag.rawValue }) {
             switch item.flag {
             case .unknown:
                 continue
