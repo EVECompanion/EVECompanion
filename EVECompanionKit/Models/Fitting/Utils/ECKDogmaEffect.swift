@@ -8,9 +8,9 @@
 import Foundation
 import Yams
 
-class ECKDogmaEffect {
+public class ECKDogmaEffect {
     
-    enum Category: Int {
+    public enum Category: Int {
         
         case passive = 0
         case active = 1
@@ -44,6 +44,27 @@ class ECKDogmaEffect {
                 self = .system
             default:
                 self = .passive
+            }
+        }
+        
+        public var title: String {
+            switch self {
+            case .passive:
+                return "Passive"
+            case .active:
+                return "Active"
+            case .target:
+                return "Target"
+            case .area:
+                return "Area"
+            case .online:
+                return "Online"
+            case .overload:
+                return "Overload"
+            case .dungeon:
+                return "Dungeon"
+            case .system:
+                return "System"
             }
         }
         

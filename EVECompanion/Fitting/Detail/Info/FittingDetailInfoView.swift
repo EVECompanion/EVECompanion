@@ -91,21 +91,6 @@ struct FittingDetailInfoView: View {
                     }
                 }
             }
-            
-            // TODO: Remove, Debug Only!
-            ForEach(fitting.fittingAttributes, id: \.attribute.id) { attribute in
-                ItemAttributeCell(attribute: attribute.attribute,
-                                  fittingAttribute: attribute.fittingAttribute)
-            }
-            
-            ForEach(fitting.items, id: \.id) { item in
-                Section(item.item.name) {
-                    ForEach(item.fittingAttributes, id: \.attribute.id) { attribute in
-                        ItemAttributeCell(attribute: attribute.attribute,
-                                          fittingAttribute: attribute.fittingAttribute)
-                    }
-                }
-            }
         }
     }
     

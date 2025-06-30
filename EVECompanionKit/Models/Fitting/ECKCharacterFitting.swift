@@ -46,6 +46,7 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     static let attributeShieldExplosiveResistId: Int = 272
     static let attributeShieldKineticResistId: Int = 273
     static let attributeShieldThermalResistId: Int = 274
+    static let attributeDroneCapacityId: Int = 283
     static let attributeVolumeId: Int = 161
     static let attributeRadiusId: Int = 162
     static let attributeSkillLevelId: Int = 280
@@ -54,6 +55,8 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     static let attributeWarpSpeedMultiplierId: Int = 600
     static let attributeRigSlotsId: Int = 1137
     static let attributeRigSlotsId2: Int = 1154
+    static let attributeDroneBandwidthId: Int = 1271
+    static let attributeDroneBandwidthNeededId: Int = 1272
     static let attributeWarpSpeedId: Int = 1281
     static let attributeSubsystemSlots: Int = 1367
     
@@ -69,6 +72,7 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
         + lowSlotModules
         + rigs
         + subsystems
+        + drones
     }
     public let name: String
     public let ship: ECKCharacterFittingItem
@@ -78,6 +82,7 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     public var lowSlotModules: [ECKCharacterFittingItem]
     public var rigs: [ECKCharacterFittingItem]
     public var subsystems: [ECKCharacterFittingItem]
+    public var drones: [ECKCharacterFittingItem]
     
     public var launcherHardPoints: Int {
         return Int(ship.attributes[Self.attributeLauncherHardpointsId]?.value ?? 0)
@@ -133,6 +138,38 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     
     public var cargo: Float? {
         return ship.attributes[Self.attributeCapacityId]?.value
+    }
+    
+    public var maxDroneCapacity: Float? {
+        return ship.attributes[Self.attributeDroneCapacityId]?.value
+    }
+    
+    public var usedDroneCapacity: Float? {
+        var result: Float = 0
+        
+        for drone in drones {
+            let volume = drone.attributes[Self.attributeVolumeId]?.value ??
+                         drone.attributes[Self.attributeVolumeId]?.baseValue ?? 0
+            result += volume * Float(drone.quantity)
+        }
+        
+        return result
+    }
+    
+    public var maxDroneBandwidth: Float? {
+        return ship.attributes[Self.attributeDroneBandwidthId]?.value
+    }
+    
+    public var usedDroneBandwidth: Float? {
+        var result: Float = 0
+        
+        for drone in drones {
+            let volume = drone.attributes[Self.attributeDroneBandwidthNeededId]?.value ??
+                         drone.attributes[Self.attributeDroneBandwidthNeededId]?.baseValue ?? 0
+            result += volume * Float(drone.quantity)
+        }
+        
+        return result
     }
     
     public var alignTime: Float? {
@@ -260,6 +297,7 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
         var lowSlotItems: [ECKCharacterFittingItem] = []
         var rigs: [ECKCharacterFittingItem] = []
         var subsystems: [ECKCharacterFittingItem] = []
+        var drones: [ECKCharacterFittingItem] = []
         for item in items.sorted(by: { $0.flag.rawValue < $1.flag.rawValue }) {
             switch item.flag {
             case .unknown:
@@ -279,8 +317,7 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
             case .Deliveries:
                 continue
             case .DroneBay:
-                // TODO
-                continue
+                drones.append(item)
             case .FighterBay:
                 // TODO
                 continue
@@ -450,6 +487,7 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
         self.lowSlotModules = lowSlotItems
         self.rigs = rigs
         self.subsystems = subsystems
+        self.drones = drones
         self.name = name
         self.ship = .init(flag: .ShipHangar,
                           quantity: 1,

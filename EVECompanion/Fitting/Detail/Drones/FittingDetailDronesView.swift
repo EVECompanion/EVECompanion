@@ -20,7 +20,17 @@ struct FittingDetailDronesView: View {
     
     var body: some View {
         List {
-            
+            ForEach(fitting.drones) { drone in 
+                HStack {
+                    ECImage(id: drone.item.typeId, category: .types)
+                        .frame(width: 40, height: 40)
+                    
+                    VStack(alignment: .leading) {
+                        Text("\(drone.quantity)x " + drone.item.name)
+                        Text(drone.state.title)
+                    }
+                }
+            }
         }
     }
     

@@ -33,6 +33,22 @@ struct FittingStatsView: View {
                       unit: "tf",
                       tint: .gray)
             }
+            
+            GridRow {
+                entry(title: "Drone Capacity",
+                      icon: "Fitting/drones",
+                      value: fitting.usedDroneCapacity ?? 0,
+                      maxValue: fitting.maxDroneCapacity ?? 0,
+                      unit: "m³",
+                      tint: .yellow)
+                
+                entry(title: "Drone Bandwidth",
+                      icon: "Fitting/drones",
+                      value: fitting.usedDroneBandwidth ?? 0,
+                      maxValue: fitting.maxDroneBandwidth ?? 0,
+                      unit: "mbit/s",
+                      tint: .blue)
+            }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 5)
@@ -51,13 +67,14 @@ struct FittingStatsView: View {
                     
                     Spacer()
                     
-                    Text("\(ECFormatters.shortenedValue(value, maximumFractionDigits: 1))/\(ECFormatters.shortenedValue(maxValue, maximumFractionDigits: 1))\(unit)")
+                    Text("\(ECFormatters.shortenedValue(value, maximumFractionDigits: 1))/\(ECFormatters.shortenedValue(maxValue, maximumFractionDigits: 1)) \(unit)")
                         .foregroundStyle(.secondary)
                 }
                 .font(.footnote)
             }
-                .progressViewStyle(.linear)
-                .tint(tint)
+            .progressViewStyle(.linear)
+            .animation(.spring, value: value)
+            .tint(tint)
         }
         
     }

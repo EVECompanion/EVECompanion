@@ -22,6 +22,10 @@ struct FittingDetailView: View {
     @State private var selectedTab: FittingDetailTab = .info
     private let character: ECKCharacter
     
+    private var canUseDrones: Bool {
+        return fitting.maxDroneCapacity ?? 0 > 0
+    }
+    
     init(character: ECKCharacter, fitting: ECKCharacterFitting) {
         self.character = character
         self.fitting = fitting
@@ -34,7 +38,9 @@ struct FittingDetailView: View {
             Picker("", selection: $selectedTab) {
                 Text("Info").tag(FittingDetailTab.info)
                 Text("Modules").tag(FittingDetailTab.modules)
-                Text("Drones").tag(FittingDetailTab.drones)
+                if canUseDrones {
+                    Text("Drones").tag(FittingDetailTab.drones)
+                }
 //                Text("Implants").tag(FittingDetailTab.implants)
 //                Text("Cargo").tag(FittingDetailTab.cargo)
             }
@@ -48,13 +54,16 @@ struct FittingDetailView: View {
                 FittingDetailModulesView(character: character, fitting: fitting)
                     .tag(FittingDetailTab.modules)
                 
-                FittingDetailDronesView(character: character, fitting: fitting)
-                    .tag(FittingDetailTab.drones)
+                if canUseDrones {
+                    FittingDetailDronesView(character: character, fitting: fitting)
+                        .tag(FittingDetailTab.drones)
+                }
                 
             }
             .animation(.spring, value: selectedTab)
+            .animation(.spring, value: canUseDrones)
         }
-        .tabViewStyle(.page)
+        .tabViewStyle(.page(indexDisplayMode: .never))
         .task {
             fitting.calculateAttributes(skills: character.skills ?? .empty)
         }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKCharacterFittingItem: Decodable, Hashable {
+public class ECKCharacterFittingItem: Decodable, Hashable, Identifiable {
     
     private enum CodingKeys: String, CodingKey {
         case flag
@@ -15,10 +15,7 @@ public class ECKCharacterFittingItem: Decodable, Hashable {
         case item = "type_id"
     }
     
-    // TODO: Remove this
-    public var id: UUID {
-        return UUID()
-    }
+    public var id: UUID = UUID()
     
     public let flag: ECKItemLocationFlag
     public let quantity: Int
@@ -27,7 +24,7 @@ public class ECKCharacterFittingItem: Decodable, Hashable {
     public var charge: ECKCharacterFittingItem?
     
     internal var attributes: [ECKCharacterFitting.AttributeID: ECKCharacterFitting.FittingAttribute] = [:]
-    internal var state: ECKDogmaEffect.Category = .online
+    public var state: ECKDogmaEffect.Category = .online
     internal var maxState: ECKDogmaEffect.Category = .passive
     
     // TODO: Remove, Debug Only!

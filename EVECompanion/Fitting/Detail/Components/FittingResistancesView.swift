@@ -55,8 +55,9 @@ struct FittingResistancesView: View {
             Text(EVEUnit.inverseAbsolutePercent.formatted(value))
                 .font(.footnote)
         }
-            .progressViewStyle(.linear)
-            .tint(tint)
+        .progressViewStyle(.linear)
+        .animation(.spring, value: value)
+        .tint(tint)
     }
     
 }
