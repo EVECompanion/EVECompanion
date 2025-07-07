@@ -30,7 +30,7 @@ struct ItemView: View {
             
             ForEach(item.itemAttributeCategories, id: \.name) { attributeCategory in
                 Section(attributeCategory.name) {
-                    ForEach(attributeCategory.attributes, id: \.name) { attribute in
+                    ForEach(attributeCategory.attributes, id: \.id) { attribute in
                         ItemAttributeCell(attribute: attribute, fittingAttribute: nil)
                     }
                 }
