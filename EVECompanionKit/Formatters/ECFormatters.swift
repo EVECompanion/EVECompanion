@@ -12,16 +12,16 @@ public struct ECFormatters {
     public static func iskShort(_ isk: Double) -> String {
         let formatter = NumberFormatter()
         
-        if Int(isk / 1_000_000_000_000) > 0 {
+        if abs(isk) >= 1_000_000_000_000 {
             formatter.maximumFractionDigits = 3
             return "\(formatter.string(for: isk / 1_000_000_000_000) ?? "")T"
-        } else if Int(isk / 1_000_000_000) > 0 {
+        } else if abs(isk) >= 1_000_000_000 {
             formatter.maximumFractionDigits = 3
             return "\(formatter.string(for: isk / 1_000_000_000) ?? "")B"
-        } else if Int(isk / 1_000_000) > 0 {
+        } else if abs(isk) >= 1_000_000 {
             formatter.maximumFractionDigits = 1
             return "\(formatter.string(for: isk / 1_000_000) ?? "")M"
-        } else if Int(isk / 1_000) > 0 {
+        } else if abs(isk) >= 1_000 {
             return "\(formatter.string(for: Int(isk / 1_000)) ?? "")k"
         } else {
             return formatter.string(for: isk) ?? isk.description
