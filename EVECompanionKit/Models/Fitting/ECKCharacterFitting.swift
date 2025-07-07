@@ -58,7 +58,9 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     static let attributeDroneBandwidthId: Int = 1271
     static let attributeDroneBandwidthNeededId: Int = 1272
     static let attributeWarpSpeedId: Int = 1281
-    static let attributeSubsystemSlots: Int = 1367
+    static let attributeSubsystemSlotsId: Int = 1367
+    static let attributeTurretModificatorId: Int = 1368
+    static let attributeLauncherModificatorId: Int = 1369
     
     public var id: Int {
         return fittingId
@@ -109,7 +111,7 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     }
     
     public var subsystemSlots: Int {
-        return Int(ship.attributes[Self.attributeSubsystemSlots]?.value ?? 0)
+        return Int(ship.attributes[Self.attributeSubsystemSlotsId]?.value ?? 0)
     }
     
     public var maxCPU: Float? {
