@@ -138,6 +138,7 @@
 		C98484032D7F7E760076016B /* CapitalNavigationInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98484022D7F7E760076016B /* CapitalNavigationInputView.swift */; };
 		C98484052D7F9A7B0076016B /* ECKCapitalNavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98484042D7F9A7B0076016B /* ECKCapitalNavigationManager.swift */; };
 		C984D06F2D8AEBBA00D60567 /* ECKCapitalRouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C984D06E2D8AEBBA00D60567 /* ECKCapitalRouteManager.swift */; };
+		C989C39F2E1E3D2D005DEFDF /* ChargeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C989C39E2E1E3D2D005DEFDF /* ChargeSelectionView.swift */; };
 		C99528D12BEE0CEB00CA6E06 /* CharacterDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99528D02BEE0CEB00CA6E06 /* CharacterDetailView.swift */; };
 		C99528D42BEE102E00CA6E06 /* EnvironmentValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99528D32BEE102E00CA6E06 /* EnvironmentValues.swift */; };
 		C99528D62BEE152F00CA6E06 /* ECKCharacterSkillqueueResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99528D52BEE152F00CA6E06 /* ECKCharacterSkillqueueResource.swift */; };
@@ -418,6 +419,7 @@
 		C98484022D7F7E760076016B /* CapitalNavigationInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalNavigationInputView.swift; sourceTree = "<group>"; };
 		C98484042D7F9A7B0076016B /* ECKCapitalNavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCapitalNavigationManager.swift; sourceTree = "<group>"; };
 		C984D06E2D8AEBBA00D60567 /* ECKCapitalRouteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCapitalRouteManager.swift; sourceTree = "<group>"; };
+		C989C39E2E1E3D2D005DEFDF /* ChargeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeSelectionView.swift; sourceTree = "<group>"; };
 		C99528D02BEE0CEB00CA6E06 /* CharacterDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailView.swift; sourceTree = "<group>"; };
 		C99528D32BEE102E00CA6E06 /* EnvironmentValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentValues.swift; sourceTree = "<group>"; };
 		C99528D52BEE152F00CA6E06 /* ECKCharacterSkillqueueResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterSkillqueueResource.swift; sourceTree = "<group>"; };
@@ -1004,6 +1006,14 @@
 			path = CapitalNavigation;
 			sourceTree = "<group>";
 		};
+		C989C39D2E1E3D25005DEFDF /* ChargeSelection */ = {
+			isa = PBXGroup;
+			children = (
+				C989C39E2E1E3D2D005DEFDF /* ChargeSelectionView.swift */,
+			);
+			path = ChargeSelection;
+			sourceTree = "<group>";
+		};
 		C99528CF2BEE0CDB00CA6E06 /* CharacterDetail */ = {
 			isa = PBXGroup;
 			children = (
@@ -1221,6 +1231,7 @@
 		C9F055BC2DE2FC8200340A05 /* Fitting */ = {
 			isa = PBXGroup;
 			children = (
+				C989C39D2E1E3D25005DEFDF /* ChargeSelection */,
 				C9F055C22DE34D5400340A05 /* Detail */,
 				C9F055C12DE3040C00340A05 /* List */,
 			);
@@ -1531,6 +1542,7 @@
 				C9ACC07C2DC9DD0C0000D0FC /* AppDelegate.swift in Sources */,
 				C9F055C42DE34D5B00340A05 /* FittingDetailView.swift in Sources */,
 				C99750A52C14606800DE5B96 /* RetryButton.swift in Sources */,
+				C989C39F2E1E3D2D005DEFDF /* ChargeSelectionView.swift in Sources */,
 				C900AE4F2DC7E43500D4EDE5 /* PushPermissionCTA.swift in Sources */,
 				C98484032D7F7E760076016B /* CapitalNavigationInputView.swift in Sources */,
 				C9CA6BA22C14EB090057F290 /* UniverseRowType.swift in Sources */,

@@ -35,7 +35,7 @@ enum AppScreen: Hashable {
     case item(ECKItem)
     
     case universe
-    case itemDatabase
+    case itemDatabase(groupIdFilter: Int?)
     case incursions
     case sovereigntyCampaigns
     
@@ -101,7 +101,6 @@ enum AppScreen: Hashable {
         switch (lhs, rhs) {
         case (.characterList, .characterList),
              (.universe, .universe),
-             (.itemDatabase, .itemDatabase),
              (.incursions, .incursions),
              (.sovereigntyCampaigns, .sovereigntyCampaigns),
              (.settings, .settings):
@@ -146,6 +145,9 @@ enum AppScreen: Hashable {
             
         case (.fittingDetail(let lhsCharacter, let lhsFitting), .fittingDetail(let rhsCharacter, let rhsFitting)):
             return lhsCharacter == rhsCharacter && lhsFitting.id == rhsFitting.id
+            
+        case (.itemDatabase(let lhsFilter), .itemDatabase(let rhsFilter)):
+            return lhsFilter == rhsFilter
             
         default:
             return false
@@ -200,8 +202,8 @@ enum AppScreen: Hashable {
             hasher.combine(fitting)
         case .universe:
             return
-        case .itemDatabase:
-            return
+        case .itemDatabase(let filter):
+            hasher.combine(filter)
         case .incursions:
             return
         case .sovereigntyCampaigns:

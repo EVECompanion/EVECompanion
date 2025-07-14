@@ -39,4 +39,20 @@ extension ECKCharacterFitting {
         }
     }
     
+    // MARK: - Damage
+    
+    public struct DamageProfile {
+        public let em: Float
+        public let explosive: Float
+        public let kinetic: Float
+        public let thermal: Float
+        
+        public init(em: Float, explosive: Float, kinetic: Float, thermal: Float) {
+            self.em = em
+            self.explosive = explosive
+            self.kinetic = kinetic
+            self.thermal = thermal
+        }
+    }
+    
 }

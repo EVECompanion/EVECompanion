@@ -25,7 +25,8 @@ struct FittingDetailModulesView: View {
     }
     
     @ObservedObject private var fitting: ECKCharacterFitting
-    let character: ECKCharacter
+    private let character: ECKCharacter
+    @State private var chargeTargetItem: ECKCharacterFittingItem?
     
     init(character: ECKCharacter, fitting: ECKCharacterFitting) {
         self.character = character
@@ -40,35 +41,70 @@ struct FittingDetailModulesView: View {
                     numberOfSlots: fitting.subsystemSlots,
                     title: "Subsystems",
                     slotType: "Subsystem",
-                    icon: "Fitting/subsystemslot")
+                    icon: "Fitting/subsystemslot") {
+                
+            }
             section(modules: moduleEntries(modules: fitting.highSlotModules,
                                            slotFlagPrefix: "HiSlot",
                                            slots: fitting.highSlots),
                     numberOfSlots: fitting.highSlots,
                     title: "High Slots",
                     slotType: "High",
-                    icon: "Fitting/highslot")
+                    icon: "Fitting/highslot") {
+                VStack {
+                    Label {
+                        Text("\(fitting.usedTurretHardPoints)/\(fitting.turretHardPoints)")
+                    } icon: {
+                        Image("Fitting/turret")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                    }
+
+                    Label {
+                        Text("\(fitting.usedLauncherHardPoints)/\(fitting.launcherHardPoints)")
+                    } icon: {
+                        Image("Fitting/launcher")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                    }
+
+                }
+            }
             section(modules: moduleEntries(modules: fitting.midSlotModules,
                                            slotFlagPrefix: "MedSlot",
                                            slots: fitting.midSlots),
                     numberOfSlots: fitting.midSlots,
                     title: "Mid Slots",
                     slotType: "Mid",
-                    icon: "Fitting/midslot")
+                    icon: "Fitting/midslot") {
+                
+            }
             section(modules: moduleEntries(modules: fitting.lowSlotModules,
                                            slotFlagPrefix: "LoSlot",
                                            slots: fitting.lowSlots),
                     numberOfSlots: fitting.lowSlots,
                     title: "Low Slots",
                     slotType: "Low",
-                    icon: "Fitting/lowslot")
+                    icon: "Fitting/lowslot") {
+                
+            }
             section(modules: moduleEntries(modules: fitting.rigs,
                                            slotFlagPrefix: "RigSlot",
                                            slots: fitting.rigSlots),
                     numberOfSlots: fitting.rigSlots,
                     title: "Rigs",
                     slotType: "Rig",
-                    icon: "Fitting/rigslot")
+                    icon: "Fitting/rigslot") {
+                
+            }
+        }
+        .sheet(item: $chargeTargetItem) { target in
+            ChargeSelectionView(target: target.item) { selectedCharge in
+                target.charge = .init(flag: target.flag,
+                                      quantity: 1,
+                                      item: selectedCharge)
+                fitting.calculateAttributes(skills: character.skills ?? .empty)
+            }
         }
     }
     
@@ -77,7 +113,8 @@ struct FittingDetailModulesView: View {
                          numberOfSlots: Int,
                          title: String,
                          slotType: String,
-                         icon: String) -> some View {
+                         icon: String,
+                         @ViewBuilder additionalHeaderView: (() -> some View)) -> some View {
         if numberOfSlots > 0 {
             Section {
                 ForEach(modules) { module in
@@ -87,9 +124,56 @@ struct FittingDetailModulesView: View {
                             ECImage(id: item.item.typeId, category: .types)
                                 .frame(width: 40, height: 40)
                             
-                            Text(item.item.name)
+                            VStack(alignment: .leading) {
+                                Text(item.item.name)
+                                
+                                Group {
+                                    if let optimalRange = item.attributes[54] {
+                                        moduleAttributeView(icon: "Fitting/targetingRange",
+                                                            title: "Optimal Range",
+                                                            unit: .length,
+                                                            attribute: optimalRange)
+                                    }
+                                    
+                                    if let falloff = item.attributes[158] {
+                                        moduleAttributeView(icon: "Fitting/falloff",
+                                                            title: "Falloff",
+                                                            unit: .length,
+                                                            attribute: falloff)
+                                    }
+                                }
+                                .foregroundStyle(.secondary)
+                            }
+                            
                         }
                         
+                        Button {
+                            self.chargeTargetItem = item
+                        } label: {
+                            if let charge = item.charge {
+                                HStack {
+                                    ECImage(id: charge.item.typeId, category: .types)
+                                        .frame(width: 40, height: 40)
+                                    
+                                    Text(charge.item.name)
+                                }
+                            } else {
+                                Text("Add Charge")
+                            }
+                        }
+                        
+//                        ForEach(item.fittingAttributes, id: \.attribute.id) { attribute in
+//                            HStack {
+//                                Text(attribute.attribute.displayName)
+//                                Spacer()
+//                                if let unit = attribute.attribute.unit {
+//                                    Text(unit.formatted(attribute.fittingAttribute.value ?? 0))
+//                                } else {
+//                                    Text("\(attribute.fittingAttribute.value ?? 0)")
+//                                }
+//                            }
+//                        }
+                    
                     case .empty:
                         HStack {
                             Image(icon)
@@ -102,7 +186,11 @@ struct FittingDetailModulesView: View {
                 }
                 
             } header: {
-                sectionHeader(text: title, icon: icon)
+                HStack {
+                    sectionHeader(text: title, icon: icon)
+                    Spacer()
+                    additionalHeaderView()
+                }
             }
         }
     }
@@ -115,6 +203,24 @@ struct FittingDetailModulesView: View {
             Image(icon)
                 .resizable()
                 .frame(width: 40, height: 40)
+        }
+    }
+    
+    @ViewBuilder
+    private func moduleAttributeView(icon: String,
+                                     title: String,
+                                     unit: EVEUnit,
+                                     attribute: ECKCharacterFitting.FittingAttribute) -> some View {
+        HStack {
+            Image(icon)
+                .resizable()
+                .frame(width: 20, height: 20)
+            
+            Text(title)
+            
+            Spacer()
+            
+            Text(unit.formatted(attribute.value ?? 0))
         }
     }
     

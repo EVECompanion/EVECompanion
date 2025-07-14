@@ -23,9 +23,19 @@ public class ECKCharacterFittingItem: Decodable, Hashable, Identifiable {
     
     public var charge: ECKCharacterFittingItem?
     
-    internal var attributes: [ECKCharacterFitting.AttributeID: ECKCharacterFitting.FittingAttribute] = [:]
-    public var state: ECKDogmaEffect.Category = .online
+    public internal(set) var attributes: [ECKCharacterFitting.AttributeID: ECKCharacterFitting.FittingAttribute] = [:]
+    public var state: ECKDogmaEffect.Category = .active
     internal var maxState: ECKDogmaEffect.Category = .passive
+    
+    internal lazy var usesLauncherSlot: Bool = {
+        let effects = ECKSDEManager.shared.getEffects(for: item.typeId)
+        return effects.first(where: { $0.id == 40 }) != nil
+    }()
+    
+    internal lazy var usesTurretSlot: Bool = {
+        let effects = ECKSDEManager.shared.getEffects(for: item.typeId)
+        return effects.first(where: { $0.id == 42 }) != nil
+    }()
     
     // TODO: Remove, Debug Only!
     public var fittingAttributes: [(attribute: ECKSDEManager.ItemAttribute, fittingAttribute: ECKCharacterFitting.FittingAttribute)] {
@@ -52,7 +62,7 @@ public class ECKCharacterFittingItem: Decodable, Hashable, Identifiable {
         self.item = try container.decode(ECKItem.self, forKey: .item)
     }
     
-    init(flag: ECKItemLocationFlag, quantity: Int, item: ECKItem) {
+    public init(flag: ECKItemLocationFlag, quantity: Int, item: ECKItem) {
         self.flag = flag
         self.quantity = quantity
         self.item = item

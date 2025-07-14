@@ -217,6 +217,7 @@ extension ECKCharacterFitting {
     
     public func calculateAttributes(skills: ECKCharacterSkills) {
         self.ship.attributes.removeAll()
+        self.target.attributes.removeAll()
         self.items.forEach({ $0.attributes.removeAll() })
         self.skills.removeAll()
         

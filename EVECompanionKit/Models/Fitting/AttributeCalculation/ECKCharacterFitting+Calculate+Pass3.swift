@@ -16,6 +16,8 @@ extension ECKCharacterFitting {
         var items: [Int: [Int: Float]] = [:]
         var charge: [Int: [Int: Float]] = [:]
         var skills: [Int: [Int: Float]] = [:]
+        var target: [Int: Float] = [:]
+        var structure: [Int: Float] = [:]
         
         init() { }
     }
@@ -28,6 +30,8 @@ extension ECKCharacterFitting {
         }
         
         await calculateValues(item: ship, ship: ship, itemObject: .ship, cache: cache)
+        await calculateValues(item: structure, ship: ship, itemObject: .structure, cache: cache)
+        await calculateValues(item: target, ship: ship, itemObject: .target, cache: cache)
         // TODO: Implants/Boosters
         for (index, item) in items.enumerated() {
             await calculateValues(item: item, ship: ship, itemObject: .item(index: index), cache: cache)
@@ -44,7 +48,8 @@ extension ECKCharacterFitting {
         }
         
         await storeCachedValues(for: ship, cache: cache.ship)
-        
+        await storeCachedValues(for: structure, cache: cache.structure)
+        await storeCachedValues(for: target, cache: cache.target)
         for (index, item) in items.enumerated() {
             await storeCachedValues(for: item, cache: cache.items[index] ?? [:])
             if let charge = item.charge {
@@ -113,9 +118,9 @@ extension ECKCharacterFitting {
         case .skill(index: let index):
             cacheValue = cache.skills[index]?[attributeId]
         case .structure:
-            ()
+            cacheValue = cache.structure[attributeId]
         case .target:
-            ()
+            cacheValue = cache.target[attributeId]
         }
         
         if let cacheValue {
@@ -151,11 +156,9 @@ extension ECKCharacterFitting {
                 case .skill(index: let index):
                     source = skills[index]
                 case .structure:
-                    // TODO?
-                    continue
+                    source = self.structure
                 case .target:
-                    // TODO
-                    continue
+                    source = self.target
                 }
                 
                 if effect.sourceCategory.rawValue > source.state.rawValue {
@@ -282,9 +285,9 @@ extension ECKCharacterFitting {
                 cache.skills[index] = [attributeId: currentValue]
             }
         case .structure:
-            ()
+            cache.structure[attributeId] = currentValue
         case .target:
-            ()
+            cache.target[attributeId] = currentValue
         }
         
         return currentValue

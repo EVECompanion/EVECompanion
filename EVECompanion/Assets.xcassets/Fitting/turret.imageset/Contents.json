@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Icon_gunnery_turret.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

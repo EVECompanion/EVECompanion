@@ -30,6 +30,15 @@ public class ECKMarketGroup: Identifiable {
                 return marketGroup.children
             }
         }
+        
+        public var item: ECKItem? {
+            switch self {
+            case .item(let item):
+                return item
+            case .marketGroup:
+                return nil
+            }
+        }
     }
     
     public let id: Int

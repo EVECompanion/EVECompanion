@@ -92,9 +92,9 @@ public class ECKSDEManager {
             return dummyFetchedAttribute
         }
         
+        let attributeName: String = result[2] as? String ?? ""
         guard let attributeId: Int64 = result[0] as? Int64,
               let stackable: Int64 = result[1] as? Int64,
-              let attributeName: String = result[2] as? String,
               let highIsGoodInt = result[3] as? Int64 else {
             logger.error("Unexpected attribute data \(result)")
             return dummyFetchedAttribute
@@ -345,7 +345,7 @@ public class ECKSDEManager {
         return parseItem(row: result)
     }
     
-    internal func itemSearch(text: String) -> [ECKItem] {
+    internal func itemSearch(text: String, groupIdFilter: Int? = nil) -> [ECKItem] {
         do {
             let statement = try connection?.prepare("""
                 SELECT
@@ -360,13 +360,13 @@ public class ECKSDEManager {
                 FROM
                     invTypes
                 where 
-                    typeName LIKE "%" || ? || "%"
-                    AND published = 1
+                    \(text.isEmpty ? "" : "typeName LIKE \"%\" || \"\(text)\" || \"%\" AND") published = 1
+                    \(groupIdFilter != nil ? "AND groupID = \(groupIdFilter!)" : "")
                 ORDER BY 
                     typeName
                 LIMIT 
                     50
-            """, text)
+            """)
             
             guard let result = try statement?.run() else {
                 return []
@@ -408,6 +408,61 @@ public class ECKSDEManager {
             return fetchedItems.map({ ECKItem(itemData: $0) })
         } catch {
             logger.error("Cannot get items with market group id \(String(describing: marketGroupId)): \(error)")
+            return []
+        }
+    }
+    
+    public func possibleCharges(typeId: Int, chargeSize: Float?) -> [ECKItem] {
+        do {
+            let statement = try connection?.prepare("""
+                SELECT
+                    invTypes.typeID,
+                    invTypes.typeName, 
+                    invTypes.description, 
+                    invTypes.mass, 
+                    invTypes.volume, 
+                    invTypes.capacity, 
+                    invTypes.radius, 
+                    invTypes.iconID
+                FROM
+                    (
+                        SELECT
+                            attributeID
+                        FROM
+                            dgmAttributeTypes
+                        WHERE
+                            attributeRawName LIKE "chargeGroup%"
+                            OR attributeRawName LIKE "launcherGroup%"
+                    ) AS attributes
+                    INNER JOIN dgmTypeAttributes ON dgmTypeAttributes.attributeID = attributes.attributeID
+                    INNER JOIN invGroups ON CAST(dgmTypeAttributes.valueFloat AS INT) = invGroups.groupID
+                    INNER JOIN invTypes ON invTypes.groupID = invGroups.groupID
+                    LEFT OUTER JOIN (
+                        SELECT
+                            dgmTypeAttributes.valueFloat AS chargeSize,
+                            dgmTypeAttributes.typeID AS typeID
+                        FROM
+                            dgmTypeAttributes
+                            LEFT OUTER JOIN dgmAttributeTypes ON dgmAttributeTypes.attributeID = dgmTypeAttributes.attributeID
+                        WHERE
+                            dgmAttributeTypes.attributeRawName LIKE "chargeSize%"
+                    ) AS chargeSizeAttributes ON chargeSizeAttributes.typeID = invTypes.typeID
+                WHERE
+                    dgmTypeAttributes.typeID = ?
+                    \(chargeSize != nil && chargeSize != 0 ? "AND chargeSizeAttributes.chargeSize = \(chargeSize!)" : "")
+                ORDER BY
+                    invTypes.typeName
+            """, typeId)
+            
+            guard let result = try statement?.run() else {
+                return []
+            }
+            
+            let fetchedItems = result.map({ parseItem(row: $0) })
+            
+            return fetchedItems.map({ ECKItem(itemData: $0) })
+        } catch {
+            logger.error("Cannot get possible charges for type id \(String(describing: typeId)): \(error)")
             return []
         }
     }
@@ -1263,8 +1318,8 @@ public class ECKSDEManager {
         return (typeId: Int(typeId), name: name)
     }
     
-    internal func getAttributeValue(attributeId: Int, typeId: Int) -> Float? {
-        let statement = try? connection?.prepare("SELECT valueFloat FROM dgmTypeAttributes WHERE attributeID = 1683 AND typeID = ?", attributeId)
+    public func getAttributeValue(attributeId: Int, typeId: Int) -> Float? {
+        let statement = try? connection?.prepare("SELECT valueFloat FROM dgmTypeAttributes WHERE attributeID = ? AND typeID = ?", attributeId, typeId)
         let result = try? statement?.run().makeIterator().failableNext()
         let value = result?[0] as? Float64
         
@@ -1275,7 +1330,7 @@ public class ECKSDEManager {
         }
     }
     
-    internal func getAttributeDefaultValue(attributeId: Int) -> Float? {
+    public func getAttributeDefaultValue(attributeId: Int) -> Float? {
         let statement = try? connection?.prepare("SELECT defaultValue FROM dgmAttributeTypes WHERE attributeID = ?", attributeId)
         let result = try? statement?.run().makeIterator().failableNext()
         let value = result?[0] as? Float64

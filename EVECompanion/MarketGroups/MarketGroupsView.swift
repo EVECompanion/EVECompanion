@@ -10,7 +10,11 @@ import EVECompanionKit
 
 struct MarketGroupsView: View {
     
-    @StateObject var manager = ECKMarketGroupManager()
+    @StateObject var manager: ECKMarketGroupManager
+    
+    init(groupIdFilter: Int?) {
+        self._manager = .init(wrappedValue: ECKMarketGroupManager(groupIdFilter: groupIdFilter))
+    }
     
     var body: some View {
         List {
@@ -41,6 +45,6 @@ struct MarketGroupsView: View {
 
 #Preview {
     NavigationStack {
-        MarketGroupsView()
+        MarketGroupsView(groupIdFilter: nil)
     }
 }

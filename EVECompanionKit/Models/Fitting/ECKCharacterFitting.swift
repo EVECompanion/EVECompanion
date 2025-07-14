@@ -9,7 +9,7 @@ import Foundation
 
 public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableObject {
     
-    internal typealias AttributeID = Int
+    public typealias AttributeID = Int
     
     static let attributeMassId: Int = 4
     static let attributeStructureHPId: Int = 9
@@ -31,6 +31,10 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     static let attributeStructureThermalResistId: Int = 110
     static let attributeStructureExplosiveResistId: Int = 111
     static let attributeStructureEMResistId: Int = 113
+    static let attributeEMDamageId: Int = 114
+    static let attributeExplosiveDamageId: Int = 116
+    static let attributeKineticDamageId: Int = 117
+    static let attributeThermalDamageId: Int = 118
     static let attributeMaximumLockedTargetsId: Int = 192
     static let attributeRadarSensorStrengthId: Int = 208
     static let attributeLadarSensorStrengthId: Int = 209
@@ -78,6 +82,12 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     }
     public let name: String
     public let ship: ECKCharacterFittingItem
+    public let target: ECKCharacterFittingItem = .init(flag: .ShipHangar,
+                                                       quantity: 1,
+                                                       item: .init(typeId: 0))
+    public let structure: ECKCharacterFittingItem = .init(flag: .ShipHangar,
+                                                          quantity: 1,
+                                                          item: .init(typeId: 0))
     
     public var highSlotModules: [ECKCharacterFittingItem]
     public var midSlotModules: [ECKCharacterFittingItem]
@@ -90,8 +100,28 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
         return Int(ship.attributes[Self.attributeLauncherHardpointsId]?.value ?? 0)
     }
     
+    public var usedLauncherHardPoints: Int {
+        return highSlotModules.reduce(0) { partialResult, item in
+            if item.usesLauncherSlot {
+                return partialResult + 1
+            } else {
+                return partialResult
+            }
+        }
+    }
+    
     public var turretHardPoints: Int {
         return Int(ship.attributes[Self.attributeTurrentHardpointsId]?.value ?? 0)
+    }
+    
+    public var usedTurretHardPoints: Int {
+        return highSlotModules.reduce(0) { partialResult, item in
+            if item.usesTurretSlot {
+                return partialResult + 1
+            } else {
+                return partialResult
+            }
+        }
     }
     
     public var lowSlots: Int {
@@ -222,9 +252,14 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     }
     
     public static let dummyAvatar: ECKCharacterFitting = {
+        let turret: ECKCharacterFittingItem = .init(flag: .HiSlot0, quantity: 1, item: .init(typeId: 37299))
+        turret.charge = .init(flag: .HiSlot0, quantity: 1, item: .init(typeId: 41336))
+        
         let fitting = ECKCharacterFitting(description: "Just my avatar",
                                           fittingId: 0,
-                                          items: [],
+                                          items: [
+                                            turret
+                                          ],
                                           name: "EVECompanion's Avatar",
                                           ship: .init(typeId: 11567))
         fitting.calculateAttributes(skills: .dummy)

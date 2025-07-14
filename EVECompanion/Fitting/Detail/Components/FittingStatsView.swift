@@ -49,6 +49,10 @@ struct FittingStatsView: View {
                       unit: "mbit/s",
                       tint: .blue)
             }
+            
+            GridRow {
+                
+            }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 5)

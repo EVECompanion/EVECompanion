@@ -91,6 +91,18 @@ struct FittingDetailInfoView: View {
                     }
                 }
             }
+            
+            ForEach(fitting.fittingAttributes, id: \.attribute.id) { attribute in
+                HStack {
+                    Text(attribute.attribute.displayName)
+                    Spacer()
+                    if let unit = attribute.attribute.unit {
+                        Text(unit.formatted(attribute.fittingAttribute.value ?? 0))
+                    } else {
+                        Text("\(attribute.fittingAttribute.value ?? 0)")
+                    }
+                }
+            }
         }
     }
     

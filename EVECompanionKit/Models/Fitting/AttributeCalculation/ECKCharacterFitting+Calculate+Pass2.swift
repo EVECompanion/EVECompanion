@@ -60,11 +60,9 @@ extension ECKCharacterFitting {
                 case .skill(index: let index):
                     target = skills[index]
                 case .structure:
-                    // TODO
-                    continue
+                    target = self.structure
                 case .target:
-                    // TODO
-                    continue
+                    target = self.target
                 }
                 
                 await target.addEffect(attributeId: effect.targetAttributeId,

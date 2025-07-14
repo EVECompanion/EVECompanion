@@ -74,6 +74,9 @@ extension ECKCharacterFitting {
                     .SubSystemSlot6,
                     .SubSystemSlot7:
                 pass1CollectAttributes(for: item.item, attributesDict: &item.attributes)
+                if let charge = item.charge {
+                    pass1CollectAttributes(for: charge.item, attributesDict: &charge.attributes)
+                }
                 
             case .unknown,
                     .AssetSafety,
