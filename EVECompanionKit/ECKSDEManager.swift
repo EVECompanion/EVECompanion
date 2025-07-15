@@ -412,6 +412,51 @@ public class ECKSDEManager {
         }
     }
     
+    public func canUseCharges(typeId: Int) -> Bool {
+        do {
+            let statement = try connection?.prepare("""
+                SELECT
+                    COUNT(*)
+                FROM
+                    (
+                        SELECT
+                            attributeID
+                        FROM
+                            dgmAttributeTypes
+                        WHERE
+                            attributeRawName LIKE "chargeGroup%"
+                            OR attributeRawName LIKE "launcherGroup%"
+                    ) AS attributes
+                    INNER JOIN dgmTypeAttributes ON dgmTypeAttributes.attributeID = attributes.attributeID
+                    INNER JOIN invGroups ON CAST(dgmTypeAttributes.valueFloat AS INT) = invGroups.groupID
+                    INNER JOIN invTypes ON invTypes.groupID = invGroups.groupID
+                    LEFT OUTER JOIN (
+                        SELECT
+                            dgmTypeAttributes.valueFloat AS chargeSize,
+                            dgmTypeAttributes.typeID AS typeID
+                        FROM
+                            dgmTypeAttributes
+                            LEFT OUTER JOIN dgmAttributeTypes ON dgmAttributeTypes.attributeID = dgmTypeAttributes.attributeID
+                        WHERE
+                            dgmAttributeTypes.attributeRawName LIKE "chargeSize%"
+                    ) AS chargeSizeAttributes ON chargeSizeAttributes.typeID = invTypes.typeID
+                WHERE
+                    dgmTypeAttributes.typeID = ?
+                ORDER BY
+                    invTypes.typeName
+            """, typeId)
+            
+            guard let result = try statement?.run().makeIterator().failableNext() else {
+                return false
+            }
+            
+            return (result.first as? Int64) ?? 0 > 0
+        } catch {
+            logger.error("Cannot determine if type id \(String(describing: typeId)) can use charges: \(error)")
+            return false
+        }
+    }
+    
     public func possibleCharges(typeId: Int, chargeSize: Float?) -> [ECKItem] {
         do {
             let statement = try connection?.prepare("""

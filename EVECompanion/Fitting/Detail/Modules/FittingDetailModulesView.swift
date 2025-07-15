@@ -147,18 +147,20 @@ struct FittingDetailModulesView: View {
                             
                         }
                         
-                        Button {
-                            self.chargeTargetItem = item
-                        } label: {
-                            if let charge = item.charge {
-                                HStack {
-                                    ECImage(id: charge.item.typeId, category: .types)
-                                        .frame(width: 40, height: 40)
-                                    
-                                    Text(charge.item.name)
+                        if item.canUseCharges {
+                            Button {
+                                self.chargeTargetItem = item
+                            } label: {
+                                if let charge = item.charge {
+                                    HStack {
+                                        ECImage(id: charge.item.typeId, category: .types)
+                                            .frame(width: 40, height: 40)
+                                        
+                                        Text(charge.item.name)
+                                    }
+                                } else {
+                                    Text("Add Charge")
                                 }
-                            } else {
-                                Text("Add Charge")
                             }
                         }
                         

@@ -60,6 +60,7 @@ struct FittingDetailView: View {
                 }
                 
             }
+            .background(Color(uiColor: UIColor.secondarySystemBackground))
             .animation(.spring, value: selectedTab)
             .animation(.spring, value: canUseDrones)
         }

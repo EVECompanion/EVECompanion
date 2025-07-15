@@ -37,6 +37,10 @@ public class ECKCharacterFittingItem: Decodable, Hashable, Identifiable {
         return effects.first(where: { $0.id == 42 }) != nil
     }()
     
+    public lazy var canUseCharges: Bool = {
+        return ECKSDEManager.shared.canUseCharges(typeId: item.typeId)
+    }()
+    
     // TODO: Remove, Debug Only!
     public var fittingAttributes: [(attribute: ECKSDEManager.ItemAttribute, fittingAttribute: ECKCharacterFitting.FittingAttribute)] {
         var fittingAttributes: [ECKCharacterFitting.FittingAttribute] = Array(attributes.values)
