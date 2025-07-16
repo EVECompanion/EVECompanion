@@ -171,6 +171,7 @@
 		C9AF7D802C2B63FA002EB951 /* AssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AF7D7F2C2B63FA002EB951 /* AssetCell.swift */; };
 		C9B079062C32C0080059785D /* ECKTokenRefreshError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B079052C32C0080059785D /* ECKTokenRefreshError.swift */; };
 		C9B079082C32C9A00059785D /* ECKTokenExpired.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B079072C32C9A00059785D /* ECKTokenExpired.swift */; };
+		C9B258532E264FA9009A14DB /* FittingDamageProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B258522E264FA9009A14DB /* FittingDamageProfileView.swift */; };
 		C9B449F82BF3A66300968754 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B449F72BF3A66300968754 /* SingleAxisGeometryReader.swift */; };
 		C9B449FB2BF40B5700968754 /* SkillQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B449FA2BF40B5700968754 /* SkillQueueView.swift */; };
 		C9B638BC2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */; };
@@ -451,6 +452,7 @@
 		C9AF7D7F2C2B63FA002EB951 /* AssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCell.swift; sourceTree = "<group>"; };
 		C9B079052C32C0080059785D /* ECKTokenRefreshError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKTokenRefreshError.swift; sourceTree = "<group>"; };
 		C9B079072C32C9A00059785D /* ECKTokenExpired.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKTokenExpired.swift; sourceTree = "<group>"; };
+		C9B258522E264FA9009A14DB /* FittingDamageProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDamageProfileView.swift; sourceTree = "<group>"; };
 		C9B449F72BF3A66300968754 /* SingleAxisGeometryReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleAxisGeometryReader.swift; sourceTree = "<group>"; };
 		C9B449FA2BF40B5700968754 /* SkillQueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillQueueView.swift; sourceTree = "<group>"; };
 		C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKAttributeDefaultValueCache.swift; sourceTree = "<group>"; };
@@ -1087,6 +1089,7 @@
 			isa = PBXGroup;
 			children = (
 				C9B638C52E08920C00E9F6F4 /* FittingResistancesView.swift */,
+				C9B258522E264FA9009A14DB /* FittingDamageProfileView.swift */,
 				C94A27032E0DA7D5006CC8DC /* FittingStatsView.swift */,
 			);
 			path = Components;
@@ -1540,6 +1543,7 @@
 				C96F989A2BEF7DDE00DEC34F /* CharacterDetailRowType.swift in Sources */,
 				C9B8853B2D8228C6005A32CA /* SolarSystemCell.swift in Sources */,
 				C9ACC07C2DC9DD0C0000D0FC /* AppDelegate.swift in Sources */,
+				C9B258532E264FA9009A14DB /* FittingDamageProfileView.swift in Sources */,
 				C9F055C42DE34D5B00340A05 /* FittingDetailView.swift in Sources */,
 				C99750A52C14606800DE5B96 /* RetryButton.swift in Sources */,
 				C989C39F2E1E3D2D005DEFDF /* ChargeSelectionView.swift in Sources */,

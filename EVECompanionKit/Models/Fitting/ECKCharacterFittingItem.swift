@@ -41,6 +41,88 @@ public class ECKCharacterFittingItem: Decodable, Hashable, Identifiable {
         return ECKSDEManager.shared.canUseCharges(typeId: item.typeId)
     }()
     
+    public var damageProfile: ECKCharacterFitting.DamageProfile? {
+        let profileAttributes: [ECKCharacterFitting.AttributeID: ECKCharacterFitting.FittingAttribute]
+        
+        if let charge {
+            profileAttributes = charge.attributes
+        } else {
+            profileAttributes = attributes
+        }
+        
+        let em = profileAttributes[ECKCharacterFitting.attributeEMDamageId]
+        let kinetic = profileAttributes[ECKCharacterFitting.attributeKineticDamageId]
+        let thermal = profileAttributes[ECKCharacterFitting.attributeThermalDamageId]
+        let explosive = profileAttributes[ECKCharacterFitting.attributeExplosiveDamageId]
+        
+        let damageMultiplier: Float
+        
+        let regularDamageMultiplierAttribute = attributes[ECKCharacterFitting.attributeDamageMultiplierId]
+        let regularDamageMultiplierValue = regularDamageMultiplierAttribute?.value ?? 1.0
+        let missileDamageMultiplierAttribute = attributes[ECKCharacterFitting.attributeMissileDamageMultiplierId]
+        let missileDamageMultiplierValue = missileDamageMultiplierAttribute?.value ?? 1.0
+        
+        if let charge, charge.item.skillRequirements?.contains(where: { $0.skill.id == 3319 }) ?? false {
+            damageMultiplier = missileDamageMultiplierValue
+        } else {
+            damageMultiplier = regularDamageMultiplierValue
+        }
+        
+        let emValue = (em?.value ?? em?.baseValue ?? 0) * damageMultiplier
+        let kineticValue = (kinetic?.value ?? kinetic?.baseValue ?? 0) * damageMultiplier
+        let thermalValue = (thermal?.value ?? thermal?.baseValue ?? 0) * damageMultiplier
+        let explosiveValue = (explosive?.value ?? explosive?.baseValue ?? 0) * damageMultiplier
+        let volleyDamage = emValue + kineticValue + thermalValue + explosiveValue
+        
+        let chargeSize = attributes[ECKCharacterFitting.attributeChargeSizeId]?.value ?? 0
+        let rateOfFire = attributes[ECKCharacterFitting.attributeRoFId]?.value ?? 0
+        let activationTime = attributes[ECKCharacterFitting.attributeActivationTimeId]?.value ?? 0
+        let activationTime2 = attributes[ECKCharacterFitting.attributeActivationTimeHighIsGoodId]?.value ?? 0
+        let cycleTime = max(rateOfFire, activationTime, activationTime2) / Float(MSEC_PER_SEC)
+        let reloadTime = (attributes[ECKCharacterFitting.attributeReloadTimeId]?.value ?? 10_000) / Float(MSEC_PER_SEC)
+        
+        let emDPS: Float
+        let kineticDPS: Float
+        let thermalDPS: Float
+        let explosiveDPS: Float
+        let dpsWithoutReload: Float
+        
+        if cycleTime > 0 {
+            emDPS = emValue / cycleTime
+            kineticDPS = kineticValue / cycleTime
+            thermalDPS = thermalValue / cycleTime
+            explosiveDPS = explosiveValue / cycleTime
+            dpsWithoutReload = volleyDamage / cycleTime
+        } else {
+            emDPS = 0
+            kineticDPS = 0
+            thermalDPS = 0
+            explosiveDPS = 0
+            dpsWithoutReload = 0
+        }
+        
+        let dpsWithReload: Float
+        
+        if chargeSize > 0, cycleTime > 0 {
+            let cycleDamage = volleyDamage * chargeSize
+            dpsWithReload = cycleDamage / (cycleTime * chargeSize + reloadTime)
+        } else {
+            dpsWithReload = dpsWithoutReload
+        }
+        
+        return .init(em: emValue,
+                     explosive: explosiveValue,
+                     kinetic: kineticValue,
+                     thermal: thermalValue,
+                     emDPS: emDPS,
+                     explosiveDPS: explosiveDPS,
+                     kineticDPS: kineticDPS,
+                     thermalDPS: thermalDPS,
+                     volleyDamage: volleyDamage,
+                     dpsWithReload: dpsWithReload,
+                     dpsWithoutReload: dpsWithoutReload)
+    }
+    
     // TODO: Remove, Debug Only!
     public var fittingAttributes: [(attribute: ECKSDEManager.ItemAttribute, fittingAttribute: ECKCharacterFitting.FittingAttribute)] {
         var fittingAttributes: [ECKCharacterFitting.FittingAttribute] = Array(attributes.values)

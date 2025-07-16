@@ -26,6 +26,7 @@ struct FittingsListView: View {
                 .refreshable {
                     await fittingManager.loadFittings()
                 }
+                .searchable(text: $fittingManager.searchText)
                 
             case .loading:
                 ProgressView()

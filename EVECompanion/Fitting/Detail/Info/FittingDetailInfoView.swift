@@ -25,6 +25,10 @@ struct FittingDetailInfoView: View {
                     FittingResistancesView(resistances: resistances)
                 }
             }
+            
+            Section("Damage Output") {
+                FittingDamageProfileView(damageProfile: fitting.damageProfile)
+            }
 
             if [fitting.maximumLockedTargets,
                 fitting.maximumTargetingRange,

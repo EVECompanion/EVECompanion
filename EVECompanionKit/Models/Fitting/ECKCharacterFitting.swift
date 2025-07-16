@@ -23,7 +23,10 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     static let attributeCpuOutputId: Int = 48
     static let attributeCpuLoadId: Int = 49
     static let attributeCpuUsageId: Int = 50
+    static let attributeRoFId: Int = 51
+    static let attributeDamageMultiplierId: Int = 64
     static let attributeInertiaModifierId: Int = 70
+    static let attributeActivationTimeId: Int = 73
     static let attributeMaximumTargetingRange: Int = 76
     static let attributeLauncherHardpointsId: Int = 101
     static let attributeTurrentHardpointsId: Int = 102
@@ -35,11 +38,13 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     static let attributeExplosiveDamageId: Int = 116
     static let attributeKineticDamageId: Int = 117
     static let attributeThermalDamageId: Int = 118
+    static let attributeChargeSizeId: Int = 128
     static let attributeMaximumLockedTargetsId: Int = 192
     static let attributeRadarSensorStrengthId: Int = 208
     static let attributeLadarSensorStrengthId: Int = 209
     static let attributeMagnetometricSensorStrengthId: Int = 210
     static let attributeGravimetricSensorStrengthId: Int = 211
+    static let attributeMissileDamageMultiplierId: Int = 212
     static let attributeShieldHPId: Int = 263
     static let attributeArmorHPId: Int = 265
     static let attributeArmorKineticResistId: Int = 269
@@ -65,6 +70,8 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     static let attributeSubsystemSlotsId: Int = 1367
     static let attributeTurretModificatorId: Int = 1368
     static let attributeLauncherModificatorId: Int = 1369
+    static let attributeReloadTimeId: Int = 1795
+    static let attributeActivationTimeHighIsGoodId: Int = 3115
     
     public var id: Int {
         return fittingId
@@ -309,6 +316,14 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
         }
         
         return result
+    }
+    
+    public var damageProfile: DamageProfile {
+        let itemDamages = items.compactMap({ $0.damageProfile })
+        
+        return itemDamages.reduce(.zero) { partialResult, profile in
+            return partialResult + profile
+        }
     }
     
     internal var skills: [ECKCharacterFittingItem] = []

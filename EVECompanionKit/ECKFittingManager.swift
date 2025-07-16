@@ -13,7 +13,19 @@ public class ECKFittingManager: ObservableObject {
     private let isPreview: Bool
     
     @Published public var loadingState: ECKLoadingState = .loading
-    @Published public var fittings: [ECKCharacterFitting] = []
+    public var fittings: [ECKCharacterFitting] {
+        if searchText.isEmpty == false {
+            return loadedFittings.filter { fitting in
+                return fitting.name.lowercased().contains(searchText.lowercased())
+                || fitting.ship.item.name.lowercased().contains(searchText.lowercased())
+            }
+        } else {
+            return loadedFittings
+        }
+    }
+    @Published public var searchText: String = ""
+    
+    @Published var loadedFittings: [ECKCharacterFitting] = []
     
     public init(character: ECKCharacter, isPreview: Bool = false) {
         self.character = character
@@ -26,7 +38,7 @@ public class ECKFittingManager: ObservableObject {
     @MainActor
     public func loadFittings() async {
         guard UserDefaults.standard.isDemoModeEnabled == false && isPreview == false else {
-            self.fittings = [
+            self.loadedFittings = [
                 .dummyAvatar
             ]
             self.loadingState = .ready
@@ -42,7 +54,7 @@ public class ECKFittingManager: ObservableObject {
         let resource = ECKCharacterFittingsResource(token: character.token)
         do {
             let esiFittings = try await ECKWebService().loadResource(resource: resource).response
-            self.fittings = esiFittings.map({ fitting in
+            self.loadedFittings = esiFittings.map({ fitting in
                 return .init(fitting: fitting)
             })
             loadingState = .ready

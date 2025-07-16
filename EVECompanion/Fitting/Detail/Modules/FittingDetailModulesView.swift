@@ -141,6 +141,13 @@ struct FittingDetailModulesView: View {
                                                             unit: .length,
                                                             attribute: falloff)
                                     }
+                                    
+                                    if let damageProfile = item.damageProfile,
+                                       damageProfile.containsDamage {
+                                        FittingDamageProfileView(damageProfile: damageProfile,
+                                                                 compactMode: true)
+                                            .foregroundStyle(.primary)
+                                    }
                                 }
                                 .foregroundStyle(.secondary)
                             }
