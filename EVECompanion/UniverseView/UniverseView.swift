@@ -22,7 +22,6 @@ struct UniverseView: View {
             }
         }
         .navigationTitle("Universe")
-        .navigationBarTitleDisplayMode(.inline)
     }
     
     @ViewBuilder

@@ -65,7 +65,6 @@ struct ContractsListView: View {
             }
         }
         .navigationTitle("Contracts")
-        .navigationBarTitleDisplayMode(.inline)
         .overlay {
             if contractManager.contracts.isEmpty && contractManager.loadingState == .ready {
                 ContentEmptyView(image: Image("Neocom/Contracts"),

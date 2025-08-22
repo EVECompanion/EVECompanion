@@ -21,7 +21,6 @@ struct PlanetaryColonyView: View {
             }
         }
         .navigationTitle(colony.colony.planet.name)
-        .navigationBarTitleDisplayMode(.inline)
     }
     
 }

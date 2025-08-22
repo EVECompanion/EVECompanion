@@ -20,6 +20,7 @@ struct CapitalNavigationTabView: View {
                         CapitalNavigationView()
                     } label: {
                         Label("Create new Route", image: "Icons/CapitalNavigation")
+                            .padding(.vertical, 8)
                     }
                 }
                 
@@ -44,7 +45,6 @@ struct CapitalNavigationTabView: View {
                     }
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Capital Navigation")
         }
         .environmentObject(manager)

@@ -51,7 +51,6 @@ struct WalletJournalView: View {
             }
         })
         .navigationTitle("Wallet Journal")
-        .navigationBarTitleDisplayMode(.inline)
         .overlay {
             if (character.walletJournal ?? []).isEmpty && character.walletJournalLoadingState == .ready {
                 ContentEmptyView(image: Image("Neocom/Wallet"),

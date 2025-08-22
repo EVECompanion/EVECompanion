@@ -42,7 +42,6 @@ struct PlanetaryColoniesView: View {
             }
         }
         .navigationTitle("Planetary Colonies")
-        .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             Task {
                 await colonyManager.loadColonies()

@@ -57,7 +57,6 @@ struct IncursionsView: View {
             }
         })
         .navigationTitle("Incursions")
-        .navigationBarTitleDisplayMode(.inline)
     }
     
 }

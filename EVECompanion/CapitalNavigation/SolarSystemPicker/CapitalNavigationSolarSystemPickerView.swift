@@ -40,7 +40,6 @@ struct CapitalNavigationSolarSystemPickerView: View {
                         placement: .navigationBarDrawer(displayMode: .always),
                         prompt: "Solar System")
             .navigationTitle(target.systemPickerTitle)
-            .navigationBarTitleDisplayMode(.inline)
             .onChange(of: searchText) { newValue in
                 if newValue.isEmpty == false {
                     systems = ECKSDEManager.shared.searchCapitalJumpDestinationSystems(newValue)

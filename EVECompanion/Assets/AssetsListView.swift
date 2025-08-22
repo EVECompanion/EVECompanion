@@ -45,7 +45,6 @@ struct AssetsListView: View {
             }
         }
         .navigationTitle("Assets")
-        .navigationBarTitleDisplayMode(.inline)
     }
     
     @ViewBuilder

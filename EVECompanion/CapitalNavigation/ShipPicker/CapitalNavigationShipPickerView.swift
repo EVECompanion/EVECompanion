@@ -25,7 +25,6 @@ struct CapitalNavigationShipPickerView: View {
                 }
             }
             .navigationTitle("Choose Your Ship")
-            .navigationBarTitleDisplayMode(.inline)
         }
     }
     

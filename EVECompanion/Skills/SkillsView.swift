@@ -55,7 +55,6 @@ struct SkillsView: View {
             await character.reloadSkills()
         }
         .navigationTitle("Skills")
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

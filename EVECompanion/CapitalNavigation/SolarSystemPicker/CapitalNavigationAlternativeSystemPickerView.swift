@@ -49,7 +49,6 @@ struct CapitalNavigationAlternativeSystemPickerView: View {
                 }
             }
             .navigationTitle("Alternative for \(systemToReplace.solarSystemName)")
-            .navigationBarTitleDisplayMode(.inline)
             .task {
                 loadData()
             }

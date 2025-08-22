@@ -50,7 +50,6 @@ struct SkillQueueView: View {
             await character.reloadSkillQueue()
         }
         .navigationTitle("Skillqueue")
-        .navigationBarTitleDisplayMode(.inline)
         .overlay {
             if (character.skillqueue?.currentEntries ?? []).isEmpty && character.initialDataLoadingState == .ready {
                 ContentEmptyView(image: Image("Neocom/Skillqueue"),

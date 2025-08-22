@@ -102,7 +102,6 @@ struct SDEUpdateView: View {
             }
             .padding(.horizontal, 20)
             .animation(.spring, value: state)
-            .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("")
             .toolbar(content: {
                 if showsSkipButton {

@@ -38,7 +38,6 @@ struct ItemView: View {
         }
         .listStyle(.plain)
         .navigationTitle(item.name)
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 #Preview("Avatar") {

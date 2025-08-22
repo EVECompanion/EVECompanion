@@ -35,7 +35,6 @@ struct IndustryJobsView: View {
             }
         }
         .navigationTitle("Industry Jobs")
-        .navigationBarTitleDisplayMode(.inline)
         .overlay {
             if industryJobsManager.jobs.isEmpty && industryJobsManager.loadingState == .ready {
                 ContentEmptyView(image: Image("Neocom/Industry"),

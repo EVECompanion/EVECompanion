@@ -48,7 +48,6 @@ struct MailDetailView: View {
             .padding(.horizontal, 20)
         }
         .navigationTitle(mail.subject ?? "")
-        .navigationBarTitleDisplayMode(.inline)
         .onAppear(perform: {
             fetchMailAndMarkAsRead()
         })

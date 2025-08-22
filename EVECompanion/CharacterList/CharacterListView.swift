@@ -51,7 +51,6 @@ struct CharacterListView: View {
             await characterStorage.reloadCharacters()
         }
         .navigationTitle("Characters")
-        .navigationBarTitleDisplayMode(.inline)
         .toolbar(content: {
             ToolbarItem {
                 Button(action: {

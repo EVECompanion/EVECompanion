@@ -35,7 +35,6 @@ struct MarketGroupsView: View {
         .searchable(text: $manager.searchString,
                     placement: .navigationBarDrawer)
         .navigationTitle("Item Database")
-        .navigationBarTitleDisplayMode(.inline)
     }
     
 }

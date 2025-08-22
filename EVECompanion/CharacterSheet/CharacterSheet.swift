@@ -112,7 +112,6 @@ struct CharacterSheet: View {
             await character.loadSheetData()
         }
         .navigationTitle(character.name)
-        .navigationBarTitleDisplayMode(.inline)
         .onAppear(perform: {
             Task { @MainActor in
                 await character.loadSheetData()

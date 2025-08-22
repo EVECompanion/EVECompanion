@@ -25,7 +25,6 @@ struct WalletTransactionsView: View {
             }
         })
         .navigationTitle("Wallet Transactions")
-        .navigationBarTitleDisplayMode(.inline)
         .overlay {
             if (character.walletTransactions ?? []).isEmpty && character.walletTransactionsLoadingState == .ready {
                 ContentEmptyView(image: Image("Neocom/Journal"),

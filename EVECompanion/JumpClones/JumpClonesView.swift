@@ -35,7 +35,6 @@ struct JumpClonesView: View {
             }
         }
         .navigationTitle("Jump Clones")
-        .navigationBarTitleDisplayMode(.inline)
         .overlay {
             if (jumpClonesManager.jumpClones?.jumpClones ?? []).isEmpty && jumpClonesManager.loadingState == .ready {
                 ContentEmptyView(image: Image("Neocom/JumpClones"),

@@ -82,7 +82,6 @@ struct MarketOrdersView: View {
             }
         })
         .navigationTitle("Market Orders")
-        .navigationBarTitleDisplayMode(.inline)
     }
     
     func totalIsk(for orders: [ECKMarketOrder]) -> Double {

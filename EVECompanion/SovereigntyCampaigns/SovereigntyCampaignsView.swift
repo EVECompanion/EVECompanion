@@ -39,7 +39,6 @@ struct SovereigntyCampaignsView: View {
         }
         .animation(.spring, value: manager.campaigns)
         .navigationTitle("Sovereignty Campaigns")
-        .navigationBarTitleDisplayMode(.inline)
     }
     
 }
