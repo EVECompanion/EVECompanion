@@ -12,8 +12,10 @@ struct MarketGroupsView: View {
     
     @StateObject var manager: ECKMarketGroupManager
     
-    init(groupIdFilter: Int?) {
-        self._manager = .init(wrappedValue: ECKMarketGroupManager(groupIdFilter: groupIdFilter))
+    init(groupIdFilter: Int?, marketGroupIdFilter: Int?) {
+        let manager = ECKMarketGroupManager(groupIdFilter: groupIdFilter,
+                                            marketGroupIdFilter: marketGroupIdFilter)
+        self._manager = .init(wrappedValue: manager)
     }
     
     var body: some View {
@@ -45,6 +47,7 @@ struct MarketGroupsView: View {
 
 #Preview {
     NavigationStack {
-        MarketGroupsView(groupIdFilter: nil)
+        MarketGroupsView(groupIdFilter: nil,
+                         marketGroupIdFilter: nil)
     }
 }

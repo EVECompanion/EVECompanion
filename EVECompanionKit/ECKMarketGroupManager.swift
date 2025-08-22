@@ -21,6 +21,7 @@ public class ECKMarketGroupManager: ObservableObject {
     @Published private var allMarketGroups: [ECKMarketGroup.ChildType] = []
     @Published private var searchedItems: [ECKMarketGroup.ChildType] = []
     public let groupIdFilter: Int?
+    public let marketGroupIdFilter: Int?
     
     @Published public var searchString: String = "" {
         didSet {
@@ -28,14 +29,15 @@ public class ECKMarketGroupManager: ObservableObject {
         }
     }
     
-    public init(groupIdFilter: Int?) {
+    public init(groupIdFilter: Int?, marketGroupIdFilter: Int?) {
         self.groupIdFilter = groupIdFilter
+        self.marketGroupIdFilter = marketGroupIdFilter
         Task { @MainActor in
             if let groupIdFilter {
                 self.searchedItems = ECKSDEManager.shared.itemSearch(text: "", groupIdFilter: groupIdFilter).map({ .item($0) })
                 self.allMarketGroups = self.searchedItems.compactMap({ $0.item }).map({ .item($0) })
             } else {
-                self.allMarketGroups = ECKSDEManager.shared.marketGroups(parentGroupId: nil).map({ .marketGroup($0) })
+                self.allMarketGroups = ECKSDEManager.shared.marketGroups(parentGroupId: marketGroupIdFilter).map({ .marketGroup($0) })
             }
         }
     }

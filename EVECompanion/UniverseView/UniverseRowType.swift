@@ -42,7 +42,7 @@ enum UniverseRowType {
         case .sovereigntyCampaigns:
             return .sovereigntyCampaigns
         case .itemDatabase:
-            return .itemDatabase(groupIdFilter: nil)
+            return .itemDatabase(groupIdFilter: nil, marketGroupIdFilter: nil)
         }
     }
     

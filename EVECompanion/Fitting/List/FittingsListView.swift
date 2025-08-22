@@ -10,7 +10,9 @@ import EVECompanionKit
 
 struct FittingsListView: View {
     
+    @EnvironmentObject var coordinator: Coordinator
     @StateObject var fittingManager: ECKFittingManager
+    @State var showsShipSelectionView: Bool = false
     
     var body: some View {
         Group {
@@ -40,6 +42,21 @@ struct FittingsListView: View {
         }
         .navigationTitle("Fittings")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showsShipSelectionView = true
+                } label: {
+                    Image(systemName: "plus")
+                }
+
+            }
+        }
+        .sheet(isPresented: $showsShipSelectionView) {
+            ShipSelectionView { ship in
+                coordinator.push(screen: .fittingDetail(fittingManager.character, .init(ship: ship)))
+            }
+        }
         .overlay {
             if fittingManager.fittings.isEmpty && fittingManager.loadingState == .ready {
                 ContentEmptyView(image: Image("Neocom/Fitting"),

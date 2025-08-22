@@ -68,8 +68,8 @@ class Coordinator: ObservableObject {
             ItemView(item: .init(typeId: typeId))
         case .universe:
             UniverseView()
-        case .itemDatabase(let filter):
-            MarketGroupsView(groupIdFilter: filter)
+        case .itemDatabase(let groupFilter, let marketGroupFilter):
+            MarketGroupsView(groupIdFilter: groupFilter, marketGroupIdFilter: marketGroupFilter)
         case .incursions:
             IncursionsView()
         case .sovereigntyCampaigns:

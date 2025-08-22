@@ -172,6 +172,7 @@
 		C9B079062C32C0080059785D /* ECKTokenRefreshError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B079052C32C0080059785D /* ECKTokenRefreshError.swift */; };
 		C9B079082C32C9A00059785D /* ECKTokenExpired.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B079072C32C9A00059785D /* ECKTokenExpired.swift */; };
 		C9B258532E264FA9009A14DB /* FittingDamageProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B258522E264FA9009A14DB /* FittingDamageProfileView.swift */; };
+		C9B25AE62E2836DC009A14DB /* ShipSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B25AE52E2836DC009A14DB /* ShipSelectionView.swift */; };
 		C9B449F82BF3A66300968754 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B449F72BF3A66300968754 /* SingleAxisGeometryReader.swift */; };
 		C9B449FB2BF40B5700968754 /* SkillQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B449FA2BF40B5700968754 /* SkillQueueView.swift */; };
 		C9B638BC2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */; };
@@ -453,6 +454,7 @@
 		C9B079052C32C0080059785D /* ECKTokenRefreshError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKTokenRefreshError.swift; sourceTree = "<group>"; };
 		C9B079072C32C9A00059785D /* ECKTokenExpired.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKTokenExpired.swift; sourceTree = "<group>"; };
 		C9B258522E264FA9009A14DB /* FittingDamageProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDamageProfileView.swift; sourceTree = "<group>"; };
+		C9B25AE52E2836DC009A14DB /* ShipSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShipSelectionView.swift; sourceTree = "<group>"; };
 		C9B449F72BF3A66300968754 /* SingleAxisGeometryReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleAxisGeometryReader.swift; sourceTree = "<group>"; };
 		C9B449FA2BF40B5700968754 /* SkillQueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillQueueView.swift; sourceTree = "<group>"; };
 		C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKAttributeDefaultValueCache.swift; sourceTree = "<group>"; };
@@ -1061,6 +1063,14 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		C9B25AE42E2836D2009A14DB /* ShipSelection */ = {
+			isa = PBXGroup;
+			children = (
+				C9B25AE52E2836DC009A14DB /* ShipSelectionView.swift */,
+			);
+			path = ShipSelection;
+			sourceTree = "<group>";
+		};
 		C9B449F92BF40B5000968754 /* SkillQueue */ = {
 			isa = PBXGroup;
 			children = (
@@ -1234,6 +1244,7 @@
 		C9F055BC2DE2FC8200340A05 /* Fitting */ = {
 			isa = PBXGroup;
 			children = (
+				C9B25AE42E2836D2009A14DB /* ShipSelection */,
 				C989C39D2E1E3D25005DEFDF /* ChargeSelection */,
 				C9F055C22DE34D5400340A05 /* Detail */,
 				C9F055C12DE3040C00340A05 /* List */,
@@ -1559,6 +1570,7 @@
 				C9FD52E12C01D25D0084E5E1 /* WalletJournalView.swift in Sources */,
 				C99750A82C14884600DE5B96 /* MarketOrdersView.swift in Sources */,
 				C9F055B02DE2512E00340A05 /* ServerStatusView.swift in Sources */,
+				C9B25AE62E2836DC009A14DB /* ShipSelectionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

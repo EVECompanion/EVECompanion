@@ -336,6 +336,14 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
                   ship: fitting.ship)
     }
     
+    public convenience init(ship: ECKItem) {
+        self.init(description: "",
+                  fittingId: 0,
+                  items: [],
+                  name: ship.name,
+                  ship: ship)
+    }
+    
     init(description: String,
          fittingId: Int,
          items: [ECKCharacterFittingItem],
