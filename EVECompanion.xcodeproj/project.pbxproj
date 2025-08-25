@@ -70,6 +70,7 @@
 		C92F9C9B2D8AA71200306DD7 /* ECKJumpCapableShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F9C9A2D8AA71200306DD7 /* ECKJumpCapableShip.swift */; };
 		C92F9C9D2D8AA72700306DD7 /* ECKCapitalJumpRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F9C9C2D8AA72700306DD7 /* ECKCapitalJumpRoute.swift */; };
 		C938723B2DBC2FD9000FB35D /* PlanetaryColonyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C938723A2DBC2FD9000FB35D /* PlanetaryColonyCell.swift */; };
+		C93E8FDD2E5CD26900187846 /* EVECompanionIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = C93E8FDC2E5CD26900187846 /* EVECompanionIcon.icon */; };
 		C942571C2C29A97800FAEE5C /* ECKAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942571B2C29A97800FAEE5C /* ECKAsset.swift */; };
 		C942571E2C29A9C500FAEE5C /* ECKAssetLocationFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942571D2C29A9C500FAEE5C /* ECKAssetLocationFlag.swift */; };
 		C94257202C29AC7D00FAEE5C /* ECKAssetLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942571F2C29AC7D00FAEE5C /* ECKAssetLocation.swift */; };
@@ -327,6 +328,7 @@
 		C92F9C9A2D8AA71200306DD7 /* ECKJumpCapableShip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKJumpCapableShip.swift; sourceTree = "<group>"; };
 		C92F9C9C2D8AA72700306DD7 /* ECKCapitalJumpRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCapitalJumpRoute.swift; sourceTree = "<group>"; };
 		C938723A2DBC2FD9000FB35D /* PlanetaryColonyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryColonyCell.swift; sourceTree = "<group>"; };
+		C93E8FDC2E5CD26900187846 /* EVECompanionIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = EVECompanionIcon.icon; sourceTree = "<group>"; };
 		C93FE8372BED29F200729DD8 /* ECFormatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECFormatters.swift; sourceTree = "<group>"; };
 		C942571B2C29A97800FAEE5C /* ECKAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKAsset.swift; sourceTree = "<group>"; };
 		C942571D2C29A9C500FAEE5C /* ECKAssetLocationFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKAssetLocationFlag.swift; sourceTree = "<group>"; };
@@ -724,6 +726,7 @@
 				C9ACC07B2DC9DD0C0000D0FC /* AppDelegate.swift */,
 				C959777C2C28B35F0008F719 /* Assets */,
 				C91EEEBE2BE9730100352175 /* Assets.xcassets */,
+				C93E8FDC2E5CD26900187846 /* EVECompanionIcon.icon */,
 				C98483FF2D7F7CEB0076016B /* CapitalNavigation */,
 				C92F9C972D8A0F5700306DD7 /* CapitalNavigationTab */,
 				C99528CF2BEE0CDB00CA6E06 /* CharacterDetail */,
@@ -1245,6 +1248,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9CB97B02C12516500366D1A /* package-list.json in Resources */,
+				C93E8FDD2E5CD26900187846 /* EVECompanionIcon.icon in Resources */,
 				C91EEEC22BE9730100352175 /* Preview Assets.xcassets in Resources */,
 				C9E93B172DB0DC2E005458BC /* EVE.sqlite in Resources */,
 				C91EEEBF2BE9730100352175 /* Assets.xcassets in Resources */,
@@ -1668,8 +1672,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = EVECompanionIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = EVECompanion/EVECompanion.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1710,8 +1715,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = EVECompanionIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = EVECompanion/EVECompanion.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
