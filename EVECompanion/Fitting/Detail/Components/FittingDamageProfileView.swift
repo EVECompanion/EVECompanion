@@ -28,7 +28,7 @@ struct FittingDamageProfileView: View {
                     Image("Fitting/Resistances/kinetic")
                     Image("Fitting/Resistances/explosive")
                 }
-                Text(compactMode ? "" :"Total")
+                Text(compactMode ? "" : "Total")
             }
             if compactMode == false {
                 Divider()

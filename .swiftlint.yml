@@ -381,7 +381,7 @@ opt_in_rules: # some rules are only opt-in
 
   # Rationale: Provides consistency in coding style
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#operator-function-whitespace
-  - operator_whitespace
+  - function_name_whitespace
 
   # Rationale: Prevents unpredictable behavior
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#override-in-extension
@@ -421,7 +421,7 @@ opt_in_rules: # some rules are only opt-in
 
   # Rationale: Provides consistency in coding style and brevity
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#redundant-optional-initialization
-  - redundant_optional_initialization
+  - implicit_optional_initialization
 
   # Rationale: Provides consistency in coding style and brevity
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#redundant-void-return
