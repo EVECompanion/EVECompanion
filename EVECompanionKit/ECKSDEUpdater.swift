@@ -18,7 +18,7 @@ public class ECKSDEUpdater: NSObject, ObservableObject {
         case updateAvailable
     }
     
-    static let minimumSDEVersion: Int = 12
+    static let minimumSDEVersion: Int = 14
     @Published public var state: State = .noUpdateAvailable
     @Published public var fileSize: Double = 0
     @MainActor

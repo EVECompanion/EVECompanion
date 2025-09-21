@@ -20,14 +20,18 @@ struct FittingDetailView: View {
     
     @ObservedObject var fitting: ECKCharacterFitting
     @State private var selectedTab: FittingDetailTab = .info
-    private let character: ECKCharacter
+    private let manager: ECKFittingManager
+    
+    private var character: ECKCharacter {
+        return manager.character
+    }
     
     private var canUseDrones: Bool {
         return fitting.maxDroneCapacity ?? 0 > 0
     }
     
-    init(character: ECKCharacter, fitting: ECKCharacterFitting) {
-        self.character = character
+    init(manager: ECKFittingManager, fitting: ECKCharacterFitting) {
+        self.manager = manager
         self.fitting = fitting
     }
     
@@ -75,5 +79,5 @@ struct FittingDetailView: View {
 }
 
 #Preview {
-    CoordinatorView(initialScreen: .fittingDetail(.dummy, .dummyAvatar))
+    CoordinatorView(initialScreen: .fittingDetail(.init(character: .dummy, isPreview: true), .dummyAvatar))
 }

@@ -60,8 +60,8 @@ class Coordinator: ObservableObject {
             JumpClonesView(jumpClonesManager: manager)
         case .fittingsList(let manager):
             FittingsListView(fittingManager: manager)
-        case .fittingDetail(let character, let fitting):
-            FittingDetailView(character: character, fitting: fitting)
+        case .fittingDetail(let manager, let fitting):
+            FittingDetailView(manager: manager, fitting: fitting)
         case .item(let item):
             ItemView(item: item)
         case .itemByTypeId(let typeId):

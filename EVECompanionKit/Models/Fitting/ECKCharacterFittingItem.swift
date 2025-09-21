@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKCharacterFittingItem: Decodable, Hashable, Identifiable {
+public class ECKCharacterFittingItem: Codable, Hashable, Identifiable {
     
     private enum CodingKeys: String, CodingKey {
         case flag
@@ -164,6 +164,13 @@ public class ECKCharacterFittingItem: Decodable, Hashable, Identifiable {
         hasher.combine(flag)
         hasher.combine(quantity)
         hasher.combine(item)
+    }
+    
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(flag, forKey: .flag)
+        try container.encode(quantity, forKey: .quantity)
+        try container.encode(item, forKey: .item)
     }
     
 }

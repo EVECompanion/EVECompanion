@@ -86,5 +86,5 @@ struct FittingStatsView: View {
 }
 
 #Preview {
-    FittingDetailView(character: .dummy, fitting: .dummyAvatar)
+    FittingDetailView(manager: .init(character: .dummy, isPreview: true), fitting: .dummyAvatar)
 }

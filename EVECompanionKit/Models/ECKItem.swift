@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class ECKItem: Decodable, Identifiable, @unchecked Sendable, Hashable {
+public final class ECKItem: Codable, Identifiable, @unchecked Sendable, Hashable {
     
     public var id: Int {
         return typeId
@@ -92,6 +92,11 @@ public final class ECKItem: Decodable, Identifiable, @unchecked Sendable, Hashab
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(typeId)
+    }
+    
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(typeId)
     }
     
 }

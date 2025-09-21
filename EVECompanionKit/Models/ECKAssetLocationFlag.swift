@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ECKItemLocationFlag: String, Decodable, Sendable {
+public enum ECKItemLocationFlag: String, Codable, Sendable {
     
     case unknown
     
@@ -108,6 +108,11 @@ public enum ECKItemLocationFlag: String, Decodable, Sendable {
         }
         
         self = value
+    }
+    
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(self.rawValue)
     }
     
 }

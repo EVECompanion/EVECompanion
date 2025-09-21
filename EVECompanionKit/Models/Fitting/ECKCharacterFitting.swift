@@ -7,7 +7,23 @@
 
 import Foundation
 
-public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableObject {
+public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObject {
+    
+    private enum CodingKeys: CodingKey {
+        case description
+        case fittingId
+        case name
+        case ship
+        case target
+        case structure
+        case highSlotModules
+        case midSlotModules
+        case lowSlotModules
+        case rigs
+        case subsystems
+        case drones
+        case skills
+    }
     
     public typealias AttributeID = Int
     
@@ -328,7 +344,22 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
     
     internal var skills: [ECKCharacterFittingItem] = []
     
-    convenience init(fitting: ESIFitting) {
+    public required init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.description = try container.decode(String.self, forKey: .description)
+        self.fittingId = try container.decode(Int.self, forKey: .fittingId)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.ship = try container.decode(ECKCharacterFittingItem.self, forKey: .ship)
+        self.highSlotModules = try container.decode([ECKCharacterFittingItem].self, forKey: .highSlotModules)
+        self.midSlotModules = try container.decode([ECKCharacterFittingItem].self, forKey: .midSlotModules)
+        self.lowSlotModules = try container.decode([ECKCharacterFittingItem].self, forKey: .lowSlotModules)
+        self.rigs = try container.decode([ECKCharacterFittingItem].self, forKey: .rigs)
+        self.subsystems = try container.decode([ECKCharacterFittingItem].self, forKey: .subsystems)
+        self.drones = try container.decode([ECKCharacterFittingItem].self, forKey: .drones)
+        self.skills = try container.decode([ECKCharacterFittingItem].self, forKey: .skills)
+    }
+    
+    internal convenience init(fitting: ESIFitting) {
         self.init(description: fitting.description,
                   fittingId: fitting.fittingId,
                   items: fitting.items,
@@ -336,7 +367,7 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
                   ship: fitting.ship)
     }
     
-    public convenience init(ship: ECKItem) {
+    internal convenience init(ship: ECKItem) {
         self.init(description: "",
                   fittingId: 0,
                   items: [],
@@ -344,11 +375,11 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
                   ship: ship)
     }
     
-    init(description: String,
-         fittingId: Int,
-         items: [ECKCharacterFittingItem],
-         name: String,
-         ship: ECKItem) {
+    internal init(description: String,
+                  fittingId: Int,
+                  items: [ECKCharacterFittingItem],
+                  name: String,
+                  ship: ECKItem) {
         self.description = description
         self.fittingId = fittingId
         
@@ -568,6 +599,23 @@ public class ECKCharacterFitting: Decodable, Identifiable, Hashable, ObservableO
         hasher.combine(items)
         hasher.combine(name)
         hasher.combine(ship)
+    }
+    
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.description, forKey: .description)
+        try container.encode(self.fittingId, forKey: .fittingId)
+        try container.encode(self.name, forKey: .name)
+        try container.encode(self.ship, forKey: .ship)
+        try container.encode(self.target, forKey: .target)
+        try container.encode(self.structure, forKey: .structure)
+        try container.encode(self.highSlotModules, forKey: .highSlotModules)
+        try container.encode(self.midSlotModules, forKey: .midSlotModules)
+        try container.encode(self.lowSlotModules, forKey: .lowSlotModules)
+        try container.encode(self.rigs, forKey: .rigs)
+        try container.encode(self.subsystems, forKey: .subsystems)
+        try container.encode(self.drones, forKey: .drones)
+        try container.encode(self.skills, forKey: .skills)
     }
     
 }

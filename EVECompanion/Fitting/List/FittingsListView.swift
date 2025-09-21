@@ -16,29 +16,44 @@ struct FittingsListView: View {
     
     var body: some View {
         Group {
-            switch fittingManager.loadingState {
-            case .ready,
-                 .reloading:
-                List(fittingManager.fittings) { fitting in
-                    NavigationLink(value: AppScreen.fittingDetail(fittingManager.character,
-                                                                  fitting)) {
-                        FittingCell(fitting: fitting)
+            List {
+                if fittingManager.localFittings.isEmpty == false {
+                    Section("Local Fittings") {
+                        ForEach(fittingManager.localFittings) { fitting in
+                            NavigationLink(value: AppScreen.fittingDetail(fittingManager,
+                                                                          fitting)) {
+                                FittingCell(fitting: fitting)
+                            }
+                        }
                     }
                 }
-                .refreshable {
-                    await fittingManager.loadFittings()
+                
+                if fittingManager.esiFittings.isEmpty == false {
+                    Section("ESI Fittings") {
+                        switch fittingManager.esiLoadingState {
+                        case .ready,
+                                .reloading:
+                            ForEach(fittingManager.esiFittings) { fitting in
+                                NavigationLink(value: AppScreen.fittingDetail(fittingManager,
+                                                                              fitting)) {
+                                    FittingCell(fitting: fitting)
+                                }
+                            }
+                        case .loading:
+                            ProgressView()
+                            
+                        case .error:
+                            RetryButton {
+                                await fittingManager.loadFittings()
+                            }
+                        }
+                    }
                 }
-                .searchable(text: $fittingManager.searchText)
-                
-            case .loading:
-                ProgressView()
-                
-            case .error:
-                RetryButton {
-                    await fittingManager.loadFittings()
-                }
-                
             }
+            .refreshable {
+                await fittingManager.loadFittings()
+            }
+            .searchable(text: $fittingManager.searchText)
         }
         .navigationTitle("Fittings")
         .navigationBarTitleDisplayMode(.inline)
@@ -49,16 +64,16 @@ struct FittingsListView: View {
                 } label: {
                     Image(systemName: "plus")
                 }
-
             }
         }
         .sheet(isPresented: $showsShipSelectionView) {
             ShipSelectionView { ship in
-                coordinator.push(screen: .fittingDetail(fittingManager.character, .init(ship: ship)))
+                coordinator.push(screen: .fittingDetail(fittingManager, fittingManager.createFitting(with: ship)))
             }
         }
         .overlay {
-            if fittingManager.fittings.isEmpty && fittingManager.loadingState == .ready {
+            // TODO: Check for empty local fittings.
+            if fittingManager.esiFittings.isEmpty && fittingManager.esiLoadingState == .ready {
                 ContentEmptyView(image: Image("Neocom/Fitting"),
                                  title: "No Fittings",
                                  subtitle: "New Fittings will appear here.")

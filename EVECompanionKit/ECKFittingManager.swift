@@ -12,20 +12,32 @@ public class ECKFittingManager: ObservableObject {
     public let character: ECKCharacter
     private let isPreview: Bool
     
-    @Published public var loadingState: ECKLoadingState = .loading
-    public var fittings: [ECKCharacterFitting] {
+    @Published var loadedLocalFittings: [ECKCharacterFitting] = []
+    public var localFittings: [ECKCharacterFitting] {
         if searchText.isEmpty == false {
-            return loadedFittings.filter { fitting in
+            return loadedLocalFittings.filter { fitting in
                 return fitting.name.lowercased().contains(searchText.lowercased())
                 || fitting.ship.item.name.lowercased().contains(searchText.lowercased())
             }
         } else {
-            return loadedFittings
+            return loadedLocalFittings
         }
     }
-    @Published public var searchText: String = ""
     
-    @Published var loadedFittings: [ECKCharacterFitting] = []
+    @Published public var esiLoadingState: ECKLoadingState = .loading
+    @Published var loadedESIFittings: [ECKCharacterFitting] = []
+    public var esiFittings: [ECKCharacterFitting] {
+        if searchText.isEmpty == false {
+            return loadedESIFittings.filter { fitting in
+                return fitting.name.lowercased().contains(searchText.lowercased())
+                || fitting.ship.item.name.lowercased().contains(searchText.lowercased())
+            }
+        } else {
+            return loadedESIFittings
+        }
+    }
+    
+    @Published public var searchText: String = ""
     
     public init(character: ECKCharacter, isPreview: Bool = false) {
         self.character = character
@@ -37,30 +49,85 @@ public class ECKFittingManager: ObservableObject {
     
     @MainActor
     public func loadFittings() async {
+        await withTaskGroup { group in
+            group.addTask {
+                await self.loadESIFittings()
+            }
+            
+            group.addTask {
+                await self.loadLocalFittings()
+            }
+        }
+    }
+    
+    @MainActor
+    func loadESIFittings() async {
         guard UserDefaults.standard.isDemoModeEnabled == false && isPreview == false else {
-            self.loadedFittings = [
+            self.loadedESIFittings = [
                 .dummyAvatar
             ]
-            self.loadingState = .ready
+            self.esiLoadingState = .ready
             return
         }
         
-        if fittings.isEmpty {
-            loadingState = .loading
+        if loadedESIFittings.isEmpty {
+            esiLoadingState = .loading
         } else {
-            loadingState = .reloading
+            esiLoadingState = .reloading
         }
         
         let resource = ECKCharacterFittingsResource(token: character.token)
         do {
             let esiFittings = try await ECKWebService().loadResource(resource: resource).response
-            self.loadedFittings = esiFittings.map({ fitting in
+            self.loadedESIFittings = esiFittings.map({ fitting in
                 return .init(fitting: fitting)
             })
-            loadingState = .ready
+            esiLoadingState = .ready
         } catch {
             logger.error("Error while fetching character fittings \(error)")
-            loadingState = .error
+            esiLoadingState = .error
+        }
+    }
+    
+    func getFittingsFileURL() throws -> URL {
+        let documentsDir = try FileManager.default.url(for: .documentDirectory,
+                                                       in: .userDomainMask,
+                                                       appropriateFor: nil,
+                                                       create: true)
+        return documentsDir.appendingPathComponent("fittings.json")
+    }
+    
+    @MainActor
+    func loadLocalFittings() async {
+        do {
+            let fittingsFile = try getFittingsFileURL()
+            let fittingsData = try Data(contentsOf: fittingsFile)
+            
+            self.loadedLocalFittings = try JSONDecoder().decode([ECKCharacterFitting].self, from: fittingsData)
+        } catch {
+            logger.error("Error loading local fittings: \(error)")
+            return
+        }
+    }
+    
+    @MainActor
+    public func createFitting(with ship: ECKItem) -> ECKCharacterFitting {
+        let newFitting = ECKCharacterFitting(ship: ship)
+        self.loadedLocalFittings.append(newFitting)
+        Task {
+            await saveLocalfittings()
+        }
+        return newFitting
+    }
+    
+    @MainActor
+    func saveLocalfittings() async {
+        do {
+            let fittingsFile = try getFittingsFileURL()
+            let fittingsData = try JSONEncoder().encode(loadedLocalFittings)
+            try fittingsData.write(to: fittingsFile, options: .atomic)
+        } catch {
+            logger.error("Error saving fittings: \(error)")
         }
     }
     
