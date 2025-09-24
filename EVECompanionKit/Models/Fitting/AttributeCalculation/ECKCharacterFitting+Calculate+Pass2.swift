@@ -28,18 +28,23 @@ extension ECKCharacterFitting {
         
         for effect in effects {
             let categoryId: Int
+            var sourceTypeId: Int? = nil
             
             switch effect.source {
             case .ship:
                 categoryId = ship.item.itemCategory.categoryId
+                sourceTypeId = ship.item.typeId
             case .character:
                 categoryId = 1373
             case .charge(index: let index):
                 categoryId = items[index].charge!.item.itemCategory.categoryId
+                sourceTypeId = items[index].charge!.item.typeId
             case .item(index: let index):
                 categoryId = items[index].item.itemCategory.categoryId
+                sourceTypeId = items[index].item.typeId
             case .skill(index: let index):
                 categoryId = skills[index].item.itemCategory.categoryId
+                sourceTypeId = skills[index].item.typeId
             case .structure:
                 continue
             case .target:
@@ -111,9 +116,17 @@ extension ECKCharacterFitting {
             case .ownerRequiredSkillModifier(skillId: let skillId),
                  .locationRequiredSkillModifier(skillId: let skillId):
                 // requiredSkill1, requiredSkill2, ...
+                let actualSkillId: Int
+                
+                if let sourceTypeId, skillId == -1 {
+                    actualSkillId = sourceTypeId
+                } else {
+                    actualSkillId = skillId
+                }
+                
                 for attributeId in [182, 183, 184, 1285, 1289, 1290] {
                     if let attribute = ship.attributes[attributeId],
-                       Int(attribute.baseValue) == skillId {
+                       Int(attribute.baseValue) == actualSkillId {
                         await ship.addEffect(attributeId: effect.targetAttributeId,
                                              sourceCategoryId: categoryId,
                                              effect: effect)
@@ -121,7 +134,7 @@ extension ECKCharacterFitting {
                     
                     for item in items {
                         if let attribute = item.attributes[attributeId],
-                           Int(attribute.baseValue) == skillId {
+                           Int(attribute.baseValue) == actualSkillId {
                             await item.addEffect(attributeId: effect.targetAttributeId,
                                                  sourceCategoryId: categoryId,
                                                  effect: effect)
@@ -129,7 +142,7 @@ extension ECKCharacterFitting {
                         
                         if let charge = item.charge,
                            let attribute = charge.attributes[attributeId],
-                           Int(attribute.baseValue) == skillId {
+                           Int(attribute.baseValue) == actualSkillId {
                             await charge.addEffect(attributeId: effect.targetAttributeId,
                                                    sourceCategoryId: categoryId,
                                                    effect: effect)
