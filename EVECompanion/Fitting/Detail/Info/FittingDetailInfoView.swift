@@ -96,6 +96,7 @@ struct FittingDetailInfoView: View {
                 }
             }
             
+            #if DEBUG
             ForEach(fitting.fittingAttributes, id: \.attribute.id) { attribute in
                 HStack {
                     Text(attribute.attribute.displayName)
@@ -107,6 +108,7 @@ struct FittingDetailInfoView: View {
                     }
                 }
             }
+            #endif
         }
     }
     
