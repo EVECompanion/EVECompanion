@@ -12,6 +12,8 @@ extension ECKCharacterFitting {
     internal func pass2() async {
         var effects: [ECKPass2Effect] = []
         self.ship.collectEffects(object: .ship, into: &effects)
+        self.target.collectEffects(object: .target, into: &effects)
+        self.structure.collectEffects(object: .structure, into: &effects)
         // TODO: Implants/Boosters
         for (index, item) in items.enumerated() {
             item.collectEffects(object: .item(index: index), into: &effects)
@@ -33,7 +35,7 @@ extension ECKCharacterFitting {
             case .character:
                 categoryId = 1373
             case .charge(index: let index):
-                categoryId = items[index].item.itemCategory.categoryId
+                categoryId = items[index].charge!.item.itemCategory.categoryId
             case .item(index: let index):
                 categoryId = items[index].item.itemCategory.categoryId
             case .skill(index: let index):
@@ -54,7 +56,7 @@ extension ECKCharacterFitting {
                     // TODO: Implants and Stuff.
                     continue
                 case .charge(index: let index):
-                    target = items[index]
+                    target = items[index].charge!
                 case .item(index: let index):
                     target = items[index]
                 case .skill(index: let index):
@@ -128,9 +130,9 @@ extension ECKCharacterFitting {
                         if let charge = item.charge,
                            let attribute = charge.attributes[attributeId],
                            Int(attribute.baseValue) == skillId {
-                            await item.addEffect(attributeId: effect.targetAttributeId,
-                                                 sourceCategoryId: categoryId,
-                                                 effect: effect)
+                            await charge.addEffect(attributeId: effect.targetAttributeId,
+                                                   sourceCategoryId: categoryId,
+                                                   effect: effect)
                         }
                     }
                 }
@@ -164,7 +166,6 @@ fileprivate extension ECKCharacterFittingItem {
     }
     
     func addEffect(attributeId: Int, sourceCategoryId: Int, effect: ECKPass2Effect) async {
-        
         var attribute: ECKCharacterFitting.FittingAttribute
         if let existingAttribute = self.attributes[attributeId] {
             attribute = existingAttribute
