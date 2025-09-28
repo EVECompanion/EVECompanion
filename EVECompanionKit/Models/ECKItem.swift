@@ -45,6 +45,30 @@ public final class ECKItem: Codable, Identifiable, @unchecked Sendable, Hashable
         return ECKSDEManager.shared.itemAttributes(typeId)
     }()
     
+    public lazy var slotType: ECKCharacterFitting.ModuleSlotType? = {
+        let effects = ECKSDEManager.shared.getEffects(for: typeId)
+        
+        for effect in effects {
+            switch effect.name {
+            case "loPower":
+                return .low
+            case "medPower":
+                return .mid
+            case "hiPower":
+                return .high
+            case "rigSlot":
+                return .rig
+            case "subSystem":
+                return .subsystem
+            default:
+                continue
+            }
+        }
+        
+        logger.error("Cannot get slot type for item \(name) (\(typeId))")
+        return nil
+    }()
+    
     public struct SkillRequirement: Identifiable {
         public let skill: ECKItem
         public let requiredLevel: Int

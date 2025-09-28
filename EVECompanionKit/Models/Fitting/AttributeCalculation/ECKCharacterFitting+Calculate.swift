@@ -179,11 +179,11 @@ extension ECKCharacterFitting {
     public class FittingAttribute {
         
         public let id: Int
-        let baseValue: Float
+        public let baseValue: Float
         public var value: Float?
         var effects: [FittingEffect]
         
-        init(id: Int, defaultValue: Float) {
+        public init(id: Int, defaultValue: Float) {
             self.id = id
             self.baseValue = defaultValue
             self.value = nil
@@ -215,7 +215,7 @@ extension ECKCharacterFitting {
         }
     }
     
-    public func calculateAttributes(skills: ECKCharacterSkills) {
+    public func calculateAttributes(skills: ECKCharacterSkills?) {
         self.ship.attributes.removeAll()
         self.target.attributes.removeAll()
         self.structure.attributes.removeAll()
@@ -224,9 +224,10 @@ extension ECKCharacterFitting {
             $0.charge?.attributes.removeAll()
         })
         self.skills.removeAll()
+        self.lastUsedSkills = skills
         
         Task {
-            pass1(skills: skills)
+            pass1(skills: skills ?? lastUsedSkills ?? .dummy)
             await pass2()
             await pass3()
             pass4()

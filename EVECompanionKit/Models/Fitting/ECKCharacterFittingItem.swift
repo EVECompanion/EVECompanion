@@ -123,8 +123,8 @@ public class ECKCharacterFittingItem: Codable, Hashable, Identifiable {
                      dpsWithoutReload: dpsWithoutReload)
     }
     
-    // TODO: Remove, Debug Only!
-    public var fittingAttributes: [(attribute: ECKSDEManager.ItemAttribute, fittingAttribute: ECKCharacterFitting.FittingAttribute)] {
+    #if DEBUG
+    public var debugFittingAttributes: [(attribute: ECKSDEManager.ItemAttribute, fittingAttribute: ECKCharacterFitting.FittingAttribute)] {
         var fittingAttributes: [ECKCharacterFitting.FittingAttribute] = Array(attributes.values)
         fittingAttributes.sort(by: { $0.id < $1.id })
         let result: [(attribute: ECKSDEManager.ItemAttribute, fittingAttribute: ECKCharacterFitting.FittingAttribute)] = fittingAttributes.map { fittingAttribute in
@@ -140,6 +140,7 @@ public class ECKCharacterFittingItem: Codable, Hashable, Identifiable {
         
         return result
     }
+    #endif
     
     public required init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)

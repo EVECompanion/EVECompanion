@@ -15,6 +15,8 @@
 		C9012AF02C03282600407A81 /* ECKItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9012AEF2C03282600407A81 /* ECKItem.swift */; };
 		C9012AF32C032D4E00407A81 /* WalletTransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9012AF22C032D4E00407A81 /* WalletTransactionsView.swift */; };
 		C9012AF52C0334F400407A81 /* WalletTransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9012AF42C0334F400407A81 /* WalletTransactionCell.swift */; };
+		C903BF7E2E8694C6001C224E /* ModuleSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C903BF7D2E8694C6001C224E /* ModuleSelectionView.swift */; };
+		C903BF802E8889B8001C224E /* ECKAddModuleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C903BF7F2E8889B8001C224E /* ECKAddModuleError.swift */; };
 		C90931FE2DAB9E9000A88120 /* Deeplink.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90931FD2DAB9E9000A88120 /* Deeplink.swift */; };
 		C90D508E2BF8B19B00DEC0F3 /* MailboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90D508D2BF8B19B00DEC0F3 /* MailboxView.swift */; };
 		C90D50902BF8B22400DEC0F3 /* ECKCharacter+Mail.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90D508F2BF8B22400DEC0F3 /* ECKCharacter+Mail.swift */; };
@@ -300,6 +302,8 @@
 		C9012AEF2C03282600407A81 /* ECKItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKItem.swift; sourceTree = "<group>"; };
 		C9012AF22C032D4E00407A81 /* WalletTransactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransactionsView.swift; sourceTree = "<group>"; };
 		C9012AF42C0334F400407A81 /* WalletTransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransactionCell.swift; sourceTree = "<group>"; };
+		C903BF7D2E8694C6001C224E /* ModuleSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleSelectionView.swift; sourceTree = "<group>"; };
+		C903BF7F2E8889B8001C224E /* ECKAddModuleError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKAddModuleError.swift; sourceTree = "<group>"; };
 		C90931FD2DAB9E9000A88120 /* Deeplink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deeplink.swift; sourceTree = "<group>"; };
 		C90D508D2BF8B19B00DEC0F3 /* MailboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailboxView.swift; sourceTree = "<group>"; };
 		C90D508F2BF8B22400DEC0F3 /* ECKCharacter+Mail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacter+Mail.swift"; sourceTree = "<group>"; };
@@ -597,6 +601,14 @@
 				C9012AF42C0334F400407A81 /* WalletTransactionCell.swift */,
 			);
 			path = WalletTransactions;
+			sourceTree = "<group>";
+		};
+		C903BF7C2E8694B7001C224E /* ModuleSelection */ = {
+			isa = PBXGroup;
+			children = (
+				C903BF7D2E8694C6001C224E /* ModuleSelectionView.swift */,
+			);
+			path = ModuleSelection;
 			sourceTree = "<group>";
 		};
 		C90931FC2DAB9E8600A88120 /* Deeplink */ = {
@@ -1233,6 +1245,7 @@
 			children = (
 				C9D094FA2DE7971300715479 /* AttributeCalculation */,
 				C9F055B52DE2F66D00340A05 /* ECKCharacterFitting.swift */,
+				C903BF7F2E8889B8001C224E /* ECKAddModuleError.swift */,
 				C9F055C82DE3B89F00340A05 /* ECKCharacterFitting+Stats.swift */,
 				C9F055B82DE2F79200340A05 /* ECKCharacterFittingItem.swift */,
 				C9D094F72DE5110A00715479 /* Utils */,
@@ -1244,6 +1257,7 @@
 		C9F055BC2DE2FC8200340A05 /* Fitting */ = {
 			isa = PBXGroup;
 			children = (
+				C903BF7C2E8694B7001C224E /* ModuleSelection */,
 				C9B25AE42E2836D2009A14DB /* ShipSelection */,
 				C989C39D2E1E3D25005DEFDF /* ChargeSelection */,
 				C9F055C22DE34D5400340A05 /* Detail */,
@@ -1501,6 +1515,7 @@
 				C9C7C4272DA1AFC40079DF82 /* UIFont+Weight.swift in Sources */,
 				C9D570AB2C5B961F00985587 /* SDEUpdateView.swift in Sources */,
 				C96735202D8CBA1F004E059F /* CapitalJumpRouteCell.swift in Sources */,
+				C903BF7E2E8694C6001C224E /* ModuleSelectionView.swift in Sources */,
 				C9DEF2F82C14B37C00815AF0 /* MailFeedbackView.swift in Sources */,
 				C9EA45FB2D90A7F200FE4365 /* ItemView.swift in Sources */,
 				C9B885342D81C617005A32CA /* CapitalNavigationSolarSystemPickerView.swift in Sources */,
@@ -1688,6 +1703,7 @@
 				C92D17CF2C27635C00D6FF5A /* ECKJumpClonesManager.swift in Sources */,
 				C98169C22C11C2FB0033B932 /* ECKCharacterAttributesResource.swift in Sources */,
 				C96430822CC1AB7500E8D6A6 /* ECKPlanetaryColony.swift in Sources */,
+				C903BF802E8889B8001C224E /* ECKAddModuleError.swift in Sources */,
 				C9E2FFEF2BFD131900754C2D /* ECKOptionalResponse.swift in Sources */,
 				C9E2FFED2BFD128B00754C2D /* ECKAlliance.swift in Sources */,
 				C91672C72BEAC9C1009EC580 /* ECKAppInfo.swift in Sources */,

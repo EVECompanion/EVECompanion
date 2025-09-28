@@ -123,4 +123,14 @@ extension ECKCharacterFitting {
         
     }
     
+    // MARK: - Slot Type
+    
+    public enum ModuleSlotType: String {
+        case rig
+        case subsystem
+        case high
+        case mid
+        case low
+    }
+    
 }

@@ -12,9 +12,17 @@ struct MarketGroupsView: View {
     
     @StateObject var manager: ECKMarketGroupManager
     
-    init(groupIdFilter: Int?, marketGroupIdFilter: Int?) {
+    private var selectionHandler: ((ECKItem) -> Void)?
+    private let customTitle: String?
+    
+    init(groupIdFilter: Int?,
+         marketGroupIdFilter: Int?,
+         customTitle: String? = nil,
+         selectionHandler: ((ECKItem) -> Void)? = nil) {
         let manager = ECKMarketGroupManager(groupIdFilter: groupIdFilter,
                                             marketGroupIdFilter: marketGroupIdFilter)
+        self.customTitle = customTitle
+        self.selectionHandler = selectionHandler
         self._manager = .init(wrappedValue: manager)
     }
     
@@ -23,16 +31,19 @@ struct MarketGroupsView: View {
             OutlineGroup(manager.marketGroups, children: \.children) { type in
                 switch type {
                 case .item(let item):
-                    NavigationLink(value: AppScreen.item(item)) {
-                        HStack {
-                            ECImage(id: item.typeId,
-                                    category: .types)
-                                .frame(width: 40,
-                                       height: 40)
-                            
-                            Text(item.name)
+                    if let selectionHandler {
+                        Button {
+                            selectionHandler(item)
+                        } label: {
+                            itemCell(for: item)
+                        }
+
+                    } else {
+                        NavigationLink(value: AppScreen.item(item)) {
+                            itemCell(for: item)
                         }
                     }
+                    
                 case .marketGroup(let marketGroup):
                     Text(marketGroup.name)
                 }
@@ -40,7 +51,19 @@ struct MarketGroupsView: View {
         }
         .searchable(text: $manager.searchString,
                     placement: .navigationBarDrawer)
-        .navigationTitle("Item Database")
+        .navigationTitle(customTitle ?? "Item Database")
+    }
+    
+    @ViewBuilder
+    func itemCell(for item: ECKItem) -> some View {
+        HStack {
+            ECImage(id: item.typeId,
+                    category: .types)
+                .frame(width: 40,
+                       height: 40)
+            
+            Text(item.name)
+        }
     }
     
 }

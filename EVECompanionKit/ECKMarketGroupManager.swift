@@ -48,7 +48,9 @@ public class ECKMarketGroupManager: ObservableObject {
             return
         }
         
-        self.searchedItems = ECKSDEManager.shared.itemSearch(text: searchString, groupIdFilter: groupIdFilter).map({ .item($0) })
+        // TODO: MarketGroupIDFilter
+        self.searchedItems = ECKSDEManager.shared.itemSearch(text: searchString,
+                                                             groupIdFilter: groupIdFilter).map({ .item($0) })
     }
     
 }

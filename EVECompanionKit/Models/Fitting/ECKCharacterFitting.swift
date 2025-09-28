@@ -343,6 +343,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     }
     
     internal var skills: [ECKCharacterFittingItem] = []
+    internal var lastUsedSkills: ECKCharacterSkills?
     
     public required init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -616,6 +617,89 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         try container.encode(self.subsystems, forKey: .subsystems)
         try container.encode(self.drones, forKey: .drones)
         try container.encode(self.skills, forKey: .skills)
+    }
+    
+    public func addModule(item: ECKItem, skills: ECKCharacterSkills) throws(ECKAddModuleError) {
+        guard let slotType = item.slotType else {
+            throw .moduleNotFittable(item)
+        }
+        
+        try checkItemIsFittable(item: item)
+        
+        switch slotType {
+        case .rig:
+            guard self.rigs.count < self.rigSlots else {
+                throw .noFreeSlot(item, .rig)
+            }
+            
+            self.rigs.append(.init(flag: .init(rawValue: "RigSlot\(rigs.count)")!, quantity: 1, item: item))
+        case .subsystem:
+            guard self.subsystems.count < self.subsystemSlots else {
+                throw .noFreeSlot(item, .subsystem)
+            }
+            
+            self.subsystems.append(.init(flag: .init(rawValue: "SubSystemSlot\(rigs.count)")!, quantity: 1, item: item))
+        case .high:
+            guard self.highSlotModules.count < self.highSlots else {
+                throw .noFreeSlot(item, .high)
+            }
+            
+            self.highSlotModules.append(.init(flag: .init(rawValue: "HiSlot\(rigs.count)")!, quantity: 1, item: item))
+        case .mid:
+            guard self.midSlotModules.count < self.midSlots else {
+                throw .noFreeSlot(item, .mid)
+            }
+            
+            self.midSlotModules.append(.init(flag: .init(rawValue: "MedSlot\(rigs.count)")!, quantity: 1, item: item))
+        case .low:
+            guard self.lowSlotModules.count < self.lowSlots else {
+                throw .noFreeSlot(item, .low)
+            }
+            
+            self.lowSlotModules.append(.init(flag: .init(rawValue: "LoSlot\(rigs.count)")!, quantity: 1, item: item))
+        }
+        
+        calculateAttributes(skills: nil)
+        // TODO: Save
+    }
+    
+    public func removeCharge(from item: ECKCharacterFittingItem) {
+        item.charge = nil
+        self.objectWillChange.send()
+        calculateAttributes(skills: nil)
+        // TODO: Save
+    }
+    
+    public func removeModule(item: ECKCharacterFittingItem) {
+        switch item.item.slotType {
+        case .high:
+            highSlotModules = highSlotModules.filter { $0.id != item.id }
+        case .mid:
+            midSlotModules = midSlotModules.filter { $0.id != item.id }
+        case .low:
+            lowSlotModules = lowSlotModules.filter { $0.id != item.id }
+        case .subsystem:
+            // TODO: Remove other modules if the slot counts changed
+            return
+            
+        case .rig:
+            rigs = rigs.filter { $0.id != item.id }
+            
+        case .none:
+            return
+        }
+        
+        self.objectWillChange.send()
+        calculateAttributes(skills: nil)
+        // TODO: Save
+    }
+    
+    private func checkItemIsFittable(item: ECKItem) throws(ECKAddModuleError) {
+        guard let slotType = item.slotType else {
+            throw .moduleNotFittable(item)
+        }
+        
+        // TODO: Implement Module Compatibility Check
     }
     
 }

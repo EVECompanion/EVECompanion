@@ -28,7 +28,7 @@ extension ECKCharacterFitting {
         
         for effect in effects {
             let categoryId: Int
-            var sourceTypeId: Int? = nil
+            var sourceTypeId: Int?
             
             switch effect.source {
             case .ship:

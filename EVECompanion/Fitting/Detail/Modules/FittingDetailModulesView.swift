@@ -10,7 +10,7 @@ import EVECompanionKit
 
 struct FittingDetailModulesView: View {
     
-    enum ModuleEntry: Identifiable {
+    enum ModuleEntry: Identifiable, Hashable {
         var id: UUID {
             switch self {
             case .item(let item):
@@ -24,9 +24,26 @@ struct FittingDetailModulesView: View {
         case empty(UUID)
     }
     
+    enum SheetItem: Identifiable {
+        case chargeSelection(target: ECKCharacterFittingItem)
+        case moduleSelection(moduleType: ModuleSelectionView.ModuleType)
+        case moduleReplacement(moduleType: ModuleSelectionView.ModuleType, moduleToReplace: ECKCharacterFittingItem)
+        
+        var id: String {
+            switch self {
+            case .chargeSelection(let target):
+                return target.id.uuidString
+            case .moduleSelection(let moduleType):
+                return moduleType.id
+            case .moduleReplacement(moduleType: let moduleType, moduleToReplace: let moduleToReplace):
+                return "\(moduleType.id)-\(moduleToReplace.id.uuidString)"
+            }
+        }
+    }
+    
     @ObservedObject private var fitting: ECKCharacterFitting
     private let character: ECKCharacter
-    @State private var chargeTargetItem: ECKCharacterFittingItem?
+    @State private var sheetItem: SheetItem?
     
     init(character: ECKCharacter, fitting: ECKCharacterFitting) {
         self.character = character
@@ -38,18 +55,20 @@ struct FittingDetailModulesView: View {
             section(modules: moduleEntries(modules: fitting.subsystems,
                                            slotFlagPrefix: "SubSystemSlot",
                                            slots: fitting.subsystemSlots),
+                    moduleType: .subsystem,
                     numberOfSlots: fitting.subsystemSlots,
                     title: "Subsystems",
-                    slotType: "Subsystem",
+                    slotType: .subsystem,
                     icon: "Fitting/subsystemslot") {
                 
             }
             section(modules: moduleEntries(modules: fitting.highSlotModules,
                                            slotFlagPrefix: "HiSlot",
                                            slots: fitting.highSlots),
+                    moduleType: .module,
                     numberOfSlots: fitting.highSlots,
                     title: "High Slots",
-                    slotType: "High",
+                    slotType: .high,
                     icon: "Fitting/highslot") {
                 VStack {
                     Label {
@@ -73,46 +92,69 @@ struct FittingDetailModulesView: View {
             section(modules: moduleEntries(modules: fitting.midSlotModules,
                                            slotFlagPrefix: "MedSlot",
                                            slots: fitting.midSlots),
+                    moduleType: .module,
                     numberOfSlots: fitting.midSlots,
                     title: "Mid Slots",
-                    slotType: "Mid",
+                    slotType: .mid,
                     icon: "Fitting/midslot") {
                 
             }
             section(modules: moduleEntries(modules: fitting.lowSlotModules,
                                            slotFlagPrefix: "LoSlot",
                                            slots: fitting.lowSlots),
+                    moduleType: .module,
                     numberOfSlots: fitting.lowSlots,
                     title: "Low Slots",
-                    slotType: "Low",
+                    slotType: .low,
                     icon: "Fitting/lowslot") {
                 
             }
             section(modules: moduleEntries(modules: fitting.rigs,
                                            slotFlagPrefix: "RigSlot",
                                            slots: fitting.rigSlots),
+                    moduleType: .rig,
                     numberOfSlots: fitting.rigSlots,
                     title: "Rigs",
-                    slotType: "Rig",
+                    slotType: .rig,
                     icon: "Fitting/rigslot") {
                 
             }
         }
-        .sheet(item: $chargeTargetItem) { target in
-            ChargeSelectionView(target: target.item) { selectedCharge in
-                target.charge = .init(flag: target.flag,
-                                      quantity: 1,
-                                      item: selectedCharge)
-                fitting.calculateAttributes(skills: character.skills ?? .empty)
+        .sheet(item: $sheetItem) { item in
+            switch item {
+            case .chargeSelection(let target):
+                ChargeSelectionView(target: target.item) { selectedCharge in
+                    target.charge = .init(flag: target.flag,
+                                          quantity: 1,
+                                          item: selectedCharge)
+                    fitting.calculateAttributes(skills: character.skills ?? .empty)
+                }
+            case .moduleSelection(let moduleType):
+                ModuleSelectionView(moduleType: moduleType, targetShip: fitting.ship.item) { item in
+                    do {
+                        try fitting.addModule(item: item, skills: character.skills ?? .empty)
+                    } catch {
+                        // TODO: Show Error to User
+                    }
+                }
+            case .moduleReplacement(moduleType: let moduleType, moduleToReplace: let moduleToReplace):
+                ModuleSelectionView(moduleType: moduleType, targetShip: fitting.ship.item) { item in
+                    do {
+                        try fitting.addModule(item: item, skills: character.skills ?? .empty)
+                    } catch {
+                        // TODO: Show Error to User
+                    }
+                }
             }
         }
     }
     
     @ViewBuilder
     private func section(modules: [ModuleEntry],
+                         moduleType: ModuleSelectionView.ModuleType,
                          numberOfSlots: Int,
                          title: String,
-                         slotType: String,
+                         slotType: ECKCharacterFitting.ModuleSlotType,
                          icon: String,
                          @ViewBuilder additionalHeaderView: (() -> some View)) -> some View {
         if numberOfSlots > 0 {
@@ -120,56 +162,8 @@ struct FittingDetailModulesView: View {
                 ForEach(modules) { module in
                     switch module {
                     case .item(let item):
-                        HStack {
-                            ECImage(id: item.item.typeId, category: .types)
-                                .frame(width: 40, height: 40)
-                            
-                            VStack(alignment: .leading) {
-                                Text(item.item.name)
-                                
-                                Group {
-                                    if let optimalRange = item.attributes[54] {
-                                        moduleAttributeView(icon: "Fitting/targetingRange",
-                                                            title: "Optimal Range",
-                                                            unit: .length,
-                                                            attribute: optimalRange)
-                                    }
-                                    
-                                    if let falloff = item.attributes[158] {
-                                        moduleAttributeView(icon: "Fitting/falloff",
-                                                            title: "Falloff",
-                                                            unit: .length,
-                                                            attribute: falloff)
-                                    }
-                                    
-                                    if let damageProfile = item.damageProfile,
-                                       damageProfile.containsDamage {
-                                        FittingDamageProfileView(damageProfile: damageProfile,
-                                                                 compactMode: true)
-                                            .foregroundStyle(.primary)
-                                    }
-                                }
-                                .foregroundStyle(.secondary)
-                            }
-                            
-                        }
-                        
-                        if item.canUseCharges {
-                            Button {
-                                self.chargeTargetItem = item
-                            } label: {
-                                if let charge = item.charge {
-                                    HStack {
-                                        ECImage(id: charge.item.typeId, category: .types)
-                                            .frame(width: 40, height: 40)
-                                        
-                                        Text(charge.item.name)
-                                    }
-                                } else {
-                                    Text("Add Charge")
-                                }
-                            }
-                        }
+                        itemCell(for: item,
+                                 moduleType: moduleType)
                         
 //                        ForEach(item.fittingAttributes, id: \.attribute.id) { attribute in
 //                            HStack {
@@ -184,13 +178,10 @@ struct FittingDetailModulesView: View {
 //                        }
                     
                     case .empty:
-                        HStack {
-                            Image(icon)
-                                .resizable()
-                                .frame(width: 40, height: 40)
-                            
-                            Text("Empty \(slotType) Slot")
-                        }
+                        emptySlotCell(moduleType: moduleType,
+                                      slotType: slotType,
+                                      icon: icon)
+                        
                     }
                 }
                 
@@ -200,6 +191,130 @@ struct FittingDetailModulesView: View {
                     Spacer()
                     additionalHeaderView()
                 }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func itemCell(for item: ECKCharacterFittingItem,
+                          moduleType: ModuleSelectionView.ModuleType) -> some View {
+        VStack(alignment: .leading) {
+            HStack {
+                Button {
+                    self.sheetItem = .moduleReplacement(moduleType: moduleType,
+                                                        moduleToReplace: item)
+                } label: {
+                    HStack {
+                        ECImage(id: item.item.typeId, category: .types)
+                            .frame(width: 40, height: 40)
+                        
+                        VStack(alignment: .leading) {
+                            Text(item.item.name)
+                            
+                            Group {
+                                if let optimalRange = item.attributes[54] {
+                                    moduleAttributeView(icon: "Fitting/targetingRange",
+                                                        title: "Optimal Range",
+                                                        unit: .length,
+                                                        attribute: optimalRange)
+                                }
+                                
+                                if let falloff = item.attributes[158] {
+                                    moduleAttributeView(icon: "Fitting/falloff",
+                                                        title: "Falloff",
+                                                        unit: .length,
+                                                        attribute: falloff)
+                                }
+                                
+                                if let maximumFlightTimeAttribute = item.charge?.attributes[281],
+                                   let chargeVelocityAttribute = item.charge?.attributes[37] {
+                                    let maximumFlightTime: Float = maximumFlightTimeAttribute.value ?? maximumFlightTimeAttribute.baseValue
+                                    let chargeVelocity: Float = chargeVelocityAttribute.value ?? chargeVelocityAttribute.baseValue
+                                    let flightRange = chargeVelocity * maximumFlightTime / Float(MSEC_PER_SEC)
+                                    let flightRangeAttribute = ECKCharacterFitting.FittingAttribute(id: -1, defaultValue: flightRange)
+                                    
+                                    moduleAttributeView(icon: "Fitting/targetingRange",
+                                                        title: "Missile Flight Range",
+                                                        unit: .length,
+                                                        attribute: flightRangeAttribute)
+                                }
+                                
+                                if let damageProfile = item.damageProfile,
+                                   damageProfile.containsDamage {
+                                    FittingDamageProfileView(damageProfile: damageProfile,
+                                                             compactMode: true)
+                                    .foregroundStyle(.primary)
+                                }
+                            }
+                            .foregroundStyle(.secondary)
+                        }
+                        
+                    }
+                }
+                .buttonStyle(.plain)
+                
+                Spacer()
+                
+                Button {
+                    fitting.removeModule(item: item)
+                } label: {
+                    Image(systemName: "xmark")
+                }
+                .buttonStyle(.borderless)
+            }
+            
+            if item.canUseCharges {
+                Divider()
+                
+                HStack {
+                    Button {
+                        self.sheetItem = .chargeSelection(target: item)
+                    } label: {
+                        if let charge = item.charge {
+                            HStack {
+                                ECImage(id: charge.item.typeId, category: .types)
+                                    .frame(width: 40, height: 40)
+                                
+                                Text(charge.item.name)
+                            }
+                        } else {
+                            Text("Add Charge")
+                                .foregroundStyle(Color.accentColor)
+                        }
+                    }
+                    .buttonStyle(.borderless)
+                    
+                    Spacer()
+                    
+                    if item.charge != nil {
+                        Button {
+                            withAnimation {
+                                fitting.removeCharge(from: item)
+                            }
+                        } label: {
+                            Image(systemName: "xmark")
+                        }
+                        .buttonStyle(.borderless)
+                    }
+                }
+            }
+        }
+        .animation(.spring, value: item.charge)
+    }
+    
+    @ViewBuilder
+    private func emptySlotCell(moduleType: ModuleSelectionView.ModuleType,
+                               slotType: ECKCharacterFitting.ModuleSlotType,
+                               icon: String) -> some View {
+        Button {
+            self.sheetItem = .moduleSelection(moduleType: moduleType)
+        } label: {
+            HStack {
+                Image(icon)
+                    .resizable()
+                    .frame(width: 40, height: 40)
+                
+                Text("Empty \(slotType.name) Slot")
             }
         }
     }
@@ -229,7 +344,7 @@ struct FittingDetailModulesView: View {
             
             Spacer()
             
-            Text(unit.formatted(attribute.value ?? 0))
+            Text(unit.formatted(attribute.value ?? attribute.baseValue))
         }
     }
     
@@ -256,6 +371,23 @@ struct FittingDetailModulesView: View {
         return result
     }
     
+}
+
+private extension ECKCharacterFitting.ModuleSlotType {
+    var name: String {
+        switch self {
+        case .rig:
+            return "Rig"
+        case .subsystem:
+            return "Subsystem"
+        case .high:
+            return "High"
+        case .mid:
+            return "Mid"
+        case .low:
+            return "Low"
+        }
+    }
 }
 
 #Preview {
