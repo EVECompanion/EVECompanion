@@ -665,7 +665,6 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     
     public func removeCharge(from item: ECKCharacterFittingItem) {
         item.charge = nil
-        self.objectWillChange.send()
         calculateAttributes(skills: nil)
         // TODO: Save
     }
@@ -689,7 +688,6 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
             return
         }
         
-        self.objectWillChange.send()
         calculateAttributes(skills: nil)
         // TODO: Save
     }
