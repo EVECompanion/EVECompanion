@@ -131,6 +131,21 @@ extension ECKCharacterFitting {
         case high
         case mid
         case low
+        
+        var name: String {
+            switch self {
+            case .rig:
+                return "rig slot"
+            case .subsystem:
+                return "subsystem slot"
+            case .high:
+                return "high slot"
+            case .mid:
+                return "mid slot"
+            case .low:
+                return "low slot"
+            }
+        }
     }
     
 }

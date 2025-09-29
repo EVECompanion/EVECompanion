@@ -638,25 +638,25 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
                 throw .noFreeSlot(item, .subsystem)
             }
             
-            self.subsystems.append(.init(flag: .init(rawValue: "SubSystemSlot\(rigs.count)")!, quantity: 1, item: item))
+            self.subsystems.append(.init(flag: .init(rawValue: "SubSystemSlot\(subsystems.count)")!, quantity: 1, item: item))
         case .high:
             guard self.highSlotModules.count < self.highSlots else {
                 throw .noFreeSlot(item, .high)
             }
             
-            self.highSlotModules.append(.init(flag: .init(rawValue: "HiSlot\(rigs.count)")!, quantity: 1, item: item))
+            self.highSlotModules.append(.init(flag: .init(rawValue: "HiSlot\(highSlotModules.count)")!, quantity: 1, item: item))
         case .mid:
             guard self.midSlotModules.count < self.midSlots else {
                 throw .noFreeSlot(item, .mid)
             }
             
-            self.midSlotModules.append(.init(flag: .init(rawValue: "MedSlot\(rigs.count)")!, quantity: 1, item: item))
+            self.midSlotModules.append(.init(flag: .init(rawValue: "MedSlot\(midSlotModules.count)")!, quantity: 1, item: item))
         case .low:
             guard self.lowSlotModules.count < self.lowSlots else {
                 throw .noFreeSlot(item, .low)
             }
             
-            self.lowSlotModules.append(.init(flag: .init(rawValue: "LoSlot\(rigs.count)")!, quantity: 1, item: item))
+            self.lowSlotModules.append(.init(flag: .init(rawValue: "LoSlot\(lowSlotModules.count)")!, quantity: 1, item: item))
         }
         
         calculateAttributes(skills: nil)

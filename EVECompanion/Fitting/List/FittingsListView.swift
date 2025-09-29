@@ -72,8 +72,7 @@ struct FittingsListView: View {
             }
         }
         .overlay {
-            // TODO: Check for empty local fittings.
-            if fittingManager.esiFittings.isEmpty && fittingManager.esiLoadingState == .ready {
+            if fittingManager.esiFittings.isEmpty && fittingManager.localFittings.isEmpty && fittingManager.esiLoadingState == .ready {
                 ContentEmptyView(image: Image("Neocom/Fitting"),
                                  title: "No Fittings",
                                  subtitle: "New Fittings will appear here.")

@@ -44,6 +44,8 @@ struct FittingDetailModulesView: View {
     @ObservedObject private var fitting: ECKCharacterFitting
     private let character: ECKCharacter
     @State private var sheetItem: SheetItem?
+    @State private var addModuleError: ECKAddModuleError?
+    @State private var showModuleErrorDialog: Bool = false
     
     init(character: ECKCharacter, fitting: ECKCharacterFitting) {
         self.character = character
@@ -120,6 +122,15 @@ struct FittingDetailModulesView: View {
                 
             }
         }
+        .alert("Error adding module",
+               isPresented: $showModuleErrorDialog,
+               presenting: $addModuleError) { error in
+            Button("Ok") {
+                error.wrappedValue = nil
+            }
+        } message: { error in
+            Text(error.wrappedValue?.text ?? "")
+        }
         .sheet(item: $sheetItem) { item in
             switch item {
             case .chargeSelection(let target):
@@ -131,18 +142,20 @@ struct FittingDetailModulesView: View {
                 }
             case .moduleSelection(let moduleType):
                 ModuleSelectionView(moduleType: moduleType, targetShip: fitting.ship.item) { item in
-                    do {
+                    do throws(ECKAddModuleError) {
                         try fitting.addModule(item: item, skills: character.skills ?? .empty)
                     } catch {
-                        // TODO: Show Error to User
+                        self.addModuleError = error
+                        self.showModuleErrorDialog = true
                     }
                 }
             case .moduleReplacement(moduleType: let moduleType, moduleToReplace: let moduleToReplace):
                 ModuleSelectionView(moduleType: moduleType, targetShip: fitting.ship.item) { item in
-                    do {
+                    do throws(ECKAddModuleError) {
                         try fitting.addModule(item: item, skills: character.skills ?? .empty)
                     } catch {
-                        // TODO: Show Error to User
+                        self.addModuleError = error
+                        self.showModuleErrorDialog = true
                     }
                 }
             }
