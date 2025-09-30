@@ -49,10 +49,6 @@ struct FittingStatsView: View {
                       unit: "mbit/s",
                       tint: .blue)
             }
-            
-            GridRow {
-                
-            }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 5)
@@ -73,6 +69,12 @@ struct FittingStatsView: View {
                     
                     Text("\(ECFormatters.shortenedValue(value, maximumFractionDigits: 1))/\(ECFormatters.shortenedValue(maxValue, maximumFractionDigits: 1)) \(unit)")
                         .foregroundStyle(.secondary)
+                }
+                .background {
+                    if value > maxValue {
+                        RoundedRectangle(cornerRadius: 5)
+                            .fill(Color.red)
+                    }
                 }
                 .font(.footnote)
             }
