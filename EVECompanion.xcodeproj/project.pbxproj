@@ -175,6 +175,8 @@
 		C9B079082C32C9A00059785D /* ECKTokenExpired.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B079072C32C9A00059785D /* ECKTokenExpired.swift */; };
 		C9B258532E264FA9009A14DB /* FittingDamageProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B258522E264FA9009A14DB /* FittingDamageProfileView.swift */; };
 		C9B25AE62E2836DC009A14DB /* ShipSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B25AE52E2836DC009A14DB /* ShipSelectionView.swift */; };
+		C9B39FAE2E8C71C50049C83D /* FittingESIImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B39FAD2E8C71C50049C83D /* FittingESIImportView.swift */; };
+		C9B39FB02E8C754B0049C83D /* ECKESIFittingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B39FAF2E8C754B0049C83D /* ECKESIFittingManager.swift */; };
 		C9B449F82BF3A66300968754 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B449F72BF3A66300968754 /* SingleAxisGeometryReader.swift */; };
 		C9B449FB2BF40B5700968754 /* SkillQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B449FA2BF40B5700968754 /* SkillQueueView.swift */; };
 		C9B638BC2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */; };
@@ -459,6 +461,8 @@
 		C9B079072C32C9A00059785D /* ECKTokenExpired.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKTokenExpired.swift; sourceTree = "<group>"; };
 		C9B258522E264FA9009A14DB /* FittingDamageProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDamageProfileView.swift; sourceTree = "<group>"; };
 		C9B25AE52E2836DC009A14DB /* ShipSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShipSelectionView.swift; sourceTree = "<group>"; };
+		C9B39FAD2E8C71C50049C83D /* FittingESIImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingESIImportView.swift; sourceTree = "<group>"; };
+		C9B39FAF2E8C754B0049C83D /* ECKESIFittingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKESIFittingManager.swift; sourceTree = "<group>"; };
 		C9B449F72BF3A66300968754 /* SingleAxisGeometryReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleAxisGeometryReader.swift; sourceTree = "<group>"; };
 		C9B449FA2BF40B5700968754 /* SkillQueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillQueueView.swift; sourceTree = "<group>"; };
 		C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKAttributeDefaultValueCache.swift; sourceTree = "<group>"; };
@@ -872,6 +876,7 @@
 				C9D570A32C5B819500985587 /* ECKSDEUpdater.swift */,
 				C9F055AA2DE24EA400340A05 /* ECKServerStatusManager.swift */,
 				C9F055B32DE2F55500340A05 /* ECKFittingManager.swift */,
+				C9B39FAF2E8C754B0049C83D /* ECKESIFittingManager.swift */,
 				C9A7C55E2BF0C545003478AD /* ECKSettingsManager.swift */,
 				C9955A262C3525080045D925 /* ECKSovereigntyCampaignManager.swift */,
 				C91FE09F2D8DA73600BA7303 /* ECKSovereigntyManager.swift */,
@@ -1083,6 +1088,14 @@
 			path = ShipSelection;
 			sourceTree = "<group>";
 		};
+		C9B39FAC2E8C71B80049C83D /* ESIImport */ = {
+			isa = PBXGroup;
+			children = (
+				C9B39FAD2E8C71C50049C83D /* FittingESIImportView.swift */,
+			);
+			path = ESIImport;
+			sourceTree = "<group>";
+		};
 		C9B449F92BF40B5000968754 /* SkillQueue */ = {
 			isa = PBXGroup;
 			children = (
@@ -1257,6 +1270,7 @@
 		C9F055BC2DE2FC8200340A05 /* Fitting */ = {
 			isa = PBXGroup;
 			children = (
+				C9B39FAC2E8C71B80049C83D /* ESIImport */,
 				C903BF7C2E8694B7001C224E /* ModuleSelection */,
 				C9B25AE42E2836D2009A14DB /* ShipSelection */,
 				C989C39D2E1E3D25005DEFDF /* ChargeSelection */,
@@ -1516,6 +1530,7 @@
 				C9D570AB2C5B961F00985587 /* SDEUpdateView.swift in Sources */,
 				C96735202D8CBA1F004E059F /* CapitalJumpRouteCell.swift in Sources */,
 				C903BF7E2E8694C6001C224E /* ModuleSelectionView.swift in Sources */,
+				C9B39FAE2E8C71C50049C83D /* FittingESIImportView.swift in Sources */,
 				C9DEF2F82C14B37C00815AF0 /* MailFeedbackView.swift in Sources */,
 				C9EA45FB2D90A7F200FE4365 /* ItemView.swift in Sources */,
 				C9B885342D81C617005A32CA /* CapitalNavigationSolarSystemPickerView.swift in Sources */,
@@ -1658,6 +1673,7 @@
 				C996A5E62BF2B4DF0038277C /* ECKSolarSystem.swift in Sources */,
 				C9F055A72DE24DCD00340A05 /* ECKServerStatus.swift in Sources */,
 				C9ACC0792DC962270000D0FC /* ECFormatters.swift in Sources */,
+				C9B39FB02E8C754B0049C83D /* ECKESIFittingManager.swift in Sources */,
 				C91672A22BEA003B009EC580 /* ECKWebService.swift in Sources */,
 				C9D094F12DE50DF500715479 /* ECKCharacterFitting+Calculate.swift in Sources */,
 				C91672AB2BEA01E1009EC580 /* ECKAPIError.swift in Sources */,
