@@ -37,36 +37,76 @@ public class ECKFittingManager: ObservableObject {
     @MainActor
     public func loadFittings() async {
         do {
-            let fittingsFile = try getFittingsFileURL()
-            let fittingsData = try Data(contentsOf: fittingsFile)
+            let fittingsDir = try getFittingsDirectory()
+            let fittingURLs = try FileManager.default.contentsOfDirectory(at: fittingsDir,
+                                                                          includingPropertiesForKeys: nil)
             
-            self.loadedLocalFittings = try JSONDecoder().decode([ECKCharacterFitting].self, from: fittingsData)
+            var fittings: [ECKCharacterFitting] = []
+            let decoder = JSONDecoder()
+            
+            for fittingURL in fittingURLs {
+                do {
+                    let fittingData = try Data(contentsOf: fittingURL)
+                    let fitting = try decoder.decode(ECKCharacterFitting.self, from: fittingData)
+                    fittings.append(fitting)
+                } catch {
+                    logger.error("Cannot load local fitting: \(error)")
+                    continue
+                }
+            }
+            
+            self.loadedLocalFittings = fittings
         } catch {
             logger.error("Error loading local fittings: \(error)")
             return
         }
     }
     
-    func getFittingsFileURL() throws -> URL {
-        let documentsDir = try FileManager.default.url(for: .documentDirectory,
-                                                       in: .userDomainMask,
-                                                       appropriateFor: nil,
-                                                       create: true)
-        return documentsDir.appendingPathComponent("fittings.json")
+    private func getDocumentsDirectory() throws -> URL {
+        return try FileManager.default.url(for: .documentDirectory,
+                                           in: .userDomainMask,
+                                           appropriateFor: nil,
+                                           create: true)
+    }
+    
+    private func getFittingsDirectory() throws -> URL {
+        let documentsDir = try getDocumentsDirectory()
+        let fittingsDir = documentsDir.appendingPathComponent("fittings", isDirectory: true)
+        
+        if FileManager.default.fileExists(atPath: fittingsDir.path) == false {
+            try FileManager.default.createDirectory(at: fittingsDir, withIntermediateDirectories: true)
+        }
+        
+        return fittingsDir
+    }
+    
+    private func getFittingFileURL(_ fitting: ECKCharacterFitting) throws -> URL {
+        let fittingsDirectoryUrl = try getFittingsDirectory()
+        return fittingsDirectoryUrl.appendingPathComponent("\(fitting.fittingId.uuidString).json", isDirectory: false)
     }
     
     @MainActor
     public func createFitting(with ship: ECKItem) -> ECKCharacterFitting {
         let newFitting = ECKCharacterFitting(ship: ship)
         self.loadedLocalFittings.append(newFitting)
-        // TODO: Save
+        saveFitting(newFitting)
         return newFitting
     }
     
     @MainActor
     public func importFitting(_ fitting: ECKCharacterFitting) {
         self.loadedLocalFittings.append(fitting)
-        // TODO: Save
+        saveFitting(fitting)
+    }
+    
+    public func saveFitting(_ fitting: ECKCharacterFitting) {
+        do {
+            let fittingFileURL = try getFittingFileURL(fitting)
+            let data = try JSONEncoder().encode(fitting)
+            try data.write(to: fittingFileURL, options: .atomic)
+        } catch {
+            logger.error("Error saving fitting: \(error)")
+        }
     }
     
 }

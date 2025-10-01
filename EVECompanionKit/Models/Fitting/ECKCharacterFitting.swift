@@ -12,6 +12,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     private enum CodingKeys: CodingKey {
         case description
         case fittingId
+        case esiFittingId
         case name
         case ship
         case target
@@ -89,12 +90,13 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     static let attributeReloadTimeId: Int = 1795
     static let attributeActivationTimeHighIsGoodId: Int = 3115
     
-    public var id: Int {
+    public var id: UUID {
         return fittingId
     }
     
     public let description: String
-    public let fittingId: Int
+    public let fittingId: UUID
+    public let esiFittingId: Int?
     public var items: [ECKCharacterFittingItem] {
         return highSlotModules
         + midSlotModules
@@ -278,8 +280,9 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         let turret: ECKCharacterFittingItem = .init(flag: .HiSlot0, quantity: 1, item: .init(typeId: 37299))
         turret.charge = .init(flag: .HiSlot0, quantity: 1, item: .init(typeId: 41336))
         
-        let fitting = ECKCharacterFitting(description: "Just my avatar",
-                                          fittingId: 0,
+        let fitting = ECKCharacterFitting(fittingId: UUID(),
+                                          description: "Just my avatar",
+                                          esiFittingId: nil,
                                           items: [
                                             turret
                                           ],
@@ -348,7 +351,8 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     public required init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.description = try container.decode(String.self, forKey: .description)
-        self.fittingId = try container.decode(Int.self, forKey: .fittingId)
+        self.fittingId = try container.decode(UUID.self, forKey: .fittingId)
+        self.esiFittingId = try container.decodeIfPresent(Int.self, forKey: .esiFittingId)
         self.name = try container.decode(String.self, forKey: .name)
         self.ship = try container.decode(ECKCharacterFittingItem.self, forKey: .ship)
         self.highSlotModules = try container.decode([ECKCharacterFittingItem].self, forKey: .highSlotModules)
@@ -361,28 +365,32 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     }
     
     internal convenience init(fitting: ESIFitting) {
-        self.init(description: fitting.description,
-                  fittingId: fitting.fittingId,
+        self.init(fittingId: UUID(),
+                  description: fitting.description,
+                  esiFittingId: fitting.fittingId,
                   items: fitting.items,
                   name: fitting.name,
                   ship: fitting.ship)
     }
     
     internal convenience init(ship: ECKItem) {
-        self.init(description: "",
-                  fittingId: 0,
+        self.init(fittingId: UUID(),
+                  description: "",
+                  esiFittingId: nil,
                   items: [],
                   name: ship.name,
                   ship: ship)
     }
     
-    internal init(description: String,
-                  fittingId: Int,
+    internal init(fittingId: UUID,
+                  description: String,
+                  esiFittingId: Int?,
                   items: [ECKCharacterFittingItem],
                   name: String,
                   ship: ECKItem) {
         self.description = description
         self.fittingId = fittingId
+        self.esiFittingId = esiFittingId
         
         var highSlotItems: [ECKCharacterFittingItem] = []
         var midSlotItems: [ECKCharacterFittingItem] = []
@@ -606,6 +614,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(self.description, forKey: .description)
         try container.encode(self.fittingId, forKey: .fittingId)
+        try container.encodeIfPresent(self.esiFittingId, forKey: .esiFittingId)
         try container.encode(self.name, forKey: .name)
         try container.encode(self.ship, forKey: .ship)
         try container.encode(self.target, forKey: .target)
@@ -619,7 +628,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         try container.encode(self.skills, forKey: .skills)
     }
     
-    public func addModule(item: ECKItem, skills: ECKCharacterSkills) throws(ECKAddModuleError) {
+    public func addModule(item: ECKItem, skills: ECKCharacterSkills, manager: ECKFittingManager) throws(ECKAddModuleError) {
         guard let slotType = item.slotType else {
             throw .moduleNotFittable(item)
         }
@@ -660,16 +669,16 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         }
         
         calculateAttributes(skills: nil)
-        // TODO: Save
+        manager.saveFitting(self)
     }
     
-    public func removeCharge(from item: ECKCharacterFittingItem) {
+    public func removeCharge(from item: ECKCharacterFittingItem, manager: ECKFittingManager) {
         item.charge = nil
         calculateAttributes(skills: nil)
-        // TODO: Save
+        manager.saveFitting(self)
     }
     
-    public func removeModule(item: ECKCharacterFittingItem) {
+    public func removeModule(item: ECKCharacterFittingItem, manager: ECKFittingManager) {
         switch item.item.slotType {
         case .high:
             highSlotModules = highSlotModules.filter { $0.id != item.id }
@@ -689,7 +698,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         }
         
         calculateAttributes(skills: nil)
-        // TODO: Save
+        manager.saveFitting(self)
     }
     
     private func checkItemIsFittable(item: ECKItem) throws(ECKAddModuleError) {

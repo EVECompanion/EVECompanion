@@ -27,12 +27,10 @@ struct FittingsListView: View {
     var body: some View {
         List {
             if fittingManager.localFittings.isEmpty == false {
-                Section("Local Fittings") {
-                    ForEach(fittingManager.localFittings) { fitting in
-                        NavigationLink(value: AppScreen.fittingDetail(fittingManager,
-                                                                      fitting)) {
-                            FittingCell(fitting: fitting)
-                        }
+                ForEach(fittingManager.localFittings) { fitting in
+                    NavigationLink(value: AppScreen.fittingDetail(fittingManager,
+                                                                  fitting)) {
+                        FittingCell(fitting: fitting)
                     }
                 }
             }

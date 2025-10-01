@@ -41,15 +41,17 @@ struct FittingDetailModulesView: View {
         }
     }
     
+    let fittingManager: ECKFittingManager
     @ObservedObject private var fitting: ECKCharacterFitting
     private let character: ECKCharacter
     @State private var sheetItem: SheetItem?
     @State private var addModuleError: ECKAddModuleError?
     @State private var showModuleErrorDialog: Bool = false
     
-    init(character: ECKCharacter, fitting: ECKCharacterFitting) {
+    init(character: ECKCharacter, fitting: ECKCharacterFitting, manager: ECKFittingManager) {
         self.character = character
         self.fitting = fitting
+        self.fittingManager = manager
     }
     
     var body: some View {
@@ -143,7 +145,8 @@ struct FittingDetailModulesView: View {
             case .moduleSelection(let moduleType):
                 ModuleSelectionView(moduleType: moduleType, targetShip: fitting.ship.item) { item in
                     do throws(ECKAddModuleError) {
-                        try fitting.addModule(item: item, skills: character.skills ?? .empty)
+                        try fitting.addModule(item: item, skills: character.skills ?? .empty,
+                                              manager: fittingManager)
                     } catch {
                         self.addModuleError = error
                         self.showModuleErrorDialog = true
@@ -152,7 +155,9 @@ struct FittingDetailModulesView: View {
             case .moduleReplacement(moduleType: let moduleType, moduleToReplace: let moduleToReplace):
                 ModuleSelectionView(moduleType: moduleType, targetShip: fitting.ship.item) { item in
                     do throws(ECKAddModuleError) {
-                        try fitting.addModule(item: item, skills: character.skills ?? .empty)
+                        try fitting.addModule(item: item,
+                                              skills: character.skills ?? .empty,
+                                              manager: fittingManager)
                     } catch {
                         self.addModuleError = error
                         self.showModuleErrorDialog = true
@@ -269,7 +274,7 @@ struct FittingDetailModulesView: View {
                 Spacer()
                 
                 Button {
-                    fitting.removeModule(item: item)
+                    fitting.removeModule(item: item, manager: fittingManager)
                 } label: {
                     Image(systemName: "xmark")
                 }
@@ -302,7 +307,7 @@ struct FittingDetailModulesView: View {
                     if item.charge != nil {
                         Button {
                             withAnimation {
-                                fitting.removeCharge(from: item)
+                                fitting.removeCharge(from: item, manager: fittingManager)
                             }
                         } label: {
                             Image(systemName: "xmark")
@@ -404,5 +409,8 @@ private extension ECKCharacterFitting.ModuleSlotType {
 }
 
 #Preview {
-    FittingDetailModulesView(character: .dummy, fitting: .dummyAvatar)
+    FittingDetailModulesView(character: .dummy,
+                             fitting: .dummyAvatar,
+                             manager: .init(character: .dummy,
+                                            isPreview: true))
 }
