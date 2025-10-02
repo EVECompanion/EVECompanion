@@ -20,9 +20,17 @@ struct FittingsListView: View {
         case esiImport
     }
     
-    @EnvironmentObject var coordinator: Coordinator
-    @StateObject var fittingManager: ECKFittingManager
-    @State var presentedSheet: SheetItem?
+    @EnvironmentObject private var coordinator: Coordinator
+    @StateObject private var fittingManager: ECKFittingManager
+    @State private var presentedSheet: SheetItem?
+    
+    @State private var fittingToRename: ECKCharacterFitting?
+    @State private var showChangeNameAlert: Bool = false
+    @State private var changeNameInput: String = ""
+    
+    init(fittingManager: ECKFittingManager) {
+        self._fittingManager = .init(wrappedValue: fittingManager)
+    }
     
     var body: some View {
         List {
@@ -31,6 +39,18 @@ struct FittingsListView: View {
                     NavigationLink(value: AppScreen.fittingDetail(fittingManager,
                                                                   fitting)) {
                         FittingCell(fitting: fitting)
+                            .contextMenu {
+                                Button {
+                                    fittingToRename = fitting
+                                    showChangeNameAlert = true
+                                } label: {
+                                    Label {
+                                        Text("Change Name")
+                                    } icon: {
+                                        Image(systemName: "rectangle.and.pencil.and.ellipsis")
+                                    }
+                                }
+                            }
                     }
                 }
             }
@@ -40,6 +60,27 @@ struct FittingsListView: View {
         }
         .searchable(text: $fittingManager.searchText)
         .navigationTitle("Fittings")
+        .alert("Fit Name",
+               isPresented: $showChangeNameAlert,
+               presenting: fittingToRename,
+               actions: { fitting in
+            TextField("Fit Name", text: $changeNameInput)
+                .onAppear {
+                    changeNameInput = fitting.name
+                }
+            
+            Button {
+                fitting.setName(changeNameInput, manager: fittingManager)
+            } label: {
+                Text("Ok")
+            }
+            
+            Button(role: .cancel) {
+                changeNameInput = fitting.name
+            } label: {
+                Text("Cancel")
+            }
+        })
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {

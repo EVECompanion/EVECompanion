@@ -105,7 +105,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         + subsystems
         + drones
     }
-    public let name: String
+    @Published public var name: String
     public let ship: ECKCharacterFittingItem
     public let target: ECKCharacterFittingItem = .init(flag: .ShipHangar,
                                                        quantity: 1,
@@ -698,6 +698,11 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         }
         
         calculateAttributes(skills: nil)
+        manager.saveFitting(self)
+    }
+    
+    public func setName(_ name: String, manager: ECKFittingManager) {
+        self.name = name
         manager.saveFitting(self)
     }
     

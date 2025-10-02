@@ -20,6 +20,8 @@ struct FittingDetailView: View {
     
     @ObservedObject var fitting: ECKCharacterFitting
     @State private var selectedTab: FittingDetailTab = .info
+    @State private var showChangeNameAlert: Bool = false
+    @State private var changeNameInput: String
     private let manager: ECKFittingManager
     
     private var character: ECKCharacter {
@@ -33,6 +35,7 @@ struct FittingDetailView: View {
     init(manager: ECKFittingManager, fitting: ECKCharacterFitting) {
         self.manager = manager
         self.fitting = fitting
+        self.changeNameInput = fitting.name
     }
     
     var body: some View {
@@ -74,6 +77,29 @@ struct FittingDetailView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(fitting.name)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showChangeNameAlert = true
+                } label: {
+                    Image(systemName: "rectangle.and.pencil.and.ellipsis")
+                }
+            }
+        }
+        .alert("Change name", isPresented: $showChangeNameAlert) {
+            TextField("Fit Name", text: $changeNameInput)
+            Button {
+                fitting.setName(changeNameInput, manager: manager)
+            } label: {
+                Text("Ok")
+            }
+            
+            Button(role: .cancel) {
+                changeNameInput = fitting.name
+            } label: {
+                Text("Cancel")
+            }
+        }
     }
     
 }

@@ -10,7 +10,7 @@ import EVECompanionKit
 
 struct FittingCell: View {
     
-    let fitting: ECKCharacterFitting
+    @ObservedObject var fitting: ECKCharacterFitting
     
     var body: some View {
         HStack {
