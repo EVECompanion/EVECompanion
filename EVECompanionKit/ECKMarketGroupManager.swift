@@ -34,7 +34,7 @@ public class ECKMarketGroupManager: ObservableObject {
         self.marketGroupIdFilter = marketGroupIdFilter
         Task { @MainActor in
             if let groupIdFilter {
-                self.searchedItems = ECKSDEManager.shared.itemSearch(text: "", groupIdFilter: groupIdFilter).map({ .item($0) })
+                self.searchedItems = ECKSDEManager.shared.itemSearch(text: "", groupIdFilter: groupIdFilter, marketGroupIdFilter: marketGroupIdFilter).map({ .item($0) })
                 self.allMarketGroups = self.searchedItems.compactMap({ $0.item }).map({ .item($0) })
             } else {
                 self.allMarketGroups = ECKSDEManager.shared.marketGroups(parentGroupId: marketGroupIdFilter).map({ .marketGroup($0) })
@@ -48,9 +48,9 @@ public class ECKMarketGroupManager: ObservableObject {
             return
         }
         
-        // TODO: MarketGroupIDFilter
         self.searchedItems = ECKSDEManager.shared.itemSearch(text: searchString,
-                                                             groupIdFilter: groupIdFilter).map({ .item($0) })
+                                                             groupIdFilter: groupIdFilter,
+                                                             marketGroupIdFilter: marketGroupIdFilter).map({ .item($0) })
     }
     
 }

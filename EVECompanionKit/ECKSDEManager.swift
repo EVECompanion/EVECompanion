@@ -345,9 +345,38 @@ public class ECKSDEManager {
         return parseItem(row: result)
     }
     
-    internal func itemSearch(text: String, groupIdFilter: Int? = nil) -> [ECKItem] {
+    internal func itemSearch(text: String, groupIdFilter: Int? = nil, marketGroupIdFilter: Int? = nil) -> [ECKItem] {
         do {
+            let marketGroupSelector: String
+            if let marketGroupIdFilter {
+                marketGroupSelector = """
+            WITH RECURSIVE marketGroups AS (
+                SELECT
+                    marketGroupID id,
+                    parentGroupID parentId,
+                    marketGroupName name,
+                    0 AS level
+                FROM
+                    invMarketGroups
+                WHERE
+                    marketGroupID = \(marketGroupIdFilter)
+                UNION ALL
+                SELECT
+                    b.marketGroupID id,
+                    parentGroupID parentId,
+                    b.marketGroupName,
+                    h.level + 1
+                FROM
+                    invMarketGroups b
+                    JOIN marketGroups h ON b.parentGroupID = h.id
+            )
+            """
+            } else {
+                marketGroupSelector = ""
+            }
+            
             let statement = try connection?.prepare("""
+                \(marketGroupSelector)
                 SELECT
                     typeID,
                     typeName, 
@@ -362,6 +391,7 @@ public class ECKSDEManager {
                 where 
                     \(text.isEmpty ? "" : "typeName LIKE \"%\" || \"\(text)\" || \"%\" AND") published = 1
                     \(groupIdFilter != nil ? "AND groupID = \(groupIdFilter!)" : "")
+                    \(marketGroupIdFilter != nil ? "AND marketGroupID IN (SELECT id FROM marketGroups)" : "")
                 ORDER BY 
                     typeName
                 LIMIT 

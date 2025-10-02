@@ -45,6 +45,7 @@ struct ShipSelectionView: View {
             }
             .navigationTitle("Select a Ship")
             .navigationBarTitleDisplayMode(.inline)
+            .searchable(text: $manager.searchString)
         }
     }
     
