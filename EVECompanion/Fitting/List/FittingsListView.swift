@@ -20,11 +20,34 @@ struct FittingsListView: View {
         case esiImport
     }
     
+    enum AlertItem: Identifiable {
+        case renameFit(ECKCharacterFitting)
+        case deleteFit(ECKCharacterFitting)
+        
+        var id: String {
+            switch self {
+            case .renameFit(let fitting):
+                return "renameFit-\(fitting.id)"
+            case .deleteFit(let fitting):
+                return "deleteFit-\(fitting.id)"
+            }
+        }
+        
+        var title: String {
+            switch self {
+            case .renameFit:
+                return "Rename Fit"
+            case .deleteFit:
+                return "Delete Fit"
+            }
+        }
+    }
+    
     @EnvironmentObject private var coordinator: Coordinator
     @StateObject private var fittingManager: ECKFittingManager
     @State private var presentedSheet: SheetItem?
     
-    @State private var fittingToRename: ECKCharacterFitting?
+    @State private var alertItem: AlertItem?
     @State private var showChangeNameAlert: Bool = false
     @State private var changeNameInput: String = ""
     
@@ -41,13 +64,36 @@ struct FittingsListView: View {
                         FittingCell(fitting: fitting)
                             .contextMenu {
                                 Button {
-                                    fittingToRename = fitting
+                                    alertItem = .renameFit(fitting)
                                     showChangeNameAlert = true
                                 } label: {
                                     Label {
                                         Text("Change Name")
                                     } icon: {
                                         Image(systemName: "rectangle.and.pencil.and.ellipsis")
+                                    }
+                                }
+                                
+                                Button {
+                                    alertItem = .deleteFit(fitting)
+                                    showChangeNameAlert = true
+                                } label: {
+                                    Label {
+                                        Text("Delete Fit")
+                                    } icon: {
+                                        Image(systemName: "trash")
+                                    }
+                                }
+                            }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                Button(role: .destructive) {
+                                    alertItem = .deleteFit(fitting)
+                                    showChangeNameAlert = true
+                                } label: {
+                                    Label {
+                                        Text("Delete Fit")
+                                    } icon: {
+                                        Image(systemName: "trash")
                                     }
                                 }
                             }
@@ -60,25 +106,15 @@ struct FittingsListView: View {
         }
         .searchable(text: $fittingManager.searchText)
         .navigationTitle("Fittings")
-        .alert("Fit Name",
+        .alert(alertItem?.title ?? "",
                isPresented: $showChangeNameAlert,
-               presenting: fittingToRename,
-               actions: { fitting in
-            TextField("Fit Name", text: $changeNameInput)
-                .onAppear {
-                    changeNameInput = fitting.name
-                }
-            
-            Button {
-                fitting.setName(changeNameInput, manager: fittingManager)
-            } label: {
-                Text("Ok")
-            }
-            
-            Button(role: .cancel) {
-                changeNameInput = fitting.name
-            } label: {
-                Text("Cancel")
+               presenting: alertItem,
+               actions: { item in
+            switch item {
+            case .deleteFit(let fitting):
+                deleteFitAlert(for: fitting)
+            case .renameFit(let fitting):
+                renameFitAlert(for: fitting)
             }
         })
         .toolbar {
@@ -120,6 +156,40 @@ struct FittingsListView: View {
         }
     }
     
+    @ViewBuilder
+    func renameFitAlert(for fitting: ECKCharacterFitting) -> some View {
+        TextField("Fit Name", text: $changeNameInput)
+            .onAppear {
+                changeNameInput = fitting.name
+            }
+        
+        Button {
+            fitting.setName(changeNameInput, manager: fittingManager)
+        } label: {
+            Text("Ok")
+        }
+        
+        Button(role: .cancel) {
+            changeNameInput = fitting.name
+        } label: {
+            Text("Cancel")
+        }
+    }
+    
+    @ViewBuilder
+    func deleteFitAlert(for fitting: ECKCharacterFitting) -> some View {
+        Button(role: .destructive) {
+            fittingManager.deleteFit(fitting)
+        } label: {
+            Text("Delete")
+        }
+        
+        Button(role: .cancel) {
+            changeNameInput = fitting.name
+        } label: {
+            Text("Cancel")
+        }
+    }
 }
 
 #Preview {

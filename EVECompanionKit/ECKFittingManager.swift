@@ -109,4 +109,17 @@ public class ECKFittingManager: ObservableObject {
         }
     }
     
+    public func deleteFit(_ fittingToRemove: ECKCharacterFitting) {
+        do {
+            let fittingFileURL = try getFittingFileURL(fittingToRemove)
+            try FileManager.default.removeItem(at: fittingFileURL)
+        } catch {
+            logger.error("Error deleting fit: \(error)")
+        }
+        
+        self.loadedLocalFittings.removeAll { fitting in
+            return fitting.id == fittingToRemove.id
+        }
+    }
+    
 }
