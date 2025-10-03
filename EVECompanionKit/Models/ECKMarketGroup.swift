@@ -39,14 +39,24 @@ public class ECKMarketGroup: Identifiable {
                 return nil
             }
         }
+        
+        public var isEmpty: Bool {
+            switch self {
+            case .marketGroup(let marketGroup):
+                return marketGroup.isEmpty
+            case .item:
+                return false
+            }
+        }
     }
     
     public let id: Int
     public let name: String
     public let description: String
     public let hasTypes: Bool
+    public let effectIdFilter: Int?
     public lazy var marketSubGroups: [ECKMarketGroup]? = {
-        let subGroups = ECKSDEManager.shared.marketGroups(parentGroupId: id)
+        let subGroups = ECKSDEManager.shared.marketGroups(parentGroupId: id, effectIdFilter: effectIdFilter)
         if subGroups.isEmpty {
             return nil
         } else {
@@ -57,26 +67,36 @@ public class ECKMarketGroup: Identifiable {
         if hasTypes {
             return types?.map({ .item($0) })
         } else {
-            return marketSubGroups?.map({ .marketGroup($0) })
+            return marketSubGroups?.filter({ $0.isEmpty == false }).map({ .marketGroup($0) })
         }
     }
     
     public lazy var types: [ECKItem]? = {
         if hasTypes {
-            return ECKSDEManager.shared.items(marketGroupId: id)
+            return ECKSDEManager.shared.items(marketGroupId: id, effectIdFilter: effectIdFilter)
         } else {
             return nil
+        }
+    }()
+    
+    public lazy var isEmpty: Bool = {
+        if effectIdFilter != nil {
+            return children?.isEmpty ?? false
+        } else {
+            return false
         }
     }()
     
     init(id: Int,
          name: String,
          description: String,
-         hasTypes: Bool) {
+         hasTypes: Bool,
+         effectIdFilter: Int?) {
         self.id = id
         self.name = name
         self.description = description
         self.hasTypes = hasTypes
+        self.effectIdFilter = effectIdFilter
     }
     
 }

@@ -17,10 +17,12 @@ struct MarketGroupsView: View {
     
     init(groupIdFilter: Int?,
          marketGroupIdFilter: Int?,
+         effectIdFilter: Int?,
          customTitle: String? = nil,
          selectionHandler: ((ECKItem) -> Void)? = nil) {
         let manager = ECKMarketGroupManager(groupIdFilter: groupIdFilter,
-                                            marketGroupIdFilter: marketGroupIdFilter)
+                                            marketGroupIdFilter: marketGroupIdFilter,
+                                            effectIdFilter: effectIdFilter)
         self.customTitle = customTitle
         self.selectionHandler = selectionHandler
         self._manager = .init(wrappedValue: manager)
@@ -71,6 +73,7 @@ struct MarketGroupsView: View {
 #Preview {
     NavigationStack {
         MarketGroupsView(groupIdFilter: nil,
-                         marketGroupIdFilter: nil)
+                         marketGroupIdFilter: nil,
+                         effectIdFilter: nil)
     }
 }

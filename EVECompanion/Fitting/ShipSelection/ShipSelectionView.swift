@@ -11,7 +11,9 @@ import EVECompanionKit
 struct ShipSelectionView: View {
 
     private let completion: (ECKItem) -> Void
-    @StateObject private var manager: ECKMarketGroupManager = .init(groupIdFilter: nil, marketGroupIdFilter: 4)
+    @StateObject private var manager: ECKMarketGroupManager = .init(groupIdFilter: nil,
+                                                                    marketGroupIdFilter: 4,
+                                                                    effectIdFilter: nil)
     @Environment(\.dismiss) var dismiss
     
     init(completion: @escaping (ECKItem) -> Void) {

@@ -345,7 +345,7 @@ public class ECKSDEManager {
         return parseItem(row: result)
     }
     
-    internal func itemSearch(text: String, groupIdFilter: Int? = nil, marketGroupIdFilter: Int? = nil) -> [ECKItem] {
+    internal func itemSearch(text: String, groupIdFilter: Int? = nil, marketGroupIdFilter: Int? = nil, effectIdFilter: Int? = nil) -> [ECKItem] {
         do {
             let marketGroupSelector: String
             if let marketGroupIdFilter {
@@ -378,7 +378,7 @@ public class ECKSDEManager {
             let statement = try connection?.prepare("""
                 \(marketGroupSelector)
                 SELECT
-                    typeID,
+                    invTypes.typeID,
                     typeName, 
                     description, 
                     mass, 
@@ -388,10 +388,12 @@ public class ECKSDEManager {
                     iconID
                 FROM
                     invTypes
+                    \(effectIdFilter != nil ? "INNER JOIN dgmTypeEffects ON invTypes.typeID = dgmTypeEffects.typeID" : "")
                 where 
                     \(text.isEmpty ? "" : "typeName LIKE \"%\" || \"\(text)\" || \"%\" AND") published = 1
                     \(groupIdFilter != nil ? "AND groupID = \(groupIdFilter!)" : "")
                     \(marketGroupIdFilter != nil ? "AND marketGroupID IN (SELECT id FROM marketGroups)" : "")
+                    \(effectIdFilter != nil ? "AND effectID = \(effectIdFilter!)" : "")
                 ORDER BY 
                     typeName
                 LIMIT 
@@ -411,11 +413,11 @@ public class ECKSDEManager {
         }
     }
     
-    internal func items(marketGroupId: Int) -> [ECKItem] {
+    internal func items(marketGroupId: Int, effectIdFilter: Int?) -> [ECKItem] {
         do {
             let statement = try connection?.prepare("""
                 SELECT
-                    typeID,
+                    invTypes.typeID,
                     typeName, 
                     description, 
                     mass, 
@@ -425,8 +427,12 @@ public class ECKSDEManager {
                     iconID
                 FROM
                     invTypes
+                    \(effectIdFilter != nil ? "INNER JOIN dgmTypeEffects ON invTypes.typeID = dgmTypeEffects.typeID" : "")
                 WHERE
                     marketGroupID = ?
+                    \(effectIdFilter != nil ? "AND effectID = \(effectIdFilter!)" : "")
+                ORDER BY
+                    typeName
             """, marketGroupId)
             
             guard let result = try statement?.run() else {
@@ -1201,32 +1207,7 @@ public class ECKSDEManager {
         return attribute
     }
     
-    func marketGroup(id: Int) -> ECKMarketGroup? {
-        do {
-            let statement = try connection?.prepare("""
-                SELECT
-                    marketGroupID,
-                    marketGroupName,
-                    description,
-                    hasTypes
-                FROM
-                    invMarketGroups
-                WHERE
-                    marketGroupID = ?
-            """, id)
-            
-            guard let result = try statement?.run().makeIterator().failableNext() else {
-                return nil
-            }
-            
-            return parseMarketGroup(row: result)
-        } catch {
-            logger.error("Cannot get market group with id \(id): \(error)")
-            return nil
-        }
-    }
-    
-    func marketGroups(parentGroupId: Int?) -> [ECKMarketGroup] {
+    func marketGroups(parentGroupId: Int?, effectIdFilter: Int?) -> [ECKMarketGroup] {
         do {
             let filter: String
             if let parentGroupId {
@@ -1254,7 +1235,7 @@ public class ECKSDEManager {
             }
             
             return result.compactMap { row in
-                return parseMarketGroup(row: row)
+                return parseMarketGroup(row: row, effectIdFilter: effectIdFilter)
             }
         } catch {
             logger.error("Cannot get market groups with parent id \(String(describing: parentGroupId)): \(error)")
@@ -1262,7 +1243,7 @@ public class ECKSDEManager {
         }
     }
     
-    private func parseMarketGroup(row: [(any Binding)?]) -> ECKMarketGroup? {
+    private func parseMarketGroup(row: [(any Binding)?], effectIdFilter: Int?) -> ECKMarketGroup? {
         guard let id: Int64 = row[0] as? Int64,
               let name: String = row[1] as? String,
               let description: String = row[2] as? String,
@@ -1271,7 +1252,7 @@ public class ECKSDEManager {
                   return nil
         }
         
-        return .init(id: Int(id), name: name, description: description, hasTypes: hasTypes != 0)
+        return .init(id: Int(id), name: name, description: description, hasTypes: hasTypes != 0, effectIdFilter: effectIdFilter)
     }
     
     public func groupName(for id: Int) -> String {

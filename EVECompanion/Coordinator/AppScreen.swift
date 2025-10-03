@@ -35,7 +35,7 @@ enum AppScreen: Hashable {
     case item(ECKItem)
     
     case universe
-    case itemDatabase(groupIdFilter: Int?, marketGroupIdFilter: Int?)
+    case itemDatabase(groupIdFilter: Int?, marketGroupIdFilter: Int?, effectIdFilter: Int?)
     case incursions
     case sovereigntyCampaigns
     
@@ -146,9 +146,9 @@ enum AppScreen: Hashable {
         case (.fittingDetail(let lhsManager, let lhsFitting), .fittingDetail(let rhsManager, let rhsFitting)):
             return lhsManager.character == rhsManager.character && lhsFitting.id == rhsFitting.id
             
-        case (.itemDatabase(let lhsGroupFilter, let lhsMarketGroupFilter),
-              .itemDatabase(let rhsGroupFilter, let rhsMarketGroupFilter)):
-            return lhsGroupFilter == rhsGroupFilter && lhsMarketGroupFilter == rhsMarketGroupFilter
+        case (.itemDatabase(let lhsGroupFilter, let lhsMarketGroupFilter, let lhsEffectIdFilter),
+              .itemDatabase(let rhsGroupFilter, let rhsMarketGroupFilter, let rhsEffectIdFilter)):
+            return lhsGroupFilter == rhsGroupFilter && lhsMarketGroupFilter == rhsMarketGroupFilter && lhsEffectIdFilter == rhsEffectIdFilter
             
         default:
             return false
@@ -203,9 +203,10 @@ enum AppScreen: Hashable {
             hasher.combine(fitting)
         case .universe:
             return
-        case .itemDatabase(let groupFilter, let marketGroupFilter):
+        case .itemDatabase(let groupFilter, let marketGroupFilter, let effectIdFilter):
             hasher.combine(groupFilter)
             hasher.combine(marketGroupFilter)
+            hasher.combine(effectIdFilter)
         case .incursions:
             return
         case .sovereigntyCampaigns:
