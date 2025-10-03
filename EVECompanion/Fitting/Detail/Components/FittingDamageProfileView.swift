@@ -42,16 +42,16 @@ struct FittingDamageProfileView: View {
                         .bold()
                     
                     if compactMode == false {
-                        Text(ECFormatters.attributeValue(damageProfile.emDPS, maximumFractionDigits: 1))
+                        Text(ECFormatters.shortenedValue(damageProfile.emDPS, maximumFractionDigits: 1))
                             .tint(.blue)
-                        Text(ECFormatters.attributeValue(damageProfile.thermalDPS, maximumFractionDigits: 1))
+                        Text(ECFormatters.shortenedValue(damageProfile.thermalDPS, maximumFractionDigits: 1))
                             .tint(.red)
-                        Text(ECFormatters.attributeValue(damageProfile.kineticDPS, maximumFractionDigits: 1))
+                        Text(ECFormatters.shortenedValue(damageProfile.kineticDPS, maximumFractionDigits: 1))
                             .tint(.gray)
-                        Text(ECFormatters.attributeValue(damageProfile.explosiveDPS, maximumFractionDigits: 1))
+                        Text(ECFormatters.shortenedValue(damageProfile.explosiveDPS, maximumFractionDigits: 1))
                             .tint(.orange)
                     }
-                    Text(ECFormatters.attributeValue(damageProfile.dpsWithoutReload, maximumFractionDigits: 1))
+                    Text(ECFormatters.shortenedValue(damageProfile.dpsWithoutReload, maximumFractionDigits: 1))
                 }
                 Divider()
             }
@@ -59,16 +59,16 @@ struct FittingDamageProfileView: View {
                 Text("Volley")
                     .bold()
                 if compactMode == false {
-                    Text(ECFormatters.attributeValue(damageProfile.em, maximumFractionDigits: 1))
+                    Text(ECFormatters.shortenedValue(damageProfile.em, maximumFractionDigits: 1))
                         .tint(.blue)
-                    Text(ECFormatters.attributeValue(damageProfile.thermal, maximumFractionDigits: 1))
+                    Text(ECFormatters.shortenedValue(damageProfile.thermal, maximumFractionDigits: 1))
                         .tint(.red)
-                    Text(ECFormatters.attributeValue(damageProfile.kinetic, maximumFractionDigits: 1))
+                    Text(ECFormatters.shortenedValue(damageProfile.kinetic, maximumFractionDigits: 1))
                         .tint(.gray)
-                    Text(ECFormatters.attributeValue(damageProfile.explosive, maximumFractionDigits: 1))
+                    Text(ECFormatters.shortenedValue(damageProfile.explosive, maximumFractionDigits: 1))
                         .tint(.orange)
                 }
-                Text(ECFormatters.attributeValue(damageProfile.volleyDamage, maximumFractionDigits: 1))
+                Text(ECFormatters.shortenedValue(damageProfile.volleyDamage, maximumFractionDigits: 1))
             }
         }
     }
