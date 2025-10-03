@@ -10,7 +10,7 @@ import Yams
 
 public class ECKDogmaEffect {
     
-    public enum Category: Int {
+    public enum Category: Int, Identifiable {
         
         case passive = 0
         case active = 1
@@ -20,6 +20,10 @@ public class ECKDogmaEffect {
         case overload = 5
         case dungeon = 6
         case system = 7
+        
+        public var id: Int {
+            return self.rawValue
+        }
         
         init(rawValue: Int?) {
             guard let rawValue else {

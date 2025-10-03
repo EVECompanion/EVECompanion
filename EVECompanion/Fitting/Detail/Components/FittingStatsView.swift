@@ -34,20 +34,22 @@ struct FittingStatsView: View {
                       tint: .gray)
             }
             
-            GridRow {
-                entry(title: "Drone Capacity",
-                      icon: "Fitting/drones",
-                      value: fitting.usedDroneCapacity ?? 0,
-                      maxValue: fitting.maxDroneCapacity ?? 0,
-                      unit: "m³",
-                      tint: .yellow)
-                
-                entry(title: "Drone Bandwidth",
-                      icon: "Fitting/drones",
-                      value: fitting.usedDroneBandwidth ?? 0,
-                      maxValue: fitting.maxDroneBandwidth ?? 0,
-                      unit: "mbit/s",
-                      tint: .blue)
+            if fitting.canUseDrones {
+                GridRow {
+                    entry(title: "Drone Capacity",
+                          icon: "Fitting/drones",
+                          value: fitting.usedDroneCapacity ?? 0,
+                          maxValue: fitting.maxDroneCapacity ?? 0,
+                          unit: "m³",
+                          tint: .yellow)
+                    
+                    entry(title: "Drone Bandwidth",
+                          icon: "Fitting/drones",
+                          value: fitting.usedDroneBandwidth ?? 0,
+                          maxValue: fitting.maxDroneBandwidth ?? 0,
+                          unit: "mbit/s",
+                          tint: .blue)
+                }
             }
         }
         .padding(.horizontal, 16)

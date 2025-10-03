@@ -6,8 +6,9 @@
 //
 
 import Foundation
+public import Combine
 
-public class ECKCharacterFittingItem: Codable, Hashable, Identifiable {
+public class ECKCharacterFittingItem: Codable, Hashable, Identifiable, ObservableObject {
     
     private enum CodingKeys: String, CodingKey {
         case flag
@@ -24,8 +25,14 @@ public class ECKCharacterFittingItem: Codable, Hashable, Identifiable {
     public var charge: ECKCharacterFittingItem?
     
     public internal(set) var attributes: [ECKCharacterFitting.AttributeID: ECKCharacterFitting.FittingAttribute] = [:]
-    public var state: ECKDogmaEffect.Category = .active
+    @Published public var state: ECKDogmaEffect.Category = .active
     internal var maxState: ECKDogmaEffect.Category = .passive
+    
+    public var userSettableStates: [ECKDogmaEffect.Category] {
+        return [.online, .active, .overload].filter { category in
+            return category.rawValue <= maxState.rawValue
+        }
+    }
     
     internal lazy var usesLauncherSlot: Bool = {
         let effects = ECKSDEManager.shared.getEffects(for: item.typeId)

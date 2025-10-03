@@ -276,6 +276,10 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         return speed * multiplier
     }
     
+    public var canUseDrones: Bool {
+        return maxDroneCapacity ?? 0 > 0
+    }
+    
     public static let dummyAvatar: ECKCharacterFitting = {
         let turret: ECKCharacterFittingItem = .init(flag: .HiSlot0, quantity: 1, item: .init(typeId: 37299))
         turret.charge = .init(flag: .HiSlot0, quantity: 1, item: .init(typeId: 41336))

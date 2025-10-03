@@ -122,6 +122,7 @@
 		C96F98A12BEFA72D00DEC34F /* ECKContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F98A02BEFA72D00DEC34F /* ECKContract.swift */; };
 		C96F98A32BEFA74000DEC34F /* ECKCharacterContractResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F98A22BEFA74000DEC34F /* ECKCharacterContractResource.swift */; };
 		C96F98A52BF017DA00DEC34F /* ECKPublicCharacterInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F98A42BF017DA00DEC34F /* ECKPublicCharacterInfo.swift */; };
+		C96FA2412E905EC00057481C /* FittingDetailModuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96FA2402E905EC00057481C /* FittingDetailModuleView.swift */; };
 		C98169C22C11C2FB0033B932 /* ECKCharacterAttributesResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98169C12C11C2FB0033B932 /* ECKCharacterAttributesResource.swift */; };
 		C98169C42C11C34D0033B932 /* ECKCharacterAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98169C32C11C34D0033B932 /* ECKCharacterAttributes.swift */; };
 		C98169C62C1219F90033B932 /* ECKCharacterImplantResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98169C52C1219F90033B932 /* ECKCharacterImplantResource.swift */; };
@@ -410,6 +411,7 @@
 		C96F98A02BEFA72D00DEC34F /* ECKContract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKContract.swift; sourceTree = "<group>"; };
 		C96F98A22BEFA74000DEC34F /* ECKCharacterContractResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterContractResource.swift; sourceTree = "<group>"; };
 		C96F98A42BF017DA00DEC34F /* ECKPublicCharacterInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKPublicCharacterInfo.swift; sourceTree = "<group>"; };
+		C96FA2402E905EC00057481C /* FittingDetailModuleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDetailModuleView.swift; sourceTree = "<group>"; };
 		C98169C12C11C2FB0033B932 /* ECKCharacterAttributesResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterAttributesResource.swift; sourceTree = "<group>"; };
 		C98169C32C11C34D0033B932 /* ECKCharacterAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterAttributes.swift; sourceTree = "<group>"; };
 		C98169C52C1219F90033B932 /* ECKCharacterImplantResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterImplantResource.swift; sourceTree = "<group>"; };
@@ -1108,6 +1110,7 @@
 			isa = PBXGroup;
 			children = (
 				C9B638C02E088B3200E9F6F4 /* FittingDetailModulesView.swift */,
+				C96FA2402E905EC00057481C /* FittingDetailModuleView.swift */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -1573,6 +1576,7 @@
 				C96430AF2CC6BE5A00E8D6A6 /* PlanetaryColoniesView.swift in Sources */,
 				C9DEF4A92C0386D5000238DF /* ECImage.swift in Sources */,
 				C92D17C52C275F5A00D6FF5A /* JumpClonesView.swift in Sources */,
+				C96FA2412E905EC00057481C /* FittingDetailModuleView.swift in Sources */,
 				C91EEEBB2BE9730000352175 /* EVECompanionApp.swift in Sources */,
 				C90D509C2BF92B0800DEC0F3 /* MailCell.swift in Sources */,
 				C956D90E2DA8F7A000D56C27 /* CoordinatorView.swift in Sources */,

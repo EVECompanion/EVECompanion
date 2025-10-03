@@ -182,18 +182,6 @@ struct FittingDetailModulesView: View {
                     case .item(let item):
                         itemCell(for: item,
                                  moduleType: moduleType)
-                        
-//                        ForEach(item.fittingAttributes, id: \.attribute.id) { attribute in
-//                            HStack {
-//                                Text(attribute.attribute.displayName)
-//                                Spacer()
-//                                if let unit = attribute.attribute.unit {
-//                                    Text(unit.formatted(attribute.fittingAttribute.value ?? 0))
-//                                } else {
-//                                    Text("\(attribute.fittingAttribute.value ?? 0)")
-//                                }
-//                            }
-//                        }
                     
                     case .empty:
                         emptySlotCell(moduleType: moduleType,
@@ -222,52 +210,7 @@ struct FittingDetailModulesView: View {
                     self.sheetItem = .moduleReplacement(moduleType: moduleType,
                                                         moduleToReplace: item)
                 } label: {
-                    HStack {
-                        ECImage(id: item.item.typeId, category: .types)
-                            .frame(width: 40, height: 40)
-                        
-                        VStack(alignment: .leading) {
-                            Text(item.item.name)
-                            
-                            Group {
-                                if let optimalRange = item.attributes[54] {
-                                    moduleAttributeView(icon: "Fitting/targetingRange",
-                                                        title: "Optimal Range",
-                                                        unit: .length,
-                                                        attribute: optimalRange)
-                                }
-                                
-                                if let falloff = item.attributes[158] {
-                                    moduleAttributeView(icon: "Fitting/falloff",
-                                                        title: "Falloff",
-                                                        unit: .length,
-                                                        attribute: falloff)
-                                }
-                                
-                                if let maximumFlightTimeAttribute = item.charge?.attributes[281],
-                                   let chargeVelocityAttribute = item.charge?.attributes[37] {
-                                    let maximumFlightTime: Float = maximumFlightTimeAttribute.value ?? maximumFlightTimeAttribute.baseValue
-                                    let chargeVelocity: Float = chargeVelocityAttribute.value ?? chargeVelocityAttribute.baseValue
-                                    let flightRange = chargeVelocity * maximumFlightTime / Float(MSEC_PER_SEC)
-                                    let flightRangeAttribute = ECKCharacterFitting.FittingAttribute(id: -1, defaultValue: flightRange)
-                                    
-                                    moduleAttributeView(icon: "Fitting/targetingRange",
-                                                        title: "Missile Flight Range",
-                                                        unit: .length,
-                                                        attribute: flightRangeAttribute)
-                                }
-                                
-                                if let damageProfile = item.damageProfile,
-                                   damageProfile.containsDamage {
-                                    FittingDamageProfileView(damageProfile: damageProfile,
-                                                             compactMode: true)
-                                    .foregroundStyle(.primary)
-                                }
-                            }
-                            .foregroundStyle(.secondary)
-                        }
-                        
-                    }
+                    FittingDetailModuleView(item: item, fitting: fitting)
                 }
                 .buttonStyle(.plain)
                 
@@ -345,24 +288,6 @@ struct FittingDetailModulesView: View {
             Image(icon)
                 .resizable()
                 .frame(width: 40, height: 40)
-        }
-    }
-    
-    @ViewBuilder
-    private func moduleAttributeView(icon: String,
-                                     title: String,
-                                     unit: EVEUnit,
-                                     attribute: ECKCharacterFitting.FittingAttribute) -> some View {
-        HStack {
-            Image(icon)
-                .resizable()
-                .frame(width: 20, height: 20)
-            
-            Text(title)
-            
-            Spacer()
-            
-            Text(unit.formatted(attribute.value ?? attribute.baseValue))
         }
     }
     

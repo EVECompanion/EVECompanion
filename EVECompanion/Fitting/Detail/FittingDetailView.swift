@@ -28,10 +28,6 @@ struct FittingDetailView: View {
         return manager.character
     }
     
-    private var canUseDrones: Bool {
-        return fitting.maxDroneCapacity ?? 0 > 0
-    }
-    
     init(manager: ECKFittingManager, fitting: ECKCharacterFitting) {
         self.manager = manager
         self.fitting = fitting
@@ -45,7 +41,7 @@ struct FittingDetailView: View {
             Picker("", selection: $selectedTab) {
                 Text("Info").tag(FittingDetailTab.info)
                 Text("Modules").tag(FittingDetailTab.modules)
-                if canUseDrones {
+                if fitting.canUseDrones {
                     Text("Drones").tag(FittingDetailTab.drones)
                 }
 //                Text("Implants").tag(FittingDetailTab.implants)
@@ -61,7 +57,7 @@ struct FittingDetailView: View {
                 FittingDetailModulesView(character: character, fitting: fitting, manager: manager)
                     .tag(FittingDetailTab.modules)
                 
-                if canUseDrones {
+                if fitting.canUseDrones {
                     FittingDetailDronesView(character: character, fitting: fitting)
                         .tag(FittingDetailTab.drones)
                 }
@@ -69,7 +65,7 @@ struct FittingDetailView: View {
             }
             .background(Color(uiColor: UIColor.secondarySystemBackground))
             .animation(.spring, value: selectedTab)
-            .animation(.spring, value: canUseDrones)
+            .animation(.spring, value: fitting.canUseDrones)
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .task {

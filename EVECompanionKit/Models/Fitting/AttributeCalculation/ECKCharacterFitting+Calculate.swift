@@ -234,6 +234,9 @@ extension ECKCharacterFitting {
             
             await MainActor.run {
                 self.objectWillChange.send()
+                self.items.forEach {
+                    $0.objectWillChange.send()
+                }
             }
         }
     }
