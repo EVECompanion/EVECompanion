@@ -82,15 +82,22 @@ struct ModuleSelectionView: View {
         }
     }
     
+    private let searchHistoryDefaultsKey: String
     private let moduleType: ModuleType
     private let targetShip: ECKItem
     private let selectionHandler: (ECKItem) -> Void
     @Environment(\.dismiss) var dismiss
+    @State var searchHistory: [ECKItem]
     
     init(moduleType: ModuleType, targetShip: ECKItem, selectionHandler: @escaping (ECKItem) -> Void) {
         self.moduleType = moduleType
         self.targetShip = targetShip
         self.selectionHandler = selectionHandler
+        self.searchHistoryDefaultsKey = "Fitting.ModuleSelection.\(moduleType.id)"
+        
+        // Load search history
+        let itemIds = UserDefaults.standard.array(forKey: searchHistoryDefaultsKey) as? [Int] ?? []
+        self.searchHistory = itemIds.map({ .init(typeId: $0) })
     }
     
     var body: some View {
@@ -98,11 +105,45 @@ struct ModuleSelectionView: View {
             MarketGroupsView(groupIdFilter: nil,
                              marketGroupIdFilter: moduleType.marketGroupIdFilter,
                              effectIdFilter: moduleType.effectIdFilter,
-                             customTitle: moduleType.title) { item in
-                selectionHandler(item)
-                dismiss()
+                             customTitle: moduleType.title) {
+                Section("History") {
+                    if searchHistory.isEmpty {
+                        Text("You have no search history for this module type.")
+                    } else {
+                        ForEach(searchHistory) { item in
+                            Button {
+                                didSelect(item)
+                            } label: {
+                                HStack {
+                                    ECImage(id: item.typeId,
+                                            category: .types)
+                                    .frame(width: 40,
+                                           height: 40)
+                                    
+                                    Text(item.name)
+                                }
+                            }
+                        }
+                    }
+                }
+            } selectionHandler: { item in
+                didSelect(item)
             }
         }
+    }
+    
+    private func didSelect(_ item: ECKItem) {
+        addToSearchHistory(item: item)
+        selectionHandler(item)
+        dismiss()
+    }
+    
+    private func addToSearchHistory(item: ECKItem) {
+        var searchHistory = self.searchHistory
+        searchHistory.removeAll { $0.id == item.id }
+        searchHistory.insert(item, at: 0)
+        searchHistory = Array(searchHistory.prefix(5))
+        UserDefaults.standard.set(searchHistory.map(\.self.id), forKey: searchHistoryDefaultsKey)
     }
     
 }

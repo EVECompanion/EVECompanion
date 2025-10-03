@@ -8,28 +8,33 @@
 import SwiftUI
 import EVECompanionKit
 
-struct MarketGroupsView: View {
+struct MarketGroupsView<LeadingSection>: View where LeadingSection: View {
     
     @StateObject var manager: ECKMarketGroupManager
     
     private var selectionHandler: ((ECKItem) -> Void)?
     private let customTitle: String?
+    private let leadingSection: () -> LeadingSection?
     
     init(groupIdFilter: Int?,
          marketGroupIdFilter: Int?,
          effectIdFilter: Int?,
          customTitle: String? = nil,
+         leadingSection: @escaping () -> LeadingSection? = { nil },
          selectionHandler: ((ECKItem) -> Void)? = nil) {
         let manager = ECKMarketGroupManager(groupIdFilter: groupIdFilter,
                                             marketGroupIdFilter: marketGroupIdFilter,
                                             effectIdFilter: effectIdFilter)
         self.customTitle = customTitle
         self.selectionHandler = selectionHandler
+        self.leadingSection = leadingSection
         self._manager = .init(wrappedValue: manager)
     }
     
     var body: some View {
         List {
+            leadingSection()
+            
             OutlineGroup(manager.marketGroups, children: \.children) { type in
                 switch type {
                 case .item(let item):
@@ -72,8 +77,8 @@ struct MarketGroupsView: View {
 
 #Preview {
     NavigationStack {
-        MarketGroupsView(groupIdFilter: nil,
-                         marketGroupIdFilter: nil,
-                         effectIdFilter: nil)
+        MarketGroupsView<EmptyView>(groupIdFilter: nil,
+                                    marketGroupIdFilter: nil,
+                                    effectIdFilter: nil)
     }
 }
