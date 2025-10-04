@@ -18,7 +18,7 @@ public class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Observabl
     
     public var id: UUID = UUID()
     
-    public let flag: ECKItemLocationFlag
+    public var flag: ECKItemLocationFlag
     public let quantity: Int
     public let item: ECKItem
     

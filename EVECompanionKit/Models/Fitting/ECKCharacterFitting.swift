@@ -699,6 +699,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
             }
         }
         
+        fixModuleFlags()
         calculateAttributes(skills: nil)
         manager.saveFitting(self)
     }
@@ -717,6 +718,20 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         }
         
         return newArray
+    }
+    
+    private func fixModuleFlags() {
+        fixModuleFlags(in: rigs, prefix: "RigSlot")
+        fixModuleFlags(in: subsystems, prefix: "SubSystemSlot")
+        fixModuleFlags(in: highSlotModules, prefix: "HiSlot")
+        fixModuleFlags(in: midSlotModules, prefix: "MedSlot")
+        fixModuleFlags(in: lowSlotModules, prefix: "LoSlot")
+    }
+    
+    private func fixModuleFlags(in modules: [ECKCharacterFittingItem], prefix: String) {
+        for (index, module) in modules.enumerated() {
+            module.flag = .init(rawValue: "\(prefix)\(index)")!
+        }
     }
     
     public func removeCharge(from item: ECKCharacterFittingItem, manager: ECKFittingManager) {
