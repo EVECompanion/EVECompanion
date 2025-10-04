@@ -632,48 +632,91 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         try container.encode(self.skills, forKey: .skills)
     }
     
-    public func addModule(item: ECKItem, skills: ECKCharacterSkills, manager: ECKFittingManager) throws(ECKAddModuleError) {
+    public func addModule(item: ECKItem,
+                          skills: ECKCharacterSkills,
+                          moduleToReplace: ECKCharacterFittingItem?,
+                          manager: ECKFittingManager) throws(ECKAddModuleError) {
         guard let slotType = item.slotType else {
             throw .moduleNotFittable(item)
         }
         
         try checkItemIsFittable(item: item)
         
-        switch slotType {
-        case .rig:
-            guard self.rigs.count < self.rigSlots else {
-                throw .noFreeSlot(item, .rig)
+        if let moduleToReplace {
+            let originalFlag = moduleToReplace.flag
+            let newModule = ECKCharacterFittingItem(flag: originalFlag,
+                                                    quantity: 1,
+                                                    item: item)
+            
+            guard moduleToReplace.item.slotType == newModule.item.slotType else {
+                throw .generic
             }
             
-            self.rigs.append(.init(flag: .init(rawValue: "RigSlot\(rigs.count)")!, quantity: 1, item: item))
-        case .subsystem:
-            guard self.subsystems.count < self.subsystemSlots else {
-                throw .noFreeSlot(item, .subsystem)
+            switch slotType {
+            case .rig:
+                rigs = replaceModule(oldModule: moduleToReplace, newModule: newModule, in: rigs)
+            case .subsystem:
+                subsystems = replaceModule(oldModule: moduleToReplace, newModule: newModule, in: subsystems)
+            case .high:
+                highSlotModules = replaceModule(oldModule: moduleToReplace, newModule: newModule, in: highSlotModules)
+            case .mid:
+                midSlotModules = replaceModule(oldModule: moduleToReplace, newModule: newModule, in: midSlotModules)
+            case .low:
+                lowSlotModules = replaceModule(oldModule: moduleToReplace, newModule: newModule, in: lowSlotModules)
             }
-            
-            self.subsystems.append(.init(flag: .init(rawValue: "SubSystemSlot\(subsystems.count)")!, quantity: 1, item: item))
-        case .high:
-            guard self.highSlotModules.count < self.highSlots else {
-                throw .noFreeSlot(item, .high)
+        } else {
+            switch slotType {
+            case .rig:
+                guard self.rigs.count < self.rigSlots else {
+                    throw .noFreeSlot(item, .rig)
+                }
+                
+                self.rigs.append(.init(flag: .init(rawValue: "RigSlot\(rigs.count)")!, quantity: 1, item: item))
+            case .subsystem:
+                guard self.subsystems.count < self.subsystemSlots else {
+                    throw .noFreeSlot(item, .subsystem)
+                }
+                
+                self.subsystems.append(.init(flag: .init(rawValue: "SubSystemSlot\(subsystems.count)")!, quantity: 1, item: item))
+            case .high:
+                guard self.highSlotModules.count < self.highSlots else {
+                    throw .noFreeSlot(item, .high)
+                }
+                
+                self.highSlotModules.append(.init(flag: .init(rawValue: "HiSlot\(highSlotModules.count)")!, quantity: 1, item: item))
+            case .mid:
+                guard self.midSlotModules.count < self.midSlots else {
+                    throw .noFreeSlot(item, .mid)
+                }
+                
+                self.midSlotModules.append(.init(flag: .init(rawValue: "MedSlot\(midSlotModules.count)")!, quantity: 1, item: item))
+            case .low:
+                guard self.lowSlotModules.count < self.lowSlots else {
+                    throw .noFreeSlot(item, .low)
+                }
+                
+                self.lowSlotModules.append(.init(flag: .init(rawValue: "LoSlot\(lowSlotModules.count)")!, quantity: 1, item: item))
             }
-            
-            self.highSlotModules.append(.init(flag: .init(rawValue: "HiSlot\(highSlotModules.count)")!, quantity: 1, item: item))
-        case .mid:
-            guard self.midSlotModules.count < self.midSlots else {
-                throw .noFreeSlot(item, .mid)
-            }
-            
-            self.midSlotModules.append(.init(flag: .init(rawValue: "MedSlot\(midSlotModules.count)")!, quantity: 1, item: item))
-        case .low:
-            guard self.lowSlotModules.count < self.lowSlots else {
-                throw .noFreeSlot(item, .low)
-            }
-            
-            self.lowSlotModules.append(.init(flag: .init(rawValue: "LoSlot\(lowSlotModules.count)")!, quantity: 1, item: item))
         }
         
         calculateAttributes(skills: nil)
         manager.saveFitting(self)
+    }
+    
+    private func replaceModule(oldModule: ECKCharacterFittingItem,
+                               newModule: ECKCharacterFittingItem,
+                               in modules: [ECKCharacterFittingItem]) -> [ECKCharacterFittingItem] {
+        var newArray: [ECKCharacterFittingItem] = []
+        
+        for module in modules {
+            if module.id == oldModule.id {
+                newArray.append(newModule)
+            } else {
+                newArray.append(module)
+            }
+        }
+        
+        return newArray
     }
     
     public func removeCharge(from item: ECKCharacterFittingItem, manager: ECKFittingManager) {

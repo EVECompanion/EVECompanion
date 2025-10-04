@@ -8,19 +8,21 @@
 import SwiftUI
 import EVECompanionKit
 
-struct MarketGroupsView<LeadingSection>: View where LeadingSection: View {
+struct MarketGroupsView<LeadingSection, SectionHeader>: View where LeadingSection: View, SectionHeader: View {
     
     @StateObject var manager: ECKMarketGroupManager
     
     private var selectionHandler: ((ECKItem) -> Void)?
     private let customTitle: String?
     private let leadingSection: () -> LeadingSection?
+    private let customSectionHeader: () -> SectionHeader?
     
     init(groupIdFilter: Int?,
          marketGroupIdFilter: Int?,
          effectIdFilter: Int?,
          customTitle: String? = nil,
          leadingSection: @escaping () -> LeadingSection? = { nil },
+         customSectionHeader: @escaping () -> SectionHeader? = { nil },
          selectionHandler: ((ECKItem) -> Void)? = nil) {
         let manager = ECKMarketGroupManager(groupIdFilter: groupIdFilter,
                                             marketGroupIdFilter: marketGroupIdFilter,
@@ -28,32 +30,36 @@ struct MarketGroupsView<LeadingSection>: View where LeadingSection: View {
         self.customTitle = customTitle
         self.selectionHandler = selectionHandler
         self.leadingSection = leadingSection
+        self.customSectionHeader = customSectionHeader
         self._manager = .init(wrappedValue: manager)
     }
     
     var body: some View {
         List {
             leadingSection()
-            
-            OutlineGroup(manager.marketGroups, children: \.children) { type in
-                switch type {
-                case .item(let item):
-                    if let selectionHandler {
-                        Button {
-                            selectionHandler(item)
-                        } label: {
-                            itemCell(for: item)
-                        }
+            Section {
+                OutlineGroup(manager.marketGroups, children: \.children) { type in
+                    switch type {
+                    case .item(let item):
+                        if let selectionHandler {
+                            Button {
+                                selectionHandler(item)
+                            } label: {
+                                itemCell(for: item)
+                            }
 
-                    } else {
-                        NavigationLink(value: AppScreen.item(item)) {
-                            itemCell(for: item)
+                        } else {
+                            NavigationLink(value: AppScreen.item(item)) {
+                                itemCell(for: item)
+                            }
                         }
+                        
+                    case .marketGroup(let marketGroup):
+                        Text(marketGroup.name)
                     }
-                    
-                case .marketGroup(let marketGroup):
-                    Text(marketGroup.name)
                 }
+            } header: {
+                customSectionHeader()
             }
         }
         .searchable(text: $manager.searchString,
@@ -77,8 +83,8 @@ struct MarketGroupsView<LeadingSection>: View where LeadingSection: View {
 
 #Preview {
     NavigationStack {
-        MarketGroupsView<EmptyView>(groupIdFilter: nil,
-                                    marketGroupIdFilter: nil,
-                                    effectIdFilter: nil)
+        MarketGroupsView<EmptyView, EmptyView>(groupIdFilter: nil,
+                                               marketGroupIdFilter: nil,
+                                               effectIdFilter: nil)
     }
 }

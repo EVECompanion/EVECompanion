@@ -143,9 +143,13 @@ struct FittingDetailModulesView: View {
                     fitting.calculateAttributes(skills: character.skills ?? .empty)
                 }
             case .moduleSelection(let moduleType):
-                ModuleSelectionView(moduleType: moduleType, targetShip: fitting.ship.item) { item in
+                ModuleSelectionView(moduleType: moduleType,
+                                    targetShip: fitting.ship.item,
+                                    itemToReplace: nil) { item in
                     do throws(ECKAddModuleError) {
-                        try fitting.addModule(item: item, skills: character.skills ?? .empty,
+                        try fitting.addModule(item: item,
+                                              skills: character.skills ?? .empty,
+                                              moduleToReplace: nil,
                                               manager: fittingManager)
                     } catch {
                         self.addModuleError = error
@@ -153,10 +157,13 @@ struct FittingDetailModulesView: View {
                     }
                 }
             case .moduleReplacement(moduleType: let moduleType, moduleToReplace: let moduleToReplace):
-                ModuleSelectionView(moduleType: moduleType, targetShip: fitting.ship.item) { item in
+                ModuleSelectionView(moduleType: moduleType,
+                                    targetShip: fitting.ship.item,
+                                    itemToReplace: moduleToReplace.item) { item in
                     do throws(ECKAddModuleError) {
                         try fitting.addModule(item: item,
                                               skills: character.skills ?? .empty,
+                                              moduleToReplace: moduleToReplace,
                                               manager: fittingManager)
                     } catch {
                         self.addModuleError = error

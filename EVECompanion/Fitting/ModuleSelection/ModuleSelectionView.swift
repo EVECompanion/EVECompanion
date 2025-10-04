@@ -84,14 +84,19 @@ struct ModuleSelectionView: View {
     
     private let searchHistoryDefaultsKey: String
     private let moduleType: ModuleType
+    private let itemToReplace: ECKItem?
     private let targetShip: ECKItem
     private let selectionHandler: (ECKItem) -> Void
     @Environment(\.dismiss) var dismiss
     @State var searchHistory: [ECKItem]
     
-    init(moduleType: ModuleType, targetShip: ECKItem, selectionHandler: @escaping (ECKItem) -> Void) {
+    init(moduleType: ModuleType,
+         targetShip: ECKItem,
+         itemToReplace: ECKItem?,
+         selectionHandler: @escaping (ECKItem) -> Void) {
         self.moduleType = moduleType
         self.targetShip = targetShip
+        self.itemToReplace = itemToReplace
         self.selectionHandler = selectionHandler
         self.searchHistoryDefaultsKey = "Fitting.ModuleSelection.\(moduleType.id)"
         
@@ -126,6 +131,21 @@ struct ModuleSelectionView: View {
                         }
                     }
                 }
+            } customSectionHeader: {
+                if let itemToReplace {
+                    VStack(alignment: .leading) {
+                        Text("Replacing:")
+                        
+                        HStack {
+                            ECImage(id: itemToReplace.typeId, category: .types)
+                                .frame(width: 40, height: 40)
+                            
+                            Text(itemToReplace.name)
+                        }
+                    }
+                } else {
+                    nil
+                }
             } selectionHandler: { item in
                 didSelect(item)
             }
@@ -152,7 +172,8 @@ struct ModuleSelectionView: View {
     Color.clear
         .sheet(isPresented: .constant(true)) {
             ModuleSelectionView(moduleType: .module(.high),
-                                targetShip: .init(typeId: 11567)) { _ in
+                                targetShip: .init(typeId: 11567),
+                                itemToReplace: .init(typeId: 40357)) { _ in
                 return
             }
         }
