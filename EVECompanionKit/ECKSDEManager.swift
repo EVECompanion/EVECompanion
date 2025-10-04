@@ -1417,31 +1417,60 @@ public class ECKSDEManager {
                 return []
             }
             
-            return result.compactMap { row -> ECKDogmaEffect? in
-                guard let effectId: Int64 = row[0] as? Int64,
-                      let effectName: String = row[1] as? String,
-                      let modifierInfo: String = row[3] as? String else {
-                          logger.info("Unexpected effect data \(row)")
-                          return nil
-                }
-                
-                let effectCategory: Int?
-                if let category: Int64 = row[2] as? Int64 {
-                    effectCategory = Int(category)
-                } else {
-                    effectCategory = nil
-                }
-                
-                let effect: FetchedEffect = (effectId: Int(effectId),
-                                             effectName: effectName,
-                                             effectCategory: effectCategory,
-                                             modifierInfo: modifierInfo)
-                
-                return .init(data: effect)
-            }
+            return parseEffects(rows: result)
         } catch {
             logger.error("Error fetching effects for type \(typeId): \(error)")
             return []
+        }
+    }
+    
+    internal func getEffect(effectId: Int) -> ECKDogmaEffect? {
+        do {
+            let statement = try connection?.prepare("""
+            SELECT
+                dgmEffects.effectID,
+                dgmEffects.effectName,
+                dgmEffects.effectCategory,
+                dgmEffects.modifierInfo
+            FROM
+                dgmEffects
+            WHERE
+                dgmEffects.effectID = ?
+            """, effectId)
+            
+            guard let result = try statement?.run() else {
+                return nil
+            }
+            
+            return parseEffects(rows: result).first
+        } catch {
+            logger.error("Error fetching effect \(effectId): \(error)")
+            return nil
+        }
+    }
+    
+    private func parseEffects(rows: Statement) -> [ECKDogmaEffect] {
+        return rows.compactMap { row -> ECKDogmaEffect? in
+            guard let effectId: Int64 = row[0] as? Int64,
+                  let effectName: String = row[1] as? String,
+                  let modifierInfo: String = row[3] as? String else {
+                      logger.info("Unexpected effect data \(row)")
+                      return nil
+            }
+            
+            let effectCategory: Int?
+            if let category: Int64 = row[2] as? Int64 {
+                effectCategory = Int(category)
+            } else {
+                effectCategory = nil
+            }
+            
+            let effect: FetchedEffect = (effectId: Int(effectId),
+                                         effectName: effectName,
+                                         effectCategory: effectCategory,
+                                         modifierInfo: modifierInfo)
+            
+            return .init(data: effect)
         }
     }
     

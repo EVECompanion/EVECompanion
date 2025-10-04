@@ -67,6 +67,13 @@ struct FittingDetailInfoView: View {
             
             if [fitting.warpSpeed, fitting.alignTime, fitting.signatureRadius, fitting.cargo].compactMap({ $0 }).isEmpty == false {
                 Section("Misc") {
+                    if let maxVelocity = fitting.maxVelocity {
+                        keyValueCell(attribute: "Maximum Velocity",
+                                     valueText: ECFormatters.attributeValue(maxVelocity,
+                                                                            maximumFractionDigits: 2) + " m/s",
+                                     icon: "Fitting/velocity")
+                    }
+                    
                     if let warpSpeed = fitting.warpSpeed {
                         keyValueCell(attribute: "Warp Speed",
                                      valueText: ECFormatters.attributeValue(warpSpeed,

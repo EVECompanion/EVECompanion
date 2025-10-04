@@ -76,6 +76,7 @@ struct FittingDetailModuleView: View {
                             Text("State")
                                 .fontWeight(.bold)
                         }
+                        .pickerStyle(.segmented)
                         .foregroundStyle(.primary)
                     }
                     

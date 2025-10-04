@@ -36,6 +36,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     static let attributeHighSlotsId: Int = 14
     static let attributePowerLoadId: Int = 15
     static let attributePowerGridUsageId: Int = 30
+    static let attributeMaxVelocityyId: Int = 37
     static let attributeCapacityId: Int = 38
     static let attributeCpuOutputId: Int = 48
     static let attributeCpuLoadId: Int = 49
@@ -199,6 +200,10 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     
     public var maxDroneCapacity: Float? {
         return ship.attributes[Self.attributeDroneCapacityId]?.value
+    }
+    
+    public var maxVelocity: Float? {
+        return ship.attributes[Self.attributeMaxVelocityyId]?.value
     }
     
     public var usedDroneCapacity: Float? {

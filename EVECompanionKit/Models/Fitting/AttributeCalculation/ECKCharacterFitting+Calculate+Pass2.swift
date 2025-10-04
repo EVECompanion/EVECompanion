@@ -11,6 +11,11 @@ extension ECKCharacterFitting {
     
     internal func pass2() async {
         var effects: [ECKPass2Effect] = []
+        
+        if let velocityBonusEffect = ECKSDEManager.shared.getEffect(effectId: -1) {
+            self.ship.collectEffect(effect: velocityBonusEffect, object: .ship, into: &effects)
+        }
+        
         self.ship.collectEffects(object: .ship, into: &effects)
         self.target.collectEffects(object: .target, into: &effects)
         self.structure.collectEffects(object: .structure, into: &effects)
@@ -209,77 +214,81 @@ fileprivate extension ECKCharacterFittingItem {
         let effects = ECKSDEManager.shared.getEffects(for: item.typeId)
         
         for effect in effects {
-            if effect.category.rawValue > self.maxState.rawValue {
-                self.maxState = effect.category
+            collectEffect(effect: effect, object: object, into: &collectedEffects)
+        }
+    }
+    
+    func collectEffect(effect: ECKDogmaEffect, object: ECKCharacterFitting.ItemObject, into collectedEffects: inout [ECKPass2Effect]) {
+        if effect.category.rawValue > self.maxState.rawValue {
+            self.maxState = effect.category
+        }
+        
+        for modifierInfo in effect.modifierInfo {
+            let modifier = getModifier(for: modifierInfo)
+            guard let modifier else {
+                continue
             }
             
-            for modifierInfo in effect.modifierInfo {
-                let modifier = getModifier(for: modifierInfo)
-                guard let modifier else {
-                    continue
-                }
-                
-                let operationId = modifierInfo["operation"] as? Int
-                guard let operation = ECKCharacterFitting.ModifierOperation(rawValue: operationId) else {
-                    continue
-                }
-                
-                let domainString = modifierInfo["domain"] as? String
-                guard let domain = ECKCharacterFitting.ModifierDomain(rawValue: domainString) else {
-                    logger.error("Domain is not set.")
-                    continue
-                }
-                
-                if case .item = object, domain == .otherId {
-                    continue
-                }
-                
-                let target: ECKCharacterFitting.ItemObject
-                
-                switch domain {
-                case .itemId:
-                    target = object
-                case .shipId:
-                    target = .ship
-                case .charId:
-                    target = .character
-                case .otherId:
-                    switch object {
-                    case .item(index: let index):
-                        target = .charge(index: index)
-                    case .charge(index: let index):
-                        target = .item(index: index)
-                    default:
-                        logger.error("Unexpected target for other id \(object)")
-                        continue
-                    }
-                case .structureId:
-                    target = .structure
-                case .target:
-                    target = .target
-                case .targetId:
-                    target = .target
-                }
-                
-                guard let modifiedAttributeID = modifierInfo["modifiedAttributeID"] as? Int else {
-                    logger.warning("Modifier Info has no modifiedAttributeID.")
-                    continue
-                }
-                
-                guard let modifyingAttributeID = modifierInfo["modifyingAttributeID"] as? Int else {
-                    logger.warning("Modifier Info has no modifyingAttributeID.")
-                    continue
-                }
-                
-                collectedEffects.append(.init(effectId: effect.id,
-                                              modifier: modifier,
-                                              operation: operation,
-                                              source: object,
-                                              sourceCategory: effect.category,
-                                              sourceAttributeId: modifyingAttributeID,
-                                              target: target,
-                                              targetAttributeId: modifiedAttributeID))
+            let operationId = modifierInfo["operation"] as? Int
+            guard let operation = ECKCharacterFitting.ModifierOperation(rawValue: operationId) else {
+                continue
             }
+            
+            let domainString = modifierInfo["domain"] as? String
+            guard let domain = ECKCharacterFitting.ModifierDomain(rawValue: domainString) else {
+                logger.error("Domain is not set.")
+                continue
+            }
+            
+            if case .item = object, domain == .otherId {
+                continue
+            }
+            
+            let target: ECKCharacterFitting.ItemObject
+            
+            switch domain {
+            case .itemId:
+                target = object
+            case .shipId:
+                target = .ship
+            case .charId:
+                target = .character
+            case .otherId:
+                switch object {
+                case .item(index: let index):
+                    target = .charge(index: index)
+                case .charge(index: let index):
+                    target = .item(index: index)
+                default:
+                    logger.error("Unexpected target for other id \(object)")
+                    continue
+                }
+            case .structureId:
+                target = .structure
+            case .target:
+                target = .target
+            case .targetId:
+                target = .target
+            }
+            
+            guard let modifiedAttributeID = modifierInfo["modifiedAttributeID"] as? Int else {
+                logger.warning("Modifier Info has no modifiedAttributeID.")
+                continue
+            }
+            
+            guard let modifyingAttributeID = modifierInfo["modifyingAttributeID"] as? Int else {
+                logger.warning("Modifier Info has no modifyingAttributeID.")
+                continue
+            }
+            
+            collectedEffects.append(.init(effectId: effect.id,
+                                          modifier: modifier,
+                                          operation: operation,
+                                          source: object,
+                                          sourceCategory: effect.category,
+                                          sourceAttributeId: modifyingAttributeID,
+                                          target: target,
+                                          targetAttributeId: modifiedAttributeID))
         }
     }
     
