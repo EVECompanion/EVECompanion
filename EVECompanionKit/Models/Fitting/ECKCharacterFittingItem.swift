@@ -29,7 +29,7 @@ public class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Observabl
     internal var maxState: ECKDogmaEffect.Category = .passive
     
     public var userSettableStates: [ECKDogmaEffect.Category] {
-        return [.online, .active, .overload].filter { category in
+        return [.passive, .active, .overload].filter { category in
             return category.rawValue <= maxState.rawValue
         }
     }
