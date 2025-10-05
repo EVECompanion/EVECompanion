@@ -22,7 +22,7 @@ public class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Observabl
     public let quantity: Int
     public let item: ECKItem
     
-    public var charge: ECKCharacterFittingItem?
+    public internal(set) var charge: ECKCharacterFittingItem?
     
     public internal(set) var attributes: [ECKCharacterFitting.AttributeID: ECKCharacterFitting.FittingAttribute] = [:]
     @Published public var state: ECKDogmaEffect.Category = .active

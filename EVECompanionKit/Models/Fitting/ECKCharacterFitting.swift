@@ -739,6 +739,29 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         }
     }
     
+    public func addCharge(_ charge: ECKItem, into module: ECKCharacterFittingItem, batchInsert: Bool) {
+        if batchInsert {
+            let moduleTypeId: Int = module.item.typeId
+            
+            for item in items where item.item.typeId == moduleTypeId {
+                item.charge = .init(flag: module.flag,
+                                    quantity: 1,
+                                    item: charge)
+            }
+        } else {
+            module.charge = .init(flag: module.flag,
+                                  quantity: 1,
+                                  item: charge)
+        }
+        
+        calculateAttributes(skills: nil)
+    }
+    
+    public func canBatchInsert(charge: ECKItem, into module: ECKCharacterFittingItem) -> Bool {
+        let moduleTypeId: Int = module.item.typeId
+        return self.items.filter({ $0.item.typeId == moduleTypeId }).count > 1
+    }
+    
     public func removeCharge(from item: ECKCharacterFittingItem, manager: ECKFittingManager) {
         item.charge = nil
         calculateAttributes(skills: nil)

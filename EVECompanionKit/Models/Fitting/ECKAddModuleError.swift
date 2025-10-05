@@ -7,11 +7,22 @@
 
 import Foundation
 
-public enum ECKAddModuleError: Error {
+public enum ECKAddModuleError: Error, Identifiable {
     
     case generic
     case moduleNotFittable(ECKItem)
     case noFreeSlot(ECKItem, ECKCharacterFitting.ModuleSlotType)
+    
+    public var id: String {
+        switch self {
+        case .generic:
+            return "generic"
+        case .moduleNotFittable(let item):
+            return "moduleNotFittable-\(item.id)"
+        case .noFreeSlot(let item, let moduleSlotType):
+            return "noFreeSlot-\(item.id)-\(moduleSlotType.rawValue)"
+        }
+    }
     
     public var text: String {
         switch self {

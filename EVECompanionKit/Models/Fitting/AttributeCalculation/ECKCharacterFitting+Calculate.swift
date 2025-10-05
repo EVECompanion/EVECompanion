@@ -224,10 +224,12 @@ extension ECKCharacterFitting {
             $0.charge?.attributes.removeAll()
         })
         self.skills.removeAll()
-        self.lastUsedSkills = skills
+        if let skills {
+            self.lastUsedSkills = skills
+        }
         
         Task {
-            pass1(skills: skills ?? lastUsedSkills ?? .dummy)
+            pass1(skills: skills ?? lastUsedSkills ?? .empty)
             await pass2()
             await pass3()
             pass4()

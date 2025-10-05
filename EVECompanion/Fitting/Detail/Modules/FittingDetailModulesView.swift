@@ -41,12 +41,44 @@ struct FittingDetailModulesView: View {
         }
     }
     
+    enum AlertItem: Identifiable {
+        public var id: String {
+            switch self {
+            case .addModuleError(let error):
+                return "addModuleError-\(error.id)"
+            case .shouldBatchInsert(charge: let charge, target: let target):
+                return "shouldBatchInsert-\(charge.id)-\(target.id)"
+            }
+        }
+        
+        public var title: String {
+            switch self {
+            case .addModuleError:
+                return "Error adding module"
+            case .shouldBatchInsert:
+                return "Batch insert charge?"
+            }
+        }
+        
+        public var text: String {
+            switch self {
+            case .addModuleError(let error):
+                return error.text
+            case .shouldBatchInsert(charge: let charge, target: let target):
+                return "Do you want to batch insert \(charge.name) into all \(target.item.name) modules?"
+            }
+        }
+        
+        case addModuleError(ECKAddModuleError)
+        case shouldBatchInsert(charge: ECKItem, target: ECKCharacterFittingItem)
+    }
+    
     let fittingManager: ECKFittingManager
     @ObservedObject private var fitting: ECKCharacterFitting
     private let character: ECKCharacter
     @State private var sheetItem: SheetItem?
-    @State private var addModuleError: ECKAddModuleError?
-    @State private var showModuleErrorDialog: Bool = false
+    @State private var alertItem: AlertItem?
+    @State private var showAlert: Bool = false
     
     init(character: ECKCharacter, fitting: ECKCharacterFitting, manager: ECKFittingManager) {
         self.character = character
@@ -124,23 +156,43 @@ struct FittingDetailModulesView: View {
                 
             }
         }
-        .alert("Error adding module",
-               isPresented: $showModuleErrorDialog,
-               presenting: $addModuleError) { error in
-            Button("Ok") {
-                error.wrappedValue = nil
+        .alert(alertItem?.title ?? "",
+               isPresented: $showAlert,
+               presenting: $alertItem) { item in
+            switch item.wrappedValue {
+            case .addModuleError(let error):
+                Button("Ok") {
+                    item.wrappedValue = nil
+                }
+            case .shouldBatchInsert(charge: let charge, target: let target):
+                Button("Yes") {
+                    fitting.addCharge(charge, into: target, batchInsert: true)
+                    item.wrappedValue = nil
+                }
+                
+                Button(role: .cancel) {
+                    fitting.addCharge(charge, into: target, batchInsert: false)
+                    item.wrappedValue = nil
+                } label: {
+                    Text("No")
+                }
+            case .none:
+                EmptyView()
             }
-        } message: { error in
-            Text(error.wrappedValue?.text ?? "")
+        } message: { item in
+            Text(item.wrappedValue?.text ?? "")
         }
         .sheet(item: $sheetItem) { item in
             switch item {
             case .chargeSelection(let target):
                 ChargeSelectionView(target: target.item) { selectedCharge in
-                    target.charge = .init(flag: target.flag,
-                                          quantity: 1,
-                                          item: selectedCharge)
-                    fitting.calculateAttributes(skills: character.skills ?? .empty)
+                    if fitting.canBatchInsert(charge: selectedCharge, into: target) {
+                        self.alertItem = .shouldBatchInsert(charge: selectedCharge,
+                                                            target: target)
+                        self.showAlert = true
+                    } else {
+                        fitting.addCharge(selectedCharge, into: target, batchInsert: false)
+                    }
                 }
             case .moduleSelection(let moduleType):
                 ModuleSelectionView(moduleType: moduleType,
@@ -152,8 +204,8 @@ struct FittingDetailModulesView: View {
                                               moduleToReplace: nil,
                                               manager: fittingManager)
                     } catch {
-                        self.addModuleError = error
-                        self.showModuleErrorDialog = true
+                        self.alertItem = .addModuleError(error)
+                        self.showAlert = true
                     }
                 }
             case .moduleReplacement(moduleType: let moduleType, moduleToReplace: let moduleToReplace):
@@ -166,8 +218,8 @@ struct FittingDetailModulesView: View {
                                               moduleToReplace: moduleToReplace,
                                               manager: fittingManager)
                     } catch {
-                        self.addModuleError = error
-                        self.showModuleErrorDialog = true
+                        self.alertItem = .addModuleError(error)
+                        self.showAlert = true
                     }
                 }
             }
