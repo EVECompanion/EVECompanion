@@ -42,7 +42,7 @@ struct FittingDetailModulesView: View {
     }
     
     enum AlertItem: Identifiable {
-        public var id: String {
+        var id: String {
             switch self {
             case .addModuleError(let error):
                 return "addModuleError-\(error.id)"
@@ -51,7 +51,7 @@ struct FittingDetailModulesView: View {
             }
         }
         
-        public var title: String {
+        var title: String {
             switch self {
             case .addModuleError:
                 return "Error adding module"
@@ -60,7 +60,7 @@ struct FittingDetailModulesView: View {
             }
         }
         
-        public var text: String {
+        var text: String {
             switch self {
             case .addModuleError(let error):
                 return error.text
@@ -90,7 +90,7 @@ struct FittingDetailModulesView: View {
         List {
             section(modules: moduleEntries(modules: fitting.subsystems,
                                            slotFlagPrefix: "SubSystemSlot",
-                                           slots: fitting.subsystemSlots),
+                                           slots: 4),
                     moduleType: .subsystem,
                     numberOfSlots: fitting.subsystemSlots,
                     title: "Subsystems",

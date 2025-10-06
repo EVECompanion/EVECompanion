@@ -777,8 +777,8 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         case .low:
             lowSlotModules = lowSlotModules.filter { $0.id != item.id }
         case .subsystem:
+            subsystems = subsystems.filter({ $0.id != item.id })
             // TODO: Remove other modules if the slot counts changed
-            return
             
         case .rig:
             rigs = rigs.filter { $0.id != item.id }
@@ -794,14 +794,6 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     public func setName(_ name: String, manager: ECKFittingManager) {
         self.name = name
         manager.saveFitting(self)
-    }
-    
-    private func checkItemIsFittable(item: ECKItem) throws(ECKAddModuleError) {
-        guard let slotType = item.slotType else {
-            throw .moduleNotFittable(item)
-        }
-        
-        // TODO: Implement Module Compatibility Check
     }
     
 }

@@ -71,6 +71,7 @@
 		C92F9C992D8A0F6300306DD7 /* CapitalNavigationTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F9C982D8A0F6300306DD7 /* CapitalNavigationTabView.swift */; };
 		C92F9C9B2D8AA71200306DD7 /* ECKJumpCapableShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F9C9A2D8AA71200306DD7 /* ECKJumpCapableShip.swift */; };
 		C92F9C9D2D8AA72700306DD7 /* ECKCapitalJumpRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F9C9C2D8AA72700306DD7 /* ECKCapitalJumpRoute.swift */; };
+		C9381AAB2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9381AAA2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift */; };
 		C938723B2DBC2FD9000FB35D /* PlanetaryColonyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C938723A2DBC2FD9000FB35D /* PlanetaryColonyCell.swift */; };
 		C93E8FDD2E5CD26900187846 /* EVECompanionIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = C93E8FDC2E5CD26900187846 /* EVECompanionIcon.icon */; };
 		C942571C2C29A97800FAEE5C /* ECKAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942571B2C29A97800FAEE5C /* ECKAsset.swift */; };
@@ -360,6 +361,7 @@
 		C92F9C982D8A0F6300306DD7 /* CapitalNavigationTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalNavigationTabView.swift; sourceTree = "<group>"; };
 		C92F9C9A2D8AA71200306DD7 /* ECKJumpCapableShip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKJumpCapableShip.swift; sourceTree = "<group>"; };
 		C92F9C9C2D8AA72700306DD7 /* ECKCapitalJumpRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCapitalJumpRoute.swift; sourceTree = "<group>"; };
+		C9381AAA2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacterFitting+IsFittable.swift"; sourceTree = "<group>"; };
 		C938723A2DBC2FD9000FB35D /* PlanetaryColonyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryColonyCell.swift; sourceTree = "<group>"; };
 		C93E8FDC2E5CD26900187846 /* EVECompanionIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = EVECompanionIcon.icon; sourceTree = "<group>"; };
 		C93FE8372BED29F200729DD8 /* ECFormatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECFormatters.swift; sourceTree = "<group>"; };
@@ -1261,6 +1263,7 @@
 			children = (
 				C9D094FA2DE7971300715479 /* AttributeCalculation */,
 				C9F055B52DE2F66D00340A05 /* ECKCharacterFitting.swift */,
+				C9381AAA2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift */,
 				C903BF7F2E8889B8001C224E /* ECKAddModuleError.swift */,
 				C9F055C82DE3B89F00340A05 /* ECKCharacterFitting+Stats.swift */,
 				C9F055B82DE2F79200340A05 /* ECKCharacterFittingItem.swift */,
@@ -1666,6 +1669,7 @@
 				C98484052D7F9A7B0076016B /* ECKCapitalNavigationManager.swift in Sources */,
 				C9FD52E32C01D35C0084E5E1 /* ECKCharacterWalletJournalResource.swift in Sources */,
 				C99750AC2C148D1000DE5B96 /* ECKRegion.swift in Sources */,
+				C9381AAB2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift in Sources */,
 				C9AD0E312DF782C700E762AC /* ECKESITypeResource.swift in Sources */,
 				C9FD52F72C0235E20084E5E1 /* ECKLoyaltyPointsEntry.swift in Sources */,
 				C952BC812BEB858D0070C504 /* ECKCharacterStorage.swift in Sources */,

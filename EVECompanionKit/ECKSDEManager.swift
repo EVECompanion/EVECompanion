@@ -1474,4 +1474,47 @@ public class ECKSDEManager {
         }
     }
     
+    enum FittingRestrictionAttribute {
+        case canFitToShipType(attributeId: Int)
+        case canFitToShipGroup(attributeId: Int)
+    }
+    
+    func getItemFittingRestrictionAttributes() -> [FittingRestrictionAttribute] {
+        do {
+            let statement = try connection?.prepare("""
+            SELECT
+                attributeID,
+                attributeRawName
+            FROM
+                dgmAttributeTypes
+            WHERE
+                attributeRawName LIKE "canFitShipType%"
+                OR attributeRawName LIKE "canFitShipGroup%"
+            """)
+            
+            guard let result = try statement?.run() else {
+                return []
+            }
+            
+            return result.compactMap { row in
+                guard let attributeId: Int64 = row[0] as? Int64,
+                      let attributeRawName: String = row[1] as? String else {
+                    logger.error("Cannot parse row \(row) to FittingRestrictionAttribute")
+                    return nil
+                }
+                
+                if attributeRawName.starts(with: "canFitShipGroup") {
+                    return .canFitToShipGroup(attributeId: Int(attributeId))
+                } else if attributeRawName.starts(with: "canFitShipType") {
+                    return .canFitToShipType(attributeId: Int(attributeId))
+                } else {
+                    return nil
+                }
+            }
+        } catch {
+            logger.error("Error fetching item restriction attributes: \(error)")
+            return []
+        }
+    }
+    
 }
