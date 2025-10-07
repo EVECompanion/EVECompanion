@@ -58,7 +58,8 @@ struct FittingDetailView: View {
                     .tag(FittingDetailTab.modules)
                 
                 if fitting.canUseDrones {
-                    FittingDetailDronesView(character: character, fitting: fitting)
+                    FittingDetailDronesView(fittingManager: manager,
+                                            fitting: fitting)
                         .tag(FittingDetailTab.drones)
                 }
                 

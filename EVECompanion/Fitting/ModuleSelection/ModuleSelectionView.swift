@@ -14,6 +14,7 @@ struct ModuleSelectionView: View {
         case rig
         case subsystem
         case module(ECKCharacterFitting.ModuleSlotType)
+        case drone
         
         var id: String {
             switch self {
@@ -23,6 +24,8 @@ struct ModuleSelectionView: View {
                 "subsystem"
             case .module(let moduleSlotType):
                 "module-\(moduleSlotType.rawValue)"
+            case .drone:
+                "drone"
             }
         }
         
@@ -34,6 +37,8 @@ struct ModuleSelectionView: View {
                 return 1112
             case .module:
                 return 9
+            case .drone:
+                return 157
             }
         }
         
@@ -56,6 +61,8 @@ struct ModuleSelectionView: View {
                 case .low:
                     return "Low Slot Module"
                 }
+            case .drone:
+                return "Drone Selection"
             }
         }
         
@@ -64,6 +71,8 @@ struct ModuleSelectionView: View {
             case .rig:
                 return nil
             case .subsystem:
+                return nil
+            case .drone:
                 return nil
             case .module(let moduleSlotType):
                 switch moduleSlotType {
@@ -112,9 +121,7 @@ struct ModuleSelectionView: View {
                              effectIdFilter: moduleType.effectIdFilter,
                              customTitle: moduleType.title) {
                 Section("History") {
-                    if searchHistory.isEmpty {
-                        Text("You have no search history for this module type.")
-                    } else {
+                    if searchHistory.isEmpty == false {
                         ForEach(searchHistory) { item in
                             Button {
                                 didSelect(item)

@@ -217,6 +217,7 @@
 		C9D095042DE7976200715479 /* ECKCharacterFitting+Calculate+Pass4.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D095032DE7976200715479 /* ECKCharacterFitting+Calculate+Pass4.swift */; };
 		C9D095062DE7BA4F00715479 /* ECKDogmaEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D095052DE7BA4F00715479 /* ECKDogmaEffect.swift */; };
 		C9D095092DE7BA8A00715479 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = C9D095082DE7BA8A00715479 /* Yams */; };
+		C9D28B8A2E9582400066DCA4 /* ECKCharacterFitting+Drones.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D28B892E9582400066DCA4 /* ECKCharacterFitting+Drones.swift */; };
 		C9D570A42C5B819500985587 /* ECKSDEUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D570A32C5B819500985587 /* ECKSDEUpdater.swift */; };
 		C9D570A62C5B836E00985587 /* ECKSDEVersionResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D570A52C5B836E00985587 /* ECKSDEVersionResource.swift */; };
 		C9D570A82C5B839600985587 /* ECKSDEVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D570A72C5B839600985587 /* ECKSDEVersion.swift */; };
@@ -501,6 +502,7 @@
 		C9D095012DE7975F00715479 /* ECKCharacterFitting+Calculate+Pass3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacterFitting+Calculate+Pass3.swift"; sourceTree = "<group>"; };
 		C9D095032DE7976200715479 /* ECKCharacterFitting+Calculate+Pass4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacterFitting+Calculate+Pass4.swift"; sourceTree = "<group>"; };
 		C9D095052DE7BA4F00715479 /* ECKDogmaEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKDogmaEffect.swift; sourceTree = "<group>"; };
+		C9D28B892E9582400066DCA4 /* ECKCharacterFitting+Drones.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacterFitting+Drones.swift"; sourceTree = "<group>"; };
 		C9D570A32C5B819500985587 /* ECKSDEUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSDEUpdater.swift; sourceTree = "<group>"; };
 		C9D570A52C5B836E00985587 /* ECKSDEVersionResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSDEVersionResource.swift; sourceTree = "<group>"; };
 		C9D570A72C5B839600985587 /* ECKSDEVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSDEVersion.swift; sourceTree = "<group>"; };
@@ -1264,6 +1266,7 @@
 				C9D094FA2DE7971300715479 /* AttributeCalculation */,
 				C9F055B52DE2F66D00340A05 /* ECKCharacterFitting.swift */,
 				C9381AAA2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift */,
+				C9D28B892E9582400066DCA4 /* ECKCharacterFitting+Drones.swift */,
 				C903BF7F2E8889B8001C224E /* ECKAddModuleError.swift */,
 				C9F055C82DE3B89F00340A05 /* ECKCharacterFitting+Stats.swift */,
 				C9F055B82DE2F79200340A05 /* ECKCharacterFittingItem.swift */,
@@ -1691,6 +1694,7 @@
 				C9D095042DE7976200715479 /* ECKCharacterFitting+Calculate+Pass4.swift in Sources */,
 				C96430882CC445CF00E8D6A6 /* ECKPlanetaryColonyManager.swift in Sources */,
 				C9B64D482BF0D54C001EF221 /* UserDefaults+Keys.swift in Sources */,
+				C9D28B8A2E9582400066DCA4 /* ECKCharacterFitting+Drones.swift in Sources */,
 				C96F98A12BEFA72D00DEC34F /* ECKContract.swift in Sources */,
 				C983AAB52BF64786002EDECB /* ECKMailRecipient.swift in Sources */,
 				C92D17C92C27604F00D6FF5A /* ECKJumpClonesResource.swift in Sources */,

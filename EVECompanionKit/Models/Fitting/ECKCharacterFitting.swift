@@ -301,6 +301,21 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         return fitting
     }()
     
+    public static let dummyVNI: ECKCharacterFitting = {
+        let drones: ECKCharacterFittingItem = .init(flag: .DroneBay, quantity: 5, item: .init(typeId: 2488))
+        
+        let fitting = ECKCharacterFitting(fittingId: UUID(),
+                                          description: "VNI",
+                                          esiFittingId: nil,
+                                          items: [
+                                            drones
+                                          ],
+                                          name: "EVECompanion's VNI",
+                                          ship: .init(typeId: 17843))
+        fitting.calculateAttributes(skills: .dummy)
+        return fitting
+    }()
+    
     public var resistances: Resistances? {
         let attributes = ship.attributes
         

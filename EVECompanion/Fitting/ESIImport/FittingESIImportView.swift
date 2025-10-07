@@ -33,6 +33,7 @@ struct FittingESIImportView: View {
                         } label: {
                             FittingCell(fitting: fitting)
                         }
+                        .buttonStyle(.plain)
                     }
                     .refreshable {
                         await fittingManager.loadFittings()

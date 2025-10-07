@@ -20,14 +20,27 @@ struct FittingDetailInfoView: View {
     
     var body: some View {
         List {
+            Section("Ship") {
+                NavigationLink(value: AppScreen.item(fitting.ship.item)) {
+                    HStack {
+                        ECImage(id: fitting.ship.item.typeId, category: .types)
+                            .frame(width: 40, height: 40)
+                        
+                        Text(fitting.ship.item.name)
+                    }
+                }
+            }
+            
             if let resistances = fitting.resistances {
                 Section("Resistances") {
                     FittingResistancesView(resistances: resistances)
                 }
             }
             
-            Section("Damage Output") {
-                FittingDamageProfileView(damageProfile: fitting.damageProfile)
+            if fitting.damageProfile.containsDamage {
+                Section("Damage Output") {
+                    FittingDamageProfileView(damageProfile: fitting.damageProfile)
+                }
             }
 
             if [fitting.maximumLockedTargets,
@@ -89,7 +102,7 @@ struct FittingDetailInfoView: View {
                     }
                     
                     if let signatureRadius = fitting.signatureRadius {
-                        keyValueCell(attribute: "SignatureRadius",
+                        keyValueCell(attribute: "Signature Radius",
                                      valueText: ECFormatters.attributeValue(signatureRadius,
                                                                             maximumFractionDigits: 1),
                                      icon: "Fitting/signatureRadius")
