@@ -30,7 +30,6 @@ extension ECKCharacterFitting {
         try checkSubsystemShipCompatibility(item: item,
                                             itemAttributes: itemAttributesDict,
                                             itemEffects: moduleEffects)
-        // TODO: Implement Module Compatibility Check
     }
     
     private func checkItemIsFittableToShipType(item: ECKItem, itemAttributes: [Int: ECKSDEManager.ItemAttribute]) throws(ECKAddModuleError) {

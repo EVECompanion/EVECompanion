@@ -567,7 +567,6 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
             case .StructureDeedBay:
                 continue
             case .SubSystemBay:
-                // TODO?
                 continue
             case .SubSystemSlot0:
                 subsystems.append(item)
@@ -778,8 +777,6 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
             lowSlotModules = lowSlotModules.filter { $0.id != item.id }
         case .subsystem:
             subsystems = subsystems.filter({ $0.id != item.id })
-            // TODO: Remove other modules if the slot counts changed
-            
         case .rig:
             rigs = rigs.filter { $0.id != item.id }
             

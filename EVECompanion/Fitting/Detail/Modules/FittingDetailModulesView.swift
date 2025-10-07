@@ -90,9 +90,11 @@ struct FittingDetailModulesView: View {
         List {
             section(modules: moduleEntries(modules: fitting.subsystems,
                                            slotFlagPrefix: "SubSystemSlot",
-                                           slots: 4),
+                                           slots: 4,
+                                           usedSlots: fitting.subsystems.count),
                     moduleType: .subsystem,
                     numberOfSlots: fitting.subsystemSlots,
+                    numberOfUsedSlots: fitting.subsystems.count,
                     title: "Subsystems",
                     slotType: .subsystem,
                     icon: "Fitting/subsystemslot") {
@@ -100,9 +102,11 @@ struct FittingDetailModulesView: View {
             }
             section(modules: moduleEntries(modules: fitting.highSlotModules,
                                            slotFlagPrefix: "HiSlot",
-                                           slots: fitting.highSlots),
+                                           slots: fitting.highSlots,
+                                           usedSlots: fitting.highSlotModules.count),
                     moduleType: .module(.high),
                     numberOfSlots: fitting.highSlots,
+                    numberOfUsedSlots: fitting.highSlotModules.count,
                     title: "High Slots",
                     slotType: .high,
                     icon: "Fitting/highslot") {
@@ -127,9 +131,11 @@ struct FittingDetailModulesView: View {
             }
             section(modules: moduleEntries(modules: fitting.midSlotModules,
                                            slotFlagPrefix: "MedSlot",
-                                           slots: fitting.midSlots),
+                                           slots: fitting.midSlots,
+                                           usedSlots: fitting.midSlotModules.count),
                     moduleType: .module(.mid),
                     numberOfSlots: fitting.midSlots,
+                    numberOfUsedSlots: fitting.midSlotModules.count,
                     title: "Mid Slots",
                     slotType: .mid,
                     icon: "Fitting/midslot") {
@@ -137,9 +143,11 @@ struct FittingDetailModulesView: View {
             }
             section(modules: moduleEntries(modules: fitting.lowSlotModules,
                                            slotFlagPrefix: "LoSlot",
-                                           slots: fitting.lowSlots),
+                                           slots: fitting.lowSlots,
+                                           usedSlots: fitting.lowSlotModules.count),
                     moduleType: .module(.low),
                     numberOfSlots: fitting.lowSlots,
+                    numberOfUsedSlots: fitting.lowSlotModules.count,
                     title: "Low Slots",
                     slotType: .low,
                     icon: "Fitting/lowslot") {
@@ -147,9 +155,11 @@ struct FittingDetailModulesView: View {
             }
             section(modules: moduleEntries(modules: fitting.rigs,
                                            slotFlagPrefix: "RigSlot",
-                                           slots: fitting.rigSlots),
+                                           slots: fitting.rigSlots,
+                                           usedSlots: fitting.rigs.count),
                     moduleType: .rig,
                     numberOfSlots: fitting.rigSlots,
+                    numberOfUsedSlots: fitting.rigs.count,
                     title: "Rigs",
                     slotType: .rig,
                     icon: "Fitting/rigslot") {
@@ -160,7 +170,7 @@ struct FittingDetailModulesView: View {
                isPresented: $showAlert,
                presenting: $alertItem) { item in
             switch item.wrappedValue {
-            case .addModuleError(let error):
+            case .addModuleError:
                 Button("Ok") {
                     item.wrappedValue = nil
                 }
@@ -230,11 +240,12 @@ struct FittingDetailModulesView: View {
     private func section(modules: [ModuleEntry],
                          moduleType: ModuleSelectionView.ModuleType,
                          numberOfSlots: Int,
+                         numberOfUsedSlots: Int,
                          title: String,
                          slotType: ECKCharacterFitting.ModuleSlotType,
                          icon: String,
                          @ViewBuilder additionalHeaderView: (() -> some View)) -> some View {
-        if numberOfSlots > 0 {
+        if max(numberOfSlots, numberOfUsedSlots) > 0 {
             Section {
                 ForEach(modules) { module in
                     switch module {
@@ -252,7 +263,10 @@ struct FittingDetailModulesView: View {
                 
             } header: {
                 HStack {
-                    sectionHeader(text: title, icon: icon)
+                    sectionHeader(text: title,
+                                  secondaryText: moduleType.id == ModuleSelectionView.ModuleType.subsystem.id ? nil : "\(numberOfUsedSlots)/\(numberOfSlots)",
+                                  icon: icon,
+                                  showWarning: numberOfUsedSlots > numberOfSlots)
                     Spacer()
                     additionalHeaderView()
                 }
@@ -340,22 +354,39 @@ struct FittingDetailModulesView: View {
     }
     
     @ViewBuilder
-    private func sectionHeader(text: String, icon: String) -> some View {
+    private func sectionHeader(text: String,
+                               secondaryText: String?,
+                               icon: String,
+                               showWarning: Bool) -> some View {
         Label {
-            Text(text)
+            HStack {
+                Text(text)
+                
+                if let secondaryText {
+                    Text(secondaryText)
+                }
+            }
         } icon: {
             Image(icon)
                 .resizable()
                 .frame(width: 40, height: 40)
         }
+        .padding(8)
+        .background {
+            if showWarning {
+                RoundedRectangle(cornerRadius: 5)
+                    .fill(Color.red)
+            }
+        }
     }
     
     private func moduleEntries(modules: [ECKCharacterFittingItem],
                                slotFlagPrefix: String,
-                               slots: Int) -> [ModuleEntry] {
+                               slots: Int,
+                               usedSlots: Int) -> [ModuleEntry] {
         var result: [ModuleEntry] = []
         
-        for index in 0..<slots {
+        for index in 0..<max(slots, usedSlots) {
             let flagString = "\(slotFlagPrefix)\(index)"
             guard let flag = ECKItemLocationFlag(rawValue: flagString) else {
                 logger.error("Cannot get flag from \(flagString)")
