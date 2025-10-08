@@ -12,7 +12,9 @@ extension ECKCharacterFitting {
     public func addDrone(newDrone: ECKItem, manager: ECKFittingManager) {
         let item = ECKCharacterFittingItem(flag: .DroneBay, quantity: 5, item: newDrone)
         drones.append(item)
-        calculateAttributes(skills: nil)
+        Task {
+            await calculateAttributes(skills: nil)
+        }
         manager.saveFitting(self)
     }
     

@@ -18,7 +18,9 @@ struct FittingDetailModuleView: View {
         return .init {
             return item.state
         } set: { newState in
-            fitting.calculateAttributes(skills: nil)
+            Task {
+                await fitting.calculateAttributes(skills: nil)
+            }
             item.state = newState
         }
     }

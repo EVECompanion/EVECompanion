@@ -215,20 +215,26 @@ extension ECKCharacterFitting {
         }
     }
     
-    public func calculateAttributes(skills: ECKCharacterSkills?) {
-        self.ship.attributes.removeAll()
-        self.target.attributes.removeAll()
-        self.structure.attributes.removeAll()
-        self.items.forEach({
-            $0.attributes.removeAll()
-            $0.charge?.attributes.removeAll()
-        })
-        self.skills.removeAll()
-        if let skills {
-            self.lastUsedSkills = skills
+    @MainActor
+    public func calculateAttributes(skills: ECKCharacterSkills?) async {
+        if let currentAttributeCalculationTask {
+            _ = await currentAttributeCalculationTask.value
         }
         
-        Task {
+        currentAttributeCalculationTask = Task {
+            self.ship.attributes.removeAll()
+            self.target.attributes.removeAll()
+            self.structure.attributes.removeAll()
+            self.items.forEach({
+                $0.attributes.removeAll()
+                $0.charge?.attributes.removeAll()
+            })
+            self.skills.removeAll()
+            if let skills {
+                self.lastUsedSkills = skills
+            }
+            
+            
             pass1(skills: skills ?? lastUsedSkills ?? .empty)
             await pass2()
             await pass3()
@@ -240,6 +246,8 @@ extension ECKCharacterFitting {
                     $0.objectWillChange.send()
                 }
             }
+            
+            currentAttributeCalculationTask = nil
         }
     }
     

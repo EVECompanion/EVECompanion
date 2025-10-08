@@ -70,7 +70,7 @@ struct FittingDetailView: View {
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .task {
-            fitting.calculateAttributes(skills: character.skills ?? .empty)
+            await fitting.calculateAttributes(skills: character.skills ?? .empty)
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(fitting.name)

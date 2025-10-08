@@ -297,7 +297,9 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
                                           ],
                                           name: "EVECompanion's Avatar",
                                           ship: .init(typeId: 11567))
-        fitting.calculateAttributes(skills: .dummy)
+        Task {
+            await fitting.calculateAttributes(skills: .dummy)
+        }
         return fitting
     }()
     
@@ -312,7 +314,9 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
                                           ],
                                           name: "EVECompanion's VNI",
                                           ship: .init(typeId: 17843))
-        fitting.calculateAttributes(skills: .dummy)
+        Task {
+            await fitting.calculateAttributes(skills: .dummy)
+        }
         return fitting
     }()
     
@@ -371,6 +375,9 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     
     internal var skills: [ECKCharacterFittingItem] = []
     internal var lastUsedSkills: ECKCharacterSkills?
+    
+    @MainActor
+    internal var currentAttributeCalculationTask: Task<Void, Never>?
     
     public required init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -719,7 +726,9 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         }
         
         fixModuleFlags()
-        calculateAttributes(skills: nil)
+        Task {
+            await calculateAttributes(skills: nil)
+        }
         manager.saveFitting(self)
     }
     
@@ -768,7 +777,9 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
                                   item: charge)
         }
         
-        calculateAttributes(skills: nil)
+        Task {
+            await calculateAttributes(skills: nil)
+        }
     }
     
     public func canBatchInsert(charge: ECKItem, into module: ECKCharacterFittingItem) -> Bool {
@@ -778,7 +789,9 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     
     public func removeCharge(from item: ECKCharacterFittingItem, manager: ECKFittingManager) {
         item.charge = nil
-        calculateAttributes(skills: nil)
+        Task {
+            await calculateAttributes(skills: nil)
+        }
         manager.saveFitting(self)
     }
     
@@ -799,7 +812,9 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
             return
         }
         
-        calculateAttributes(skills: nil)
+        Task {
+            await calculateAttributes(skills: nil)
+        }
         manager.saveFitting(self)
     }
     
