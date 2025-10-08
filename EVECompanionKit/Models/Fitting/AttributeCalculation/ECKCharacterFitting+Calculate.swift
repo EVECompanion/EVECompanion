@@ -234,7 +234,6 @@ extension ECKCharacterFitting {
                 self.lastUsedSkills = skills
             }
             
-            
             pass1(skills: skills ?? lastUsedSkills ?? .empty)
             await pass2()
             await pass3()

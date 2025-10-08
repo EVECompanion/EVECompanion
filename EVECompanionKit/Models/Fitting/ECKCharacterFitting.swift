@@ -658,17 +658,35 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         try container.encode(self.skills, forKey: .skills)
     }
     
+    func copy() -> ECKCharacterFitting {
+        return .init(fittingId: self.fittingId,
+                     description: self.description,
+                     esiFittingId: self.esiFittingId,
+                     items: self.items.map({ $0.copy() }),
+                     name: self.name,
+                     ship: self.ship.item)
+    }
+    
+    @MainActor
     public func addModule(item: ECKItem,
                           skills: ECKCharacterSkills,
                           moduleToReplace: ECKCharacterFittingItem?,
-                          manager: ECKFittingManager) throws(ECKAddModuleError) {
+                          manager: ECKFittingManager) async throws( ECKAddModuleError) {
         guard let slotType = item.slotType else {
             throw .moduleNotFittable(item)
         }
         
-        try checkItemIsFittable(item: item)
-        
         if let moduleToReplace {
+            // We cannot check if the item is fittable on this fitting instance.
+            // For example, if the turret slots are full, a turret cannot be fitted.
+            // So we need to copy the fit, remove the module to replace and then run this check.
+            let fittingCopy = self.copy()
+            fittingCopy.lastUsedSkills = self.lastUsedSkills
+            await fittingCopy.removeModule(item: moduleToReplace, manager: nil)
+            print("Task: \(fittingCopy.currentAttributeCalculationTask)")
+            await fittingCopy.currentAttributeCalculationTask?.value
+            try fittingCopy.checkItemIsFittable(item: item)
+            
             let originalFlag = moduleToReplace.flag
             let newModule = ECKCharacterFittingItem(flag: originalFlag,
                                                     quantity: 1,
@@ -691,6 +709,8 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
                 lowSlotModules = replaceModule(oldModule: moduleToReplace, newModule: newModule, in: lowSlotModules)
             }
         } else {
+            try checkItemIsFittable(item: item)
+            
             switch slotType {
             case .rig:
                 guard self.rigs.count < self.rigSlots else {
@@ -795,7 +815,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         manager.saveFitting(self)
     }
     
-    public func removeModule(item: ECKCharacterFittingItem, manager: ECKFittingManager) {
+    public func removeModule(item: ECKCharacterFittingItem, manager: ECKFittingManager?) async {
         switch item.item.slotType {
         case .high:
             highSlotModules = highSlotModules.filter { $0.id != item.id }
@@ -812,10 +832,8 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
             return
         }
         
-        Task {
-            await calculateAttributes(skills: nil)
-        }
-        manager.saveFitting(self)
+        await calculateAttributes(skills: nil)
+        manager?.saveFitting(self)
     }
     
     public func setName(_ name: String, manager: ECKFittingManager) {

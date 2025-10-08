@@ -210,14 +210,16 @@ struct FittingDetailModulesView: View {
                                     itemToReplace: nil) { result in
                     switch result {
                     case .item(let item):
-                        do throws(ECKAddModuleError) {
-                            try fitting.addModule(item: item,
-                                                  skills: character.skills ?? .empty,
-                                                  moduleToReplace: nil,
-                                                  manager: fittingManager)
-                        } catch {
-                            self.alertItem = .addModuleError(error)
-                            self.showAlert = true
+                        Task {
+                            do throws(ECKAddModuleError) {
+                                try await fitting.addModule(item: item,
+                                                            skills: character.skills ?? .empty,
+                                                            moduleToReplace: nil,
+                                                            manager: fittingManager)
+                            } catch {
+                                self.alertItem = .addModuleError(error)
+                                self.showAlert = true
+                            }
                         }
                     case .remove:
                         return
@@ -228,19 +230,22 @@ struct FittingDetailModulesView: View {
                 ModuleSelectionView(moduleType: moduleType,
                                     targetShip: fitting.ship.item,
                                     itemToReplace: moduleToReplace.item) { result in
-                    switch result {
-                    case .item(let item):
-                        do throws(ECKAddModuleError) {
-                            try fitting.addModule(item: item,
-                                                  skills: character.skills ?? .empty,
-                                                  moduleToReplace: moduleToReplace,
-                                                  manager: fittingManager)
-                        } catch {
-                            self.alertItem = .addModuleError(error)
-                            self.showAlert = true
+                    Task {
+                        switch result {
+                        case .item(let item):
+                            do throws(ECKAddModuleError) {
+                                try await fitting.addModule(item: item,
+                                                            skills: character.skills ?? .empty,
+                                                            moduleToReplace: moduleToReplace,
+                                                            manager: fittingManager)
+                            } catch {
+                                self.alertItem = .addModuleError(error)
+                                self.showAlert = true
+                            }
+                            
+                        case .remove:
+                            await fitting.removeModule(item: moduleToReplace, manager: fittingManager)
                         }
-                    case .remove:
-                        fitting.removeModule(item: moduleToReplace, manager: fittingManager)
                     }
                 }
             }

@@ -16,7 +16,7 @@ public class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Observabl
         case item = "type_id"
     }
     
-    public var id: UUID = UUID()
+    public var id: UUID
     
     public var flag: ECKItemLocationFlag
     public let quantity: Int
@@ -150,13 +150,15 @@ public class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Observabl
     #endif
     
     public required init(from decoder: any Decoder) throws {
+        self.id = .init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.flag = try container.decode(ECKItemLocationFlag.self, forKey: .flag)
         self.quantity = try container.decode(Int.self, forKey: .quantity)
         self.item = try container.decode(ECKItem.self, forKey: .item)
     }
     
-    public init(flag: ECKItemLocationFlag, quantity: Int, item: ECKItem) {
+    public init(id: UUID = .init(), flag: ECKItemLocationFlag, quantity: Int, item: ECKItem) {
+        self.id = id
         self.flag = flag
         self.quantity = quantity
         self.item = item
@@ -179,6 +181,13 @@ public class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Observabl
         try container.encode(flag, forKey: .flag)
         try container.encode(quantity, forKey: .quantity)
         try container.encode(item, forKey: .item)
+    }
+    
+    func copy() -> ECKCharacterFittingItem {
+        return .init(id: id,
+                     flag: flag,
+                     quantity: quantity,
+                     item: item)
     }
     
 }
