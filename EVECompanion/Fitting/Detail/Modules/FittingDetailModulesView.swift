@@ -207,29 +207,40 @@ struct FittingDetailModulesView: View {
             case .moduleSelection(let moduleType):
                 ModuleSelectionView(moduleType: moduleType,
                                     targetShip: fitting.ship.item,
-                                    itemToReplace: nil) { item in
-                    do throws(ECKAddModuleError) {
-                        try fitting.addModule(item: item,
-                                              skills: character.skills ?? .empty,
-                                              moduleToReplace: nil,
-                                              manager: fittingManager)
-                    } catch {
-                        self.alertItem = .addModuleError(error)
-                        self.showAlert = true
+                                    itemToReplace: nil) { result in
+                    switch result {
+                    case .item(let item):
+                        do throws(ECKAddModuleError) {
+                            try fitting.addModule(item: item,
+                                                  skills: character.skills ?? .empty,
+                                                  moduleToReplace: nil,
+                                                  manager: fittingManager)
+                        } catch {
+                            self.alertItem = .addModuleError(error)
+                            self.showAlert = true
+                        }
+                    case .remove:
+                        return
                     }
+                    
                 }
             case .moduleReplacement(moduleType: let moduleType, moduleToReplace: let moduleToReplace):
                 ModuleSelectionView(moduleType: moduleType,
                                     targetShip: fitting.ship.item,
-                                    itemToReplace: moduleToReplace.item) { item in
-                    do throws(ECKAddModuleError) {
-                        try fitting.addModule(item: item,
-                                              skills: character.skills ?? .empty,
-                                              moduleToReplace: moduleToReplace,
-                                              manager: fittingManager)
-                    } catch {
-                        self.alertItem = .addModuleError(error)
-                        self.showAlert = true
+                                    itemToReplace: moduleToReplace.item) { result in
+                    switch result {
+                    case .item(let item):
+                        do throws(ECKAddModuleError) {
+                            try fitting.addModule(item: item,
+                                                  skills: character.skills ?? .empty,
+                                                  moduleToReplace: moduleToReplace,
+                                                  manager: fittingManager)
+                        } catch {
+                            self.alertItem = .addModuleError(error)
+                            self.showAlert = true
+                        }
+                    case .remove:
+                        fitting.removeModule(item: moduleToReplace, manager: fittingManager)
                     }
                 }
             }
@@ -286,15 +297,6 @@ struct FittingDetailModulesView: View {
                     FittingDetailModuleView(item: item, fitting: fitting)
                 }
                 .buttonStyle(.plain)
-                
-                Spacer()
-                
-                Button {
-                    fitting.removeModule(item: item, manager: fittingManager)
-                } label: {
-                    Image(systemName: "xmark")
-                }
-                .buttonStyle(.borderless)
             }
             
             if item.canUseCharges {

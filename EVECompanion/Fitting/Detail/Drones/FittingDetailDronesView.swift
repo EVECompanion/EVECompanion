@@ -41,9 +41,14 @@ struct FittingDetailDronesView: View {
         .sheet(isPresented: $showSelectionView) {
             ModuleSelectionView(moduleType: .drone,
                                 targetShip: fitting.ship.item,
-                                itemToReplace: nil) { selectedDrone in
-                fitting.addDrone(newDrone: selectedDrone,
-                                 manager: fittingManager)
+                                itemToReplace: nil) { result in
+                switch result {
+                case .item(let selectedDrone):
+                    fitting.addDrone(newDrone: selectedDrone,
+                                     manager: fittingManager)
+                case .remove:
+                    return
+                }
             }
         }
     }

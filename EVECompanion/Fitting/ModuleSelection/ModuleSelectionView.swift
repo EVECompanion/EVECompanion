@@ -91,18 +91,23 @@ struct ModuleSelectionView: View {
         }
     }
     
+    enum ModuleSelectionResult {
+        case item(ECKItem)
+        case remove
+    }
+    
     private let searchHistoryDefaultsKey: String
     private let moduleType: ModuleType
     private let itemToReplace: ECKItem?
     private let targetShip: ECKItem
-    private let selectionHandler: (ECKItem) -> Void
+    private let selectionHandler: (ModuleSelectionResult) -> Void
     @Environment(\.dismiss) var dismiss
     @State var searchHistory: [ECKItem]
     
     init(moduleType: ModuleType,
          targetShip: ECKItem,
          itemToReplace: ECKItem?,
-         selectionHandler: @escaping (ECKItem) -> Void) {
+         selectionHandler: @escaping (ModuleSelectionResult) -> Void) {
         self.moduleType = moduleType
         self.targetShip = targetShip
         self.itemToReplace = itemToReplace
@@ -120,19 +125,35 @@ struct ModuleSelectionView: View {
                              marketGroupIdFilter: moduleType.marketGroupIdFilter,
                              effectIdFilter: moduleType.effectIdFilter,
                              customTitle: moduleType.title) {
-                Section("History") {
-                    if searchHistory.isEmpty == false {
-                        ForEach(searchHistory) { item in
+                Group {
+                    if let itemToReplace {
+                        Section {
                             Button {
-                                didSelect(item)
+                                removeModule()
                             } label: {
-                                HStack {
-                                    ECImage(id: item.typeId,
-                                            category: .types)
-                                    .frame(width: 40,
-                                           height: 40)
-                                    
-                                    Text(item.name)
+                                Label {
+                                    Text("Remove \(itemToReplace.name)")
+                                } icon: {
+                                    Image(systemName: "trash")
+                                }
+                            }
+                        }
+                    }
+                    
+                    if searchHistory.isEmpty == false {
+                        Section("History") {
+                            ForEach(searchHistory) { item in
+                                Button {
+                                    didSelect(item)
+                                } label: {
+                                    HStack {
+                                        ECImage(id: item.typeId,
+                                                category: .types)
+                                        .frame(width: 40,
+                                               height: 40)
+                                        
+                                        Text(item.name)
+                                    }
                                 }
                             }
                         }
@@ -161,7 +182,12 @@ struct ModuleSelectionView: View {
     
     private func didSelect(_ item: ECKItem) {
         addToSearchHistory(item: item)
-        selectionHandler(item)
+        selectionHandler(.item(item))
+        dismiss()
+    }
+    
+    private func removeModule() {
+        selectionHandler(.remove)
         dismiss()
     }
     
