@@ -35,7 +35,7 @@ struct FittingDetailModuleView: View {
             
             VStack(alignment: .leading) {
                 Text(item.item.name)
-                    .font(.title2)
+                    .font(.headline)
                     .fontWeight(.bold)
                 
                 Group {

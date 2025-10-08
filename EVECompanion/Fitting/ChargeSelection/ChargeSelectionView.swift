@@ -14,6 +14,8 @@ struct ChargeSelectionView: View {
     private let charges: [ECKItem]
     private let completion: (ECKItem) -> Void
     @Environment(\.dismiss) private var dismiss
+    private let searchHistoryDefaultsKey: String
+    @State private var searchHistory: [ECKItem]
     
     init(target: ECKItem, _ completion: @escaping (ECKItem) -> Void) {
         self.target = target
@@ -22,24 +24,28 @@ struct ChargeSelectionView: View {
         self.charges = ECKSDEManager.shared.possibleCharges(typeId: target.typeId,
                                                             chargeSize: chargeSize)
         self.completion = completion
+        
+        self.searchHistoryDefaultsKey = "Fitting.ModuleSelection.\(target.id)"
+        
+        // Load search history
+        let itemIds = UserDefaults.standard.array(forKey: searchHistoryDefaultsKey) as? [Int] ?? []
+        self.searchHistory = itemIds.map({ .init(typeId: $0) })
     }
     
     var body: some View {
         NavigationStack {
             List {
+                if searchHistory.isEmpty == false {
+                    Section("History") {
+                        ForEach(searchHistory) { charge in
+                            chargeCellButton(charge)
+                        }
+                    }
+                }
+                
                 Section {
                     ForEach(charges) { charge in
-                        Button {
-                            completion(charge)
-                            dismiss()
-                        } label: {
-                            HStack {
-                                ECImage(id: charge.typeId, category: .types)
-                                    .frame(width: 40, height: 40)
-                                
-                                Text(charge.name)
-                            }
-                        }
+                        chargeCellButton(charge)
                     }
                 } header: {
                     HStack {
@@ -53,6 +59,33 @@ struct ChargeSelectionView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Possible Charges")
         }
+    }
+    
+    private func chargeCellButton(_ charge: ECKItem) -> some View {
+        Button {
+            addToSearchHistory(item: charge)
+            completion(charge)
+            dismiss()
+        } label: {
+            chargeCell(charge)
+        }
+    }
+    
+    private func chargeCell(_ charge: ECKItem) -> some View {
+        HStack {
+            ECImage(id: charge.typeId, category: .types)
+                .frame(width: 40, height: 40)
+            
+            Text(charge.name)
+        }
+    }
+    
+    private func addToSearchHistory(item: ECKItem) {
+        var searchHistory = self.searchHistory
+        searchHistory.removeAll { $0.id == item.id }
+        searchHistory.insert(item, at: 0)
+        searchHistory = Array(searchHistory.prefix(5))
+        UserDefaults.standard.set(searchHistory.map(\.self.id), forKey: searchHistoryDefaultsKey)
     }
     
 }
