@@ -20,15 +20,56 @@ struct FittingResistancesView: View {
         Grid {
             GridRow {
                 Text("")
-                Image("Fitting/Resistances/em")
-                Image("Fitting/Resistances/thermal")
-                Image("Fitting/Resistances/kinetic")
-                Image("Fitting/Resistances/explosive")
-                Text("HP")
+                
+                Group {
+                    Image("Fitting/shield")
+                        .resizable()
+                    Image("Fitting/armor")
+                        .resizable()
+                    Image("Fitting/structure")
+                        .resizable()
+                }
+                .frame(width: 30, height: 30)
             }
-            row(icon: "Fitting/shield", stats: resistances.shield)
-            row(icon: "Fitting/armor", stats: resistances.armor)
-            row(icon: "Fitting/structure", stats: resistances.structure)
+            
+            GridRow {
+                Image("Fitting/Resistances/em")
+                
+                bar(value: resistances.shield.em, tint: .blue)
+                bar(value: resistances.armor.em, tint: .blue)
+                bar(value: resistances.structure.em, tint: .blue)
+            }
+            
+            GridRow {
+                Image("Fitting/Resistances/thermal")
+                bar(value: resistances.shield.thermal, tint: .red)
+                bar(value: resistances.armor.thermal, tint: .red)
+                bar(value: resistances.structure.thermal, tint: .red)
+            }
+            
+            GridRow {
+                Image("Fitting/Resistances/kinetic")
+                bar(value: resistances.shield.kinetic, tint: .gray)
+                bar(value: resistances.armor.kinetic, tint: .gray)
+                bar(value: resistances.structure.kinetic, tint: .gray)
+            }
+            
+            GridRow {
+                Image("Fitting/Resistances/explosive")
+                bar(value: resistances.shield.explosive, tint: .orange)
+                bar(value: resistances.armor.explosive, tint: .orange)
+                bar(value: resistances.structure.explosive, tint: .orange)
+            }
+            
+            GridRow {
+                Text("HP")
+                Text(EVEUnit.hitpoints.formatted(resistances.shield.hp))
+                    .font(.footnote)
+                Text(EVEUnit.hitpoints.formatted(resistances.armor.hp))
+                    .font(.footnote)
+                Text(EVEUnit.hitpoints.formatted(resistances.structure.hp))
+                    .font(.footnote)
+            }
         }
     }
     

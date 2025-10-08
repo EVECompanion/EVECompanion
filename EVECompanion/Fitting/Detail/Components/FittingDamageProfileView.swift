@@ -22,52 +22,67 @@ struct FittingDamageProfileView: View {
         Grid(alignment: .center, horizontalSpacing: 20) {
             GridRow {
                 Text("")
-                if compactMode == false {
-                    Image("Fitting/Resistances/em")
-                    Image("Fitting/Resistances/thermal")
-                    Image("Fitting/Resistances/kinetic")
-                    Image("Fitting/Resistances/explosive")
-                }
-                Text(compactMode ? "" : "Total")
+                
+                Text("DPS")
+                
+                Text ("Volley")
             }
+            
             if compactMode == false {
                 Divider()
-            }
-            if damageProfile.emDPS > 0
-                || damageProfile.thermalDPS > 0
-                || damageProfile.kineticDPS > 0
-                || damageProfile.explosiveDPS > 0 {
+                
                 GridRow {
-                    Text("DPS")
-                        .bold()
+                    Image("Fitting/Resistances/em")
                     
-                    if compactMode == false {
-                        Text(ECFormatters.shortenedValue(damageProfile.emDPS, maximumFractionDigits: 1))
-                            .tint(.blue)
-                        Text(ECFormatters.shortenedValue(damageProfile.thermalDPS, maximumFractionDigits: 1))
-                            .tint(.red)
-                        Text(ECFormatters.shortenedValue(damageProfile.kineticDPS, maximumFractionDigits: 1))
-                            .tint(.gray)
-                        Text(ECFormatters.shortenedValue(damageProfile.explosiveDPS, maximumFractionDigits: 1))
-                            .tint(.orange)
-                    }
-                    Text(ECFormatters.shortenedValue(damageProfile.dpsWithoutReload, maximumFractionDigits: 1))
-                }
-                Divider()
-            }
-            GridRow {
-                Text("Volley")
-                    .bold()
-                if compactMode == false {
+                    Text(ECFormatters.shortenedValue(damageProfile.emDPS, maximumFractionDigits: 1))
+                        .tint(.blue)
+                    
                     Text(ECFormatters.shortenedValue(damageProfile.em, maximumFractionDigits: 1))
                         .tint(.blue)
+                }
+                
+                Divider()
+                
+                GridRow {
+                    Image("Fitting/Resistances/thermal")
+                    
+                    Text(ECFormatters.shortenedValue(damageProfile.thermalDPS, maximumFractionDigits: 1))
+                        .tint(.red)
+                    
                     Text(ECFormatters.shortenedValue(damageProfile.thermal, maximumFractionDigits: 1))
                         .tint(.red)
+                }
+                
+                Divider()
+                
+                GridRow {
+                    Image("Fitting/Resistances/kinetic")
+                    
+                    Text(ECFormatters.shortenedValue(damageProfile.kineticDPS, maximumFractionDigits: 1))
+                        .tint(.gray)
+                    
                     Text(ECFormatters.shortenedValue(damageProfile.kinetic, maximumFractionDigits: 1))
                         .tint(.gray)
+                }
+                
+                Divider()
+                
+                GridRow {
+                    Image("Fitting/Resistances/explosive")
+                    
+                    Text(ECFormatters.shortenedValue(damageProfile.explosiveDPS, maximumFractionDigits: 1))
+                        .tint(.orange)
+                    
                     Text(ECFormatters.shortenedValue(damageProfile.explosive, maximumFractionDigits: 1))
                         .tint(.orange)
                 }
+            }
+            
+            Divider()
+            
+            GridRow {
+                Text("Total")
+                Text(ECFormatters.shortenedValue(damageProfile.dpsWithoutReload, maximumFractionDigits: 1))
                 Text(ECFormatters.shortenedValue(damageProfile.volleyDamage, maximumFractionDigits: 1))
             }
         }
