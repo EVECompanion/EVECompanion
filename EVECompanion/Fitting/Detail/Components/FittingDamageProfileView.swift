@@ -25,7 +25,7 @@ struct FittingDamageProfileView: View {
                 
                 Text("DPS")
                 
-                Text ("Volley")
+                Text("Volley")
             }
             
             if compactMode == false {

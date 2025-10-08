@@ -683,7 +683,6 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
             let fittingCopy = self.copy()
             fittingCopy.lastUsedSkills = self.lastUsedSkills
             await fittingCopy.removeModule(item: moduleToReplace, manager: nil)
-            print("Task: \(fittingCopy.currentAttributeCalculationTask)")
             await fittingCopy.currentAttributeCalculationTask?.value
             try fittingCopy.checkItemIsFittable(item: item)
             
