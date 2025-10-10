@@ -19,7 +19,7 @@ public class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Observabl
     public var id: UUID
     
     public var flag: ECKItemLocationFlag
-    public let quantity: Int
+    @Published public var quantity: Int
     public let item: ECKItem
     
     public internal(set) var charge: ECKCharacterFittingItem?
@@ -49,6 +49,10 @@ public class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Observabl
     }()
     
     public var damageProfile: ECKCharacterFitting.DamageProfile? {
+        guard self.state.rawValue >= ECKDogmaEffect.Category.active.rawValue else {
+            return nil
+        }
+        
         let profileAttributes: [ECKCharacterFitting.AttributeID: ECKCharacterFitting.FittingAttribute]
         
         if let charge {
@@ -70,9 +74,9 @@ public class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Observabl
         let missileDamageMultiplierValue = missileDamageMultiplierAttribute?.value ?? 1.0
         
         if let charge, charge.item.skillRequirements?.contains(where: { $0.skill.id == 3319 }) ?? false {
-            damageMultiplier = missileDamageMultiplierValue
+            damageMultiplier = missileDamageMultiplierValue * Float(quantity)
         } else {
-            damageMultiplier = regularDamageMultiplierValue
+            damageMultiplier = regularDamageMultiplierValue * Float(quantity)
         }
         
         let emValue = (em?.value ?? em?.baseValue ?? 0) * damageMultiplier

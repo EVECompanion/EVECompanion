@@ -14,6 +14,8 @@ struct FittingDetailDronesView: View {
     @ObservedObject private var fitting: ECKCharacterFitting
     @State private var showSelectionView: Bool = false
     
+    
+    
     init(fittingManager: ECKFittingManager,
          fitting: ECKCharacterFitting) {
         self.fittingManager = fittingManager
@@ -35,7 +37,9 @@ struct FittingDetailDronesView: View {
             }
             
             ForEach(fitting.drones) { drone in
-                droneCell(for: drone)
+                FittingDetailDroneView(fitting: fitting,
+                                       fittingManager: fittingManager,
+                                       drone: drone)
             }
         }
         .sheet(isPresented: $showSelectionView) {
@@ -49,19 +53,6 @@ struct FittingDetailDronesView: View {
                 case .remove:
                     return
                 }
-            }
-        }
-    }
-    
-    @ViewBuilder
-    func droneCell(for drone: ECKCharacterFittingItem) -> some View {
-        HStack {
-            ECImage(id: drone.item.typeId, category: .types)
-                .frame(width: 40, height: 40)
-            
-            VStack(alignment: .leading) {
-                Text("\(drone.quantity)x " + drone.item.name)
-                Text(drone.state.title)
             }
         }
     }

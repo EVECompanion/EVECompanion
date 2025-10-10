@@ -226,6 +226,10 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         var result: Float = 0
         
         for drone in drones {
+            guard drone.state.rawValue >= ECKDogmaEffect.Category.active.rawValue else {
+                continue
+            }
+            
             let volume = drone.attributes[Self.attributeDroneBandwidthNeededId]?.value ??
                          drone.attributes[Self.attributeDroneBandwidthNeededId]?.baseValue ?? 0
             result += volume * Float(drone.quantity)
@@ -781,7 +785,10 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         }
     }
     
-    public func addCharge(_ charge: ECKItem, into module: ECKCharacterFittingItem, batchInsert: Bool) {
+    public func addCharge(_ charge: ECKItem,
+                          into module: ECKCharacterFittingItem,
+                          manager: ECKFittingManager,
+                          batchInsert: Bool) {
         if batchInsert {
             let moduleTypeId: Int = module.item.typeId
             
@@ -799,6 +806,8 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         Task {
             await calculateAttributes(skills: nil)
         }
+        
+        manager.saveFitting(self)
     }
     
     public func canBatchInsert(charge: ECKItem, into module: ECKCharacterFittingItem) -> Bool {

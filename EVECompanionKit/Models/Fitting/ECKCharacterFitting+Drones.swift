@@ -18,4 +18,10 @@ extension ECKCharacterFitting {
         manager.saveFitting(self)
     }
     
+    public func removeDrone(_ drone: ECKCharacterFittingItem, manager: ECKFittingManager) {
+        self.drones = self.drones.filter({ $0.id != drone.id })
+        objectWillChange.send()
+        manager.saveFitting(self)
+    }
+    
 }

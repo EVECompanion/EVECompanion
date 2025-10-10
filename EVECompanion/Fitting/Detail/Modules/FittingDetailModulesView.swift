@@ -176,12 +176,18 @@ struct FittingDetailModulesView: View {
                 }
             case .shouldBatchInsert(charge: let charge, target: let target):
                 Button("Yes") {
-                    fitting.addCharge(charge, into: target, batchInsert: true)
+                    fitting.addCharge(charge,
+                                      into: target,
+                                      manager: fittingManager,
+                                      batchInsert: true)
                     item.wrappedValue = nil
                 }
                 
                 Button(role: .cancel) {
-                    fitting.addCharge(charge, into: target, batchInsert: false)
+                    fitting.addCharge(charge,
+                                      into: target,
+                                      manager: fittingManager,
+                                      batchInsert: false)
                     item.wrappedValue = nil
                 } label: {
                     Text("No")
@@ -201,7 +207,10 @@ struct FittingDetailModulesView: View {
                                                             target: target)
                         self.showAlert = true
                     } else {
-                        fitting.addCharge(selectedCharge, into: target, batchInsert: false)
+                        fitting.addCharge(selectedCharge,
+                                          into: target,
+                                          manager: fittingManager,
+                                          batchInsert: false)
                     }
                 }
             case .moduleSelection(let moduleType):

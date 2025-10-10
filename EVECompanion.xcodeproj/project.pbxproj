@@ -102,6 +102,7 @@
 		C956D90E2DA8F7A000D56C27 /* CoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C956D90C2DA8F7A000D56C27 /* CoordinatorView.swift */; };
 		C956D90F2DA8F7A000D56C27 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C956D90B2DA8F7A000D56C27 /* Coordinator.swift */; };
 		C956D9102DA8F7A000D56C27 /* AppScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C956D90A2DA8F7A000D56C27 /* AppScreen.swift */; };
+		C957A3A42E97BE5F00F4A42C /* FittingDetailDroneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C957A3A32E97BE5F00F4A42C /* FittingDetailDroneView.swift */; };
 		C959777E2C28B3680008F719 /* AssetsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C959777D2C28B3680008F719 /* AssetsListView.swift */; };
 		C95977802C28B56E0008F719 /* ECKAssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C959777F2C28B56E0008F719 /* ECKAssetManager.swift */; };
 		C95980C32C2229EE007C9FD9 /* IndustryJobsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95980C22C2229EE007C9FD9 /* IndustryJobsView.swift */; };
@@ -392,6 +393,7 @@
 		C956D90A2DA8F7A000D56C27 /* AppScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppScreen.swift; sourceTree = "<group>"; };
 		C956D90B2DA8F7A000D56C27 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		C956D90C2DA8F7A000D56C27 /* CoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorView.swift; sourceTree = "<group>"; };
+		C957A3A32E97BE5F00F4A42C /* FittingDetailDroneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDetailDroneView.swift; sourceTree = "<group>"; };
 		C959777D2C28B3680008F719 /* AssetsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsListView.swift; sourceTree = "<group>"; };
 		C959777F2C28B56E0008F719 /* ECKAssetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKAssetManager.swift; sourceTree = "<group>"; };
 		C95980C22C2229EE007C9FD9 /* IndustryJobsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndustryJobsView.swift; sourceTree = "<group>"; };
@@ -1123,6 +1125,7 @@
 			isa = PBXGroup;
 			children = (
 				C9B638C22E088B6200E9F6F4 /* FittingDetailDronesView.swift */,
+				C957A3A32E97BE5F00F4A42C /* FittingDetailDroneView.swift */,
 			);
 			path = Drones;
 			sourceTree = "<group>";
@@ -1584,6 +1587,7 @@
 				C92D17C52C275F5A00D6FF5A /* JumpClonesView.swift in Sources */,
 				C96FA2412E905EC00057481C /* FittingDetailModuleView.swift in Sources */,
 				C91EEEBB2BE9730000352175 /* EVECompanionApp.swift in Sources */,
+				C957A3A42E97BE5F00F4A42C /* FittingDetailDroneView.swift in Sources */,
 				C90D509C2BF92B0800DEC0F3 /* MailCell.swift in Sources */,
 				C956D90E2DA8F7A000D56C27 /* CoordinatorView.swift in Sources */,
 				C956D90F2DA8F7A000D56C27 /* Coordinator.swift in Sources */,
