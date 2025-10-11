@@ -221,8 +221,9 @@ extension ECKCharacterFitting {
             _ = await currentAttributeCalculationTask.value
         }
         
-        currentAttributeCalculationTask = Task {
+        let task = Task {
             self.ship.attributes.removeAll()
+            self.character.attributes.removeAll()
             self.target.attributes.removeAll()
             self.structure.attributes.removeAll()
             self.items.forEach({
@@ -245,9 +246,11 @@ extension ECKCharacterFitting {
                     $0.objectWillChange.send()
                 }
             }
-            
-            currentAttributeCalculationTask = nil
         }
+        
+        self.currentAttributeCalculationTask = task
+        await task.value
+        self.currentAttributeCalculationTask = nil
     }
     
 }

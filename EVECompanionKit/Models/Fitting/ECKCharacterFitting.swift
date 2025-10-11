@@ -24,6 +24,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         case subsystems
         case drones
         case skills
+        case implants
     }
     
     public typealias AttributeID = Int
@@ -105,9 +106,13 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         + rigs
         + subsystems
         + drones
+        + implants
     }
     @Published public var name: String
     public let ship: ECKCharacterFittingItem
+    public let character: ECKCharacterFittingItem = .init(flag: .Implant,
+                                                          quantity: 1,
+                                                          item: .init(typeId: 0))
     public let target: ECKCharacterFittingItem = .init(flag: .ShipHangar,
                                                        quantity: 1,
                                                        item: .init(typeId: 0))
@@ -121,6 +126,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     public var rigs: [ECKCharacterFittingItem]
     public var subsystems: [ECKCharacterFittingItem]
     public var drones: [ECKCharacterFittingItem]
+    public var implants: [ECKCharacterFittingItem]
     
     public var launcherHardPoints: Int {
         return Int(ship.attributes[Self.attributeLauncherHardpointsId]?.value ?? 0)
@@ -293,11 +299,14 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         let turret: ECKCharacterFittingItem = .init(flag: .HiSlot0, quantity: 1, item: .init(typeId: 37299))
         turret.charge = .init(flag: .HiSlot0, quantity: 1, item: .init(typeId: 41336))
         
+        let implant: ECKCharacterFittingItem = .init(flag: .Implant, quantity: 1, item: .init(typeId: 20499))
+        
         let fitting = ECKCharacterFitting(fittingId: UUID(),
                                           description: "Just my avatar",
                                           esiFittingId: nil,
                                           items: [
-                                            turret
+                                            turret,
+                                            implant
                                           ],
                                           name: "EVECompanion's Avatar",
                                           ship: .init(typeId: 11567))
@@ -397,6 +406,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         self.subsystems = try container.decode([ECKCharacterFittingItem].self, forKey: .subsystems)
         self.drones = try container.decode([ECKCharacterFittingItem].self, forKey: .drones)
         self.skills = try container.decode([ECKCharacterFittingItem].self, forKey: .skills)
+        self.implants = try container.decodeIfPresent([ECKCharacterFittingItem].self, forKey: .implants) ?? []
     }
     
     internal convenience init(fitting: ESIFitting) {
@@ -433,6 +443,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         var rigs: [ECKCharacterFittingItem] = []
         var subsystems: [ECKCharacterFittingItem] = []
         var drones: [ECKCharacterFittingItem] = []
+        var implants: [ECKCharacterFittingItem] = []
         for item in items.sorted(by: { $0.flag.rawValue < $1.flag.rawValue }) {
             switch item.flag {
             case .unknown:
@@ -498,8 +509,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
             case .HiddenModifiers:
                 continue
             case .Implant:
-                // TODO
-                continue
+                implants.append(item)
             case .LoSlot0:
                 lowSlotItems.append(item)
             case .LoSlot1:
@@ -623,6 +633,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         self.subsystems = subsystems
         self.drones = drones
         self.name = name
+        self.implants = implants
         self.ship = .init(flag: .ShipHangar,
                           quantity: 1,
                           item: ship)
@@ -660,6 +671,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         try container.encode(self.subsystems, forKey: .subsystems)
         try container.encode(self.drones, forKey: .drones)
         try container.encode(self.skills, forKey: .skills)
+        try container.encode(self.implants, forKey: .implants)
     }
     
     func copy() -> ECKCharacterFitting {

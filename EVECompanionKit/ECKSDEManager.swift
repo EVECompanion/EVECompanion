@@ -19,11 +19,11 @@ public class ECKSDEManager {
     }
     
     private func getSDEURL() throws -> URL {
-        #if DEBUG
+#if DEBUG
         if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
             return Bundle.main.url(forResource: "EVE", withExtension: "sqlite")!
         }
-        #endif
+#endif
         let documentsDir = try FileManager.default.url(for: .documentDirectory,
                                                        in: .userDomainMask,
                                                        appropriateFor: nil,
@@ -115,7 +115,7 @@ public class ECKSDEManager {
                               secondaryAttribute: String,
                               multiplier: Double)
     
-    static let dummyFetchedSkill = (0, 
+    static let dummyFetchedSkill = (0,
                                     "Unknown Skill",
                                     "Unknown Category",
                                     "",
@@ -209,7 +209,7 @@ public class ECKSDEManager {
             logger.error("Unexpected skill data \(row)")
             return Self.dummyFetchedSkill
         }
-                
+        
         return (Int(skillId),
                 skillName,
                 category,
@@ -343,6 +343,42 @@ public class ECKSDEManager {
         }
         
         return parseItem(row: result)
+    }
+    
+    public func getImplants(for implantSlot: Int, text: String?) -> [ECKItem] {
+        do {
+            let statement = try connection?.prepare("""
+            SELECT
+                invTypes.typeID, 
+                typeName, 
+                description, 
+                mass, 
+                volume, 
+                capacity, 
+                radius, 
+                iconID
+            FROM
+                invTypes
+                LEFT OUTER JOIN dgmTypeAttributes ON invTypes.typeID = dgmTypeAttributes.typeID
+            WHERE
+                dgmTypeAttributes.attributeID = 331
+                AND dgmTypeAttributes.valueFloat = \(implantSlot)
+                \(text != nil && text?.isEmpty == false ? "AND typeName LIKE '%\(text!)%'" : "")
+            ORDER BY 
+                invTypes.typeName
+            """)
+            
+            guard let result = try statement?.run() else {
+                return []
+            }
+            
+            let fetchedItems = result.map({ parseItem(row: $0) })
+            
+            return fetchedItems.map({ ECKItem(itemData: $0) })
+        } catch {
+            logger.error("Cannot get implants for slot \(implantSlot) with search string \(String(describing: text)): \(error)")
+            return []
+        }
     }
     
     internal func itemSearch(text: String, groupIdFilter: Int? = nil, marketGroupIdFilter: Int? = nil, effectIdFilter: Int? = nil) -> [ECKItem] {

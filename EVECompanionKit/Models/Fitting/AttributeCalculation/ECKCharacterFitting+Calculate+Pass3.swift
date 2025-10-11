@@ -17,6 +17,7 @@ extension ECKCharacterFitting {
         var charge: [Int: [Int: Float]] = [:]
         var skills: [Int: [Int: Float]] = [:]
         var target: [Int: Float] = [:]
+        var character: [Int: Float] = [:]
         var structure: [Int: Float] = [:]
         
         init() { }
@@ -32,7 +33,8 @@ extension ECKCharacterFitting {
         await calculateValues(item: ship, ship: ship, itemObject: .ship, cache: cache)
         await calculateValues(item: structure, ship: ship, itemObject: .structure, cache: cache)
         await calculateValues(item: target, ship: ship, itemObject: .target, cache: cache)
-        // TODO: Implants/Boosters
+        await calculateValues(item: character, ship: ship, itemObject: .character, cache: cache)
+        // TODO: Boosters
         for (index, item) in items.enumerated() {
             await calculateValues(item: item, ship: ship, itemObject: .item(index: index), cache: cache)
             if let charge = item.charge {
@@ -110,7 +112,7 @@ extension ECKCharacterFitting {
         case .ship:
             cacheValue = cache.ship[attributeId]
         case .character:
-            ()
+            cacheValue = cache.character[attributeId]
         case .charge(index: let index):
             cacheValue = cache.charge[index]?[attributeId]
         case .item(index: let index):
@@ -143,8 +145,7 @@ extension ECKCharacterFitting {
                 case .ship:
                     source = ship
                 case .character:
-                    // TODO
-                    continue
+                    source = character
                 case .charge(index: let index):
                     guard let charge = items[index].charge else {
                         continue
@@ -265,7 +266,7 @@ extension ECKCharacterFitting {
         case .ship:
             cache.ship[attributeId] = currentValue
         case .character:
-            ()
+            cache.character[attributeId] = currentValue
         case .charge(let index):
             if cache.charge[index] != nil {
                 cache.charge[index]?[attributeId] = currentValue

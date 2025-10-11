@@ -71,6 +71,9 @@
 		C92F9C992D8A0F6300306DD7 /* CapitalNavigationTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F9C982D8A0F6300306DD7 /* CapitalNavigationTabView.swift */; };
 		C92F9C9B2D8AA71200306DD7 /* ECKJumpCapableShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F9C9A2D8AA71200306DD7 /* ECKJumpCapableShip.swift */; };
 		C92F9C9D2D8AA72700306DD7 /* ECKCapitalJumpRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F9C9C2D8AA72700306DD7 /* ECKCapitalJumpRoute.swift */; };
+		C9318D7E2E9984B400B1AD5D /* FittingDetailImplantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9318D7D2E9984B400B1AD5D /* FittingDetailImplantsView.swift */; };
+		C9318D802E9ADC2800B1AD5D /* FittingImplantSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9318D7F2E9ADC2800B1AD5D /* FittingImplantSearchView.swift */; };
+		C9318D822E9AE78600B1AD5D /* ECKCharacterFitting+Implants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9318D812E9AE78600B1AD5D /* ECKCharacterFitting+Implants.swift */; };
 		C9381AAB2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9381AAA2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift */; };
 		C938723B2DBC2FD9000FB35D /* PlanetaryColonyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C938723A2DBC2FD9000FB35D /* PlanetaryColonyCell.swift */; };
 		C93E8FDD2E5CD26900187846 /* EVECompanionIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = C93E8FDC2E5CD26900187846 /* EVECompanionIcon.icon */; };
@@ -363,6 +366,9 @@
 		C92F9C982D8A0F6300306DD7 /* CapitalNavigationTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalNavigationTabView.swift; sourceTree = "<group>"; };
 		C92F9C9A2D8AA71200306DD7 /* ECKJumpCapableShip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKJumpCapableShip.swift; sourceTree = "<group>"; };
 		C92F9C9C2D8AA72700306DD7 /* ECKCapitalJumpRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCapitalJumpRoute.swift; sourceTree = "<group>"; };
+		C9318D7D2E9984B400B1AD5D /* FittingDetailImplantsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDetailImplantsView.swift; sourceTree = "<group>"; };
+		C9318D7F2E9ADC2800B1AD5D /* FittingImplantSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingImplantSearchView.swift; sourceTree = "<group>"; };
+		C9318D812E9AE78600B1AD5D /* ECKCharacterFitting+Implants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacterFitting+Implants.swift"; sourceTree = "<group>"; };
 		C9381AAA2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacterFitting+IsFittable.swift"; sourceTree = "<group>"; };
 		C938723A2DBC2FD9000FB35D /* PlanetaryColonyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryColonyCell.swift; sourceTree = "<group>"; };
 		C93E8FDC2E5CD26900187846 /* EVECompanionIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = EVECompanionIcon.icon; sourceTree = "<group>"; };
@@ -929,6 +935,15 @@
 			path = CapitalNavigation;
 			sourceTree = "<group>";
 		};
+		C9318D7C2E9984A500B1AD5D /* Implants */ = {
+			isa = PBXGroup;
+			children = (
+				C9318D7D2E9984B400B1AD5D /* FittingDetailImplantsView.swift */,
+				C9318D7F2E9ADC2800B1AD5D /* FittingImplantSearchView.swift */,
+			);
+			path = Implants;
+			sourceTree = "<group>";
+		};
 		C93FE8362BED29E900729DD8 /* Formatters */ = {
 			isa = PBXGroup;
 			children = (
@@ -1133,8 +1148,8 @@
 		C9B638C42E0891FD00E9F6F4 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				C9B638C52E08920C00E9F6F4 /* FittingResistancesView.swift */,
 				C9B258522E264FA9009A14DB /* FittingDamageProfileView.swift */,
+				C9B638C52E08920C00E9F6F4 /* FittingResistancesView.swift */,
 				C94A27032E0DA7D5006CC8DC /* FittingStatsView.swift */,
 			);
 			path = Components;
@@ -1270,6 +1285,7 @@
 				C9F055B52DE2F66D00340A05 /* ECKCharacterFitting.swift */,
 				C9381AAA2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift */,
 				C9D28B892E9582400066DCA4 /* ECKCharacterFitting+Drones.swift */,
+				C9318D812E9AE78600B1AD5D /* ECKCharacterFitting+Implants.swift */,
 				C903BF7F2E8889B8001C224E /* ECKAddModuleError.swift */,
 				C9F055C82DE3B89F00340A05 /* ECKCharacterFitting+Stats.swift */,
 				C9F055B82DE2F79200340A05 /* ECKCharacterFittingItem.swift */,
@@ -1306,9 +1322,10 @@
 			children = (
 				C9B638C42E0891FD00E9F6F4 /* Components */,
 				C9B638BF2E088B2500E9F6F4 /* Drones */,
-				C9B638BE2E088B1F00E9F6F4 /* Modules */,
-				C9F055C52DE3AAD700340A05 /* Info */,
 				C9F055C32DE34D5B00340A05 /* FittingDetailView.swift */,
+				C9318D7C2E9984A500B1AD5D /* Implants */,
+				C9F055C52DE3AAD700340A05 /* Info */,
+				C9B638BE2E088B1F00E9F6F4 /* Modules */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -1561,6 +1578,7 @@
 				C90D508E2BF8B19B00DEC0F3 /* MailboxView.swift in Sources */,
 				C9DEF4AC2C0397F8000238DF /* SkillsView.swift in Sources */,
 				C96F989D2BEF7FEF00DEC34F /* ContractsListView.swift in Sources */,
+				C9318D802E9ADC2800B1AD5D /* FittingImplantSearchView.swift in Sources */,
 				C94A27042E0DA7D5006CC8DC /* FittingStatsView.swift in Sources */,
 				C99750B02C149D9100DE5B96 /* MarketOrderCell.swift in Sources */,
 				C9A7C55D2BF0C2E8003478AD /* SettingsView.swift in Sources */,
@@ -1607,6 +1625,7 @@
 				C9CA6BA22C14EB090057F290 /* UniverseRowType.swift in Sources */,
 				C9012AF52C0334F400407A81 /* WalletTransactionCell.swift in Sources */,
 				C9955A2C2C35297D0045D925 /* SovereigntyCampaignCell.swift in Sources */,
+				C9318D7E2E9984B400B1AD5D /* FittingDetailImplantsView.swift in Sources */,
 				C959777E2C28B3680008F719 /* AssetsListView.swift in Sources */,
 				C952624F2BFA7B680014B5F5 /* MailCreateView.swift in Sources */,
 				C9B638C62E08920C00E9F6F4 /* FittingResistancesView.swift in Sources */,
@@ -1671,6 +1690,7 @@
 				C942571E2C29A9C500FAEE5C /* ECKAssetLocationFlag.swift in Sources */,
 				C9F055B62DE2F66D00340A05 /* ECKCharacterFitting.swift in Sources */,
 				C99750AE2C1494DC00DE5B96 /* ECKCharacterMarketOrdersResource.swift in Sources */,
+				C9318D822E9AE78600B1AD5D /* ECKCharacterFitting+Implants.swift in Sources */,
 				C96F98A32BEFA74000DEC34F /* ECKCharacterContractResource.swift in Sources */,
 				C90082112DC60357007660AE /* ECKEmptySkillQueueNotificationRequest.swift in Sources */,
 				C98484052D7F9A7B0076016B /* ECKCapitalNavigationManager.swift in Sources */,

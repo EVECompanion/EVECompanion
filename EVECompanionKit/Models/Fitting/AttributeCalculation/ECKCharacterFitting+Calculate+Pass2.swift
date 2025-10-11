@@ -19,7 +19,8 @@ extension ECKCharacterFitting {
         self.ship.collectEffects(object: .ship, into: &effects)
         self.target.collectEffects(object: .target, into: &effects)
         self.structure.collectEffects(object: .structure, into: &effects)
-        // TODO: Implants/Boosters
+        self.character.collectEffects(object: .character, into: &effects)
+        // TODO: Boosters
         for (index, item) in items.enumerated() {
             item.collectEffects(object: .item(index: index), into: &effects)
             if let charge = item.charge {
@@ -63,8 +64,7 @@ extension ECKCharacterFitting {
                 case .ship:
                     target = ship
                 case .character:
-                    // TODO: Implants and Stuff.
-                    continue
+                    target = character
                 case .charge(index: let index):
                     target = items[index].charge!
                 case .item(index: let index):

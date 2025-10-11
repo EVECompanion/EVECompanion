@@ -44,17 +44,20 @@ struct FittingDetailView: View {
                 if fitting.canUseDrones {
                     Text("Drones").tag(FittingDetailTab.drones)
                 }
-//                Text("Implants").tag(FittingDetailTab.implants)
+                Text("Implants").tag(FittingDetailTab.implants)
 //                Text("Cargo").tag(FittingDetailTab.cargo)
             }
             .pickerStyle(.segmented)
             .padding(.horizontal, 10)
 
             TabView(selection: $selectedTab) {
-                FittingDetailInfoView(character: character, fitting: fitting)
+                FittingDetailInfoView(character: character,
+                                      fitting: fitting)
                     .tag(FittingDetailTab.info)
                 
-                FittingDetailModulesView(character: character, fitting: fitting, manager: manager)
+                FittingDetailModulesView(character: character,
+                                         fitting: fitting,
+                                         manager: manager)
                     .tag(FittingDetailTab.modules)
                 
                 if fitting.canUseDrones {
@@ -63,6 +66,9 @@ struct FittingDetailView: View {
                         .tag(FittingDetailTab.drones)
                 }
                 
+                FittingDetailImplantsView(fitting: fitting,
+                                          fittingManager: manager)
+                    .tag(FittingDetailTab.implants)
             }
             .background(Color(uiColor: UIColor.secondarySystemBackground))
             .animation(.spring, value: selectedTab)

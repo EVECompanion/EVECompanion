@@ -72,7 +72,8 @@ extension ECKCharacterFitting {
                     .SubSystemSlot4,
                     .SubSystemSlot5,
                     .SubSystemSlot6,
-                    .SubSystemSlot7:
+                    .SubSystemSlot7,
+                    .Implant:
                 pass1CollectAttributes(for: item.item, attributesDict: &item.attributes)
                 if let charge = item.charge {
                     pass1CollectAttributes(for: charge.item, attributesDict: &charge.attributes)
@@ -92,7 +93,6 @@ extension ECKCharacterFitting {
                     .Hangar,
                     .HangarAll,
                     .HiddenModifiers,
-                    .Implant,
                     .Locked,
                     .MobileDepotHold,
                     .QuafeBay,

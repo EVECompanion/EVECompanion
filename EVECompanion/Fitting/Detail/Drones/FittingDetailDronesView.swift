@@ -14,8 +14,6 @@ struct FittingDetailDronesView: View {
     @ObservedObject private var fitting: ECKCharacterFitting
     @State private var showSelectionView: Bool = false
     
-    
-    
     init(fittingManager: ECKFittingManager,
          fitting: ECKCharacterFitting) {
         self.fittingManager = fittingManager
