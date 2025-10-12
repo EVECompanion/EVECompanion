@@ -57,6 +57,9 @@ public class ECKESIFittingManager: ObservableObject {
             self.loadedESIFittings = esiFittings.map({ fitting in
                 return .init(fitting: fitting)
             })
+            .sorted(by: { lhs, rhs in
+                return lhs.ship.item.name < rhs.ship.item.name
+            })
             esiLoadingState = .ready
         } catch {
             logger.error("Error while fetching character fittings \(error)")

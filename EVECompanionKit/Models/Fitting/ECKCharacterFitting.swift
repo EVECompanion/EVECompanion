@@ -296,17 +296,77 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     }
     
     public static let dummyAvatar: ECKCharacterFitting = {
-        let turret: ECKCharacterFittingItem = .init(flag: .HiSlot0, quantity: 1, item: .init(typeId: 37299))
-        turret.charge = .init(flag: .HiSlot0, quantity: 1, item: .init(typeId: 41336))
+        let turret1: ECKCharacterFittingItem = .init(flag: .HiSlot0, quantity: 1, item: .init(typeId: 37298))
+        turret1.charge = .init(flag: .HiSlot0, quantity: 1, item: .init(typeId: 41336))
         
-        let implant: ECKCharacterFittingItem = .init(flag: .Implant, quantity: 1, item: .init(typeId: 20499))
+        let turret2: ECKCharacterFittingItem = .init(flag: .HiSlot1, quantity: 1, item: .init(typeId: 37298))
+        turret2.charge = .init(flag: .HiSlot0, quantity: 1, item: .init(typeId: 41336))
+        
+        let turret3: ECKCharacterFittingItem = .init(flag: .HiSlot2, quantity: 1, item: .init(typeId: 37298))
+        turret3.charge = .init(flag: .HiSlot0, quantity: 1, item: .init(typeId: 41336))
+        
+        let turret4: ECKCharacterFittingItem = .init(flag: .HiSlot3, quantity: 1, item: .init(typeId: 37298))
+        turret4.charge = .init(flag: .HiSlot0, quantity: 1, item: .init(typeId: 41336))
+        
+        let turret5: ECKCharacterFittingItem = .init(flag: .HiSlot4, quantity: 1, item: .init(typeId: 37298))
+        turret5.charge = .init(flag: .HiSlot0, quantity: 1, item: .init(typeId: 41336))
+        
+        let turret6: ECKCharacterFittingItem = .init(flag: .HiSlot5, quantity: 1, item: .init(typeId: 37298))
+        turret6.charge = .init(flag: .HiSlot0, quantity: 1, item: .init(typeId: 41336))
+        
+        let smartbomb: ECKCharacterFittingItem = .init(flag: .HiSlot6, quantity: 1, item: .init(typeId: 14188))
+        let dd: ECKCharacterFittingItem = .init(flag: .HiSlot7, quantity: 1, item: .init(typeId: 24550))
+
+        let capBooster: ECKCharacterFittingItem = .init(flag: .MedSlot0, quantity: 1, item: .init(typeId: 41492))
+        let sebo: ECKCharacterFittingItem = .init(flag: .MedSlot1, quantity: 1, item: .init(typeId: 14236))
+        let ab: ECKCharacterFittingItem = .init(flag: .MedSlot2, quantity: 1, item: .init(typeId: 41238))
+        let shieldHardener1: ECKCharacterFittingItem = .init(flag: .MedSlot3, quantity: 1, item: .init(typeId: 4347))
+        let shieldHardener2: ECKCharacterFittingItem = .init(flag: .MedSlot4, quantity: 1, item: .init(typeId: 4347))
+        
+        let plates1: ECKCharacterFittingItem = .init(flag: .LoSlot0, quantity: 1, item: .init(typeId: 41456))
+        let plates2: ECKCharacterFittingItem = .init(flag: .LoSlot1, quantity: 1, item: .init(typeId: 41456))
+        let plates3: ECKCharacterFittingItem = .init(flag: .LoSlot2, quantity: 1, item: .init(typeId: 41456))
+        let membrane1: ECKCharacterFittingItem = .init(flag: .LoSlot3, quantity: 1, item: .init(typeId: 18881))
+        let membrane2: ECKCharacterFittingItem = .init(flag: .LoSlot4, quantity: 1, item: .init(typeId: 18881))
+        let membrane3: ECKCharacterFittingItem = .init(flag: .LoSlot5, quantity: 1, item: .init(typeId: 18881))
+        let damageControl: ECKCharacterFittingItem = .init(flag: .LoSlot6, quantity: 1, item: .init(typeId: 41200))
+        let flexHardener: ECKCharacterFittingItem = .init(flag: .LoSlot7, quantity: 1, item: .init(typeId: 41525))
+        
+        let rig1: ECKCharacterFittingItem = .init(flag: .RigSlot0, quantity: 1, item: .init(typeId: 31061))
+        let rig2: ECKCharacterFittingItem = .init(flag: .RigSlot1, quantity: 1, item: .init(typeId: 31061))
+        let rig3: ECKCharacterFittingItem = .init(flag: .RigSlot2, quantity: 1, item: .init(typeId: 31061))
         
         let fitting = ECKCharacterFitting(fittingId: UUID(),
                                           description: "Just my avatar",
                                           esiFittingId: nil,
                                           items: [
-                                            turret,
-                                            implant
+                                            turret1,
+                                            turret2,
+                                            turret3,
+                                            turret4,
+                                            turret5,
+                                            turret6,
+                                            smartbomb,
+                                            dd,
+                                            
+                                            capBooster,
+                                            sebo,
+                                            ab,
+                                            shieldHardener1,
+                                            shieldHardener2,
+                                            
+                                            plates1,
+                                            plates2,
+                                            plates3,
+                                            membrane1,
+                                            membrane2,
+                                            membrane3,
+                                            damageControl,
+                                            flexHardener,
+                                            
+                                            rig1,
+                                            rig2,
+                                            rig3
                                           ],
                                           name: "EVECompanion's Avatar",
                                           ship: .init(typeId: 11567))

@@ -55,8 +55,8 @@ struct FittingESIImportView: View {
                 if fittingManager.esiFittings.isEmpty &&
                     fittingManager.esiLoadingState == .ready {
                     ContentEmptyView(image: Image("Neocom/Fitting"),
-                                     title: "No Fittings",
-                                     subtitle: "New Fittings will appear here.")
+                                     title: "No EVE Fittings",
+                                     subtitle: "New Fittings you saved in EVE will appear here.")
                 }
             }
         }
