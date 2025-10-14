@@ -77,4 +77,5 @@ fastlane/test_output
 iOSInjectionProject/
 *.pem
 fastlane/report.xml
-EVECompanion/Preview Content/EVE.sqlite
+*.sqlite
+sde/

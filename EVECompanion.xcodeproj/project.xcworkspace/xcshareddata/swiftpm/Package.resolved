@@ -1,5 +1,5 @@
 {
-  "originHash" : "ab666e7eaa1e85d9619db7590125807442b4ca16c6812f885f0a804c5b1e527a",
+  "originHash" : "b0b10f283d1509beac7e00031df15e6ad32ec0b05677d7f511c105c3f01d9f3e",
   "pins" : [
     {
       "identity" : "jwtdecode.swift",
@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser",
       "state" : {
-        "revision" : "0fbc8848e389af3bb55c182bc19ca9d5dc2f255b",
-        "version" : "1.4.0"
+        "revision" : "cdd0ef3755280949551dc26dee5de9ddeda89f54",
+        "version" : "1.6.2"
       }
     },
     {
