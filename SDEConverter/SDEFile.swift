@@ -11,11 +11,17 @@ import Yams
 enum SDEFile {
     
     case types
+    case typeDogma
+    case attributes
     
     private var fileName: String {
         switch self {
         case .types:
             return "types.yaml"
+        case .attributes:
+            return "dogmaAttributes.yaml"
+        case .typeDogma:
+            return "typeDogma.yaml"
         }
     }
     
