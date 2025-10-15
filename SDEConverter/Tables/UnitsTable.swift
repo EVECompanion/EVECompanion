@@ -20,6 +20,12 @@ class UnitsTable: SDETable {
         table.column(unitNameColumn)
     }
     
+    func createIndexes(connection: Connection) throws {
+        try connection.run(table.createIndex(
+            unitIdColumn
+        ))
+    }
+    
     func add(id: Int, data: [String : Any], to db: SQLite.Connection) throws {
         try db.run(
             table.insert(

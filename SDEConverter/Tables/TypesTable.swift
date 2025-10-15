@@ -22,10 +22,12 @@ class TypesTable: SDETable {
     private let radiusColumn = Expression<Float64>("radius")
     private let iconIdColumn = Expression<Int64?>("iconID")
     private let publishedColumn = Expression<Bool>("published")
+    private let marketGroupIdColumn = Expression<Int64?>("marketGroupID")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(typeIdColumn)
         table.column(groupIdColumn)
+        table.column(marketGroupIdColumn)
         table.column(typeNameColumn)
         table.column(descriptionColumn)
         table.column(massColumn)
@@ -34,6 +36,15 @@ class TypesTable: SDETable {
         table.column(radiusColumn)
         table.column(iconIdColumn)
         table.column(publishedColumn)
+    }
+    
+    func createIndexes(connection: Connection) throws {
+        try connection.run(table.createIndex(
+            typeIdColumn,
+            groupIdColumn,
+            typeNameColumn,
+            marketGroupIdColumn
+        ))
     }
     
     func add(id: Int, data: [String : Any], to db: Connection) throws {
@@ -45,10 +56,19 @@ class TypesTable: SDETable {
             iconId = nil
         }
         
+        let marketGroupId: Int64?
+        
+        if let marketGroupIdInt = data["marketGroupID"] as? Int {
+            marketGroupId = Int64(marketGroupIdInt)
+        } else {
+            marketGroupId = nil
+        }
+        
         try db.run(
             table.insert(
                 typeIdColumn <- Int64(id),
                 groupIdColumn <- Int64(data["groupID"] as! Int),
+                marketGroupIdColumn <- marketGroupId,
                 typeNameColumn <- (data["name"] as! [String: String])["en"]!,
                 descriptionColumn <- (data["description"] as? [String: String])?["en"],
                 massColumn <- Float64(data["mass"] as? Double ?? 0.0),

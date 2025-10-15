@@ -28,6 +28,14 @@ class TraitsTable: SDETable {
         table.column(unitIdColumn)
     }
     
+    func createIndexes(connection: Connection) throws {
+        try connection.run(table.createIndex(
+            traitIdColumn,
+            typeIdColumn,
+            skillIdColumn
+        ))
+    }
+    
     func add(id: Int, data: [String : Any], to db: SQLite.Connection) throws {
         let typeId = id
         

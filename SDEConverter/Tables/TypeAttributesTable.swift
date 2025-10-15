@@ -24,6 +24,13 @@ class TypeAttributesTable: SDETable {
         table.column(valueFloatColumn)
     }
     
+    func createIndexes(connection: Connection) throws {
+        try connection.run(table.createIndex(
+            typeIdColumn,
+            attributeIdColumn
+        ))
+    }
+    
     func add(id: Int, data: [String : Any], to db: SQLite.Connection) throws {
         try db.run(
             table.insert(

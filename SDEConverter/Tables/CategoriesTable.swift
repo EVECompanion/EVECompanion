@@ -20,6 +20,12 @@ class CategoriesTable: SDETable {
         table.column(categoryNameColumn)
     }
     
+    func createIndexes(connection: Connection) throws {
+        try connection.run(table.createIndex(
+            categoryIdColumn
+        ))
+    }
+    
     func add(id: Int, data: [String : Any], to db: SQLite.Connection) throws {
         try db.run(
             table.insert(

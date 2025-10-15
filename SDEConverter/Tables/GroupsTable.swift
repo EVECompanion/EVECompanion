@@ -13,18 +13,28 @@ class GroupsTable: SDETable {
     var table: SQLite.Table = .init("invGroups")
     
     var groupIdColumn = Expression<Int64>("groupID")
+    var categoryIdColumn = Expression<Int64>("categoryID")
     var groupNameColumn = Expression<String>("groupName")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(groupIdColumn)
+        table.column(categoryIdColumn)
         table.column(groupNameColumn)
+    }
+    
+    func createIndexes(connection: Connection) throws {
+        try connection.run(table.createIndex(
+            groupIdColumn,
+            categoryIdColumn
+        ))
     }
     
     func add(id: Int, data: [String : Any], to db: SQLite.Connection) throws {
         try db.run(
             table.insert(
                 groupIdColumn <- Int64(id),
-                groupNameColumn <- data["name"] as! String
+                categoryIdColumn <- Int64(data["categoryID"] as! Int),
+                groupNameColumn <- (data["name"] as! [String: Any])["en"] as! String
             )
         )
     }

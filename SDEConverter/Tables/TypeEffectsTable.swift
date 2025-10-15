@@ -20,6 +20,13 @@ class TypeEffectsTable: SDETable {
         table.column(effectIDColumn)
     }
     
+    func createIndexes(connection: Connection) throws {
+        try connection.run(table.createIndex(
+            effectIDColumn,
+            typeIdColumn
+        ))
+    }
+    
     func add(id: Int, data: [String : Any], to db: SQLite.Connection) throws {
         try db.run(
             table.insert(

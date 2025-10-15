@@ -37,14 +37,14 @@ class SDEBuilder {
     }
     
     private func fillTables() throws {
+        try fillTypesTable()
+        try fillGroupsTable()
         try fillUnitsTable()
         try fillTypeDogmaTables()
         try fillMapDenormalizeTable()
         try fillTraitsTable()
         try fillCategoriesTable()
-        try fillGroupsTable()
         try fillAttributeCategoriesTable()
-        try fillTypesTable()
         try fillAttributeTypesTable()
     }
     
@@ -113,7 +113,7 @@ class SDEBuilder {
         print("Filling Groups Table.")
         
         let typeAttributesTable = GroupsTable()
-        let fileContent = try SDEFile.attributeCategories.loadFile(sdeDir: sdeDir)
+        let fileContent = try SDEFile.groups.loadFile(sdeDir: sdeDir)
         
         for category in fileContent {
             try typeAttributesTable.add(id: Int(category.key)!, data: category.value, to: db)
