@@ -27,13 +27,20 @@ class SDEBuilder {
         try TypesTable().createTable(in: db)
         try AttributeTypesTable().createTable(in: db)
         try TypeAttributesTable().createTable(in: db)
+        try AttributeCategoriesTable().createTable(in: db)
+        try GroupsTable().createTable(in: db)
+        try CategoriesTable().createTable(in: db)
+        try TraitsTable().createTable(in: db)
     }
     
     private func fillTables() throws {
+        try fillTraitsTable()
+        try fillCategoriesTable()
+        try fillGroupsTable()
+        try fillAttributeCategoriesTable()
         try fillTypeDogmaTables()
         try fillTypesTable()
         try fillAttributeTypesTable()
-        
     }
     
     private func fillTypesTable() throws {
@@ -75,6 +82,58 @@ class SDEBuilder {
         }
         
         print("Done filling Type Attributes Table")
+    }
+    
+    private func fillAttributeCategoriesTable() throws {
+        print("Filling Attribute Categories Table.")
+        
+        let typeAttributesTable = AttributeCategoriesTable()
+        let fileContent = try SDEFile.attributeCategories.loadFile(sdeDir: sdeDir)
+        
+        for category in fileContent {
+            try typeAttributesTable.add(id: Int(category.key)!, data: category.value, to: db)
+        }
+        
+        print("Done Filling Attribute Categories Table.")
+    }
+    
+    private func fillGroupsTable() throws {
+        print("Filling Groups Table.")
+        
+        let typeAttributesTable = GroupsTable()
+        let fileContent = try SDEFile.attributeCategories.loadFile(sdeDir: sdeDir)
+        
+        for category in fileContent {
+            try typeAttributesTable.add(id: Int(category.key)!, data: category.value, to: db)
+        }
+        
+        print("Done filling Groups Table.")
+    }
+    
+    private func fillCategoriesTable() throws {
+        print("Filling Categories Table.")
+        
+        let categoriesTable = CategoriesTable()
+        let fileContent = try SDEFile.categories.loadFile(sdeDir: sdeDir)
+        
+        for category in fileContent {
+            try categoriesTable.add(id: Int(category.key)!, data: category.value, to: db)
+        }
+        
+        print("Done filling Categories Table.")
+    }
+    
+    private func fillTraitsTable() throws {
+        print("Filling Traits Table.")
+        
+        let categoriesTable = TraitsTable()
+        let fileContent = try SDEFile.traits.loadFile(sdeDir: sdeDir)
+        
+        for trait in fileContent {
+            try categoriesTable.add(id: Int(trait.key)!, data: trait.value, to: db)
+        }
+        
+        print("Done filling Traits Table.")
     }
     
 }

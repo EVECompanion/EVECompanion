@@ -13,6 +13,10 @@ enum SDEFile {
     case types
     case typeDogma
     case attributes
+    case attributeCategories
+    case categories
+    case groups
+    case traits
     
     private var fileName: String {
         switch self {
@@ -22,6 +26,14 @@ enum SDEFile {
             return "dogmaAttributes.yaml"
         case .typeDogma:
             return "typeDogma.yaml"
+        case .attributeCategories:
+            return "dogmaAttributeCategories.yaml"
+        case .groups:
+            return "groups.yaml"
+        case .categories:
+            return "categories.yaml"
+        case .traits:
+            return "typeBonus.yaml"
         }
     }
     
