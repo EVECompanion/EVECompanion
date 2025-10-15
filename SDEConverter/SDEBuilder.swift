@@ -36,9 +36,11 @@ class SDEBuilder {
         try UnitsTable().createTable(in: db)
         try StationsTable().createTable(in: db)
         try SolarSystemsTable().createTable(in: db)
+        try RegionsTable().createTable(in: db)
     }
     
     private func fillTables() throws {
+        try fillRegionsTable()
         try fillSolarSystemsTable()
         try fillStationsTable()
         try fillTypesTable()
@@ -294,6 +296,19 @@ class SDEBuilder {
         }
         
         print("Done filling Solar Systems Table.")
+    }
+    
+    private func fillRegionsTable() throws {
+        print("Filling Regions Table.")
+        
+        let traitsTable = RegionsTable()
+        let fileContent = try SDEFile.regions.loadFile(sdeDir: sdeDir)
+        
+        for region in fileContent {
+            try traitsTable.add(id: Int(region.key)!, data: region.value, to: db)
+        }
+        
+        print("Done filling Regions Table.")
     }
     
 }
