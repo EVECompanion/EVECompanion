@@ -14,11 +14,13 @@ class TypeAttributesTable: SDETable {
     
     private let typeIdColumn = Expression<Int64>("typeID")
     private let attributeIdColumn = Expression<Int64>("attributeID")
+    private let valueIntColumn = Expression<Int64?>("valueInt")
     private let valueFloatColumn = Expression<Float64>("valueFloat")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(typeIdColumn)
         table.column(attributeIdColumn)
+        table.column(valueIntColumn)
         table.column(valueFloatColumn)
     }
     

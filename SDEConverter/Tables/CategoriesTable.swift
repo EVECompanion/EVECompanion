@@ -12,7 +12,7 @@ class CategoriesTable: SDETable {
     
     var table: SQLite.Table = .init("invCategories")
     
-    var categoryIdColumn = Expression<Int64>("categoryId")
+    var categoryIdColumn = Expression<Int64>("categoryID")
     var categoryNameColumn = Expression<String>("categoryName")
     
     func addColumns(to table: SQLite.TableBuilder) {

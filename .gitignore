@@ -79,3 +79,4 @@ iOSInjectionProject/
 fastlane/report.xml
 *.sqlite
 sde/
+*.zip
