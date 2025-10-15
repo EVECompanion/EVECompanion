@@ -16,8 +16,12 @@ enum SDEFile {
     case attributeCategories
     case categories
     case groups
+    case moons
+    case npcCorps
     case solarSystems
     case planets
+    case stations
+    case stationOperations
     case traits
     case units
     
@@ -43,6 +47,14 @@ enum SDEFile {
             return "mapSolarSystems.yaml"
         case .units:
             return "dogmaUnits.yaml"
+        case .stations:
+            return "npcStations.yaml"
+        case .moons:
+            return "mapMoons.yaml"
+        case .npcCorps:
+            return "npcCorporations.yaml"
+        case .stationOperations:
+            return "stationOperations.yaml"
         }
     }
     

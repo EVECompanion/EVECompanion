@@ -34,9 +34,11 @@ class SDEBuilder {
         try MapDenormalizeTable().createTable(in: db)
         try TypeEffectsTable().createTable(in: db)
         try UnitsTable().createTable(in: db)
+        try StationsTable().createTable(in: db)
     }
     
     private func fillTables() throws {
+        try fillStationsTable()
         try fillTypesTable()
         try fillGroupsTable()
         try fillUnitsTable()
@@ -211,6 +213,63 @@ class SDEBuilder {
         }
         
         print("Done filling Units Table.")
+    }
+    
+    private func fillStationsTable() throws {
+        print("Filling Stations Table.")
+        
+        let stationsTable = StationsTable()
+        let fileContent = try SDEFile.stations.loadFile(sdeDir: sdeDir)
+        
+        let moons = try SDEFile.moons.loadFile(sdeDir: sdeDir)
+        let planets = try SDEFile.planets.loadFile(sdeDir: sdeDir)
+        let npcCorps = try SDEFile.npcCorps.loadFile(sdeDir: sdeDir)
+        let operations = try SDEFile.stationOperations.loadFile(sdeDir: sdeDir)
+        let solarSystems = try SDEFile.solarSystems.loadFile(sdeDir: sdeDir)
+        
+        for station in fileContent {
+            let solarSystemId = station.value["solarSystemID"] as! Int
+            let orbitId = station.value["orbitID"] as! Int
+            let corporationId = station.value["ownerID"] as! Int
+            let operationId = station.value["operationID"] as! Int
+            
+            let moon = moons["\(orbitId)"]
+            let moonNumber = moon?["orbitIndex"] as? Int
+            let moonOrbitId = moon?["orbitID"] as? Int
+            
+            let planet = planets["\(moonOrbitId ?? orbitId)"]
+            let planetUniqueName = (planet?["uniqueName"] as? [String: Any])?["en"] as? String
+            let planetNumber = planet?["celestialIndex"] as? Int
+            
+            let corpName = (npcCorps["\(corporationId)"]!["name"] as! [String: Any])["en"]!
+            let operation = (operations["\(operationId)"]!["operationName"] as! [String: Any])["en"]!
+            
+            let solarSystemDict = solarSystems["\(solarSystemId)"]
+            let solarSystemName = (solarSystemDict!["name"] as! [String: Any])["en"]!
+            
+            var name = "\(solarSystemName) "
+            
+            if let planetUniqueName {
+                name += "\(planetUniqueName) - "
+            } else if let planetNumber {
+                name += "\(romanNumeral(for: planetNumber)) - "
+            } else {
+                name += "- "
+            }
+            
+            if let moonNumber {
+                name += "Moon \(romanNumeral(for: moonNumber)) - "
+            }
+            
+            name += "\(corpName) \(operation)"
+            
+            var data = station.value
+            data["name"] = name
+            
+            try stationsTable.add(id: Int(station.key)!, data: data, to: db)
+        }
+        
+        print("Done filling Stations Table.")
     }
     
 }
