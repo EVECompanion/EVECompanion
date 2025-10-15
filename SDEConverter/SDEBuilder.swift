@@ -32,15 +32,16 @@ class SDEBuilder {
         try CategoriesTable().createTable(in: db)
         try TraitsTable().createTable(in: db)
         try MapDenormalizeTable().createTable(in: db)
+        try TypeEffectsTable().createTable(in: db)
     }
     
     private func fillTables() throws {
+        try fillTypeDogmaTables()
         try fillMapDenormalizeTable()
         try fillTraitsTable()
         try fillCategoriesTable()
         try fillGroupsTable()
         try fillAttributeCategoriesTable()
-        try fillTypeDogmaTables()
         try fillTypesTable()
         try fillAttributeTypesTable()
     }
@@ -73,6 +74,7 @@ class SDEBuilder {
         print("Filling Type Attributes Table")
         
         let typeAttributesTable = TypeAttributesTable()
+        let typeEffectsTable = TypeEffectsTable()
         let fileContent = try SDEFile.typeDogma.loadFile(sdeDir: sdeDir)
         
         for type in fileContent {
@@ -80,6 +82,12 @@ class SDEBuilder {
             
             for dogmaAttribute in dogmaAttributes {
                 try typeAttributesTable.add(id: Int(type.key)!, data: dogmaAttribute, to: db)
+            }
+            
+            let effects: [[String: Any]] = (type.value["dogmaEffects"] as? [[String: Any]]) ?? []
+            
+            for effect in effects {
+                try typeEffectsTable.add(id: Int(type.key)!, data: effect, to: db)
             }
         }
         
