@@ -19,6 +19,7 @@ enum SDEFile {
     case solarSystems
     case planets
     case traits
+    case units
     
     private var fileName: String {
         switch self {
@@ -40,6 +41,8 @@ enum SDEFile {
             return "mapPlanets.yaml"
         case .solarSystems:
             return "mapSolarSystems.yaml"
+        case .units:
+            return "dogmaUnits.yaml"
         }
     }
     

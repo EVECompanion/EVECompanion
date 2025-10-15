@@ -33,9 +33,11 @@ class SDEBuilder {
         try TraitsTable().createTable(in: db)
         try MapDenormalizeTable().createTable(in: db)
         try TypeEffectsTable().createTable(in: db)
+        try UnitsTable().createTable(in: db)
     }
     
     private func fillTables() throws {
+        try fillUnitsTable()
         try fillTypeDogmaTables()
         try fillMapDenormalizeTable()
         try fillTraitsTable()
@@ -136,11 +138,11 @@ class SDEBuilder {
     private func fillTraitsTable() throws {
         print("Filling Traits Table.")
         
-        let categoriesTable = TraitsTable()
+        let traitsTable = TraitsTable()
         let fileContent = try SDEFile.traits.loadFile(sdeDir: sdeDir)
         
         for trait in fileContent {
-            try categoriesTable.add(id: Int(trait.key)!, data: trait.value, to: db)
+            try traitsTable.add(id: Int(trait.key)!, data: trait.value, to: db)
         }
         
         print("Done filling Traits Table.")
@@ -196,6 +198,19 @@ class SDEBuilder {
             }
         }
         return numeralString
+    }
+    
+    private func fillUnitsTable() throws {
+        print("Filling Units Table.")
+        
+        let unitsTable = UnitsTable()
+        let fileContent = try SDEFile.units.loadFile(sdeDir: sdeDir)
+        
+        for unit in fileContent {
+            try unitsTable.add(id: Int(unit.key)!, data: unit.value, to: db)
+        }
+        
+        print("Done filling Units Table.")
     }
     
 }
