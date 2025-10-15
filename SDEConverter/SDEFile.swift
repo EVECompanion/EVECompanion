@@ -22,6 +22,7 @@ enum SDEFile {
     case planets
     case stations
     case stationOperations
+    case suns
     case traits
     case units
     
@@ -55,6 +56,8 @@ enum SDEFile {
             return "npcCorporations.yaml"
         case .stationOperations:
             return "stationOperations.yaml"
+        case .suns:
+            return "mapStars.yaml"
         }
     }
     

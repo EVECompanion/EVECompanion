@@ -35,9 +35,11 @@ class SDEBuilder {
         try TypeEffectsTable().createTable(in: db)
         try UnitsTable().createTable(in: db)
         try StationsTable().createTable(in: db)
+        try SolarSystemsTable().createTable(in: db)
     }
     
     private func fillTables() throws {
+        try fillSolarSystemsTable()
         try fillStationsTable()
         try fillTypesTable()
         try fillGroupsTable()
@@ -270,6 +272,28 @@ class SDEBuilder {
         }
         
         print("Done filling Stations Table.")
+    }
+    
+    private func fillSolarSystemsTable() throws {
+        print("Filling Solar Systems Table.")
+        
+        let traitsTable = SolarSystemsTable()
+        let fileContent = try SDEFile.solarSystems.loadFile(sdeDir: sdeDir)
+        
+        let suns = try SDEFile.suns.loadFile(sdeDir: sdeDir)
+        
+        for solarSystem in fileContent {
+            var data = solarSystem.value
+            
+            let sunId = data["starID"] as? Int
+            if let sunId {
+                data["sunTypeID"] = suns["\(sunId)"]?["typeID"] as? Int
+            }
+                
+            try traitsTable.add(id: Int(solarSystem.key)!, data: data, to: db)
+        }
+        
+        print("Done filling Solar Systems Table.")
     }
     
 }
