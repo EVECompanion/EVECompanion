@@ -31,9 +31,11 @@ class SDEBuilder {
         try GroupsTable().createTable(in: db)
         try CategoriesTable().createTable(in: db)
         try TraitsTable().createTable(in: db)
+        try MapDenormalizeTable().createTable(in: db)
     }
     
     private func fillTables() throws {
+        try fillMapDenormalizeTable()
         try fillTraitsTable()
         try fillCategoriesTable()
         try fillGroupsTable()
@@ -134,6 +136,58 @@ class SDEBuilder {
         }
         
         print("Done filling Traits Table.")
+    }
+    
+    private func fillMapDenormalizeTable() throws {
+        print("Filling Map Denormalize Table.")
+        
+        let mapTable = MapDenormalizeTable()
+        
+        let solarSystemsFileContent = try SDEFile.solarSystems.loadFile(sdeDir: sdeDir)
+        
+        for solarSystem in solarSystemsFileContent {
+            var data = solarSystem.value
+            
+            data["name"] = (data["name"] as! [String: Any])["en"] as! String
+            
+            try mapTable.add(id: Int(solarSystem.key)!, data: data, to: db)
+        }
+        
+        let planetsFileContent = try SDEFile.planets.loadFile(sdeDir: sdeDir)
+        
+        for planet in planetsFileContent {
+            var data: [String: Any] = planet.value
+            
+            let statement = try db.prepare("""
+                SELECT itemName from mapDenormalize WHERE itemID = ?
+            """, planet.value["solarSystemID"] as! Int)
+            
+            let result = try statement.run().makeIterator().failableNext()
+            let systemName = result!.first as! String
+            let planetIndex = data["celestialIndex"] as! Int
+            data["name"] = "\(systemName) \(romanNumeral(for: planetIndex))"
+            
+            try mapTable.add(id: Int(planet.key)!, data: data, to: db)
+        }
+        
+        print("Done filling Map Denormalize Table.")
+    }
+    
+    private func romanNumeral(for int: Int) -> String {
+        var integerValue = int
+        // Roman numerals cannot be represented in integers greater than 3999
+        if int >= 4000 {
+            fatalError("Invalid input (greater than 3999)")
+        }
+        var numeralString = ""
+        let mappingList: [(Int, String)] = [(1000, "M"), (900, "CM"), (500, "D"), (400, "CD"), (100, "C"), (90, "XC"), (50, "L"), (40, "XL"), (10, "X"), (9, "IX"), (5, "V"), (4, "IV"), (1, "I")]
+        for i in mappingList {
+            while (integerValue >= i.0) {
+                integerValue -= i.0
+                numeralString += i.1
+            }
+        }
+        return numeralString
     }
     
 }

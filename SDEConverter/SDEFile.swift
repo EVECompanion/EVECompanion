@@ -16,6 +16,8 @@ enum SDEFile {
     case attributeCategories
     case categories
     case groups
+    case solarSystems
+    case planets
     case traits
     
     private var fileName: String {
@@ -34,6 +36,10 @@ enum SDEFile {
             return "categories.yaml"
         case .traits:
             return "typeBonus.yaml"
+        case .planets:
+            return "mapPlanets.yaml"
+        case .solarSystems:
+            return "mapSolarSystems.yaml"
         }
     }
     
