@@ -39,9 +39,11 @@ class SDEBuilder {
         try RegionsTable().createTable(in: db)
         try ConstellationsTable().createTable(in: db)
         try FactionsTable().createTable(in: db)
+        try MarketGroupsTable().createTable(in: db)
     }
     
     private func fillTables() throws {
+        try fillMarketGroupsTable()
         try fillFactionsTable()
         try fillConstellationsTable()
         try fillRegionsTable()
@@ -339,6 +341,19 @@ class SDEBuilder {
         }
         
         print("Done filling Factions Table.")
+    }
+    
+    private func fillMarketGroupsTable() throws {
+        print("Filling Market Groups Table.")
+        
+        let marketGroupsTable = MarketGroupsTable()
+        let fileContent = try SDEFile.marketGroups.loadFile(sdeDir: sdeDir)
+        
+        for marketGroup in fileContent {
+            try marketGroupsTable.add(id: Int(marketGroup.key)!, data: marketGroup.value, to: db)
+        }
+        
+        print("Done filling Market Groups Table.")
     }
     
 }

@@ -18,6 +18,7 @@ enum SDEFile {
     case attributeCategories
     case categories
     case groups
+    case marketGroups
     case moons
     case npcCorps
     case solarSystems
@@ -67,6 +68,8 @@ enum SDEFile {
             return "mapConstellations.yaml"
         case .factions:
             return "factions.yaml"
+        case .marketGroups:
+            return "marketGroups.yaml"
         }
     }
     
