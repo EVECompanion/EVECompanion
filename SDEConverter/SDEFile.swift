@@ -11,6 +11,7 @@ import Yams
 enum SDEFile {
     
     case constellations
+    case dogmaEffects
     case factions
     case types
     case typeDogma
@@ -73,6 +74,8 @@ enum SDEFile {
             return "marketGroups.yaml"
         case .planetSchematics:
             return "planetSchematics.yaml"
+        case .dogmaEffects:
+            return "dogmaEffects.yaml"
         }
     }
     

@@ -43,9 +43,11 @@ class SDEBuilder {
         try IndustryActivitiesTable().createTable(in: db)
         try PlanetSchematicsTable().createTable(in: db)
         try PlanetSchematicsTypeMapTable().createTable(in: db)
+        try DogmaEffectsTable().createTable(in: db)
     }
     
     private func fillTables() throws {
+        try fillDogmaEffectsTable()
         try fillMapDenormalizeTable()
         try fillPlanetSchematicsTables()
         try fillIndustryActivitiesTable()
@@ -460,6 +462,19 @@ class SDEBuilder {
         }
         
         print("Done filling Planet Schematics Tables.")
+    }
+    
+    private func fillDogmaEffectsTable() throws {
+        print("Filling Dogma Effects Table.")
+        
+        let effectsTable = DogmaEffectsTable()
+        let fileContent = try SDEFile.dogmaEffects.loadFile(sdeDir: sdeDir)
+        
+        for effect in fileContent {
+            try effectsTable.add(id: Int(effect.key)!, data: effect.value, to: db)
+        }
+        
+        print("Done filling Dogma Effects Table.")
     }
     
 }

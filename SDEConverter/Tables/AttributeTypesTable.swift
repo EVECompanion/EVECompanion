@@ -16,7 +16,7 @@ class AttributeTypesTable: SDETable {
     private let categoryIdColumn = Expression<Int64?>("categoryID")
     private let attributeNameColumnn = Expression<String?>("attributeName")
     private let attributeRawNameColumn = Expression<String>("attributeRawName")
-    private let attributeDisplayNameColumn = Expression<String?>("attributeDisplayName")
+    private let attributeDisplayNameColumn = Expression<String?>("displayName")
     private let highIsGoodColumn = Expression<Bool>("highIsGood")
     private let stackableColumn = Expression<Bool>("stackable")
     private let publishedColumn = Expression<Bool>("published")
