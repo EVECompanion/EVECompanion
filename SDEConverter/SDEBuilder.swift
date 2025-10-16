@@ -40,9 +40,11 @@ class SDEBuilder {
         try ConstellationsTable().createTable(in: db)
         try FactionsTable().createTable(in: db)
         try MarketGroupsTable().createTable(in: db)
+        try IndustryActivitiesTable().createTable(in: db)
     }
     
     private func fillTables() throws {
+        try fillIndustryActivitiesTable()
         try fillMarketGroupsTable()
         try fillFactionsTable()
         try fillConstellationsTable()
@@ -354,6 +356,84 @@ class SDEBuilder {
         }
         
         print("Done filling Market Groups Table.")
+    }
+    
+    private func fillIndustryActivitiesTable() throws {
+        print("Filling Industry Activities Table.")
+        
+        let industryActivitiesTable = IndustryActivitiesTable()
+        
+        try industryActivitiesTable.add(id: 0,
+                                        data: [
+                                            "name": "None",
+                                            "description": "No activity"
+                                        ],
+                                        to: db)
+        
+        try industryActivitiesTable.add(id: 1,
+                                        data: [
+                                            "name": "Manufacturing",
+                                            "description": "Manufacturing"
+                                        ],
+                                        to: db)
+        
+        try industryActivitiesTable.add(id: 2,
+                                        data: [
+                                            "name": "Researching Technology",
+                                            "description": "Technological research"
+                                        ],
+                                        to: db)
+        
+        try industryActivitiesTable.add(id: 3,
+                                        data: [
+                                            "name": "Researching Time Efficiency",
+                                            "description": "Researching time efficiency"
+                                        ],
+                                        to: db)
+        
+        try industryActivitiesTable.add(id: 4,
+                                        data: [
+                                            "name": "Researching Material Efficiency",
+                                            "description": "Researching material efficiency"
+                                        ],
+                                        to: db)
+        
+        try industryActivitiesTable.add(id: 5,
+                                        data: [
+                                            "name": "Copying",
+                                            "description": "Copying"
+                                        ],
+                                        to: db)
+        
+        try industryActivitiesTable.add(id: 6,
+                                        data: [
+                                            "name": "Duplicating",
+                                            "description": "The process of creating an item, by studying an already existing item."
+                                        ],
+                                        to: db)
+        
+        try industryActivitiesTable.add(id: 7,
+                                        data: [
+                                            "name": "Reverse Engineering",
+                                            "description": "The process of creating a blueprint from an item."
+                                        ],
+                                        to: db)
+        
+        try industryActivitiesTable.add(id: 8,
+                                        data: [
+                                            "name": "Invention",
+                                            "description": "The process of creating a more advanced item based on an existing item"
+                                        ],
+                                        to: db)
+        
+        try industryActivitiesTable.add(id: 11,
+                                        data: [
+                                            "name": "Reactions",
+                                            "description": "The process of combining raw and intermediate materials to create advanced components"
+                                        ],
+                                        to: db)
+        
+        print("Done filling Industry Activities Table.")
     }
     
 }
