@@ -23,6 +23,7 @@ enum SDEFile {
     case npcCorps
     case solarSystems
     case planets
+    case planetSchematics
     case regions
     case stations
     case stationOperations
@@ -70,6 +71,8 @@ enum SDEFile {
             return "factions.yaml"
         case .marketGroups:
             return "marketGroups.yaml"
+        case .planetSchematics:
+            return "planetSchematics.yaml"
         }
     }
     

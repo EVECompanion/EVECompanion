@@ -41,9 +41,13 @@ class SDEBuilder {
         try FactionsTable().createTable(in: db)
         try MarketGroupsTable().createTable(in: db)
         try IndustryActivitiesTable().createTable(in: db)
+        try PlanetSchematicsTable().createTable(in: db)
+        try PlanetSchematicsTypeMapTable().createTable(in: db)
     }
     
     private func fillTables() throws {
+        try fillMapDenormalizeTable()
+        try fillPlanetSchematicsTables()
         try fillIndustryActivitiesTable()
         try fillMarketGroupsTable()
         try fillFactionsTable()
@@ -55,7 +59,6 @@ class SDEBuilder {
         try fillGroupsTable()
         try fillUnitsTable()
         try fillTypeDogmaTables()
-        try fillMapDenormalizeTable()
         try fillTraitsTable()
         try fillCategoriesTable()
         try fillAttributeCategoriesTable()
@@ -173,6 +176,7 @@ class SDEBuilder {
             var data = solarSystem.value
             
             data["name"] = (data["name"] as! [String: Any])["en"] as! String
+            data["typeID"] = 5
             
             try mapTable.add(id: Int(solarSystem.key)!, data: data, to: db)
         }
@@ -434,6 +438,28 @@ class SDEBuilder {
                                         to: db)
         
         print("Done filling Industry Activities Table.")
+    }
+    
+    private func fillPlanetSchematicsTables() throws {
+        print("Filling Planet Schematics Tables.")
+        
+        let planetSchematicsTable = PlanetSchematicsTable()
+        let planetSchematicsTypeMapTable = PlanetSchematicsTypeMapTable()
+        let fileContent = try SDEFile.planetSchematics.loadFile(sdeDir: sdeDir)
+        
+        for schematic in fileContent {
+            try planetSchematicsTable.add(id: Int(schematic.key)!, data: schematic.value, to: db)
+            
+            let types = schematic.value["types"] as! [String: Any]
+            for type in types {
+                var data = type.value as! [String: Any]
+                data["typeID"] = Int(type.key)!
+                
+                try planetSchematicsTypeMapTable.add(id: Int(schematic.key)!, data: data, to: db)
+            }
+        }
+        
+        print("Done filling Planet Schematics Tables.")
     }
     
 }
