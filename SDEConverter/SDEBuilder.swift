@@ -37,9 +37,11 @@ class SDEBuilder {
         try StationsTable().createTable(in: db)
         try SolarSystemsTable().createTable(in: db)
         try RegionsTable().createTable(in: db)
+        try ConstellationsTable().createTable(in: db)
     }
     
     private func fillTables() throws {
+        try fillConstellationsTable()
         try fillRegionsTable()
         try fillSolarSystemsTable()
         try fillStationsTable()
@@ -309,6 +311,19 @@ class SDEBuilder {
         }
         
         print("Done filling Regions Table.")
+    }
+    
+    private func fillConstellationsTable() throws {
+        print("Filling Constellations Table.")
+        
+        let constellationsTable = ConstellationsTable()
+        let fileContent = try SDEFile.constellations.loadFile(sdeDir: sdeDir)
+        
+        for constellation in fileContent {
+            try constellationsTable.add(id: Int(constellation.key)!, data: constellation.value, to: db)
+        }
+        
+        print("Done filling Constellations Table.")
     }
     
 }
