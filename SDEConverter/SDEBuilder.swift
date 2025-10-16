@@ -38,9 +38,11 @@ class SDEBuilder {
         try SolarSystemsTable().createTable(in: db)
         try RegionsTable().createTable(in: db)
         try ConstellationsTable().createTable(in: db)
+        try FactionsTable().createTable(in: db)
     }
     
     private func fillTables() throws {
+        try fillFactionsTable()
         try fillConstellationsTable()
         try fillRegionsTable()
         try fillSolarSystemsTable()
@@ -324,6 +326,19 @@ class SDEBuilder {
         }
         
         print("Done filling Constellations Table.")
+    }
+    
+    private func fillFactionsTable() throws {
+        print("Filling Factions Table.")
+        
+        let factionsTable = FactionsTable()
+        let fileContent = try SDEFile.factions.loadFile(sdeDir: sdeDir)
+        
+        for faction in fileContent {
+            try factionsTable.add(id: Int(faction.key)!, data: faction.value, to: db)
+        }
+        
+        print("Done filling Factions Table.")
     }
     
 }

@@ -11,6 +11,7 @@ import Yams
 enum SDEFile {
     
     case constellations
+    case factions
     case types
     case typeDogma
     case attributes
@@ -64,6 +65,8 @@ enum SDEFile {
             return "mapRegions.yaml"
         case .constellations:
             return "mapConstellations.yaml"
+        case .factions:
+            return "factions.yaml"
         }
     }
     
