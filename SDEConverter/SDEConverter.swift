@@ -13,12 +13,15 @@ import SQLite
 struct SDEConverter: ParsableCommand {
     
     @Option var sdeDir: String
+    @Option var effectPatches: String
     @Option var outputFile: String
     
     mutating func run() throws {
         print("Converting SDE data from \(sdeDir) to \(outputFile)")
         
-        let builder = try SDEBuilder(sdeDir: sdeDir, outputFile: outputFile)
+        let builder = try SDEBuilder(sdeDir: sdeDir,
+                                     effectPatches: effectPatches,
+                                     outputFile: outputFile)
         try builder.run()
     }
     

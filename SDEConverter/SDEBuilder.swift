@@ -11,16 +11,19 @@ import SQLite
 class SDEBuilder {
     
     private let db: Connection
+    private let effectPatchesFile: String
     private let sdeDir: String
     
-    init(sdeDir: String, outputFile: String) throws {
+    init(sdeDir: String, effectPatches: String, outputFile: String) throws {
         self.sdeDir = sdeDir
+        self.effectPatchesFile = effectPatches
         self.db = try Connection(outputFile)
     }
     
     func run() throws {
         try createTables()
         try fillTables()
+        try applyDataPatches()
     }
     
     private func createTables() throws {
@@ -65,6 +68,28 @@ class SDEBuilder {
         try fillCategoriesTable()
         try fillAttributeCategoriesTable()
         try fillAttributeTypesTable()
+    }
+    
+    private func applyDataPatches() throws {
+        struct EffectPatch: Decodable {
+            let effectName: String
+            let modifierInfo: String
+        }
+        
+        print("Applying Data Patches")
+        try generateSkillRequirementsAttributeMappingTable()
+        try db.execute("INSERT INTO dgmAttributeTypes(attributeID, attributeRawName, published, defaultValue, highIsGood, stackable) VALUES(-1, 'velocityBoost', 1, 0, 1, 1)")
+        try db.execute("INSERT INTO dgmEffects(effectID, effectName, effectCategory, modifierInfo) VALUES(-1, 'velocityBoost', 0, '- domain: itemID\r\n  func: ItemModifier\r\n  modifiedAttributeID: -1\r\n  modifyingAttributeID: 4\r\n  operation: 5\r\n- domain: itemID\r\n  func: ItemModifier\r\n  modifiedAttributeID: 37\r\n  modifyingAttributeID: -1\r\n  operation: 6')")
+        try db.execute("UPDATE dgmEffects SET effectCategory = 4 WHERE effectName = 'online'")
+        
+        let effectPatchesData = try String(contentsOfFile: effectPatchesFile, encoding: .utf8).data(using: .utf8)!
+        let effectPatches = try JSONDecoder().decode([EffectPatch].self, from: effectPatchesData)
+        
+        for effectPatch in effectPatches {
+            try db.execute("UPDATE dgmEffects SET modifierInfo = \"\(effectPatch.modifierInfo)\" WHERE effectName = \"\(effectPatch.effectName)\"")
+        }
+        
+        print("Done applying data patches")
     }
     
     private func fillTypesTable() throws {
@@ -475,6 +500,33 @@ class SDEBuilder {
         }
         
         print("Done filling Dogma Effects Table.")
+    }
+    
+    private func generateSkillRequirementsAttributeMappingTable() throws {
+        try db.execute("CREATE TABLE dgmSkillRequirementsAttributeMapping (displayAttributeID INTEGER NOT NULL, requirementAttributeID INTEGER NOT NULL, PRIMARY KEY (displayAttributeID, requirementAttributeID))")
+        
+        class AttributeMapEntry {
+            let displayAttributeId: Int
+            let requirementAttributeID: Int
+            
+            init(displayAttributeID: Int, requirementAttributeID: Int) {
+                self.displayAttributeId = displayAttributeID;
+                self.requirementAttributeID = requirementAttributeID;
+            }
+        }
+        
+        let mappings = [
+            AttributeMapEntry(displayAttributeID: 182, requirementAttributeID: 277),
+            AttributeMapEntry(displayAttributeID: 183, requirementAttributeID: 278),
+            AttributeMapEntry(displayAttributeID: 184, requirementAttributeID: 279),
+            AttributeMapEntry(displayAttributeID: 1285, requirementAttributeID: 1286),
+            AttributeMapEntry(displayAttributeID: 1289, requirementAttributeID: 1287),
+            AttributeMapEntry(displayAttributeID: 1290, requirementAttributeID: 1288),
+        ];
+        
+        for mapping in mappings {
+            try db.execute("INSERT INTO dgmSkillRequirementsAttributeMapping(displayAttributeID, requirementAttributeID) VALUES(\(mapping.displayAttributeId),\(mapping.requirementAttributeID))")
+        }
     }
     
 }

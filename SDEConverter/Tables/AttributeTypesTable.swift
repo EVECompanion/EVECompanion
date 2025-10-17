@@ -21,7 +21,7 @@ class AttributeTypesTable: SDETable {
     private let stackableColumn = Expression<Bool>("stackable")
     private let publishedColumn = Expression<Bool>("published")
     private let defaultValueColumn = Expression<Float64>("defaultValue")
-    private let unitIdColumn = Expression<Int64>("unitID")
+    private let unitIdColumn = Expression<Int64?>("unitID")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(attributeIdColumn)

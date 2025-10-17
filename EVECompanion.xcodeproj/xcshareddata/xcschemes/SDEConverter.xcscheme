@@ -58,6 +58,10 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "--effect-patches ./SDEConverter/effect_patches.json"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "--output-file ./EVE.sqlite"
             isEnabled = "YES">
          </CommandLineArgument>

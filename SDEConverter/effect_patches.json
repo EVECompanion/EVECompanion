@@ -1,0 +1,38 @@
+    [
+        {
+            "effectName": "droneDmgBonus",
+            "modifierInfo": "- domain: shipID\r\n  func: OwnerRequiredSkillModifier\r\n  modifiedAttributeID: 64\r\n  modifyingAttributeID: 292\r\n  operation: 6\r\n  skillTypeID: -1"
+        },
+        {
+            "effectName": "missileEMDmgBonus",
+            "modifierInfo": "- domain: charID\r\n  func: OwnerRequiredSkillModifier\r\n  modifiedAttributeID: 114\r\n  modifyingAttributeID: 292\r\n  operation: 6\r\n  skillTypeID: -1"
+        },
+        {
+            "effectName": "missileExplosiveDmgBonus",
+            "modifierInfo": "- domain: charID\r\n  func: OwnerRequiredSkillModifier\r\n  modifiedAttributeID: 116\r\n  modifyingAttributeID: 292\r\n  operation: 6\r\n  skillTypeID: -1"
+        },
+        {
+            "effectName": "missileKineticDmgBonus2",
+            "modifierInfo": "- domain: charID\r\n  func: OwnerRequiredSkillModifier\r\n  modifiedAttributeID: 117\r\n  modifyingAttributeID: 292\r\n  operation: 6\r\n  skillTypeID: -1"
+        },
+        {
+            "effectName": "missileThermalDmgBonus",
+            "modifierInfo": "- domain: charID\r\n  func: OwnerRequiredSkillModifier\r\n  modifiedAttributeID: 118\r\n  modifyingAttributeID: 292\r\n  operation: 6\r\n  skillTypeID: -1"
+        },
+        {
+            "effectName": "moduleBonusMicrowarpdrive",
+            "modifierInfo": "- domain: shipID\r\n  func: ItemModifier\r\n  modifiedAttributeID: 4\r\n  modifyingAttributeID: 796\r\n  operation: 2\r\n- domain: shipID\r\n  func: ItemModifier\r\n  modifiedAttributeID: -1\r\n  modifyingAttributeID: 567\r\n  operation: 2\r\n- domain: shipID\r\n  func: ItemModifier\r\n  modifiedAttributeID: -1\r\n  modifyingAttributeID: 20\r\n  operation: 4\r\n- domain: shipID\r\n  func: ItemModifier\r\n  modifiedAttributeID: 552\r\n  modifyingAttributeID: 554\r\n  operation: 6"
+        },
+        {
+            "effectName": "moduleBonusAfterburner",
+            "modifierInfo": "- domain: shipID\r\n  func: ItemModifier\r\n  modifiedAttributeID: 4\r\n  modifyingAttributeID: 796\r\n  operation: 2\r\n- domain: shipID\r\n  func: ItemModifier\r\n  modifiedAttributeID: -1\r\n  modifyingAttributeID: 567\r\n  operation: 2\r\n- domain: shipID\r\n  func: ItemModifier\r\n  modifiedAttributeID: -1\r\n  modifyingAttributeID: 20\r\n  operation: 4"
+        },
+        {
+            "effectName": "hardPointModifierEffect",
+            "modifierInfo": "- domain: shipID\r\n  func: ItemModifier\r\n  modifiedAttributeID: 101\r\n  modifyingAttributeID: 1369\r\n  operation: 2\r\n- domain: shipID\r\n  func: ItemModifier\r\n  modifiedAttributeID: 102\r\n  modifyingAttributeID: 1368\r\n  operation: 2"
+        },
+        {
+            "effectName": "slotModifier",
+            "modifierInfo": "- domain: shipID\r\n  func: ItemModifier\r\n  modifiedAttributeID: 14\r\n  modifyingAttributeID: 1374\r\n  operation: 2\r\n- domain: shipID\r\n  func: ItemModifier\r\n  modifiedAttributeID: 13\r\n  modifyingAttributeID: 1375\r\n  operation: 2\r\n- domain: shipID\r\n  func: ItemModifier\r\n  modifiedAttributeID: 12\r\n  modifyingAttributeID: 1376\r\n  operation: 2"
+        }
+    ]

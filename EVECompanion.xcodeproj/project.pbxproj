@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 73;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -576,8 +576,18 @@
 		C9FD52FE2C026BBF0084E5E1 /* LoyaltyPointCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyaltyPointCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		C9DEDB362EA17F78007B7916 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = C90BD0482E9D304D00BB0EB9 /* Sources */;
+			membershipExceptions = (
+				effect_patches.json,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		C90BD04D2E9D304D00BB0EB9 /* SDEConverter */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = SDEConverter; sourceTree = "<group>"; };
+		C90BD04D2E9D304D00BB0EB9 /* SDEConverter */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C9DEDB362EA17F78007B7916 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SDEConverter; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1509,7 +1519,6 @@
 				};
 			};
 			buildConfigurationList = C91EEEB22BE9730000352175 /* Build configuration list for PBXProject "EVECompanion" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1530,6 +1539,7 @@
 				C9D095072DE7BA8A00715479 /* XCRemoteSwiftPackageReference "Yams" */,
 				C90BD0582E9D8BE600BB0EB9 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
 			);
+			preferredProjectObjectVersion = 56;
 			productRefGroup = C91EEEB82BE9730000352175 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
