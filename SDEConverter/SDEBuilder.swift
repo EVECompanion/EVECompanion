@@ -28,6 +28,7 @@ class SDEBuilder {
         try fillTables()
         try applyDataPatches()
         try fillJumpDistancesTables()
+        try db.execute("VACUUM")
     }
     
     private func createTables() throws {
