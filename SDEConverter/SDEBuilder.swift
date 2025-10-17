@@ -6,9 +6,12 @@
 //
 
 import Foundation
+import simd
 import SQLite
 
 class SDEBuilder {
+    
+    static let MAX_LY_RANGE: Double = 9460000000000000 * 12;
     
     private let db: Connection
     private let effectPatchesFile: String
@@ -24,6 +27,7 @@ class SDEBuilder {
         try createTables()
         try fillTables()
         try applyDataPatches()
+        try fillJumpDistancesTables()
     }
     
     private func createTables() throws {
@@ -47,6 +51,8 @@ class SDEBuilder {
         try PlanetSchematicsTable().createTable(in: db)
         try PlanetSchematicsTypeMapTable().createTable(in: db)
         try DogmaEffectsTable().createTable(in: db)
+        try CapitalJumpDistancesTable().createTable(in: db)
+        try CapitalHSJumpDistancesTable().createTable(in: db)
     }
     
     private func fillTables() throws {
@@ -527,6 +533,66 @@ class SDEBuilder {
         for mapping in mappings {
             try db.execute("INSERT INTO dgmSkillRequirementsAttributeMapping(displayAttributeID, requirementAttributeID) VALUES(\(mapping.displayAttributeId),\(mapping.requirementAttributeID))")
         }
+    }
+    
+    typealias SolarSystem = (systemId: Int64, x: Double, y: Double, z: Double)
+    private func fillJumpDistancesTables() throws {
+        print("Filling Jump Distances Tables.")
+        let capitalHSJumpDistancesTable = CapitalHSJumpDistancesTable()
+        let capitalJumpDistancesTable = CapitalJumpDistancesTable()
+        let lowSecSystems = try db.prepare("SELECT solarSystemID, x, y, z FROM mapSolarSystems AS system WHERE round(system.security, 1) <= 0.4 AND system.regionID != 10000070 AND system.regionID != 10000019 AND system.regionID != 10000004 AND system.regionID != 10000017 AND system.regionID < 11000001 AND system.solarSystemID != 30100000").map({ $0 })
+        let highSecSystems = try db.prepare("SELECT solarSystemID, x, y, z FROM mapSolarSystems AS system WHERE round(system.security, 1) > 0.4 AND system.regionID != 10000070 AND system.regionID != 10000019 AND system.regionID != 10000004 AND system.regionID != 10000017 AND system.regionID < 11000001").map({ $0 })
+        
+        print("Inserting Highsec to Lowsec connections to jump distances tables.")
+        for highSecSystem in highSecSystems {
+            for lowSecSystem in lowSecSystems {
+                let hsSystem = system(from: highSecSystem)
+                let lsSystem = system(from: lowSecSystem)
+                let distance = systemDistance(systemA: hsSystem, systemB: lsSystem)
+                
+                if distance >= SDEBuilder.MAX_LY_RANGE {
+                    continue;
+                }
+                
+                try capitalHSJumpDistancesTable.add(entry: .init(startSystemId: hsSystem.systemId,
+                                                                 destinationSystemId: lsSystem.systemId,
+                                                                 distance: distance),
+                                                    to: db)
+            }
+        }
+        
+        print("Inserting Lowsec to Lowsec connections to jump distances tables.")
+        for i in 0..<lowSecSystems.count - 1 {
+            for j in i+1..<lowSecSystems.count {
+                let systemA = system(from:lowSecSystems[i])
+                let systemB = system(from:lowSecSystems[j])
+                let distance = systemDistance(systemA: systemA, systemB: systemB)
+                
+                if distance >= SDEBuilder.MAX_LY_RANGE {
+                    continue;
+                }
+                
+                try capitalJumpDistancesTable.add(entry: .init(startSystemId: systemA.systemId,
+                                                               destinationSystemId: systemB.systemId,
+                                                               distance: distance),
+                                                    to: db)
+            }
+        }
+        
+        print("Done Filling Jump Distances Tables.")
+    }
+    
+    private func system(from element: SQLite.Statement.Element) -> SolarSystem {
+        let systemId = element[0] as! Int64
+        let x = element[1] as! Double
+        let y = element[2] as! Double
+        let z = element[3] as! Double
+        
+        return (systemId, x, y, z)
+    }
+    
+    private func systemDistance(systemA: SolarSystem, systemB: SolarSystem) -> Double {
+        return sqrt(pow(systemB.x - systemA.x, 2) + pow(systemB.y - systemA.y, 2) + pow(systemB.z - systemA.z, 2))
     }
     
 }
