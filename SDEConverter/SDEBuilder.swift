@@ -308,7 +308,7 @@ class SDEBuilder {
             }
             
             if let moonNumber {
-                name += "Moon \(romanNumeral(for: moonNumber)) - "
+                name += "Moon \(moonNumber) - "
             }
             
             name += "\(corpName) \(operation)"
