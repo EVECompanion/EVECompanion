@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 73;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -233,6 +233,32 @@
 		C9DCC40B2EA62A6A00D2F643 /* ECKCharacterCurrentShipResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC40A2EA62A6A00D2F643 /* ECKCharacterCurrentShipResource.swift */; };
 		C9DCC40D2EA6A80100D2F643 /* ECKCharacterLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC40C2EA6A80100D2F643 /* ECKCharacterLocation.swift */; };
 		C9DCC40F2EA6B34700D2F643 /* ECKCharacterCurrentShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC40E2EA6B34700D2F643 /* ECKCharacterCurrentShip.swift */; };
+		C9DCC61C2EA6C4D200D2F643 /* TypesTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6132EA6C4D200D2F643 /* TypesTable.swift */; };
+		C9DCC61D2EA6C4D200D2F643 /* SDETable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC61A2EA6C4D200D2F643 /* SDETable.swift */; };
+		C9DCC61E2EA6C4D200D2F643 /* DogmaEffectsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6052EA6C4D200D2F643 /* DogmaEffectsTable.swift */; };
+		C9DCC61F2EA6C4D200D2F643 /* CapitalHSJumpDistancesTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6012EA6C4D200D2F643 /* CapitalHSJumpDistancesTable.swift */; };
+		C9DCC6202EA6C4D200D2F643 /* MarketGroupsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC60A2EA6C4D200D2F643 /* MarketGroupsTable.swift */; };
+		C9DCC6212EA6C4D200D2F643 /* MapDenormalizeTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6092EA6C4D200D2F643 /* MapDenormalizeTable.swift */; };
+		C9DCC6222EA6C4D200D2F643 /* TypeAttributesTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6112EA6C4D200D2F643 /* TypeAttributesTable.swift */; };
+		C9DCC6232EA6C4D200D2F643 /* PlanetSchematicsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC60B2EA6C4D200D2F643 /* PlanetSchematicsTable.swift */; };
+		C9DCC6242EA6C4D200D2F643 /* SDEBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6172EA6C4D200D2F643 /* SDEBuilder.swift */; };
+		C9DCC6252EA6C4D200D2F643 /* AttributeCategoriesTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC5FF2EA6C4D200D2F643 /* AttributeCategoriesTable.swift */; };
+		C9DCC6262EA6C4D200D2F643 /* StationsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC60F2EA6C4D200D2F643 /* StationsTable.swift */; };
+		C9DCC6272EA6C4D200D2F643 /* CategoriesTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6032EA6C4D200D2F643 /* CategoriesTable.swift */; };
+		C9DCC6282EA6C4D200D2F643 /* AttributeTypesTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6002EA6C4D200D2F643 /* AttributeTypesTable.swift */; };
+		C9DCC6292EA6C4D200D2F643 /* SDEFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6192EA6C4D200D2F643 /* SDEFile.swift */; };
+		C9DCC62A2EA6C4D200D2F643 /* CapitalJumpDistancesTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6022EA6C4D200D2F643 /* CapitalJumpDistancesTable.swift */; };
+		C9DCC62B2EA6C4D200D2F643 /* ConstellationsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6042EA6C4D200D2F643 /* ConstellationsTable.swift */; };
+		C9DCC62C2EA6C4D200D2F643 /* UnitsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6142EA6C4D200D2F643 /* UnitsTable.swift */; };
+		C9DCC62D2EA6C4D200D2F643 /* GroupsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6072EA6C4D200D2F643 /* GroupsTable.swift */; };
+		C9DCC62E2EA6C4D200D2F643 /* TypeEffectsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6122EA6C4D200D2F643 /* TypeEffectsTable.swift */; };
+		C9DCC62F2EA6C4D200D2F643 /* TraitsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6102EA6C4D200D2F643 /* TraitsTable.swift */; };
+		C9DCC6302EA6C4D200D2F643 /* PlanetSchematicsTypeMapTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC60C2EA6C4D200D2F643 /* PlanetSchematicsTypeMapTable.swift */; };
+		C9DCC6312EA6C4D200D2F643 /* RegionsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC60D2EA6C4D200D2F643 /* RegionsTable.swift */; };
+		C9DCC6322EA6C4D200D2F643 /* SDEConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6182EA6C4D200D2F643 /* SDEConverter.swift */; };
+		C9DCC6332EA6C4D200D2F643 /* SolarSystemsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC60E2EA6C4D200D2F643 /* SolarSystemsTable.swift */; };
+		C9DCC6342EA6C4D200D2F643 /* FactionsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6062EA6C4D200D2F643 /* FactionsTable.swift */; };
+		C9DCC6352EA6C4D200D2F643 /* IndustryActivitiesTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6082EA6C4D200D2F643 /* IndustryActivitiesTable.swift */; };
 		C9DEDD352DADAA9000781E8A /* ECKMarketGroupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEDD342DADAA9000781E8A /* ECKMarketGroupManager.swift */; };
 		C9DEDD372DADAB9600781E8A /* ECKMarketGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEDD362DADAB9600781E8A /* ECKMarketGroup.swift */; };
 		C9DEF2EE2C14AEA000815AF0 /* ECKLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEF2ED2C14AEA000815AF0 /* ECKLogger.swift */; };
@@ -536,6 +562,33 @@
 		C9DCC40A2EA62A6A00D2F643 /* ECKCharacterCurrentShipResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterCurrentShipResource.swift; sourceTree = "<group>"; };
 		C9DCC40C2EA6A80100D2F643 /* ECKCharacterLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterLocation.swift; sourceTree = "<group>"; };
 		C9DCC40E2EA6B34700D2F643 /* ECKCharacterCurrentShip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterCurrentShip.swift; sourceTree = "<group>"; };
+		C9DCC5FF2EA6C4D200D2F643 /* AttributeCategoriesTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeCategoriesTable.swift; sourceTree = "<group>"; };
+		C9DCC6002EA6C4D200D2F643 /* AttributeTypesTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeTypesTable.swift; sourceTree = "<group>"; };
+		C9DCC6012EA6C4D200D2F643 /* CapitalHSJumpDistancesTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalHSJumpDistancesTable.swift; sourceTree = "<group>"; };
+		C9DCC6022EA6C4D200D2F643 /* CapitalJumpDistancesTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalJumpDistancesTable.swift; sourceTree = "<group>"; };
+		C9DCC6032EA6C4D200D2F643 /* CategoriesTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesTable.swift; sourceTree = "<group>"; };
+		C9DCC6042EA6C4D200D2F643 /* ConstellationsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstellationsTable.swift; sourceTree = "<group>"; };
+		C9DCC6052EA6C4D200D2F643 /* DogmaEffectsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DogmaEffectsTable.swift; sourceTree = "<group>"; };
+		C9DCC6062EA6C4D200D2F643 /* FactionsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactionsTable.swift; sourceTree = "<group>"; };
+		C9DCC6072EA6C4D200D2F643 /* GroupsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsTable.swift; sourceTree = "<group>"; };
+		C9DCC6082EA6C4D200D2F643 /* IndustryActivitiesTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndustryActivitiesTable.swift; sourceTree = "<group>"; };
+		C9DCC6092EA6C4D200D2F643 /* MapDenormalizeTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapDenormalizeTable.swift; sourceTree = "<group>"; };
+		C9DCC60A2EA6C4D200D2F643 /* MarketGroupsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketGroupsTable.swift; sourceTree = "<group>"; };
+		C9DCC60B2EA6C4D200D2F643 /* PlanetSchematicsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetSchematicsTable.swift; sourceTree = "<group>"; };
+		C9DCC60C2EA6C4D200D2F643 /* PlanetSchematicsTypeMapTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetSchematicsTypeMapTable.swift; sourceTree = "<group>"; };
+		C9DCC60D2EA6C4D200D2F643 /* RegionsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionsTable.swift; sourceTree = "<group>"; };
+		C9DCC60E2EA6C4D200D2F643 /* SolarSystemsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolarSystemsTable.swift; sourceTree = "<group>"; };
+		C9DCC60F2EA6C4D200D2F643 /* StationsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationsTable.swift; sourceTree = "<group>"; };
+		C9DCC6102EA6C4D200D2F643 /* TraitsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TraitsTable.swift; sourceTree = "<group>"; };
+		C9DCC6112EA6C4D200D2F643 /* TypeAttributesTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeAttributesTable.swift; sourceTree = "<group>"; };
+		C9DCC6122EA6C4D200D2F643 /* TypeEffectsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeEffectsTable.swift; sourceTree = "<group>"; };
+		C9DCC6132EA6C4D200D2F643 /* TypesTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypesTable.swift; sourceTree = "<group>"; };
+		C9DCC6142EA6C4D200D2F643 /* UnitsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitsTable.swift; sourceTree = "<group>"; };
+		C9DCC6162EA6C4D200D2F643 /* effect_patches.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = effect_patches.json; sourceTree = "<group>"; };
+		C9DCC6172EA6C4D200D2F643 /* SDEBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDEBuilder.swift; sourceTree = "<group>"; };
+		C9DCC6182EA6C4D200D2F643 /* SDEConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDEConverter.swift; sourceTree = "<group>"; };
+		C9DCC6192EA6C4D200D2F643 /* SDEFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDEFile.swift; sourceTree = "<group>"; };
+		C9DCC61A2EA6C4D200D2F643 /* SDETable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDETable.swift; sourceTree = "<group>"; };
 		C9DEDD342DADAA9000781E8A /* ECKMarketGroupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMarketGroupManager.swift; sourceTree = "<group>"; };
 		C9DEDD362DADAB9600781E8A /* ECKMarketGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMarketGroup.swift; sourceTree = "<group>"; };
 		C9DEF2ED2C14AEA000815AF0 /* ECKLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKLogger.swift; sourceTree = "<group>"; };
@@ -583,20 +636,6 @@
 		C9FD52FA2C0236A30084E5E1 /* ECKCorporation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCorporation.swift; sourceTree = "<group>"; };
 		C9FD52FE2C026BBF0084E5E1 /* LoyaltyPointCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyaltyPointCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		C9DEDB362EA17F78007B7916 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			buildPhase = C90BD0482E9D304D00BB0EB9 /* Sources */;
-			membershipExceptions = (
-				effect_patches.json,
-			);
-		};
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		C90BD04D2E9D304D00BB0EB9 /* SDEConverter */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C9DEDB362EA17F78007B7916 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SDEConverter; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		C90BD0492E9D304D00BB0EB9 /* Frameworks */ = {
@@ -845,7 +884,7 @@
 			children = (
 				C91EEEB92BE9730000352175 /* EVECompanion */,
 				C91EEEEB2BE975D000352175 /* EVECompanionKit */,
-				C90BD04D2E9D304D00BB0EB9 /* SDEConverter */,
+				C9DCC61B2EA6C4D200D2F643 /* SDEConverter */,
 				C91EEEB82BE9730000352175 /* Products */,
 				C9BDB1892DB3C3D700DA4375 /* Recovered References */,
 				C90BD0532E9D317800BB0EB9 /* Frameworks */,
@@ -1282,6 +1321,48 @@
 			path = SDEUpdateView;
 			sourceTree = "<group>";
 		};
+		C9DCC6152EA6C4D200D2F643 /* Tables */ = {
+			isa = PBXGroup;
+			children = (
+				C9DCC5FF2EA6C4D200D2F643 /* AttributeCategoriesTable.swift */,
+				C9DCC6002EA6C4D200D2F643 /* AttributeTypesTable.swift */,
+				C9DCC6012EA6C4D200D2F643 /* CapitalHSJumpDistancesTable.swift */,
+				C9DCC6022EA6C4D200D2F643 /* CapitalJumpDistancesTable.swift */,
+				C9DCC6032EA6C4D200D2F643 /* CategoriesTable.swift */,
+				C9DCC6042EA6C4D200D2F643 /* ConstellationsTable.swift */,
+				C9DCC6052EA6C4D200D2F643 /* DogmaEffectsTable.swift */,
+				C9DCC6062EA6C4D200D2F643 /* FactionsTable.swift */,
+				C9DCC6072EA6C4D200D2F643 /* GroupsTable.swift */,
+				C9DCC6082EA6C4D200D2F643 /* IndustryActivitiesTable.swift */,
+				C9DCC6092EA6C4D200D2F643 /* MapDenormalizeTable.swift */,
+				C9DCC60A2EA6C4D200D2F643 /* MarketGroupsTable.swift */,
+				C9DCC60B2EA6C4D200D2F643 /* PlanetSchematicsTable.swift */,
+				C9DCC60C2EA6C4D200D2F643 /* PlanetSchematicsTypeMapTable.swift */,
+				C9DCC60D2EA6C4D200D2F643 /* RegionsTable.swift */,
+				C9DCC60E2EA6C4D200D2F643 /* SolarSystemsTable.swift */,
+				C9DCC60F2EA6C4D200D2F643 /* StationsTable.swift */,
+				C9DCC6102EA6C4D200D2F643 /* TraitsTable.swift */,
+				C9DCC6112EA6C4D200D2F643 /* TypeAttributesTable.swift */,
+				C9DCC6122EA6C4D200D2F643 /* TypeEffectsTable.swift */,
+				C9DCC6132EA6C4D200D2F643 /* TypesTable.swift */,
+				C9DCC6142EA6C4D200D2F643 /* UnitsTable.swift */,
+			);
+			path = Tables;
+			sourceTree = "<group>";
+		};
+		C9DCC61B2EA6C4D200D2F643 /* SDEConverter */ = {
+			isa = PBXGroup;
+			children = (
+				C9DCC6152EA6C4D200D2F643 /* Tables */,
+				C9DCC6162EA6C4D200D2F643 /* effect_patches.json */,
+				C9DCC6172EA6C4D200D2F643 /* SDEBuilder.swift */,
+				C9DCC6182EA6C4D200D2F643 /* SDEConverter.swift */,
+				C9DCC6192EA6C4D200D2F643 /* SDEFile.swift */,
+				C9DCC61A2EA6C4D200D2F643 /* SDETable.swift */,
+			);
+			path = SDEConverter;
+			sourceTree = "<group>";
+		};
 		C9DEF4AA2C0397EF000238DF /* Skills */ = {
 			isa = PBXGroup;
 			children = (
@@ -1440,9 +1521,6 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				C90BD04D2E9D304D00BB0EB9 /* SDEConverter */,
-			);
 			name = SDEConverter;
 			packageProductDependencies = (
 				C90BD0542E9D317800BB0EB9 /* SQLite */,
@@ -1531,6 +1609,7 @@
 				};
 			};
 			buildConfigurationList = C91EEEB22BE9730000352175 /* Build configuration list for PBXProject "EVECompanion" */;
+			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1551,7 +1630,6 @@
 				C9D095072DE7BA8A00715479 /* XCRemoteSwiftPackageReference "Yams" */,
 				C90BD0582E9D8BE600BB0EB9 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
 			);
-			preferredProjectObjectVersion = 56;
 			productRefGroup = C91EEEB82BE9730000352175 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1631,6 +1709,32 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9DCC61C2EA6C4D200D2F643 /* TypesTable.swift in Sources */,
+				C9DCC61D2EA6C4D200D2F643 /* SDETable.swift in Sources */,
+				C9DCC61E2EA6C4D200D2F643 /* DogmaEffectsTable.swift in Sources */,
+				C9DCC61F2EA6C4D200D2F643 /* CapitalHSJumpDistancesTable.swift in Sources */,
+				C9DCC6202EA6C4D200D2F643 /* MarketGroupsTable.swift in Sources */,
+				C9DCC6212EA6C4D200D2F643 /* MapDenormalizeTable.swift in Sources */,
+				C9DCC6222EA6C4D200D2F643 /* TypeAttributesTable.swift in Sources */,
+				C9DCC6232EA6C4D200D2F643 /* PlanetSchematicsTable.swift in Sources */,
+				C9DCC6242EA6C4D200D2F643 /* SDEBuilder.swift in Sources */,
+				C9DCC6252EA6C4D200D2F643 /* AttributeCategoriesTable.swift in Sources */,
+				C9DCC6262EA6C4D200D2F643 /* StationsTable.swift in Sources */,
+				C9DCC6272EA6C4D200D2F643 /* CategoriesTable.swift in Sources */,
+				C9DCC6282EA6C4D200D2F643 /* AttributeTypesTable.swift in Sources */,
+				C9DCC6292EA6C4D200D2F643 /* SDEFile.swift in Sources */,
+				C9DCC62A2EA6C4D200D2F643 /* CapitalJumpDistancesTable.swift in Sources */,
+				C9DCC62B2EA6C4D200D2F643 /* ConstellationsTable.swift in Sources */,
+				C9DCC62C2EA6C4D200D2F643 /* UnitsTable.swift in Sources */,
+				C9DCC62D2EA6C4D200D2F643 /* GroupsTable.swift in Sources */,
+				C9DCC62E2EA6C4D200D2F643 /* TypeEffectsTable.swift in Sources */,
+				C9DCC62F2EA6C4D200D2F643 /* TraitsTable.swift in Sources */,
+				C9DCC6302EA6C4D200D2F643 /* PlanetSchematicsTypeMapTable.swift in Sources */,
+				C9DCC6312EA6C4D200D2F643 /* RegionsTable.swift in Sources */,
+				C9DCC6322EA6C4D200D2F643 /* SDEConverter.swift in Sources */,
+				C9DCC6332EA6C4D200D2F643 /* SolarSystemsTable.swift in Sources */,
+				C9DCC6342EA6C4D200D2F643 /* FactionsTable.swift in Sources */,
+				C9DCC6352EA6C4D200D2F643 /* IndustryActivitiesTable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2071,7 +2175,6 @@
 		C91EEEDC2BE9730100352175 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = EVECompanionIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
@@ -2114,7 +2217,6 @@
 		C91EEEDD2BE9730100352175 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = EVECompanionIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
