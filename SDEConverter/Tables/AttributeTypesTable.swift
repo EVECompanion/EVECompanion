@@ -53,6 +53,14 @@ class AttributeTypesTable: SDETable {
             categoryId = nil
         }
         
+        let unitId: Int64?
+        
+        if let unit = data["unitID"] as? Int {
+            unitId = Int64(unit)
+        } else {
+            unitId = nil
+        }
+        
         try db.run(
             table.insert(
                 attributeIdColumn <- Int64(id),
@@ -64,7 +72,7 @@ class AttributeTypesTable: SDETable {
                 stackableColumn <- data["stackable"] as! Bool,
                 publishedColumn <- data["published"] as! Bool,
                 defaultValueColumn <- Float64(data["defaultValue"] as! Double),
-                unitIdColumn <- Int64(data["dataType"] as! Int)
+                unitIdColumn <- unitId
             )
         )
     }
