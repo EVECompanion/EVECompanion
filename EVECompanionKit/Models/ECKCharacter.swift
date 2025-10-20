@@ -34,6 +34,8 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
     @Published public var loyaltyPoints: [ECKLoyaltyPointsEntry]?
     @Published public var marketOrders: [ECKMarketOrder]?
     @Published public var jumpFatigue: ECKJumpFatigue?
+    @Published public var location: ECKCharacterLocation?
+    @Published public var currentShip: ECKCharacterCurrentShip?
     
     @Published public var initialDataLoadingState: ECKLoadingState = .loading
     @Published public var walletJournalLoadingState: ECKLoadingState = .loading
@@ -74,6 +76,8 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
         self.jumpFatigue = .dummy
         self.initialDataLoadingState = .ready
         self.marketOrdersLoadingState = .ready
+        self.location = .dummyDocked
+        self.currentShip = .dummy
     }
     
     @MainActor
@@ -178,6 +182,26 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
                 let corporationResource = ECKCorporationResource(corporationId: corporationId)
                 let corporationResponse = try? await ECKWebService().loadResource(resource: corporationResource).response
                 self.corporation = corporationResponse
+            }
+        }
+        
+        Task {
+            do {
+                let locationResource = ECKCharacterLocationResource(token: token)
+                let locationResponse = try await ECKWebService().loadResource(resource: locationResource)
+                self.location = locationResponse.response
+            } catch {
+                logger.error("Error loading character location: \(error)")
+            }
+        }
+        
+        Task {
+            do {
+                let currentShipResource = ECKCharacterCurrentShipResource(token: token)
+                let currentShipResponse = try await ECKWebService().loadResource(resource: currentShipResource)
+                self.currentShip = currentShipResponse.response
+            } catch {
+                logger.error("Error loading character ship: \(error)")
             }
         }
         

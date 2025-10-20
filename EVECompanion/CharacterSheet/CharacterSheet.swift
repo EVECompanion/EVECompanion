@@ -11,6 +11,27 @@ import Kingfisher
 
 struct CharacterSheet: View {
     
+    struct LocationStationView: View {
+        
+        @ObservedObject var station: ECKStation
+        let solarSystemName: String
+        
+        var body: some View {
+            VStack(alignment: .leading) {
+                Text("Location")
+                Group {
+                    if let name = station.stationName {
+                        Text(name)
+                    } else {
+                        Text(solarSystemName)
+                    }
+                }
+                .foregroundStyle(Color.secondary)
+            }
+        }
+        
+    }
+    
     @ObservedObject var character: ECKCharacter
     let jumpFatigueTimer = Timer.publish(every: 1,
                                          on: .main,
@@ -19,6 +40,28 @@ struct CharacterSheet: View {
     var body: some View {
         List {
             characterCell
+            
+            Section {
+                if let location = character.location {
+                    if let station = location.station {
+                        LocationStationView(station: station,
+                                            solarSystemName: location.solarSystem.solarSystemName)
+                    } else {
+                        keyValueCell(key: "Location", value: "\(location.solarSystem.solarSystemName) (Undocked)")
+                    }
+                }
+                
+                if let ship = character.currentShip {
+                    NavigationLink(value: AppScreen.item(ship.shipType)) {
+                        HStack {
+                            ECImage(id: ship.shipType.typeId, category: .types)
+                                .frame(width: 40, height: 40)
+                            keyValueCell(key: "Current Ship",
+                                         value: currentShipText(for: ship))
+                        }
+                    }
+                }
+            }
             
             Section {
                 
@@ -156,6 +199,14 @@ struct CharacterSheet: View {
                     }
                 }
             }
+        }
+    }
+    
+    func currentShipText(for ship: ECKCharacterCurrentShip) -> String {
+        if ship.shipName.contains(ship.shipType.name) {
+            return ship.shipName
+        } else {
+            return "\(ship.shipName) (\(ship.shipType.name))"
         }
     }
     
