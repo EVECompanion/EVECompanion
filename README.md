@@ -23,7 +23,7 @@ This project is a companion app for the online Game [EVE Online](https://www.eve
 
 ## Static Data Export
 
-This project uses a modified version of the SQLite EVE Online SDE conversion of [Fuzzwork](https://www.fuzzwork.co.uk/dump/). The script to process Fuzzwork's SQLite conversion for the app is available at https://github.com/EVECompanion/EVECompanion-SDEProcessor.
+This project uses a custom SQLite conversion of the [EVE Online SDE](https://developers.eveonline.com/static-data). The script to process Fuzzwork's SQLite conversion for the app is available at https://github.com/EVECompanion/EVECompanion-SDEProcessor.
 
 ### Using the SDE in SwiftUI Previews
 
