@@ -159,6 +159,7 @@ class ECKWebService {
                 let body = request.httpBody
                 let resourceDescription = String(describing: resource)
                 let characterId = resource.token?.characterId
+                logger.info("Loading data from URL \(url)")
                 let dataTask = Self.urlSession.dataTask(with: request) { data, response, error in
                     if let error = error {
                         logger.error("Error while loading resource \(resourceDescription): \(error.localizedDescription)")

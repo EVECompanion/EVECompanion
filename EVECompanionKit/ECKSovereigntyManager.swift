@@ -37,7 +37,15 @@ actor ECKSovereigntyManager {
     }
     
     private func updateSovereignty() async {
+        guard sovUpdateTask == nil else {
+            return
+        }
+        
         sovUpdateTask = Task {
+            defer {
+                self.sovUpdateTask = nil
+            }
+            
             guard lastRequestDate + cacheTime < Date() else {
                 return
             }
