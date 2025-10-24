@@ -134,6 +134,9 @@ struct SettingsView: View {
                 } label: {
                     Text("Acknowledgments")
                 }
+                
+                Link("EVE Online accounts are managed by CCP Games. For account management or data removal requests, please contact CCP directly at https://support.eveonline.com/.",
+                     destination: URL(string: "https://support.eveonline.com/")!)
             }, footer: {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("ISK Donations are welcome. Character: \"EVECompanion DotApp\" in the \"EVECompanion DotApp Corporation\" (Ticker: [.APP.])")
