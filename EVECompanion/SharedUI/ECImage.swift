@@ -14,7 +14,7 @@ struct ECImage: View {
     let id: Int
     let category: ECKImageManager.Category
     let isBPC: Bool?
-    @State var url: URL?
+    @State var imageSource: Source?
     @State var isLoading: Bool = true
     let size: CGSize?
     
@@ -22,13 +22,13 @@ struct ECImage: View {
         Group {
             if isLoading {
                 ProgressView()
-            } else if let url = url {
+            } else if let imageSource = imageSource {
                 if let size {
-                    KFImage(url)
+                    KFImage(source: imageSource)
                         .setProcessor(ResizingImageProcessor(referenceSize: size))
                         .resizable()
                 } else {
-                    KFImage(url)
+                    KFImage(source: imageSource)
                         .resizable()
                 }
             } else {
@@ -36,11 +36,13 @@ struct ECImage: View {
                     .resizable()
             }
         }.onAppear(perform: {
-            if url == nil {
+            if imageSource == nil {
                 Task { @MainActor in
-                    self.url = await ECKImageManager().loadURL(id: id,
-                                                               category: category,
-                                                               isBPC: isBPC)
+                    if let url = await ECKImageManager().loadURL(id: id,
+                                                                 category: category,
+                                                                 isBPC: isBPC) {
+                        self.imageSource = .network(url)
+                    }
                     self.isLoading = false
                 }
             }

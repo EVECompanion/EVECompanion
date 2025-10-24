@@ -17,6 +17,18 @@
 		C9012AF52C0334F400407A81 /* WalletTransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9012AF42C0334F400407A81 /* WalletTransactionCell.swift */; };
 		C903BF7E2E8694C6001C224E /* ModuleSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C903BF7D2E8694C6001C224E /* ModuleSelectionView.swift */; };
 		C903BF802E8889B8001C224E /* ECKAddModuleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C903BF7F2E8889B8001C224E /* ECKAddModuleError.swift */; };
+		C906BA8B2EA8F87300A9E3F3 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C906BA5D2EA7B56800A9E3F3 /* WidgetKit.framework */; };
+		C906BA8C2EA8F87300A9E3F3 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C906BA5F2EA7B56800A9E3F3 /* SwiftUI.framework */; };
+		C906BA972EA8F87400A9E3F3 /* WidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C906BA8A2EA8F87300A9E3F3 /* WidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C906BAA22EA8F89400A9E3F3 /* SkillQueueWidgetConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BA9C2EA8F89400A9E3F3 /* SkillQueueWidgetConfiguration.swift */; };
+		C906BAA32EA8F89400A9E3F3 /* EVECompanionWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BA9E2EA8F89400A9E3F3 /* EVECompanionWidgets.swift */; };
+		C906BAA42EA8F89400A9E3F3 /* EVECompanionWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BA9F2EA8F89400A9E3F3 /* EVECompanionWidgetsBundle.swift */; };
+		C906BAA62EA8F89400A9E3F3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C906BA9D2EA8F89400A9E3F3 /* Assets.xcassets */; };
+		C906BAA72EA8FE8500A9E3F3 /* EVECompanionKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91EEEEA2BE975D000352175 /* EVECompanionKit.framework */; };
+		C906BAA82EA8FE8500A9E3F3 /* EVECompanionKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C91EEEEA2BE975D000352175 /* EVECompanionKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C906BAB12EA9FC2A00A9E3F3 /* ECKWidgetDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BAB02EA9FC2A00A9E3F3 /* ECKWidgetDataProvider.swift */; };
+		C906BAB32EAA1F0900A9E3F3 /* ECImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEF4A82C0386D5000238DF /* ECImage.swift */; };
+		C906BAB52EAA207700A9E3F3 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C906BAB42EAA207700A9E3F3 /* Kingfisher */; };
 		C90931FE2DAB9E9000A88120 /* Deeplink.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90931FD2DAB9E9000A88120 /* Deeplink.swift */; };
 		C90BD0552E9D317800BB0EB9 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = C90BD0542E9D317800BB0EB9 /* SQLite */; };
 		C90BD0572E9D317F00BB0EB9 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = C90BD0562E9D317F00BB0EB9 /* Yams */; };
@@ -311,6 +323,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C906BA952EA8F87400A9E3F3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C91EEEAF2BE9730000352175 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C906BA892EA8F87300A9E3F3;
+			remoteInfo = WidgetsExtension;
+		};
+		C906BAA92EA8FE8500A9E3F3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C91EEEAF2BE9730000352175 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C91EEEE92BE975D000352175;
+			remoteInfo = EVECompanionKit;
+		};
 		C91EEEFB2BE975D000352175 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C91EEEAF2BE9730000352175 /* Project object */;
@@ -321,6 +347,28 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		C906BA722EA7B56900A9E3F3 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				C906BA972EA8F87400A9E3F3 /* WidgetsExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C906BAAB2EA8FE8500A9E3F3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C906BAA82EA8FE8500A9E3F3 /* EVECompanionKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C90BD04A2E9D304D00BB0EB9 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -355,6 +403,15 @@
 		C9012AF42C0334F400407A81 /* WalletTransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransactionCell.swift; sourceTree = "<group>"; };
 		C903BF7D2E8694C6001C224E /* ModuleSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleSelectionView.swift; sourceTree = "<group>"; };
 		C903BF7F2E8889B8001C224E /* ECKAddModuleError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKAddModuleError.swift; sourceTree = "<group>"; };
+		C906BA5D2EA7B56800A9E3F3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		C906BA5F2EA7B56800A9E3F3 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		C906BA8A2EA8F87300A9E3F3 /* WidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C906BA9C2EA8F89400A9E3F3 /* SkillQueueWidgetConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillQueueWidgetConfiguration.swift; sourceTree = "<group>"; };
+		C906BA9D2EA8F89400A9E3F3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C906BA9E2EA8F89400A9E3F3 /* EVECompanionWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EVECompanionWidgets.swift; sourceTree = "<group>"; };
+		C906BA9F2EA8F89400A9E3F3 /* EVECompanionWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EVECompanionWidgetsBundle.swift; sourceTree = "<group>"; };
+		C906BAA02EA8F89400A9E3F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C906BAB02EA9FC2A00A9E3F3 /* ECKWidgetDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKWidgetDataProvider.swift; sourceTree = "<group>"; };
 		C90931FD2DAB9E9000A88120 /* Deeplink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deeplink.swift; sourceTree = "<group>"; };
 		C90BD04C2E9D304D00BB0EB9 /* SDEConverter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SDEConverter; sourceTree = BUILT_PRODUCTS_DIR; };
 		C90D508D2BF8B19B00DEC0F3 /* MailboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailboxView.swift; sourceTree = "<group>"; };
@@ -638,6 +695,17 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		C906BA872EA8F87300A9E3F3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C906BAB52EAA207700A9E3F3 /* Kingfisher in Frameworks */,
+				C906BAA72EA8FE8500A9E3F3 /* EVECompanionKit.framework in Frameworks */,
+				C906BA8C2EA8F87300A9E3F3 /* SwiftUI.framework in Frameworks */,
+				C906BA8B2EA8F87300A9E3F3 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C90BD0492E9D304D00BB0EB9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -713,6 +781,18 @@
 			path = ModuleSelection;
 			sourceTree = "<group>";
 		};
+		C906BAA12EA8F89400A9E3F3 /* EVECompanionWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				C906BA9C2EA8F89400A9E3F3 /* SkillQueueWidgetConfiguration.swift */,
+				C906BA9D2EA8F89400A9E3F3 /* Assets.xcassets */,
+				C906BA9E2EA8F89400A9E3F3 /* EVECompanionWidgets.swift */,
+				C906BA9F2EA8F89400A9E3F3 /* EVECompanionWidgetsBundle.swift */,
+				C906BAA02EA8F89400A9E3F3 /* Info.plist */,
+			);
+			path = EVECompanionWidgets;
+			sourceTree = "<group>";
+		};
 		C90931FC2DAB9E8600A88120 /* Deeplink */ = {
 			isa = PBXGroup;
 			children = (
@@ -724,6 +804,8 @@
 		C90BD0532E9D317800BB0EB9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C906BA5D2EA7B56800A9E3F3 /* WidgetKit.framework */,
+				C906BA5F2EA7B56800A9E3F3 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -884,6 +966,7 @@
 			children = (
 				C91EEEB92BE9730000352175 /* EVECompanion */,
 				C91EEEEB2BE975D000352175 /* EVECompanionKit */,
+				C906BAA12EA8F89400A9E3F3 /* EVECompanionWidgets */,
 				C9DCC61B2EA6C4D200D2F643 /* SDEConverter */,
 				C91EEEB82BE9730000352175 /* Products */,
 				C9BDB1892DB3C3D700DA4375 /* Recovered References */,
@@ -897,6 +980,7 @@
 				C91EEEB72BE9730000352175 /* EVECompanion.app */,
 				C91EEEEA2BE975D000352175 /* EVECompanionKit.framework */,
 				C90BD04C2E9D304D00BB0EB9 /* SDEConverter */,
+				C906BA8A2EA8F87300A9E3F3 /* WidgetsExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -977,6 +1061,7 @@
 				C92D17BD2C23348B00D6FF5A /* ECKIndustryJobManager.swift */,
 				C92D17CE2C27635C00D6FF5A /* ECKJumpClonesManager.swift */,
 				C91672C12BEAC734009EC580 /* ECKKeychain.swift */,
+				C906BAB02EA9FC2A00A9E3F3 /* ECKWidgetDataProvider.swift */,
 				C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */,
 				C9DEF2ED2C14AEA000815AF0 /* ECKLogger.swift */,
 				C9DEDD342DADAA9000781E8A /* ECKMarketGroupManager.swift */,
@@ -1509,6 +1594,28 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		C906BA892EA8F87300A9E3F3 /* WidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C906BA992EA8F87400A9E3F3 /* Build configuration list for PBXNativeTarget "WidgetsExtension" */;
+			buildPhases = (
+				C906BA862EA8F87300A9E3F3 /* Sources */,
+				C906BA872EA8F87300A9E3F3 /* Frameworks */,
+				C906BA882EA8F87300A9E3F3 /* Resources */,
+				C906BAAB2EA8FE8500A9E3F3 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C906BAAA2EA8FE8500A9E3F3 /* PBXTargetDependency */,
+			);
+			name = WidgetsExtension;
+			packageProductDependencies = (
+				C906BAB42EAA207700A9E3F3 /* Kingfisher */,
+			);
+			productName = WidgetsExtension;
+			productReference = C906BA8A2EA8F87300A9E3F3 /* WidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		C90BD04B2E9D304D00BB0EB9 /* SDEConverter */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C90BD0522E9D304D00BB0EB9 /* Build configuration list for PBXNativeTarget "SDEConverter" */;
@@ -1541,11 +1648,13 @@
 				C9CB97AE2C124FF100366D1A /* swift-package-list */,
 				C91EEEB52BE9730000352175 /* Resources */,
 				C91EEF022BE975D000352175 /* Embed Frameworks */,
+				C906BA722EA7B56900A9E3F3 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				C91EEEFC2BE975D000352175 /* PBXTargetDependency */,
+				C906BA962EA8F87400A9E3F3 /* PBXTargetDependency */,
 			);
 			name = EVECompanion;
 			packageProductDependencies = (
@@ -1596,6 +1705,9 @@
 				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 1540;
 				TargetAttributes = {
+					C906BA892EA8F87300A9E3F3 = {
+						CreatedOnToolsVersion = 26.0.1;
+					};
 					C90BD04B2E9D304D00BB0EB9 = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
@@ -1637,11 +1749,20 @@
 				C91EEEB62BE9730000352175 /* EVECompanion */,
 				C91EEEE92BE975D000352175 /* EVECompanionKit */,
 				C90BD04B2E9D304D00BB0EB9 /* SDEConverter */,
+				C906BA892EA8F87300A9E3F3 /* WidgetsExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		C906BA882EA8F87300A9E3F3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C906BAA62EA8F89400A9E3F3 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C91EEEB52BE9730000352175 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1705,6 +1826,17 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		C906BA862EA8F87300A9E3F3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C906BAA22EA8F89400A9E3F3 /* SkillQueueWidgetConfiguration.swift in Sources */,
+				C906BAB32EAA1F0900A9E3F3 /* ECImage.swift in Sources */,
+				C906BAA32EA8F89400A9E3F3 /* EVECompanionWidgets.swift in Sources */,
+				C906BAA42EA8F89400A9E3F3 /* EVECompanionWidgetsBundle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C90BD0482E9D304D00BB0EB9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1949,6 +2081,7 @@
 				C90D50902BF8B22400DEC0F3 /* ECKCharacter+Mail.swift in Sources */,
 				C91FE0A02D8DA73600BA7303 /* ECKSovereigntyManager.swift in Sources */,
 				C9CA6B992C14DE500057F290 /* ECKFaction.swift in Sources */,
+				C906BAB12EA9FC2A00A9E3F3 /* ECKWidgetDataProvider.swift in Sources */,
 				C9FD52F92C02369B0084E5E1 /* ECKCorporationResource.swift in Sources */,
 				C9CA6B932C14DC420057F290 /* ECKIncursionState.swift in Sources */,
 				C92D17CD2C27611A00D6FF5A /* ECKJumpClone.swift in Sources */,
@@ -2007,6 +2140,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		C906BA962EA8F87400A9E3F3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C906BA892EA8F87300A9E3F3 /* WidgetsExtension */;
+			targetProxy = C906BA952EA8F87400A9E3F3 /* PBXContainerItemProxy */;
+		};
+		C906BAAA2EA8FE8500A9E3F3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C91EEEE92BE975D000352175 /* EVECompanionKit */;
+			targetProxy = C906BAA92EA8FE8500A9E3F3 /* PBXContainerItemProxy */;
+		};
 		C91EEEFC2BE975D000352175 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C91EEEE92BE975D000352175 /* EVECompanionKit */;
@@ -2015,6 +2158,70 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		C906BA9A2EA8F87400A9E3F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H4K6BXTR7Y;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EVECompanionWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Widgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.schlabertz.EVECompanion.dev.Widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C906BA9B2EA8F87400A9E3F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H4K6BXTR7Y;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EVECompanionWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Widgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.schlabertz.EVECompanion.dev.Widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		C90BD0502E9D304D00BB0EB9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2350,6 +2557,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		C906BA992EA8F87400A9E3F3 /* Build configuration list for PBXNativeTarget "WidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C906BA9A2EA8F87400A9E3F3 /* Debug */,
+				C906BA9B2EA8F87400A9E3F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C90BD0522E9D304D00BB0EB9 /* Build configuration list for PBXNativeTarget "SDEConverter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2480,6 +2696,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C906BAB42EAA207700A9E3F3 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C952BC902BEC12AB0070C504 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
 		C90BD0542E9D317800BB0EB9 /* SQLite */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C98483FC2D7EDB0C0076016B /* XCRemoteSwiftPackageReference "SQLite.swift" */;
