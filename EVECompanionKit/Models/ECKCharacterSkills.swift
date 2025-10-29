@@ -133,7 +133,7 @@ public class ECKCharacterSkillLevel: Decodable, Identifiable, Equatable, Hashabl
     
 }
 
-public class ECKCharacterSkillQueue: Decodable, Equatable, Hashable {
+public final class ECKCharacterSkillQueue: Codable, Equatable, Hashable, Sendable {
     
     public let loadedEntries: [ECKCharacterSkillQueueEntry]
     public var currentEntries: [ECKCharacterSkillQueueEntry] {
@@ -184,9 +184,18 @@ public class ECKCharacterSkillQueue: Decodable, Equatable, Hashable {
         hasher.combine(loadedEntries)
     }
     
+    enum CodingKeys: CodingKey {
+        case loadedEntries
+    }
+    
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(self.loadedEntries)
+    }
+    
 }
 
-public class ECKCharacterSkillQueueEntry: Decodable, Equatable, Identifiable, Hashable {
+public final class ECKCharacterSkillQueueEntry: Codable, Equatable, Identifiable, Hashable, Sendable {
     
     private enum CodingKeys: String, CodingKey {
         case startDate = "start_date"

@@ -9,6 +9,7 @@ import WidgetKit
 import SwiftUI
 import EVECompanionKit
 import Kingfisher
+import AppIntents
 
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> SkillQueueWidgetTimelineEntry {
@@ -20,7 +21,28 @@ struct Provider: AppIntentTimelineProvider {
     }
     
     func timeline(for configuration: SkillQueueWidgetConfiguration, in context: Context) async -> Timeline<SkillQueueWidgetTimelineEntry> {
-        let entries: [SkillQueueWidgetTimelineEntry] = [.dummy1, .dummy2]
+        var entries: [SkillQueueWidgetTimelineEntry] = []
+        
+        let skillQueue = await ECKWidgetDataStorage.shared.loadSkillQueue(for: configuration.character.id)
+        
+        let skillQueueEntries = skillQueue?.skillQueue ?? []
+        for skillQueueEntry in skillQueueEntries.enumerated() {
+            let remainingEntries = Array(skillQueueEntries.dropFirst(skillQueueEntry.offset))
+            let timelineStartDate: Date
+            if let startDate = skillQueueEntry.element.startDate {
+                timelineStartDate = startDate
+            } else if skillQueueEntry.offset == 0 {
+                timelineStartDate = Date()
+            } else {
+                continue
+            }
+            
+            entries.append(.init(date: timelineStartDate,
+                                 character: configuration.character,
+                                 skillQueue: remainingEntries.map({ .init(skillName: $0.name,
+                                                                          startDate: $0.startDate,
+                                                                          finishDate: $0.finishDate) })))
+        }
         
         var imageResources: [any Resource] = []
         
@@ -39,15 +61,24 @@ struct Provider: AppIntentTimelineProvider {
             }.start()
         }
         
+        if entries.isEmpty {
+            entries.append(.init(date: Date(),
+                                 character: configuration.character,
+                                 skillQueue: []))
+        }
+        
         return Timeline(entries: entries, policy: .never)
     }
-
-//    func relevances() async -> WidgetRelevances<ConfigurationAppIntent> {
-//        // Generate a list containing the contexts this widget is relevant in.
-//    }
 }
 
-struct WidgetCharacter {
+struct WidgetCharacter: AppEntity {
+    
+    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Character"
+    var displayRepresentation: DisplayRepresentation {
+        DisplayRepresentation(stringLiteral: name)
+    }
+    static var defaultQuery = WidgetCharacterQuery()
+    
     let name: String
     let id: Int
     
@@ -61,31 +92,71 @@ struct WidgetCharacter {
         self.name = name
     }
     
+    init(data: ECKWidgetDataStorage.SkillQueueData) {
+        self.id = data.characterId
+        self.name = data.characterName
+    }
+    
     static var dummy: WidgetCharacter {
         return .init(id: 2123087197, name: "EVECompanion")
     }
 }
 
-struct SkillQueueWidgetTimelineEntry: TimelineEntry {
-    var date: Date {
-        skillQueue.first?.startDate ?? Date()
+struct WidgetCharacterQuery: EntityQuery {
+    
+    typealias Entity = WidgetCharacter
+    
+    func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
+        var result: [Entity] = []
+        
+        for identifier in identifiers {
+            if identifier == WidgetCharacter.dummy.id {
+                result.append(.dummy)
+                continue
+            }
+            
+            guard let data = await ECKWidgetDataStorage.shared.loadSkillQueue(for: identifier) else {
+                continue
+            }
+            
+            result.append(.init(data: data))
+        }
+        
+        return result
     }
+    
+    func suggestedEntities() async throws -> [Entity] {
+        let skillQueues = await ECKWidgetDataStorage.shared.loadAllSkillQueues()
+        return skillQueues.map({ .init(data: $0) })
+    }
+    
+}
+
+struct SkillQueueWidgetTimelineEntry: TimelineEntry {
+    
+    let date: Date
     
     let character: WidgetCharacter
     let skillQueue: [SkillQueueEntry]
     
-    init(character: WidgetCharacter, skillQueue: [SkillQueueEntry]) {
-        self.character = character
-        self.skillQueue = skillQueue
-    }
+    static var dummy1: SkillQueueWidgetTimelineEntry = {
+        let dummy1Skill = SkillQueueEntry.dummy1
+        return .init(date: dummy1Skill.startDate!,
+                     character: .dummy,
+                     skillQueue: [dummy1Skill, .dummy2])
+    }()
     
-    static var dummy1: SkillQueueWidgetTimelineEntry {
-        return .init(character: .dummy, skillQueue: [.dummy1, .dummy2])
-    }
+    static var dummy2: SkillQueueWidgetTimelineEntry = {
+        return .init(date: SkillQueueEntry.dummy2.startDate!,
+                     character: .dummy,
+                     skillQueue: [.dummy2])
+    }()
     
-    static var dummy2: SkillQueueWidgetTimelineEntry {
-        return .init(character: .dummy, skillQueue: [.dummy2])
-    }
+    static var dummy3: SkillQueueWidgetTimelineEntry = {
+        return .init(date: SkillQueueEntry.dummy2.finishDate!,
+                     character: .dummy,
+                     skillQueue: [])
+    }()
 }
 
 struct SkillQueueEntry: Identifiable {
@@ -95,38 +166,64 @@ struct SkillQueueEntry: Identifiable {
     }
     
     let skillName: String
-    let startDate: Date
-    let finishDate: Date
+    let startDate: Date?
+    let finishDate: Date?
     
-    static var dummy1: SkillQueueEntry {
+    static var dummy1: SkillQueueEntry = {
         return .init(skillName: "Amarr Titan IV",
                      startDate: Date() - 3600,
-                     finishDate: Date() + 120)
-    }
+                     finishDate: Date() + 5)
+    }()
     
-    static var dummy2: SkillQueueEntry {
+    static var dummy2: SkillQueueEntry = {
         return .init(skillName: "Amarr Titan V",
-                     startDate: Date() + 121,
-                     finishDate: Date() + 3600 + 121)
-    }
+                     startDate: dummy1.finishDate,
+                     finishDate: dummy1.finishDate! + 5)
+    }()
 }
 
 struct EVECompanionWidgetsEntryView: View {
     var entry: Provider.Entry
     @Environment(\.widgetFamily) var widgetFamily
 
+    var numberOfSkills: Int {
+        switch widgetFamily {
+            
+        case .systemSmall:
+            return 0
+        case .systemMedium:
+            return 0
+        case .systemLarge:
+            return 2
+        case .systemExtraLarge:
+            return 2
+        case .accessoryCircular:
+            return 0
+        case .accessoryRectangular:
+            return 0
+        case .accessoryInline:
+            return 0
+        @unknown default:
+            return 0
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
             characterCell
             
+            Spacer()
+                .frame(height: 10)
+            
             if let activeSkill = entry.skillQueue.first {
                 skillCell(for: activeSkill, isActive: true)
-            }
-            
-            if widgetFamily != .systemSmall {
-                ForEach(entry.skillQueue.dropFirst()) { skill in
+                
+                ForEach(entry.skillQueue.dropFirst().prefix(numberOfSkills)) { skill in
+                    Divider()
                     skillCell(for: skill, isActive: false)
                 }
+            } else {
+                Text("No skill in training")
             }
             
             Spacer()
@@ -135,17 +232,26 @@ struct EVECompanionWidgetsEntryView: View {
     
     @ViewBuilder
     func skillCell(for skill: SkillQueueEntry, isActive: Bool) -> some View {
-        HStack {
-            Text(skill.skillName)
+        Text(skill.skillName)
+            
+        if let finishDate = skill.finishDate,
+           let startDate = skill.startDate {
             if isActive {
-                Text(skill.finishDate, style: .timer)
+                Text(finishDate, style: .timer)
+                    .bold()
             } else {
-                Text(ECFormatters.timeInterval(timeInterval: skill.finishDate.timeIntervalSince(skill.startDate)))
+                Text(ECFormatters.timeInterval(timeInterval: finishDate.timeIntervalSince(startDate)))
             }
+        } else {
+            Text("Paused")
+                .foregroundStyle(.secondary)
         }
         
-        Text("Completes \(ECFormatters.dateFormatter(date: skill.finishDate))")
-            .foregroundStyle(Color.secondary)
+        if let finishDate = skill.finishDate,
+           widgetFamily != .systemMedium {
+            Text("Completes \(ECFormatters.dateFormatter(date: finishDate))")
+                .foregroundStyle(Color.secondary)
+        }
     }
     
     @ViewBuilder
@@ -158,6 +264,10 @@ struct EVECompanionWidgetsEntryView: View {
                 .clipShape(Circle())
             
             Text(entry.character.name)
+                .bold()
+                .font(.title2)
+            
+            Spacer()
         }
     }
 }
@@ -170,8 +280,10 @@ struct EVECompanionWidgets: Widget {
                                intent: SkillQueueWidgetConfiguration.self,
                                provider: Provider()) { entry in
             EVECompanionWidgetsEntryView(entry: entry)
+                .containerBackground(.background,
+                                     for: .widget)
         }
-        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge])
+        .supportedFamilies([.systemMedium, .systemLarge])
     }
 }
 
@@ -189,9 +301,10 @@ extension SkillQueueWidgetConfiguration {
     }
 }
 
-#Preview(as: .systemSmall) {
+#Preview(as: .systemMedium) {
     EVECompanionWidgets()
 } timeline: {
     SkillQueueWidgetTimelineEntry.dummy1
     SkillQueueWidgetTimelineEntry.dummy2
+    SkillQueueWidgetTimelineEntry.dummy3
 }

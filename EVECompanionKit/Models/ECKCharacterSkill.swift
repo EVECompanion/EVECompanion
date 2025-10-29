@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKCharacterSkill: Decodable, Hashable {
+public class ECKCharacterSkill: Codable, Hashable {
     
     public let skillId: Int
     public let name: String
@@ -53,6 +53,11 @@ public class ECKCharacterSkill: Decodable, Hashable {
         self.primaryAttribute = skillData.primaryAttribute
         self.secondaryAttribute = skillData.secondaryAttribute
         self.multiplier = skillData.multiplier
+    }
+    
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(skillId)
     }
     
     public static func == (lhs: ECKCharacterSkill, rhs: ECKCharacterSkill) -> Bool {

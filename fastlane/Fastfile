@@ -20,9 +20,20 @@ platform :ios do
     DISPLAYNAME_PRODUCTION = "EVECompanion"
     DISPLAYNAME_BETA = "#{DISPLAYNAME_PRODUCTION} Beta"
     DISPLAYNAME_DEV = "#{DISPLAYNAME_PRODUCTION} Dev"
+
+    BUNDLEID_WIDGETS_PRODUCTION = "de.schlabertz.EVECompanion.Widgets"
+    BUNDLEID_WIDGETS_BETA = "de.schlabertz.EVECompanion.beta.Widgets"
+    BUNDLEID_WIDGETS_DEV = "de.schlabertz.EVECompanion.dev.Widgets"
+
+    APP_GROUP_DEV = "group.de.schlabertz.EVECompanion.dev"
+    APP_GROUP_BETA = "group.de.schlabertz.EVECompanion.beta"
+    APP_GROUP_PRODUCTION = "group.de.schlabertz.EVECompanion"
     
     PROFILE_BETA = "EVECompanion Beta Distribution"
     PROFILE_PRODUCTION = "EVECompanion Production Distribution"
+
+    ENTITLEMENTS_FILE_APP = "EVECompanion/EVECompanion.entitlements"
+    ENTITLEMENTS_FILE_WIDGETS = "EVECompanionWidgets/WidgetsExtension.entitlements"
 
     PLIST_PATH = "EVECompanion/Info.plist"
     PROJECT_FILE = "EVECompanion.xcodeproj"
@@ -53,12 +64,16 @@ platform :ios do
     def build(environment)
         if environment == "production"
             bundleID = BUNDLEID_PRODUCTION
+            bundleIDWidgets = BUNDLEID_WIDGETS_PRODUCTION
             displayName = DISPLAYNAME_PRODUCTION
             profile = PROFILE_PRODUCTION
+            appGroup = APP_GROUP_PRODUCTION
         elsif environment == "beta"
             bundleID = BUNDLEID_BETA
+            bundleIDWidgets = BUNDLEID_WIDGETS_BETA
             displayName = DISPLAYNAME_BETA
             profile = PROFILE_BETA
+            appGroup = APP_GROUP_BETA
         else
             UI.user_error!("Unknown environment #{environment}")
             return
@@ -88,6 +103,12 @@ platform :ios do
             app_identifier: bundleID # The App Identifier
         )
         
+        update_app_identifier(
+            xcodeproj: PROJECT_FILE,
+            plist_path: "EVECompanionWidgets/Info.plist", # Path to info plist file, relative to xcodeproj
+            app_identifier: bundleIDWidgets # The App Identifier
+        )
+
         # Set the new Display Name
         update_info_plist(
             plist_path: PLIST_PATH,
@@ -105,6 +126,16 @@ platform :ios do
         # Set the new build number
         increment_build_number(
             build_number: new_build_number,
+        )
+
+        update_app_group_identifiers(
+            entitlements_file: ENTITLEMENTS_FILE_APP,
+            app_group_identifiers: [appGroup]
+        )
+
+        update_app_group_identifiers(
+            entitlements_file: ENTITLEMENTS_FILE_WIDGETS,
+            app_group_identifiers: [appGroup]
         )
 
         # Load certificates and provisioning profiles

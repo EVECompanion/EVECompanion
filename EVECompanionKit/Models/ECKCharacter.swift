@@ -114,6 +114,7 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
                                         try? mailboxResponse)
                 if let skillqueue {
                     self.skills?.updateWithSkillQueue(skillqueue)
+                    await ECKWidgetDataStorage.shared.storeSkillQueue(skillqueue, for: self)
                 }
                 self.initialDataLoadingState = .ready
             } catch {
@@ -121,6 +122,11 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
                 self.initialDataLoadingState = .error
             }
         }
+    }
+    
+    @MainActor
+    public func reloadWidgetData() async {
+        await reloadSkillQueue()
     }
     
     @MainActor
@@ -136,6 +142,8 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
             return
         }
         
+        await ECKWidgetDataStorage.shared.storeSkillQueue(skillqueueResponse, for: self)
+            
         if let skills {
             skills.updateWithSkillQueue(skillqueueResponse)
         }

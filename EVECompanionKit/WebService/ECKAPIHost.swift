@@ -18,9 +18,12 @@ enum Host {
     private static func evecompanionAPIHost(for appVariant: ECKAppVariant) -> String {
         switch ECKAppVariant.current {
         case .dev,
-             .beta:
+             .devWidgets,
+             .beta,
+             .betaWidgets:
             return "staging-api.evecompanion.app"
         case .prod,
+             .prodWidgets,
              .unknown:
             return "api.evecompanion.app"
         }

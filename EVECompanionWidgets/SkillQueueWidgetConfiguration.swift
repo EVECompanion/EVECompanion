@@ -7,12 +7,21 @@
 
 import WidgetKit
 import AppIntents
+import EVECompanionKit
 
 struct SkillQueueWidgetConfiguration: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource { "Configuration" }
-    static var description: IntentDescription { "This is an example widget." }
-
+    static var title: LocalizedStringResource { "Select Character" }
+    static var description: IntentDescription { "Selects the character to display the skill queue for." }
+    
     // An example configurable parameter.
-//    @Parameter(title: "Character")
-    var character: WidgetCharacter = .dummy
+    @Parameter(title: "Character", default: .dummy)
+    var character: WidgetCharacter
+    
+    init(character: WidgetCharacter) {
+        self.character = character
+    }
+    
+    init() {
+        
+    }
 }

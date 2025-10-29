@@ -26,9 +26,9 @@
 		C906BAA62EA8F89400A9E3F3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C906BA9D2EA8F89400A9E3F3 /* Assets.xcassets */; };
 		C906BAA72EA8FE8500A9E3F3 /* EVECompanionKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91EEEEA2BE975D000352175 /* EVECompanionKit.framework */; };
 		C906BAA82EA8FE8500A9E3F3 /* EVECompanionKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C91EEEEA2BE975D000352175 /* EVECompanionKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C906BAB12EA9FC2A00A9E3F3 /* ECKWidgetDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BAB02EA9FC2A00A9E3F3 /* ECKWidgetDataProvider.swift */; };
 		C906BAB32EAA1F0900A9E3F3 /* ECImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEF4A82C0386D5000238DF /* ECImage.swift */; };
 		C906BAB52EAA207700A9E3F3 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C906BAB42EAA207700A9E3F3 /* Kingfisher */; };
+		C906BAB72EAC275800A9E3F3 /* ECKWidgetDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BAB62EAC275800A9E3F3 /* ECKWidgetDataStorage.swift */; };
 		C90931FE2DAB9E9000A88120 /* Deeplink.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90931FD2DAB9E9000A88120 /* Deeplink.swift */; };
 		C90BD0552E9D317800BB0EB9 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = C90BD0542E9D317800BB0EB9 /* SQLite */; };
 		C90BD0572E9D317F00BB0EB9 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = C90BD0562E9D317F00BB0EB9 /* Yams */; };
@@ -411,7 +411,8 @@
 		C906BA9E2EA8F89400A9E3F3 /* EVECompanionWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EVECompanionWidgets.swift; sourceTree = "<group>"; };
 		C906BA9F2EA8F89400A9E3F3 /* EVECompanionWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EVECompanionWidgetsBundle.swift; sourceTree = "<group>"; };
 		C906BAA02EA8F89400A9E3F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C906BAB02EA9FC2A00A9E3F3 /* ECKWidgetDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKWidgetDataProvider.swift; sourceTree = "<group>"; };
+		C906BAB62EAC275800A9E3F3 /* ECKWidgetDataStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKWidgetDataStorage.swift; sourceTree = "<group>"; };
+		C906BAB82EB1721F00A9E3F3 /* WidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WidgetsExtension.entitlements; sourceTree = "<group>"; };
 		C90931FD2DAB9E9000A88120 /* Deeplink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deeplink.swift; sourceTree = "<group>"; };
 		C90BD04C2E9D304D00BB0EB9 /* SDEConverter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SDEConverter; sourceTree = BUILT_PRODUCTS_DIR; };
 		C90D508D2BF8B19B00DEC0F3 /* MailboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailboxView.swift; sourceTree = "<group>"; };
@@ -789,6 +790,7 @@
 				C906BA9E2EA8F89400A9E3F3 /* EVECompanionWidgets.swift */,
 				C906BA9F2EA8F89400A9E3F3 /* EVECompanionWidgetsBundle.swift */,
 				C906BAA02EA8F89400A9E3F3 /* Info.plist */,
+				C906BAB82EB1721F00A9E3F3 /* WidgetsExtension.entitlements */,
 			);
 			path = EVECompanionWidgets;
 			sourceTree = "<group>";
@@ -1051,18 +1053,19 @@
 				C91672C62BEAC9C1009EC580 /* ECKAppInfo.swift */,
 				C9FBF7572DACF285007FF7E7 /* ECKAppVariant.swift */,
 				C959777F2C28B56E0008F719 /* ECKAssetManager.swift */,
+				C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */,
 				C916729F2BE97A5B009EC580 /* ECKAuthenticationSession.swift */,
 				C952BC802BEB858D0070C504 /* ECKCharacterStorage.swift */,
 				C91672B82BEA9E68009EC580 /* ECKConstants.swift */,
 				C96F989E2BEFA6DB00DEC34F /* ECKContractManager.swift */,
+				C9B39FAF2E8C754B0049C83D /* ECKESIFittingManager.swift */,
+				C9F055B32DE2F55500340A05 /* ECKFittingManager.swift */,
 				C91FE0A32D8E07CB00BA7303 /* ECKGlobals.swift */,
 				C90EFAD12CF9011000691A38 /* ECKImageManager.swift */,
 				C9CA6B9C2C14E1B60057F290 /* ECKIncursionManager.swift */,
 				C92D17BD2C23348B00D6FF5A /* ECKIndustryJobManager.swift */,
 				C92D17CE2C27635C00D6FF5A /* ECKJumpClonesManager.swift */,
 				C91672C12BEAC734009EC580 /* ECKKeychain.swift */,
-				C906BAB02EA9FC2A00A9E3F3 /* ECKWidgetDataProvider.swift */,
-				C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */,
 				C9DEF2ED2C14AEA000815AF0 /* ECKLogger.swift */,
 				C9DEDD342DADAA9000781E8A /* ECKMarketGroupManager.swift */,
 				C900820B2DC5FA4A007660AE /* ECKNotificationManager.swift */,
@@ -1070,11 +1073,10 @@
 				C99528D92BEE18DF00CA6E06 /* ECKSDEManager.swift */,
 				C9D570A32C5B819500985587 /* ECKSDEUpdater.swift */,
 				C9F055AA2DE24EA400340A05 /* ECKServerStatusManager.swift */,
-				C9F055B32DE2F55500340A05 /* ECKFittingManager.swift */,
-				C9B39FAF2E8C754B0049C83D /* ECKESIFittingManager.swift */,
 				C9A7C55E2BF0C545003478AD /* ECKSettingsManager.swift */,
 				C9955A262C3525080045D925 /* ECKSovereigntyCampaignManager.swift */,
 				C91FE09F2D8DA73600BA7303 /* ECKSovereigntyManager.swift */,
+				C906BAB62EAC275800A9E3F3 /* ECKWidgetDataStorage.swift */,
 				C91EEEEC2BE975D000352175 /* EVECompanionKit.h */,
 				C91672AC2BEA0390009EC580 /* Extensions */,
 				C93FE8362BED29E900729DD8 /* Formatters */,
@@ -2081,7 +2083,6 @@
 				C90D50902BF8B22400DEC0F3 /* ECKCharacter+Mail.swift in Sources */,
 				C91FE0A02D8DA73600BA7303 /* ECKSovereigntyManager.swift in Sources */,
 				C9CA6B992C14DE500057F290 /* ECKFaction.swift in Sources */,
-				C906BAB12EA9FC2A00A9E3F3 /* ECKWidgetDataProvider.swift in Sources */,
 				C9FD52F92C02369B0084E5E1 /* ECKCorporationResource.swift in Sources */,
 				C9CA6B932C14DC420057F290 /* ECKIncursionState.swift in Sources */,
 				C92D17CD2C27611A00D6FF5A /* ECKJumpClone.swift in Sources */,
@@ -2130,6 +2131,7 @@
 				C9B079062C32C0080059785D /* ECKTokenRefreshError.swift in Sources */,
 				C9DCC40B2EA62A6A00D2F643 /* ECKCharacterCurrentShipResource.swift in Sources */,
 				C9A645AF2C32A18E00E2E68D /* ECKJumpFatigue.swift in Sources */,
+				C906BAB72EAC275800A9E3F3 /* ECKWidgetDataStorage.swift in Sources */,
 				C9FD52E72C01D7260084E5E1 /* ECKWalletJournalEntry.swift in Sources */,
 				C91FE09C2D8DA5AE00BA7303 /* ECKSolarSystemSovereignty.swift in Sources */,
 				C9FD52F52C02359A0084E5E1 /* ECKLoyaltyPointsResource.swift in Sources */,
@@ -2163,6 +2165,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = EVECompanionWidgets/WidgetsExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H4K6BXTR7Y;
@@ -2195,6 +2198,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = EVECompanionWidgets/WidgetsExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H4K6BXTR7Y;

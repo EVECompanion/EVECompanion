@@ -146,6 +146,8 @@ struct SettingsView: View {
                     }
                         
                     Text("\(ECKAppInfo.appName) \(ECKAppInfo.version), Build \(ECKAppInfo.build) by Jonas Schlabertz")
+                    
+                    Text("© 2014 CCP hf. All rights reserved. \"EVE\", \"EVE Online\", \"CCP\", and all related logos and images are trademarks or registered trademarks of CCP hf.")
                 }
             })
         }
