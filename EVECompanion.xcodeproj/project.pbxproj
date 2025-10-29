@@ -21,7 +21,7 @@
 		C906BA8C2EA8F87300A9E3F3 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C906BA5F2EA7B56800A9E3F3 /* SwiftUI.framework */; };
 		C906BA972EA8F87400A9E3F3 /* WidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C906BA8A2EA8F87300A9E3F3 /* WidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C906BAA22EA8F89400A9E3F3 /* SkillQueueWidgetConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BA9C2EA8F89400A9E3F3 /* SkillQueueWidgetConfiguration.swift */; };
-		C906BAA32EA8F89400A9E3F3 /* EVECompanionWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BA9E2EA8F89400A9E3F3 /* EVECompanionWidgets.swift */; };
+		C906BAA32EA8F89400A9E3F3 /* SkillQueueEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BA9E2EA8F89400A9E3F3 /* SkillQueueEntryView.swift */; };
 		C906BAA42EA8F89400A9E3F3 /* EVECompanionWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BA9F2EA8F89400A9E3F3 /* EVECompanionWidgetsBundle.swift */; };
 		C906BAA62EA8F89400A9E3F3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C906BA9D2EA8F89400A9E3F3 /* Assets.xcassets */; };
 		C906BAA72EA8FE8500A9E3F3 /* EVECompanionKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91EEEEA2BE975D000352175 /* EVECompanionKit.framework */; };
@@ -29,6 +29,12 @@
 		C906BAB32EAA1F0900A9E3F3 /* ECImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEF4A82C0386D5000238DF /* ECImage.swift */; };
 		C906BAB52EAA207700A9E3F3 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C906BAB42EAA207700A9E3F3 /* Kingfisher */; };
 		C906BAB72EAC275800A9E3F3 /* ECKWidgetDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BAB62EAC275800A9E3F3 /* ECKWidgetDataStorage.swift */; };
+		C906BABA2EB2BA4100A9E3F3 /* SkillQueueWidgetTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BAB92EB2BA4100A9E3F3 /* SkillQueueWidgetTimelineProvider.swift */; };
+		C906BABC2EB2BAC600A9E3F3 /* WidgetCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BABB2EB2BAC600A9E3F3 /* WidgetCharacter.swift */; };
+		C906BABE2EB2BADA00A9E3F3 /* WidgetCharacterQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BABD2EB2BADA00A9E3F3 /* WidgetCharacterQuery.swift */; };
+		C906BAC12EB2BB4A00A9E3F3 /* SkillQueueWidgetTimelineEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BAC02EB2BB4A00A9E3F3 /* SkillQueueWidgetTimelineEntry.swift */; };
+		C906BAC32EB2BB6500A9E3F3 /* SkillQueueEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BAC22EB2BB6500A9E3F3 /* SkillQueueEntry.swift */; };
+		C906BAC52EB2BC1900A9E3F3 /* SkillQueueWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BAC42EB2BC1900A9E3F3 /* SkillQueueWidget.swift */; };
 		C90931FE2DAB9E9000A88120 /* Deeplink.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90931FD2DAB9E9000A88120 /* Deeplink.swift */; };
 		C90BD0552E9D317800BB0EB9 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = C90BD0542E9D317800BB0EB9 /* SQLite */; };
 		C90BD0572E9D317F00BB0EB9 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = C90BD0562E9D317F00BB0EB9 /* Yams */; };
@@ -408,11 +414,17 @@
 		C906BA8A2EA8F87300A9E3F3 /* WidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		C906BA9C2EA8F89400A9E3F3 /* SkillQueueWidgetConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillQueueWidgetConfiguration.swift; sourceTree = "<group>"; };
 		C906BA9D2EA8F89400A9E3F3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		C906BA9E2EA8F89400A9E3F3 /* EVECompanionWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EVECompanionWidgets.swift; sourceTree = "<group>"; };
+		C906BA9E2EA8F89400A9E3F3 /* SkillQueueEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillQueueEntryView.swift; sourceTree = "<group>"; };
 		C906BA9F2EA8F89400A9E3F3 /* EVECompanionWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EVECompanionWidgetsBundle.swift; sourceTree = "<group>"; };
 		C906BAA02EA8F89400A9E3F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C906BAB62EAC275800A9E3F3 /* ECKWidgetDataStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKWidgetDataStorage.swift; sourceTree = "<group>"; };
 		C906BAB82EB1721F00A9E3F3 /* WidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WidgetsExtension.entitlements; sourceTree = "<group>"; };
+		C906BAB92EB2BA4100A9E3F3 /* SkillQueueWidgetTimelineProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillQueueWidgetTimelineProvider.swift; sourceTree = "<group>"; };
+		C906BABB2EB2BAC600A9E3F3 /* WidgetCharacter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetCharacter.swift; sourceTree = "<group>"; };
+		C906BABD2EB2BADA00A9E3F3 /* WidgetCharacterQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetCharacterQuery.swift; sourceTree = "<group>"; };
+		C906BAC02EB2BB4A00A9E3F3 /* SkillQueueWidgetTimelineEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillQueueWidgetTimelineEntry.swift; sourceTree = "<group>"; };
+		C906BAC22EB2BB6500A9E3F3 /* SkillQueueEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillQueueEntry.swift; sourceTree = "<group>"; };
+		C906BAC42EB2BC1900A9E3F3 /* SkillQueueWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillQueueWidget.swift; sourceTree = "<group>"; };
 		C90931FD2DAB9E9000A88120 /* Deeplink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deeplink.swift; sourceTree = "<group>"; };
 		C90BD04C2E9D304D00BB0EB9 /* SDEConverter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SDEConverter; sourceTree = BUILT_PRODUCTS_DIR; };
 		C90D508D2BF8B19B00DEC0F3 /* MailboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailboxView.swift; sourceTree = "<group>"; };
@@ -785,14 +797,28 @@
 		C906BAA12EA8F89400A9E3F3 /* EVECompanionWidgets */ = {
 			isa = PBXGroup;
 			children = (
-				C906BA9C2EA8F89400A9E3F3 /* SkillQueueWidgetConfiguration.swift */,
+				C906BABF2EB2BB2500A9E3F3 /* SkillQueueWidgets */,
 				C906BA9D2EA8F89400A9E3F3 /* Assets.xcassets */,
-				C906BA9E2EA8F89400A9E3F3 /* EVECompanionWidgets.swift */,
 				C906BA9F2EA8F89400A9E3F3 /* EVECompanionWidgetsBundle.swift */,
 				C906BAA02EA8F89400A9E3F3 /* Info.plist */,
+				C906BABB2EB2BAC600A9E3F3 /* WidgetCharacter.swift */,
+				C906BABD2EB2BADA00A9E3F3 /* WidgetCharacterQuery.swift */,
 				C906BAB82EB1721F00A9E3F3 /* WidgetsExtension.entitlements */,
 			);
 			path = EVECompanionWidgets;
+			sourceTree = "<group>";
+		};
+		C906BABF2EB2BB2500A9E3F3 /* SkillQueueWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				C906BA9C2EA8F89400A9E3F3 /* SkillQueueWidgetConfiguration.swift */,
+				C906BAC02EB2BB4A00A9E3F3 /* SkillQueueWidgetTimelineEntry.swift */,
+				C906BAC22EB2BB6500A9E3F3 /* SkillQueueEntry.swift */,
+				C906BA9E2EA8F89400A9E3F3 /* SkillQueueEntryView.swift */,
+				C906BAC42EB2BC1900A9E3F3 /* SkillQueueWidget.swift */,
+				C906BAB92EB2BA4100A9E3F3 /* SkillQueueWidgetTimelineProvider.swift */,
+			);
+			path = SkillQueueWidgets;
 			sourceTree = "<group>";
 		};
 		C90931FC2DAB9E8600A88120 /* Deeplink */ = {
@@ -1834,8 +1860,14 @@
 			files = (
 				C906BAA22EA8F89400A9E3F3 /* SkillQueueWidgetConfiguration.swift in Sources */,
 				C906BAB32EAA1F0900A9E3F3 /* ECImage.swift in Sources */,
-				C906BAA32EA8F89400A9E3F3 /* EVECompanionWidgets.swift in Sources */,
+				C906BAA32EA8F89400A9E3F3 /* SkillQueueEntryView.swift in Sources */,
+				C906BABC2EB2BAC600A9E3F3 /* WidgetCharacter.swift in Sources */,
+				C906BABA2EB2BA4100A9E3F3 /* SkillQueueWidgetTimelineProvider.swift in Sources */,
+				C906BAC52EB2BC1900A9E3F3 /* SkillQueueWidget.swift in Sources */,
+				C906BABE2EB2BADA00A9E3F3 /* WidgetCharacterQuery.swift in Sources */,
+				C906BAC32EB2BB6500A9E3F3 /* SkillQueueEntry.swift in Sources */,
 				C906BAA42EA8F89400A9E3F3 /* EVECompanionWidgetsBundle.swift in Sources */,
+				C906BAC12EB2BB4A00A9E3F3 /* SkillQueueWidgetTimelineEntry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
