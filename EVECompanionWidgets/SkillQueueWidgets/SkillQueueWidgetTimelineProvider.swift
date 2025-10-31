@@ -54,7 +54,9 @@ struct SkillQueueWidgetTimelineProvider: AppIntentTimelineProvider {
         
         await withCheckedContinuation { continuation in
             ImagePrefetcher(resources: imageResources, options: [
-                .forceRefresh,
+                .alsoPrefetchToMemory,
+                .waitForCache,
+                .cacheOriginalImage,
                 .processor(ResizingImageProcessor(referenceSize: .init(width: 800, height: 800)))
             ]) { _, _, _ in
                 continuation.resume()
