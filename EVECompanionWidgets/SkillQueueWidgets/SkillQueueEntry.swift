@@ -20,12 +20,12 @@ struct SkillQueueEntry: Identifiable {
     static var dummy1: SkillQueueEntry = {
         return .init(skillName: "Amarr Titan IV",
                      startDate: Date() - 3600,
-                     finishDate: Date() + 5)
+                     finishDate: Date() + 3600)
     }()
     
     static var dummy2: SkillQueueEntry = {
         return .init(skillName: "Amarr Titan V",
                      startDate: dummy1.finishDate,
-                     finishDate: dummy1.finishDate! + 5)
+                     finishDate: dummy1.finishDate! + 3600 * 50)
     }()
 }

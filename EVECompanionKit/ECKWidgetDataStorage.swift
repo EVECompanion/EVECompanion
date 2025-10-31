@@ -63,6 +63,16 @@ public actor ECKWidgetDataStorage {
         }
     }
     
+    public func removeSkillQueue(for characterId: Int) {
+        logger.info("Removing stored skillqueue for character \(characterId)")
+        
+        do {
+            try removeData(dataType: .skillQueue, characterId: characterId)
+        } catch {
+            logger.error("Error removing skillqueue for character \(characterId)")
+        }
+    }
+    
     public func loadAllSkillQueues() -> [SkillQueueData] {
         let skillQueueFiles = listFiles(for: .skillQueue)
         let data: [SkillQueueData] = skillQueueFiles.compactMap({ try? loadData($0) })
@@ -116,6 +126,15 @@ public actor ECKWidgetDataStorage {
         }
         
         return try loadData(url)
+    }
+    
+    private func removeData(dataType: DataType, characterId: Int) throws {
+        guard let url = buildFileURL(dataType: dataType, characterId: characterId) else {
+            logger.error("Cannot get shared container url.")
+            throw WidgetDataError.sharedDirectoryURL
+        }
+        
+        try FileManager.default.removeItem(at: url)
     }
     
     private func loadData<DecodeTo: Decodable>(_ url: URL) throws -> DecodeTo {

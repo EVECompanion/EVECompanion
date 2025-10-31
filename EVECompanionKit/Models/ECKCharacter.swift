@@ -169,6 +169,9 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
     @MainActor 
     public func remove() {
         ECKKeychain.remove(token: token)
+        Task {
+            await ECKWidgetDataStorage.shared.removeSkillQueue(for: self.id)
+        }
     }
     
     @MainActor

@@ -29,12 +29,20 @@ struct WidgetCharacterQuery: EntityQuery {
             result.append(.init(data: data))
         }
         
+        if result.isEmpty {
+            result.append(.dummy)
+        }
+        
         return result
     }
     
     func suggestedEntities() async throws -> [Entity] {
         let skillQueues = await ECKWidgetDataStorage.shared.loadAllSkillQueues()
-        return skillQueues.map({ .init(data: $0) })
+        var result: [Entity] = skillQueues.map({ .init(data: $0) })
+        if result.isEmpty {
+            result.append(.dummy)
+        }
+        return result
     }
     
 }

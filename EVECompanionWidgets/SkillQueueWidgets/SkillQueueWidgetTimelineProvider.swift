@@ -23,25 +23,31 @@ struct SkillQueueWidgetTimelineProvider: AppIntentTimelineProvider {
     func timeline(for configuration: SkillQueueWidgetConfiguration, in context: Context) async -> Timeline<SkillQueueWidgetTimelineEntry> {
         var entries: [SkillQueueWidgetTimelineEntry] = []
         
-        let skillQueue = await ECKWidgetDataStorage.shared.loadSkillQueue(for: configuration.character.id)
-        
-        let skillQueueEntries = skillQueue?.skillQueue ?? []
-        for skillQueueEntry in skillQueueEntries.enumerated() {
-            let remainingEntries = Array(skillQueueEntries.dropFirst(skillQueueEntry.offset))
-            let timelineStartDate: Date
-            if let startDate = skillQueueEntry.element.startDate {
-                timelineStartDate = startDate
-            } else if skillQueueEntry.offset == 0 {
-                timelineStartDate = Date()
-            } else {
-                continue
-            }
+        if configuration.character.id == WidgetCharacter.dummy.id {
+            entries.append(.dummy1)
+            entries.append(.dummy2)
+            entries.append(.dummy3)
+        } else {
+            let skillQueue = await ECKWidgetDataStorage.shared.loadSkillQueue(for: configuration.character.id)
             
-            entries.append(.init(date: timelineStartDate,
-                                 character: configuration.character,
-                                 skillQueue: remainingEntries.map({ .init(skillName: $0.name,
-                                                                          startDate: $0.startDate,
-                                                                          finishDate: $0.finishDate) })))
+            let skillQueueEntries = skillQueue?.skillQueue ?? []
+            for skillQueueEntry in skillQueueEntries.enumerated() {
+                let remainingEntries = Array(skillQueueEntries.dropFirst(skillQueueEntry.offset))
+                let timelineStartDate: Date
+                if let startDate = skillQueueEntry.element.startDate {
+                    timelineStartDate = startDate
+                } else if skillQueueEntry.offset == 0 {
+                    timelineStartDate = Date()
+                } else {
+                    continue
+                }
+                
+                entries.append(.init(date: timelineStartDate,
+                                     character: configuration.character,
+                                     skillQueue: remainingEntries.map({ .init(skillName: $0.name,
+                                                                              startDate: $0.startDate,
+                                                                              finishDate: $0.finishDate) })))
+            }
         }
         
         var imageResources: [any Resource] = []
