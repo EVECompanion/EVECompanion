@@ -35,6 +35,7 @@
 		C906BAC12EB2BB4A00A9E3F3 /* SkillQueueWidgetTimelineEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BAC02EB2BB4A00A9E3F3 /* SkillQueueWidgetTimelineEntry.swift */; };
 		C906BAC32EB2BB6500A9E3F3 /* SkillQueueEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BAC22EB2BB6500A9E3F3 /* SkillQueueEntry.swift */; };
 		C906BAC52EB2BC1900A9E3F3 /* SkillQueueWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BAC42EB2BC1900A9E3F3 /* SkillQueueWidget.swift */; };
+		C906BAC72EB4C51E00A9E3F3 /* ECKBackgroundTaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BAC62EB4C51E00A9E3F3 /* ECKBackgroundTaskManager.swift */; };
 		C90931FE2DAB9E9000A88120 /* Deeplink.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90931FD2DAB9E9000A88120 /* Deeplink.swift */; };
 		C90BD0552E9D317800BB0EB9 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = C90BD0542E9D317800BB0EB9 /* SQLite */; };
 		C90BD0572E9D317F00BB0EB9 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = C90BD0562E9D317F00BB0EB9 /* Yams */; };
@@ -425,6 +426,7 @@
 		C906BAC02EB2BB4A00A9E3F3 /* SkillQueueWidgetTimelineEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillQueueWidgetTimelineEntry.swift; sourceTree = "<group>"; };
 		C906BAC22EB2BB6500A9E3F3 /* SkillQueueEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillQueueEntry.swift; sourceTree = "<group>"; };
 		C906BAC42EB2BC1900A9E3F3 /* SkillQueueWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillQueueWidget.swift; sourceTree = "<group>"; };
+		C906BAC62EB4C51E00A9E3F3 /* ECKBackgroundTaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKBackgroundTaskManager.swift; sourceTree = "<group>"; };
 		C90931FD2DAB9E9000A88120 /* Deeplink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deeplink.swift; sourceTree = "<group>"; };
 		C90BD04C2E9D304D00BB0EB9 /* SDEConverter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SDEConverter; sourceTree = BUILT_PRODUCTS_DIR; };
 		C90D508D2BF8B19B00DEC0F3 /* MailboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailboxView.swift; sourceTree = "<group>"; };
@@ -1079,6 +1081,7 @@
 				C91672C62BEAC9C1009EC580 /* ECKAppInfo.swift */,
 				C9FBF7572DACF285007FF7E7 /* ECKAppVariant.swift */,
 				C959777F2C28B56E0008F719 /* ECKAssetManager.swift */,
+				C906BAC62EB4C51E00A9E3F3 /* ECKBackgroundTaskManager.swift */,
 				C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */,
 				C916729F2BE97A5B009EC580 /* ECKAuthenticationSession.swift */,
 				C952BC802BEB858D0070C504 /* ECKCharacterStorage.swift */,
@@ -2047,6 +2050,7 @@
 				C96F989F2BEFA6DB00DEC34F /* ECKContractManager.swift in Sources */,
 				C9C7C4212DA11C2B0079DF82 /* EVEUnit.swift in Sources */,
 				C99750AA2C14897E00DE5B96 /* ECKMarketOrder.swift in Sources */,
+				C906BAC72EB4C51E00A9E3F3 /* ECKBackgroundTaskManager.swift in Sources */,
 				C983AABF2BF64FB9002EDECB /* ECKUpdateMailResource.swift in Sources */,
 				C91672B32BEA044B009EC580 /* ECKWebError.swift in Sources */,
 				C9A7C55F2BF0C545003478AD /* ECKSettingsManager.swift in Sources */,
@@ -2212,7 +2216,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.9.1;
 				PRODUCT_BUNDLE_IDENTIFIER = de.schlabertz.EVECompanion.dev.Widgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2245,7 +2249,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.9.1;
 				PRODUCT_BUNDLE_IDENTIFIER = de.schlabertz.EVECompanion.dev.Widgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2429,6 +2433,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EVECompanion/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "EVECompanion Dev";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -2471,6 +2477,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EVECompanion/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "EVECompanion Dev";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

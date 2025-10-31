@@ -7,6 +7,7 @@
 
 import SwiftUI
 import EVECompanionKit
+import BackgroundTasks
 
 @main
 struct EVECompanionApp: App {
@@ -34,12 +35,22 @@ struct EVECompanionApp: App {
                         await notificationManager.refreshPermissionStatus()
                     }
                     
-                    if newPhase == .active {
+                    switch newPhase {
+                    case .active:
                         characterStorage.triggerAutomaticReloadIfNecessary()
+                    case .background:
+                        ECKBackgroundTaskManager.shared.scheduleWidgetRefreshTask(scheduleRetry: false)
+                    default:
+                        break
                     }
                 }
         }
-        
+        .backgroundTask(.appRefresh(ECKBackgroundTaskManager.TaskType.widgetRefresh.rawValue)) {
+            logger.info("Invoked widget refresh task.")
+            await characterStorage.refreshWidgetData()
+            logger.info("Finished widget refresh task.")
+            ECKBackgroundTaskManager.shared.scheduleWidgetRefreshTask(scheduleRetry: false)
+        }
     }
     
 }

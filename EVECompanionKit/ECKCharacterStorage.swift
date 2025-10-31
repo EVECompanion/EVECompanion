@@ -225,4 +225,19 @@ public class ECKCharacterStorage: ObservableObject {
         }
     }
     
+    public func refreshWidgetData() async {
+        guard UserDefaults.standard.isDemoModeEnabled == false else {
+            logger.info("Skipping widget data reloading, running in demo mode.")
+            return
+        }
+        
+        await withTaskGroup { taskGroup in
+            for character in characters {
+                taskGroup.addTask {
+                    await character.reloadWidgetData()
+                }
+            }
+        }
+    }
+    
 }

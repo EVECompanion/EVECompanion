@@ -126,6 +126,7 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
     
     @MainActor
     public func reloadWidgetData() async {
+        logger.info("Reloading widget data for character \(id)")
         await reloadSkillQueue()
     }
     
