@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKCharacterSkill: Codable, Hashable {
+public final class ECKCharacterSkill: Codable, Hashable, Sendable {
     
     public let skillId: Int
     public let name: String
