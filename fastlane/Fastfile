@@ -32,6 +32,9 @@ platform :ios do
     PROFILE_BETA = "EVECompanion Beta Distribution"
     PROFILE_PRODUCTION = "EVECompanion Production Distribution"
 
+    PROFILE_WIDGETS_BETA = "EVECompanion Beta Widgets Distribution"
+    PROFILE_WIDGETS_PRODUCTION = "EVECompanion Widgets Distribution"
+
     ENTITLEMENTS_FILE_APP = "EVECompanion/EVECompanion.entitlements"
     ENTITLEMENTS_FILE_WIDGETS = "EVECompanionWidgets/WidgetsExtension.entitlements"
 
@@ -67,12 +70,14 @@ platform :ios do
             bundleIDWidgets = BUNDLEID_WIDGETS_PRODUCTION
             displayName = DISPLAYNAME_PRODUCTION
             profile = PROFILE_PRODUCTION
+            profileWidgets = PROFILE_WIDGETS_PRODUCTION
             appGroup = APP_GROUP_PRODUCTION
         elsif environment == "beta"
             bundleID = BUNDLEID_BETA
             bundleIDWidgets = BUNDLEID_WIDGETS_BETA
             displayName = DISPLAYNAME_BETA
             profile = PROFILE_BETA
+            profileWidgets = PROFILE_WIDGETS_BETA
             appGroup = APP_GROUP_BETA
         else
             UI.user_error!("Unknown environment #{environment}")
@@ -152,6 +157,20 @@ platform :ios do
             bundle_identifier: bundleID,
             code_sign_identity: "iPhone Distribution",
             profile_name: profile
+        )
+
+        get_provisioning_profile(
+            app_identifier: bundleIDWidgets
+        )
+
+        update_code_signing_settings(
+            use_automatic_signing: false,
+            path: PROJECT_FILE,
+            team_id: "H4K6BXTR7Y",
+            targets: "WidgetsExtension",
+            bundle_identifier: bundleIDWidgets,
+            code_sign_identity: "iPhone Distribution",
+            profile_name: profileWidgets
         )
 
         build_app(
