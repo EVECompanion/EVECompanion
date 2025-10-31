@@ -25,7 +25,6 @@
 		C906BAA42EA8F89400A9E3F3 /* EVECompanionWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BA9F2EA8F89400A9E3F3 /* EVECompanionWidgetsBundle.swift */; };
 		C906BAA62EA8F89400A9E3F3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C906BA9D2EA8F89400A9E3F3 /* Assets.xcassets */; };
 		C906BAA72EA8FE8500A9E3F3 /* EVECompanionKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91EEEEA2BE975D000352175 /* EVECompanionKit.framework */; };
-		C906BAA82EA8FE8500A9E3F3 /* EVECompanionKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C91EEEEA2BE975D000352175 /* EVECompanionKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C906BAB32EAA1F0900A9E3F3 /* ECImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEF4A82C0386D5000238DF /* ECImage.swift */; };
 		C906BAB52EAA207700A9E3F3 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C906BAB42EAA207700A9E3F3 /* Kingfisher */; };
 		C906BAB72EAC275800A9E3F3 /* ECKWidgetDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906BAB62EAC275800A9E3F3 /* ECKWidgetDataStorage.swift */; };
@@ -363,17 +362,6 @@
 				C906BA972EA8F87400A9E3F3 /* WidgetsExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C906BAAB2EA8FE8500A9E3F3 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				C906BAA82EA8FE8500A9E3F3 /* EVECompanionKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C90BD04A2E9D304D00BB0EB9 /* CopyFiles */ = {
@@ -1632,7 +1620,6 @@
 				C906BA862EA8F87300A9E3F3 /* Sources */,
 				C906BA872EA8F87300A9E3F3 /* Frameworks */,
 				C906BA882EA8F87300A9E3F3 /* Resources */,
-				C906BAAB2EA8FE8500A9E3F3 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
