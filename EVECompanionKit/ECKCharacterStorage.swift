@@ -11,6 +11,7 @@ public import Combine
 #if DEBUG
 import Pulse
 #endif
+import WidgetKit
 
 public class ECKCharacterStorage: ObservableObject {
     
@@ -173,6 +174,7 @@ public class ECKCharacterStorage: ObservableObject {
         let tokens = ECKKeychain.getTokens()
         characters = tokens.map({ .init(token: $0) })
         await reloadNotifications()
+        WidgetCenter.shared.reloadTimelines(ofKind: "SkillQueueWidget")
     }
     
     @MainActor
@@ -238,6 +240,8 @@ public class ECKCharacterStorage: ObservableObject {
                 }
             }
         }
+        
+        WidgetCenter.shared.reloadTimelines(ofKind: "SkillQueueWidget")
     }
     
 }
