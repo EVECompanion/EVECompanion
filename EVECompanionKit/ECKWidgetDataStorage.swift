@@ -66,7 +66,7 @@ public actor ECKWidgetDataStorage {
     public func loadAllSkillQueues() -> [SkillQueueData] {
         let skillQueueFiles = listFiles(for: .skillQueue)
         let data: [SkillQueueData] = skillQueueFiles.compactMap({ try? loadData($0) })
-        return data
+        return data.sorted(by: { $0.characterName < $1.characterName })
     }
     
     private func listFiles(for dataType: DataType) -> [URL] {
