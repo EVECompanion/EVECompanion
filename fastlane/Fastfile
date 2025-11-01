@@ -149,7 +149,7 @@ platform :ios do
         )
 
         Dir.chdir("..") do
-            sh("mv #{firebaseConfig} EVECompanion/GoogleService-Info.plist")
+            sh("cp #{firebaseConfig} EVECompanion/GoogleService-Info.plist")
         end
 
         # Load certificates and provisioning profiles
