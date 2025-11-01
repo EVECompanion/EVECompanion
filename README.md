@@ -8,6 +8,7 @@ This project is a companion app for the online Game [EVE Online](https://www.eve
 
 - Character Tracking: Monitor your characters' progress and status.
 - Skill Queues: Keep an eye on your skill training.
+- Fitting Simulation: Experiment with ship fittings and theorycraft on the go.
 - Wallet Management: Track your ISK and financial transactions.
 - Mail Access: Read your EVE Mails on the go.
 - Contract Overview: Stay updated on your contracts.
@@ -23,11 +24,11 @@ This project is a companion app for the online Game [EVE Online](https://www.eve
 
 ## Static Data Export
 
-This project uses a custom SQLite conversion of the [EVE Online SDE](https://developers.eveonline.com/static-data). The script to process Fuzzwork's SQLite conversion for the app is available at https://github.com/EVECompanion/EVECompanion-SDEProcessor.
+This project uses a custom SQLite conversion of the [EVE Online SDE](https://developers.eveonline.com/static-data). The script to generate the SDE SQLite file for the app is available as a CLI tool in the `SDEConverter` target of this Xcode project.
 
 ### Using the SDE in SwiftUI Previews
 
-To use the processed SDE file in SwiftUI previews, copy the file into the `EVECompanion/Preview Content` directory in Xcode with the filename `EVE.sqlite`.
+To use the SDE SQLite file in SwiftUI previews, copy the file into the `EVECompanion/Preview Content` directory in Xcode with the filename `EVE.sqlite`.
 
 ## Static Data Export Update API
 
