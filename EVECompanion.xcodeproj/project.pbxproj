@@ -216,6 +216,10 @@
 		C9B8853B2D8228C6005A32CA /* SolarSystemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B8853A2D8228C6005A32CA /* SolarSystemCell.swift */; };
 		C9BA46662DAFAB5200396025 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92E80D22C012E3000AC0F07 /* String.swift */; };
 		C9BBEC552C6E9C0B008CB3F2 /* ContentEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BBEC542C6E9C0B008CB3F2 /* ContentEmptyView.swift */; };
+		C9BCEA062EB63B3000357E2D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C9BCEA052EB63B3000357E2D /* GoogleService-Info.plist */; };
+		C9BCEA092EB63D1300357E2D /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = C9BCEA082EB63D1300357E2D /* FirebaseAnalyticsCore */; };
+		C9BCEA0B2EB63D1300357E2D /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = C9BCEA0A2EB63D1300357E2D /* FirebaseCore */; };
+		C9BCEA0D2EB63D1300357E2D /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = C9BCEA0C2EB63D1300357E2D /* FirebaseCrashlytics */; };
 		C9BDB18C2DB3C59C00DA4375 /* CapitalNavigationShipPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BDB18A2DB3C59C00DA4375 /* CapitalNavigationShipPickerView.swift */; };
 		C9C566E72DBD674C009293F4 /* PlanetaryColonyWarningsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C566E62DBD674C009293F4 /* PlanetaryColonyWarningsView.swift */; };
 		C9C7C4212DA11C2B0079DF82 /* EVEUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C7C41F2DA11BF60079DF82 /* EVEUnit.swift */; };
@@ -590,6 +594,7 @@
 		C9B885332D81C617005A32CA /* CapitalNavigationSolarSystemPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalNavigationSolarSystemPickerView.swift; sourceTree = "<group>"; };
 		C9B8853A2D8228C6005A32CA /* SolarSystemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolarSystemCell.swift; sourceTree = "<group>"; };
 		C9BBEC542C6E9C0B008CB3F2 /* ContentEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentEmptyView.swift; sourceTree = "<group>"; };
+		C9BCEA052EB63B3000357E2D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C9BDB18A2DB3C59C00DA4375 /* CapitalNavigationShipPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalNavigationShipPickerView.swift; sourceTree = "<group>"; };
 		C9C566E62DBD674C009293F4 /* PlanetaryColonyWarningsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryColonyWarningsView.swift; sourceTree = "<group>"; };
 		C9C7C41F2DA11BF60079DF82 /* EVEUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EVEUnit.swift; sourceTree = "<group>"; };
@@ -724,8 +729,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				C90D50962BF8BC5500DEC0F3 /* PulseUI in Frameworks */,
+				C9BCEA092EB63D1300357E2D /* FirebaseAnalyticsCore in Frameworks */,
 				C9CB97B32C12526400366D1A /* SwiftPackageList in Frameworks */,
 				C9CB97B52C12526500366D1A /* SwiftPackageListUI in Frameworks */,
+				C9BCEA0B2EB63D1300357E2D /* FirebaseCore in Frameworks */,
+				C9BCEA0D2EB63D1300357E2D /* FirebaseCrashlytics in Frameworks */,
 				C952BC922BEC12AB0070C504 /* Kingfisher in Frameworks */,
 				C91EEEFD2BE975D000352175 /* EVECompanionKit.framework in Frameworks */,
 			);
@@ -1007,6 +1015,7 @@
 			isa = PBXGroup;
 			children = (
 				C9ACC07B2DC9DD0C0000D0FC /* AppDelegate.swift */,
+				C9BCEA052EB63B3000357E2D /* GoogleService-Info.plist */,
 				C959777C2C28B35F0008F719 /* Assets */,
 				C91EEEBE2BE9730100352175 /* Assets.xcassets */,
 				C93E8FDC2E5CD26900187846 /* EVECompanionIcon.icon */,
@@ -1680,6 +1689,9 @@
 				C90D50952BF8BC5500DEC0F3 /* PulseUI */,
 				C9CB97B22C12526400366D1A /* SwiftPackageList */,
 				C9CB97B42C12526400366D1A /* SwiftPackageListUI */,
+				C9BCEA082EB63D1300357E2D /* FirebaseAnalyticsCore */,
+				C9BCEA0A2EB63D1300357E2D /* FirebaseCore */,
+				C9BCEA0C2EB63D1300357E2D /* FirebaseCrashlytics */,
 			);
 			productName = EVECompanion;
 			productReference = C91EEEB72BE9730000352175 /* EVECompanion.app */;
@@ -1759,6 +1771,7 @@
 				C98483FC2D7EDB0C0076016B /* XCRemoteSwiftPackageReference "SQLite.swift" */,
 				C9D095072DE7BA8A00715479 /* XCRemoteSwiftPackageReference "Yams" */,
 				C90BD0582E9D8BE600BB0EB9 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
+				C9BCEA072EB63D1300357E2D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = C91EEEB82BE9730000352175 /* Products */;
 			projectDirPath = "";
@@ -1790,6 +1803,7 @@
 				C91EEEC22BE9730100352175 /* Preview Assets.xcassets in Resources */,
 				C9E93B172DB0DC2E005458BC /* EVE.sqlite in Resources */,
 				C91EEEBF2BE9730100352175 /* Assets.xcassets in Resources */,
+				C9BCEA062EB63B3000357E2D /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2433,6 +2447,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.10;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = de.schlabertz.EVECompanion.dev;
 				PRODUCT_NAME = EVECompanion;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2477,6 +2492,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.10;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = de.schlabertz.EVECompanion.dev;
 				PRODUCT_NAME = EVECompanion;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2684,6 +2700,14 @@
 				minimumVersion = 0.15.3;
 			};
 		};
+		C9BCEA072EB63D1300357E2D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.5.0;
+			};
+		};
 		C9CB97B12C12526400366D1A /* XCRemoteSwiftPackageReference "swift-package-list" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/FelixHerrmann/swift-package-list";
@@ -2776,6 +2800,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C98483FC2D7EDB0C0076016B /* XCRemoteSwiftPackageReference "SQLite.swift" */;
 			productName = SQLite;
+		};
+		C9BCEA082EB63D1300357E2D /* FirebaseAnalyticsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9BCEA072EB63D1300357E2D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsCore;
+		};
+		C9BCEA0A2EB63D1300357E2D /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9BCEA072EB63D1300357E2D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		C9BCEA0C2EB63D1300357E2D /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9BCEA072EB63D1300357E2D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
 		};
 		C9CB97B22C12526400366D1A /* SwiftPackageList */ = {
 			isa = XCSwiftPackageProductDependency;

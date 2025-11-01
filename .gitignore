@@ -80,3 +80,5 @@ fastlane/report.xml
 *.sqlite
 sde/
 *.zip
+FirebaseConfig/
+EVECompanion/GoogleService-Info.plist

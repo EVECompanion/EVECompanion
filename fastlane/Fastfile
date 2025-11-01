@@ -41,6 +41,9 @@ platform :ios do
     PLIST_PATH = "EVECompanion/Info.plist"
     PROJECT_FILE = "EVECompanion.xcodeproj"
     
+    FIREBASE_FILE_BETA = "FirebaseConfig/Beta.plist"
+    FIREBASE_FILE_PRODUCTION = "FirebaseConfig/Production.plist"
+
     APP_SCHEME = "EVECompanion"
     
     before_all do |lane, options|
@@ -72,6 +75,7 @@ platform :ios do
             profile = PROFILE_PRODUCTION
             profileWidgets = PROFILE_WIDGETS_PRODUCTION
             appGroup = APP_GROUP_PRODUCTION
+            firebaseConfig = FIREBASE_FILE_PRODUCTION
         elsif environment == "beta"
             bundleID = BUNDLEID_BETA
             bundleIDWidgets = BUNDLEID_WIDGETS_BETA
@@ -79,6 +83,7 @@ platform :ios do
             profile = PROFILE_BETA
             profileWidgets = PROFILE_WIDGETS_BETA
             appGroup = APP_GROUP_BETA
+            firebaseConfig = FIREBASE_FILE_BETA
         else
             UI.user_error!("Unknown environment #{environment}")
             return
@@ -142,6 +147,10 @@ platform :ios do
             entitlements_file: ENTITLEMENTS_FILE_WIDGETS,
             app_group_identifiers: [appGroup]
         )
+
+        Dir.chdir("..") do
+            sh("mv #{firebaseConfig} EVECompanion/GoogleService-Info.plist}")
+        end
 
         # Load certificates and provisioning profiles
         get_certificates
