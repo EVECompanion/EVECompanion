@@ -39,17 +39,17 @@ struct EVECompanionApp: App {
                     case .active:
                         characterStorage.triggerAutomaticReloadIfNecessary()
                     case .background:
-                        ECKBackgroundTaskManager.shared.scheduleWidgetRefreshTask(scheduleRetry: false)
+                        ECKBackgroundTaskManager.shared.scheduleAppRefreshTask()
                     default:
                         break
                     }
                 }
         }
-        .backgroundTask(.appRefresh(ECKBackgroundTaskManager.TaskType.widgetRefresh.rawValue)) {
-            logger.info("Invoked widget refresh task.")
-            await characterStorage.refreshWidgetData()
-            logger.info("Finished widget refresh task.")
-            ECKBackgroundTaskManager.shared.scheduleWidgetRefreshTask(scheduleRetry: false)
+        .backgroundTask(.appRefresh(ECKBackgroundTaskManager.TaskType.refreshTask.rawValue)) {
+            logger.info("Invoked app refresh task.")
+            await characterStorage.performAppRefreshTask()
+            logger.info("Finished app refresh task.")
+            ECKBackgroundTaskManager.shared.scheduleAppRefreshTask()
         }
     }
     

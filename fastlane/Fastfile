@@ -41,6 +41,7 @@ platform :ios do
     PLIST_PATH = "EVECompanion/Info.plist"
     PROJECT_FILE = "EVECompanion.xcodeproj"
     
+    FIREBASE_FILE_DEV = "FirebaseConfig/Dev.plist"
     FIREBASE_FILE_BETA = "FirebaseConfig/Beta.plist"
     FIREBASE_FILE_PRODUCTION = "FirebaseConfig/Production.plist"
 
@@ -64,6 +65,10 @@ platform :ios do
         reset_git_repo(
             disregard_gitignore: false
         )
+
+        Dir.chdir("..") do
+            sh("cp #{FIREBASE_FILE_DEV} EVECompanion/GoogleService-Info.plist")
+        end
     end
     
     # environment can be "production" or "beta"

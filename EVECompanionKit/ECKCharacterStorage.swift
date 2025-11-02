@@ -227,9 +227,9 @@ public class ECKCharacterStorage: ObservableObject {
         }
     }
     
-    public func refreshWidgetData() async {
+    public func performAppRefreshTask() async {
         guard UserDefaults.standard.isDemoModeEnabled == false else {
-            logger.info("Skipping widget data reloading, running in demo mode.")
+            logger.info("Skipping app data reloading, running in demo mode.")
             return
         }
         
@@ -242,6 +242,9 @@ public class ECKCharacterStorage: ObservableObject {
         }
         
         WidgetCenter.shared.reloadTimelines(ofKind: "SkillQueueWidget")
+        
+        await reloadNotifications()
+        await currentNotificationSchedulingTask?.value
     }
     
 }

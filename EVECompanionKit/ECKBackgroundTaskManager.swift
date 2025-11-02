@@ -12,7 +12,7 @@ import BackgroundTasks
 public class ECKBackgroundTaskManager: ObservableObject {
     
     public enum TaskType: String {
-        case widgetRefresh = "de.schlabertz.EVECompanion.widgetRefresh"
+        case refreshTask = "de.schlabertz.EVECompanion.refreshTask"
     }
     
     public static let shared: ECKBackgroundTaskManager = .init()
@@ -21,17 +21,16 @@ public class ECKBackgroundTaskManager: ObservableObject {
         
     }
     
-    public func scheduleWidgetRefreshTask(scheduleRetry: Bool) {
-        let request = BGAppRefreshTaskRequest(identifier: TaskType.widgetRefresh.rawValue)
-        
-        if scheduleRetry {
-            request.earliestBeginDate = .now.addingTimeInterval(30 * 60)
-        } else {
-            request.earliestBeginDate = .now.addingTimeInterval(12 * 3600)
-        }
+    public func scheduleAppRefreshTask() {
+        let request = BGAppRefreshTaskRequest(identifier: TaskType.refreshTask.rawValue)
+        #if DEBUG
+        request.earliestBeginDate = .now.addingTimeInterval(3600)
+        #else
+        request.earliestBeginDate = .now.addingTimeInterval(12 * 3600)
+        #endif
         
         do {
-            logger.info("Trying to schedule widget refresh task.")
+            logger.info("Trying to schedule widget refresh task. Earliest begin date: \(String(describing: request.earliestBeginDate))")
             try BGTaskScheduler.shared.submit(request)
             logger.info("Scheduled widget refresh task.")
         } catch {
