@@ -36,6 +36,6 @@ struct WidgetCharacter: AppEntity {
     }
     
     static var dummy: WidgetCharacter {
-        return .init(id: 2123087197, name: "EVECompanion (Demo)")
+        return .init(id: 2123087197, name: "Demo Character")
     }
 }

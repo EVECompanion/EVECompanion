@@ -75,8 +75,7 @@ struct SkillQueueEntryView: View {
                 .foregroundStyle(.secondary)
         }
         
-        if let finishDate = skill.finishDate,
-           widgetFamily != .systemMedium {
+        if let finishDate = skill.finishDate {
             Text("Completes \(ECFormatters.dateFormatter(date: finishDate))")
                 .foregroundStyle(Color.secondary)
         }
@@ -91,10 +90,17 @@ struct SkillQueueEntryView: View {
                        height: 60)
                 .clipShape(Circle())
             
-            Text(entry.character.name)
-                .bold()
-                .font(.title2)
-            
+            VStack(alignment: .leading) {
+                Text(entry.character.name)
+                    .bold()
+                    .font(.title2)
+             
+                if entry.character.id == WidgetCharacter.dummy.id {
+                    Text("You can change the selected character by editing this widget.")
+                        .fixedSize(horizontal: false, vertical: true)
+                        .foregroundStyle(.secondary)
+                }
+            }
             Spacer()
         }
     }
