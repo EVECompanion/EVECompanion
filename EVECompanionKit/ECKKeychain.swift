@@ -77,7 +77,7 @@ internal struct ECKKeychain {
         
         do {
             let data = try jsonEncoder.encode(sortedTokens)
-            keychain.set(data, forKey: tokenKey)
+            keychain.set(data, forKey: tokenKey, withAccess: .accessibleAfterFirstUnlock)
         } catch {
             logger.error("Cannot encode tokens \(tokens): \(error)")
         }
