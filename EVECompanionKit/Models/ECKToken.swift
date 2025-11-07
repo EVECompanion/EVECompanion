@@ -53,7 +53,12 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable {
     lazy var id: String = {
         do {
             let jwt = try JWTDecode.decode(jwt: accessToken)
-            return jwt.subject ?? UUID().uuidString
+            guard let subject = jwt.subject else {
+                logger.error("\(jwt) has no subject.")
+                return UUID().uuidString
+            }
+            
+            return subject
         } catch {
             logger.error("Error decoding jwt \(error)")
             return UUID().uuidString

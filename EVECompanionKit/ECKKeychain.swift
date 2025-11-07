@@ -34,11 +34,14 @@ internal struct ECKKeychain {
     static func add(token: ECKToken) {
         var currentTokens = getTokens()
         var isNewToken: Bool = false
+        logger.info("Adding token \(token.id)")
         
         if let existingToken = currentTokens.enumerated().first(where: { $0.element.id == token.id }) {
+            logger.info("Token \(token.id) is replacing an existing token.")
             currentTokens[existingToken.offset] = token
             isNewToken = existingToken.element.isValid == false && token.isValid
         } else {
+            logger.info("Token \(token.id) is a new token.")
             isNewToken = true
             currentTokens.append(token)
         }
@@ -70,22 +73,26 @@ internal struct ECKKeychain {
             return lhsToken.characterName < rhsToken.characterName
         }
         
+        logger.info("Saving tokens \(sortedTokens)")
+        
         do {
             let data = try jsonEncoder.encode(sortedTokens)
             keychain.set(data, forKey: tokenKey)
         } catch {
-            logger.error("Cannot encode tokens: \(error)")
+            logger.error("Cannot encode tokens \(tokens): \(error)")
         }
     }
     
     @MainActor
     static func getTokens() -> [ECKToken] {
         guard let tokenData = keychain.getData(tokenKey) else {
+            logger.warning("Keychain has no tokens for key \(tokenKey)")
             return []
         }
         
         do {
             let tokens = try jsonDecoder.decode([FailableDecodable<ECKToken>].self, from: tokenData)
+            logger.info("Decoded tokens \(tokens)")
             return tokens.compactMap({ $0.base })
         } catch {
             logger.error("Error decoding tokens: \(error)")
