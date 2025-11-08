@@ -95,7 +95,7 @@ struct SkillQueueEntryView: View {
                     .bold()
                     .font(.title2)
              
-                if entry.character.id == WidgetCharacter.dummy.id {
+                if entry.character.id == WidgetCharacter.dummy1.id {
                     Text("You can change the selected character by editing this widget.")
                         .fixedSize(horizontal: false, vertical: true)
                         .foregroundStyle(.secondary)

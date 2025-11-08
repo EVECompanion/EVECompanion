@@ -35,7 +35,15 @@ struct WidgetCharacter: AppEntity {
         self.name = data.characterName
     }
     
-    static var dummy: WidgetCharacter {
-        return .init(id: 2123087197, name: "Demo Character")
+    static var dummy1: WidgetCharacter {
+        return .init(id: -1, name: "Demo Character")
+    }
+    
+    static var dummy2: WidgetCharacter {
+        return .init(id: -2, name: "Demo Character")
+    }
+    
+    static var dummy3: WidgetCharacter {
+        return .init(id: -3, name: "Demo Character 2")
     }
 }

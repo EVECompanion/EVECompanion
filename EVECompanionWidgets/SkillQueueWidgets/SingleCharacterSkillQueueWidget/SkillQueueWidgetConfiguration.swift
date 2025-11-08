@@ -14,7 +14,7 @@ struct SkillQueueWidgetConfiguration: WidgetConfigurationIntent {
     static var description: IntentDescription { "Selects the character to display the skill queue for." }
     
     // An example configurable parameter.
-    @Parameter(title: "Character", default: .dummy)
+    @Parameter(title: "Character", default: .dummy1)
     var character: WidgetCharacter
     
     init(character: WidgetCharacter) {

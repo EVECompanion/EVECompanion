@@ -17,13 +17,17 @@ struct SkillQueueWidgetTimelineProvider: AppIntentTimelineProvider {
     }
 
     func snapshot(for configuration: SkillQueueWidgetConfiguration, in context: Context) async -> SkillQueueWidgetTimelineEntry {
-        SkillQueueWidgetTimelineEntry.dummy2
+        await timeline(for: configuration, in: context).entries.first ?? .dummy2
     }
     
     func timeline(for configuration: SkillQueueWidgetConfiguration, in context: Context) async -> Timeline<SkillQueueWidgetTimelineEntry> {
+        guard context.isPreview == false else {
+            return .init(entries: [.dummy4], policy: .never)
+        }
+        
         var entries: [SkillQueueWidgetTimelineEntry] = []
         
-        if configuration.character.id == WidgetCharacter.dummy.id {
+        if configuration.character.id == WidgetCharacter.dummy1.id {
             entries.append(.dummy1)
             entries.append(.dummy2)
             entries.append(.dummy3)

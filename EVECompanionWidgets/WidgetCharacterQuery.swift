@@ -17,8 +17,8 @@ struct WidgetCharacterQuery: EntityQuery {
         var result: [Entity] = []
         
         for identifier in identifiers {
-            if identifier == WidgetCharacter.dummy.id {
-                result.append(.dummy)
+            if identifier == WidgetCharacter.dummy1.id {
+                result.append(.dummy1)
                 continue
             }
             
@@ -30,7 +30,7 @@ struct WidgetCharacterQuery: EntityQuery {
         }
         
         if result.isEmpty {
-            result.append(.dummy)
+            result.append(.dummy1)
         }
         
         return result
@@ -40,7 +40,7 @@ struct WidgetCharacterQuery: EntityQuery {
         let skillQueues = await ECKWidgetDataStorage.shared.loadAllSkillQueues()
         var result: [Entity] = skillQueues.map({ .init(data: $0) })
         if result.isEmpty {
-            result.append(.dummy)
+            result.append(.dummy1)
         }
         return result
     }

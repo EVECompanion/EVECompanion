@@ -11,6 +11,7 @@ import SwiftUI
 @main
 struct EVECompanionWidgetsBundle: WidgetBundle {
     var body: some Widget {
-        SkillQueueWidget()
+        MultiCharacterSkillQueueWidget()
+        SkillQueueWidget()        
     }
 }

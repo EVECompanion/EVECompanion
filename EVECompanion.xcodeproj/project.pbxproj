@@ -301,6 +301,11 @@
 		C9EA45FB2D90A7F200FE4365 /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EA45FA2D90A7F200FE4365 /* ItemView.swift */; };
 		C9EAA52A2C6FDBDB00ABB30F /* ECKCapitalJumpPathfinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EAA5292C6FDBDB00ABB30F /* ECKCapitalJumpPathfinder.swift */; };
 		C9EAA52D2C6FED7400ABB30F /* SwiftPriorityQueue in Frameworks */ = {isa = PBXBuildFile; productRef = C9EAA52C2C6FED7400ABB30F /* SwiftPriorityQueue */; };
+		C9EAF0D02EBE90F800F73641 /* MultiCharacterSkillQueueWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EAF0CF2EBE90F800F73641 /* MultiCharacterSkillQueueWidget.swift */; };
+		C9EAF0D32EBE915A00F73641 /* MultiCharacterSkillQueueWidgetConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EAF0D22EBE915A00F73641 /* MultiCharacterSkillQueueWidgetConfiguration.swift */; };
+		C9EAF0D52EBE920C00F73641 /* MultiCharacterSkillQueueWidgetTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EAF0D42EBE920C00F73641 /* MultiCharacterSkillQueueWidgetTimelineProvider.swift */; };
+		C9EAF0D72EBEA08800F73641 /* MultiCharacterSkillQueueWidgetTimelineEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EAF0D62EBEA08800F73641 /* MultiCharacterSkillQueueWidgetTimelineEntry.swift */; };
+		C9EAF0D92EBEA1D200F73641 /* MultiCharacterSkillQueueEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EAF0D82EBEA1D200F73641 /* MultiCharacterSkillQueueEntryView.swift */; };
 		C9EC4BA72BF5580D00D46CC4 /* UniverseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EC4BA62BF5580D00D46CC4 /* UniverseView.swift */; };
 		C9EC4BA92BF558B700D46CC4 /* EVECompanionTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EC4BA82BF558B700D46CC4 /* EVECompanionTabView.swift */; };
 		C9F055A72DE24DCD00340A05 /* ECKServerStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F055A62DE24DCD00340A05 /* ECKServerStatus.swift */; };
@@ -671,6 +676,11 @@
 		C9E93B182DB19CED005458BC /* CharacterSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterSelection.swift; sourceTree = "<group>"; };
 		C9EA45FA2D90A7F200FE4365 /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
 		C9EAA5292C6FDBDB00ABB30F /* ECKCapitalJumpPathfinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCapitalJumpPathfinder.swift; sourceTree = "<group>"; };
+		C9EAF0CF2EBE90F800F73641 /* MultiCharacterSkillQueueWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiCharacterSkillQueueWidget.swift; sourceTree = "<group>"; };
+		C9EAF0D22EBE915A00F73641 /* MultiCharacterSkillQueueWidgetConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiCharacterSkillQueueWidgetConfiguration.swift; sourceTree = "<group>"; };
+		C9EAF0D42EBE920C00F73641 /* MultiCharacterSkillQueueWidgetTimelineProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiCharacterSkillQueueWidgetTimelineProvider.swift; sourceTree = "<group>"; };
+		C9EAF0D62EBEA08800F73641 /* MultiCharacterSkillQueueWidgetTimelineEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiCharacterSkillQueueWidgetTimelineEntry.swift; sourceTree = "<group>"; };
+		C9EAF0D82EBEA1D200F73641 /* MultiCharacterSkillQueueEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiCharacterSkillQueueEntryView.swift; sourceTree = "<group>"; };
 		C9EC4BA62BF5580D00D46CC4 /* UniverseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniverseView.swift; sourceTree = "<group>"; };
 		C9EC4BA82BF558B700D46CC4 /* EVECompanionTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EVECompanionTabView.swift; sourceTree = "<group>"; };
 		C9F055A62DE24DCD00340A05 /* ECKServerStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKServerStatus.swift; sourceTree = "<group>"; };
@@ -809,12 +819,8 @@
 		C906BABF2EB2BB2500A9E3F3 /* SkillQueueWidgets */ = {
 			isa = PBXGroup;
 			children = (
-				C906BA9C2EA8F89400A9E3F3 /* SkillQueueWidgetConfiguration.swift */,
-				C906BAC02EB2BB4A00A9E3F3 /* SkillQueueWidgetTimelineEntry.swift */,
-				C906BAC22EB2BB6500A9E3F3 /* SkillQueueEntry.swift */,
-				C906BA9E2EA8F89400A9E3F3 /* SkillQueueEntryView.swift */,
-				C906BAC42EB2BC1900A9E3F3 /* SkillQueueWidget.swift */,
-				C906BAB92EB2BA4100A9E3F3 /* SkillQueueWidgetTimelineProvider.swift */,
+				C9EAF0CE2EBE90DF00F73641 /* MultiCharacterSkillQueueWidget */,
+				C9EAF0CD2EBE90B800F73641 /* SingleCharacterSkillQueueWidget */,
 			);
 			path = SkillQueueWidgets;
 			sourceTree = "<group>";
@@ -1512,6 +1518,31 @@
 			path = Item;
 			sourceTree = "<group>";
 		};
+		C9EAF0CD2EBE90B800F73641 /* SingleCharacterSkillQueueWidget */ = {
+			isa = PBXGroup;
+			children = (
+				C906BAC22EB2BB6500A9E3F3 /* SkillQueueEntry.swift */,
+				C906BA9C2EA8F89400A9E3F3 /* SkillQueueWidgetConfiguration.swift */,
+				C906BA9E2EA8F89400A9E3F3 /* SkillQueueEntryView.swift */,
+				C906BAB92EB2BA4100A9E3F3 /* SkillQueueWidgetTimelineProvider.swift */,
+				C906BAC42EB2BC1900A9E3F3 /* SkillQueueWidget.swift */,
+				C906BAC02EB2BB4A00A9E3F3 /* SkillQueueWidgetTimelineEntry.swift */,
+			);
+			path = SingleCharacterSkillQueueWidget;
+			sourceTree = "<group>";
+		};
+		C9EAF0CE2EBE90DF00F73641 /* MultiCharacterSkillQueueWidget */ = {
+			isa = PBXGroup;
+			children = (
+				C9EAF0CF2EBE90F800F73641 /* MultiCharacterSkillQueueWidget.swift */,
+				C9EAF0D82EBEA1D200F73641 /* MultiCharacterSkillQueueEntryView.swift */,
+				C9EAF0D42EBE920C00F73641 /* MultiCharacterSkillQueueWidgetTimelineProvider.swift */,
+				C9EAF0D62EBEA08800F73641 /* MultiCharacterSkillQueueWidgetTimelineEntry.swift */,
+				C9EAF0D22EBE915A00F73641 /* MultiCharacterSkillQueueWidgetConfiguration.swift */,
+			);
+			path = MultiCharacterSkillQueueWidget;
+			sourceTree = "<group>";
+		};
 		C9EC4BA52BF557FD00D46CC4 /* UniverseView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1862,14 +1893,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9EAF0D32EBE915A00F73641 /* MultiCharacterSkillQueueWidgetConfiguration.swift in Sources */,
+				C9EAF0D52EBE920C00F73641 /* MultiCharacterSkillQueueWidgetTimelineProvider.swift in Sources */,
 				C906BAA22EA8F89400A9E3F3 /* SkillQueueWidgetConfiguration.swift in Sources */,
 				C906BAB32EAA1F0900A9E3F3 /* ECImage.swift in Sources */,
 				C906BAA32EA8F89400A9E3F3 /* SkillQueueEntryView.swift in Sources */,
+				C9EAF0D92EBEA1D200F73641 /* MultiCharacterSkillQueueEntryView.swift in Sources */,
 				C906BABC2EB2BAC600A9E3F3 /* WidgetCharacter.swift in Sources */,
 				C906BABA2EB2BA4100A9E3F3 /* SkillQueueWidgetTimelineProvider.swift in Sources */,
 				C906BAC52EB2BC1900A9E3F3 /* SkillQueueWidget.swift in Sources */,
 				C906BABE2EB2BADA00A9E3F3 /* WidgetCharacterQuery.swift in Sources */,
+				C9EAF0D72EBEA08800F73641 /* MultiCharacterSkillQueueWidgetTimelineEntry.swift in Sources */,
 				C906BAC32EB2BB6500A9E3F3 /* SkillQueueEntry.swift in Sources */,
+				C9EAF0D02EBE90F800F73641 /* MultiCharacterSkillQueueWidget.swift in Sources */,
 				C906BAA42EA8F89400A9E3F3 /* EVECompanionWidgetsBundle.swift in Sources */,
 				C906BAC12EB2BB4A00A9E3F3 /* SkillQueueWidgetTimelineEntry.swift in Sources */,
 			);

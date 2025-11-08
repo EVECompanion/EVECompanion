@@ -38,7 +38,15 @@ public actor ECKWidgetDataStorage {
         
         public let characterId: Int
         public let characterName: String
-        public let skillQueue: [SkillQueueEntry]
+        public var skillQueue: [SkillQueueEntry]
+        
+        public init(characterId: Int,
+                    characterName: String,
+                    skillQueue: [SkillQueueEntry]) {
+            self.characterId = characterId
+            self.characterName = characterName
+            self.skillQueue = skillQueue
+        }
     }
     
     private var appGroupContainerURL: URL? {
