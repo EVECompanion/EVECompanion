@@ -174,7 +174,7 @@ public class ECKCharacterStorage: ObservableObject {
         let tokens = ECKKeychain.getTokens()
         characters = tokens.map({ .init(token: $0) })
         await reloadNotifications()
-        WidgetCenter.shared.reloadTimelines(ofKind: "SkillQueueWidget")
+        WidgetCenter.shared.reloadAllTimelines()
     }
     
     @MainActor
@@ -241,7 +241,7 @@ public class ECKCharacterStorage: ObservableObject {
             }
         }
         
-        WidgetCenter.shared.reloadTimelines(ofKind: "SkillQueueWidget")
+        WidgetCenter.shared.reloadAllTimelines()
         
         await reloadNotifications()
         await currentNotificationSchedulingTask?.value
