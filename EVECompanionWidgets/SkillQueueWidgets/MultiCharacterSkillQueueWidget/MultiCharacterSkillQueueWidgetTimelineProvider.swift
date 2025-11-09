@@ -25,41 +25,6 @@ struct MultiCharacterSkillQueueWidgetTimelineProvider: AppIntentTimelineProvider
             return .init(entries: [.dummy2], policy: .never)
         }
         
-        let baseDate = Date()
-        
-        var entries: [MultiCharacterSkillQueueWidgetTimelineEntry] = []
-        
-        var data: [ECKWidgetDataStorage.SkillQueueData] = []
-        
-        for character in configuration.characters {
-            let skillQueue = await ECKWidgetDataStorage.shared.loadSkillQueue(for: character.id)
-            data.append((skillQueue ?? .init(characterId: character.id,
-                                             characterName: character.name,
-                                             skillQueue: [])))
-        }
-        
-        while data.compactMap({ $0.skillQueue }).isEmpty == false {
-            // Find the next completion date from all the skill queues
-            guard let nextDate = data.compactMap({ $0.skillQueue.first?.finishDate }).min() else {
-                break
-            }
-            
-            guard let affectedCharacterIndex = data.firstIndex(where: { $0.skillQueue.first?.finishDate == nextDate }) else {
-                logger.error("Cannot find character for finish date \(nextDate)")
-                break
-            }
-            
-            entries.append(.init(entries: data.map({ data in
-                return .init(date: data.skillQueue.first?.finishDate ?? baseDate,
-                             character: .init(id: data.characterId, name: data.characterName),
-                             skillQueue: data.skillQueue.map({ .init(skillName: $0.name, startDate: $0.startDate, finishDate: $0.finishDate) }))
-            })))
-            
-            data[affectedCharacterIndex] = .init(characterId: data[affectedCharacterIndex].characterId,
-                                                 characterName: data[affectedCharacterIndex].characterName,
-                                                 skillQueue: Array(data[affectedCharacterIndex].skillQueue.dropFirst()))
-        }
-        
         var imageResources: [any Resource] = []
         
         for character in configuration.characters {
@@ -81,12 +46,59 @@ struct MultiCharacterSkillQueueWidgetTimelineProvider: AppIntentTimelineProvider
             }.start()
         }
         
-        if entries.isEmpty {
-            for character in configuration.characters {
-                entries.append(.init(entries: [.init(date: baseDate, character: character, skillQueue: [])]))
-            }
-        }
+        let now = Date()
+        var allData: [ECKWidgetDataStorage.SkillQueueData] = []
         
-        return Timeline(entries: entries, policy: .never)
+        for character in configuration.characters {
+            let skillQueue = await ECKWidgetDataStorage.shared.loadSkillQueue(for: character.id)
+            allData.append((skillQueue ?? .init(characterId: character.id,
+                                                characterName: character.name,
+                                                skillQueue: [])))
+        }
+
+        // Collect all future finish dates across all characters
+        let futureFinishDates = allData
+            .flatMap { $0.skillQueue }
+            .compactMap(\.finishDate)
+            .filter { $0 > now }
+            .sorted()
+
+        var timelineEntries: [MultiCharacterSkillQueueWidgetTimelineEntry] = [
+            makeMultiCharacterEntry(for: now, allData: allData)
+        ]
+
+        for finishDate in futureFinishDates {
+            timelineEntries.append(makeMultiCharacterEntry(for: finishDate, allData: allData))
+        }
+
+        if let last = futureFinishDates.last {
+            timelineEntries.append(makeMultiCharacterEntry(for: last, allData: allData))
+        }
+
+        return Timeline(entries: timelineEntries, policy: .never)
+    }
+    
+    private func makeMultiCharacterEntry(for date: Date, allData: [ECKWidgetDataStorage.SkillQueueData]) -> MultiCharacterSkillQueueWidgetTimelineEntry {
+        let characterEntries = allData.map { data -> SkillQueueWidgetTimelineEntry in
+            let activeOrUpcomingSkills = data.skillQueue.filter { entry in
+                if let finishDate = entry.finishDate {
+                    return finishDate > date
+                } else {
+                    return true
+                }
+            }
+
+            let character = WidgetCharacter(id: data.characterId, name: data.characterName)
+            return SkillQueueWidgetTimelineEntry(
+                date: date,
+                character: character,
+                skillQueue: activeOrUpcomingSkills.map({ .init(skillName: $0.name, startDate: $0.startDate, finishDate: $0.finishDate) })
+            )
+        }
+
+        return MultiCharacterSkillQueueWidgetTimelineEntry(
+            date: date,
+            entries: characterEntries
+        )
     }
 }

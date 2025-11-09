@@ -28,4 +28,16 @@ struct SkillQueueEntry: Identifiable {
                      startDate: dummy1.finishDate,
                      finishDate: dummy1.finishDate! + 3600 * 50)
     }()
+    
+    static var dummy3: SkillQueueEntry = {
+        return .init(skillName: "Spaceship Command IV",
+                     startDate: Date() - 3600,
+                     finishDate: Date() + 10)
+    }()
+    
+    static var dummy4: SkillQueueEntry = {
+        return .init(skillName: "Spaceship Command V",
+                     startDate: dummy3.finishDate,
+                     finishDate: dummy3.finishDate! + 3600 * 50)
+    }()
 }

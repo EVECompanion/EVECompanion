@@ -24,8 +24,9 @@ struct MultiCharacterSkillQueueWidget: Widget {
     }
 }
 
-#Preview(as: .systemMedium) {
+#Preview(as: .systemLarge) {
     MultiCharacterSkillQueueWidget()
 } timeline: {
     MultiCharacterSkillQueueWidgetTimelineEntry.dummy1
+    MultiCharacterSkillQueueWidgetTimelineEntry.dummy2
 }

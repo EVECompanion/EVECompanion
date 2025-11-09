@@ -68,6 +68,7 @@ struct MultiCharacterSkillQueueEntryView: View {
                 .foregroundStyle(.secondary)
         } else {
             Text("No skill in training")
+                .foregroundStyle(.secondary)
         }
     }
 }
