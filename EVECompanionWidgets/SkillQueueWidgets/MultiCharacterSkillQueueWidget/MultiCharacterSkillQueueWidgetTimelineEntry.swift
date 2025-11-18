@@ -18,7 +18,7 @@ struct MultiCharacterSkillQueueWidgetTimelineEntry: TimelineEntry {
     }()
     
     static var dummy2: MultiCharacterSkillQueueWidgetTimelineEntry = {
-        return .init(date: SkillQueueWidgetTimelineEntry.dummy4.date, entries: [.dummy4])
+        return .init(date: SkillQueueWidgetTimelineEntry.dummy4.date, entries: [.dummy3, .dummy4])
     }()
     
 }

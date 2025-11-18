@@ -85,7 +85,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "_XCWidgetDefaultView"
-            value = "timeline"
+            value = "info"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable

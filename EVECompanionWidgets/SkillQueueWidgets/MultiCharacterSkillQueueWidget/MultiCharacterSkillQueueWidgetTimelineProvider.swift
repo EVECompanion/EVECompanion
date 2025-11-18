@@ -22,7 +22,7 @@ struct MultiCharacterSkillQueueWidgetTimelineProvider: AppIntentTimelineProvider
     
     func timeline(for configuration: MultiCharacterSkillQueueWidgetConfiguration, in context: Context) async -> Timeline<MultiCharacterSkillQueueWidgetTimelineEntry> {
         guard context.isPreview == false else {
-            return .init(entries: [.dummy2], policy: .never)
+            return .init(entries: [.dummy2, .dummy1], policy: .never)
         }
         
         var imageResources: [any Resource] = []

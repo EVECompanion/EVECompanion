@@ -30,14 +30,14 @@ struct SkillQueueWidgetTimelineEntry: TimelineEntry {
     
     static var dummy3: SkillQueueWidgetTimelineEntry = {
         return .init(date: SkillQueueEntry.dummy2.finishDate!,
-                     character: .dummy1,
+                     character: .dummy2,
                      skillQueue: [])
     }()
     
     static var dummy4: SkillQueueWidgetTimelineEntry = {
         let dummy1Skill = SkillQueueEntry.dummy1
         return .init(date: SkillQueueEntry.dummy2.finishDate!,
-                     character: .dummy2,
+                     character: .dummy3,
                      skillQueue: [dummy1Skill, .dummy2])
     }()
 }
