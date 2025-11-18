@@ -142,6 +142,10 @@
 		C96430AF2CC6BE5A00E8D6A6 /* PlanetaryColoniesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96430AE2CC6BE5A00E8D6A6 /* PlanetaryColoniesView.swift */; };
 		C96430B12CC7AE0D00E8D6A6 /* PlanetaryColonyPinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96430B02CC7AE0D00E8D6A6 /* PlanetaryColonyPinView.swift */; };
 		C96735202D8CBA1F004E059F /* CapitalJumpRouteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C967351F2D8CBA1F004E059F /* CapitalJumpRouteCell.swift */; };
+		C96E4F162EC3B76B002BC743 /* ECKMarketDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96E4F152EC3B76B002BC743 /* ECKMarketDataManager.swift */; };
+		C96E52202EC3BACB002BC743 /* ECKMarketOrdersResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96E521F2EC3BACB002BC743 /* ECKMarketOrdersResource.swift */; };
+		C96E58322EC3BD7E002BC743 /* ECKMarketOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96E58312EC3BD7E002BC743 /* ECKMarketOrder.swift */; };
+		C96E58342EC3CCDC002BC743 /* ItemMarketDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96E58332EC3CCDC002BC743 /* ItemMarketDataView.swift */; };
 		C96F989A2BEF7DDE00DEC34F /* CharacterDetailRowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F98992BEF7DDE00DEC34F /* CharacterDetailRowType.swift */; };
 		C96F989D2BEF7FEF00DEC34F /* ContractsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F989C2BEF7FEF00DEC34F /* ContractsListView.swift */; };
 		C96F989F2BEFA6DB00DEC34F /* ECKContractManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F989E2BEFA6DB00DEC34F /* ECKContractManager.swift */; };
@@ -168,6 +172,8 @@
 		C98484052D7F9A7B0076016B /* ECKCapitalNavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98484042D7F9A7B0076016B /* ECKCapitalNavigationManager.swift */; };
 		C984D06F2D8AEBBA00D60567 /* ECKCapitalRouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C984D06E2D8AEBBA00D60567 /* ECKCapitalRouteManager.swift */; };
 		C989C39F2E1E3D2D005DEFDF /* ChargeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C989C39E2E1E3D2D005DEFDF /* ChargeSelectionView.swift */; };
+		C98F253B2EC510F600D0269A /* ECKMarketHistoryResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F253A2EC510F600D0269A /* ECKMarketHistoryResource.swift */; };
+		C98F253D2EC5148000D0269A /* ECKMarketHistoryEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F253C2EC5148000D0269A /* ECKMarketHistoryEntry.swift */; };
 		C99528D12BEE0CEB00CA6E06 /* CharacterDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99528D02BEE0CEB00CA6E06 /* CharacterDetailView.swift */; };
 		C99528D42BEE102E00CA6E06 /* EnvironmentValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99528D32BEE102E00CA6E06 /* EnvironmentValues.swift */; };
 		C99528D62BEE152F00CA6E06 /* ECKCharacterSkillqueueResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99528D52BEE152F00CA6E06 /* ECKCharacterSkillqueueResource.swift */; };
@@ -185,7 +191,7 @@
 		C996A5EC2BF2BBCA0038277C /* ECKStructureResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C996A5EB2BF2BBCA0038277C /* ECKStructureResource.swift */; };
 		C99750A52C14606800DE5B96 /* RetryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99750A42C14606800DE5B96 /* RetryButton.swift */; };
 		C99750A82C14884600DE5B96 /* MarketOrdersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99750A72C14884600DE5B96 /* MarketOrdersView.swift */; };
-		C99750AA2C14897E00DE5B96 /* ECKMarketOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99750A92C14897E00DE5B96 /* ECKMarketOrder.swift */; };
+		C99750AA2C14897E00DE5B96 /* ECKCharacterMarketOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99750A92C14897E00DE5B96 /* ECKCharacterMarketOrder.swift */; };
 		C99750AC2C148D1000DE5B96 /* ECKRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99750AB2C148D1000DE5B96 /* ECKRegion.swift */; };
 		C99750AE2C1494DC00DE5B96 /* ECKCharacterMarketOrdersResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99750AD2C1494DC00DE5B96 /* ECKCharacterMarketOrdersResource.swift */; };
 		C99750B02C149D9100DE5B96 /* MarketOrderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99750AF2C149D9100DE5B96 /* MarketOrderCell.swift */; };
@@ -223,8 +229,6 @@
 		C9BDB18C2DB3C59C00DA4375 /* CapitalNavigationShipPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BDB18A2DB3C59C00DA4375 /* CapitalNavigationShipPickerView.swift */; };
 		C9C566E72DBD674C009293F4 /* PlanetaryColonyWarningsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C566E62DBD674C009293F4 /* PlanetaryColonyWarningsView.swift */; };
 		C9C7C4212DA11C2B0079DF82 /* EVEUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C7C41F2DA11BF60079DF82 /* EVEUnit.swift */; };
-		C9C7C4232DA11F3A0079DF82 /* EVEUnit+Formatted.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C7C4222DA11F3A0079DF82 /* EVEUnit+Formatted.swift */; };
-		C9C7C4252DA1227A0079DF82 /* Item+Traits.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C7C4242DA1227A0079DF82 /* Item+Traits.swift */; };
 		C9C7C4272DA1AFC40079DF82 /* UIFont+Weight.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C7C4262DA1AFC40079DF82 /* UIFont+Weight.swift */; };
 		C9C87AD12D9E783A00EF5D45 /* ItemAttributeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C87AD02D9E783A00EF5D45 /* ItemAttributeCell.swift */; };
 		C9CA6B912C14DBBE0057F290 /* ECKIncursion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CA6B902C14DBBE0057F290 /* ECKIncursion.swift */; };
@@ -528,6 +532,10 @@
 		C96430B02CC7AE0D00E8D6A6 /* PlanetaryColonyPinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryColonyPinView.swift; sourceTree = "<group>"; };
 		C967351C2D8C26BD004E059F /* CapitalNavigationShipPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalNavigationShipPickerView.swift; sourceTree = "<group>"; };
 		C967351F2D8CBA1F004E059F /* CapitalJumpRouteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalJumpRouteCell.swift; sourceTree = "<group>"; };
+		C96E4F152EC3B76B002BC743 /* ECKMarketDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMarketDataManager.swift; sourceTree = "<group>"; };
+		C96E521F2EC3BACB002BC743 /* ECKMarketOrdersResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMarketOrdersResource.swift; sourceTree = "<group>"; };
+		C96E58312EC3BD7E002BC743 /* ECKMarketOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMarketOrder.swift; sourceTree = "<group>"; };
+		C96E58332EC3CCDC002BC743 /* ItemMarketDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemMarketDataView.swift; sourceTree = "<group>"; };
 		C96F98992BEF7DDE00DEC34F /* CharacterDetailRowType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailRowType.swift; sourceTree = "<group>"; };
 		C96F989C2BEF7FEF00DEC34F /* ContractsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractsListView.swift; sourceTree = "<group>"; };
 		C96F989E2BEFA6DB00DEC34F /* ECKContractManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKContractManager.swift; sourceTree = "<group>"; };
@@ -553,6 +561,8 @@
 		C98484042D7F9A7B0076016B /* ECKCapitalNavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCapitalNavigationManager.swift; sourceTree = "<group>"; };
 		C984D06E2D8AEBBA00D60567 /* ECKCapitalRouteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCapitalRouteManager.swift; sourceTree = "<group>"; };
 		C989C39E2E1E3D2D005DEFDF /* ChargeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeSelectionView.swift; sourceTree = "<group>"; };
+		C98F253A2EC510F600D0269A /* ECKMarketHistoryResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMarketHistoryResource.swift; sourceTree = "<group>"; };
+		C98F253C2EC5148000D0269A /* ECKMarketHistoryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMarketHistoryEntry.swift; sourceTree = "<group>"; };
 		C99528D02BEE0CEB00CA6E06 /* CharacterDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailView.swift; sourceTree = "<group>"; };
 		C99528D32BEE102E00CA6E06 /* EnvironmentValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentValues.swift; sourceTree = "<group>"; };
 		C99528D52BEE152F00CA6E06 /* ECKCharacterSkillqueueResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterSkillqueueResource.swift; sourceTree = "<group>"; };
@@ -570,7 +580,7 @@
 		C996A5EB2BF2BBCA0038277C /* ECKStructureResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKStructureResource.swift; sourceTree = "<group>"; };
 		C99750A42C14606800DE5B96 /* RetryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryButton.swift; sourceTree = "<group>"; };
 		C99750A72C14884600DE5B96 /* MarketOrdersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketOrdersView.swift; sourceTree = "<group>"; };
-		C99750A92C14897E00DE5B96 /* ECKMarketOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMarketOrder.swift; sourceTree = "<group>"; };
+		C99750A92C14897E00DE5B96 /* ECKCharacterMarketOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterMarketOrder.swift; sourceTree = "<group>"; };
 		C99750AB2C148D1000DE5B96 /* ECKRegion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKRegion.swift; sourceTree = "<group>"; };
 		C99750AD2C1494DC00DE5B96 /* ECKCharacterMarketOrdersResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterMarketOrdersResource.swift; sourceTree = "<group>"; };
 		C99750AF2C149D9100DE5B96 /* MarketOrderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketOrderCell.swift; sourceTree = "<group>"; };
@@ -603,8 +613,6 @@
 		C9BDB18A2DB3C59C00DA4375 /* CapitalNavigationShipPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalNavigationShipPickerView.swift; sourceTree = "<group>"; };
 		C9C566E62DBD674C009293F4 /* PlanetaryColonyWarningsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryColonyWarningsView.swift; sourceTree = "<group>"; };
 		C9C7C41F2DA11BF60079DF82 /* EVEUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EVEUnit.swift; sourceTree = "<group>"; };
-		C9C7C4222DA11F3A0079DF82 /* EVEUnit+Formatted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EVEUnit+Formatted.swift"; sourceTree = "<group>"; };
-		C9C7C4242DA1227A0079DF82 /* Item+Traits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Item+Traits.swift"; sourceTree = "<group>"; };
 		C9C7C4262DA1AFC40079DF82 /* UIFont+Weight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Weight.swift"; sourceTree = "<group>"; };
 		C9C87AD02D9E783A00EF5D45 /* ItemAttributeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemAttributeCell.swift; sourceTree = "<group>"; };
 		C9CA6B902C14DBBE0057F290 /* ECKIncursion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKIncursion.swift; sourceTree = "<group>"; };
@@ -898,6 +906,8 @@
 				C9E2FFEA2BFD121100754C2D /* ECKAllianceResource.swift */,
 				C94257252C29B53800FAEE5C /* ECKCharacterAssetNamesResource.swift */,
 				C94257212C29B15500FAEE5C /* ECKCharacterAssetsResource.swift */,
+				C96E521F2EC3BACB002BC743 /* ECKMarketOrdersResource.swift */,
+				C98F253A2EC510F600D0269A /* ECKMarketHistoryResource.swift */,
 				C98169C12C11C2FB0033B932 /* ECKCharacterAttributesResource.swift */,
 				C96F98A22BEFA74000DEC34F /* ECKCharacterContractResource.swift */,
 				C98169C52C1219F90033B932 /* ECKCharacterImplantResource.swift */,
@@ -936,9 +946,7 @@
 		C91672B72BEA9CD3009EC580 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				C9F055B72DE2F74700340A05 /* Fitting */,
 				C9E2FFEC2BFD128B00754C2D /* ECKAlliance.swift */,
-				C9F055A62DE24DCD00340A05 /* ECKServerStatus.swift */,
 				C942571B2C29A97800FAEE5C /* ECKAsset.swift */,
 				C942571F2C29AC7D00FAEE5C /* ECKAssetLocation.swift */,
 				C942571D2C29A9C500FAEE5C /* ECKAssetLocationFlag.swift */,
@@ -946,14 +954,13 @@
 				C952BC822BEB85C50070C504 /* ECKCharacter.swift */,
 				C90D508F2BF8B22400DEC0F3 /* ECKCharacter+Mail.swift */,
 				C98169C32C11C34D0033B932 /* ECKCharacterAttributes.swift */,
+				C99750A92C14897E00DE5B96 /* ECKCharacterMarketOrder.swift */,
 				C99528D72BEE18D100CA6E06 /* ECKCharacterSkill.swift */,
 				C952BCA32BED270E0070C504 /* ECKCharacterSkills.swift */,
 				C9CA6B962C14DD7F0057F290 /* ECKConstellation.swift */,
 				C96F98A02BEFA72D00DEC34F /* ECKContract.swift */,
 				C9FD52FA2C0236A30084E5E1 /* ECKCorporation.swift */,
 				C983AAB82BF64B42002EDECB /* ECKEmptyResponse.swift */,
-				C9DEDD362DADAB9600781E8A /* ECKMarketGroup.swift */,
-				C9C7C41F2DA11BF60079DF82 /* EVEUnit.swift */,
 				C9CA6B982C14DE500057F290 /* ECKFaction.swift */,
 				C92D17CA2C2760FE00D6FF5A /* ECKHomeLocation.swift */,
 				C9CA6B902C14DBBE0057F290 /* ECKIncursion.swift */,
@@ -969,7 +976,9 @@
 				C983AAB22BF6466B002EDECB /* ECKMail.swift */,
 				C983AAC22BF650BB002EDECB /* ECKMailingList.swift */,
 				C983AAB42BF64786002EDECB /* ECKMailRecipient.swift */,
-				C99750A92C14897E00DE5B96 /* ECKMarketOrder.swift */,
+				C9DEDD362DADAB9600781E8A /* ECKMarketGroup.swift */,
+				C98F253C2EC5148000D0269A /* ECKMarketHistoryEntry.swift */,
+				C96E58312EC3BD7E002BC743 /* ECKMarketOrder.swift */,
 				C9E2FFEE2BFD131900754C2D /* ECKOptionalResponse.swift */,
 				C96430912CC46A0200E8D6A6 /* ECKPlanet.swift */,
 				C96430812CC1AB7500E8D6A6 /* ECKPlanetaryColony.swift */,
@@ -979,6 +988,7 @@
 				C96F98A42BF017DA00DEC34F /* ECKPublicCharacterInfo.swift */,
 				C99750AB2C148D1000DE5B96 /* ECKRegion.swift */,
 				C9D570A72C5B839600985587 /* ECKSDEVersion.swift */,
+				C9F055A62DE24DCD00340A05 /* ECKServerStatus.swift */,
 				C996A5E52BF2B4DF0038277C /* ECKSolarSystem.swift */,
 				C91FE09B2D8DA5AD00BA7303 /* ECKSolarSystemSovereignty.swift */,
 				C9955A222C3443D30045D925 /* ECKSovereigntyCampaign.swift */,
@@ -989,6 +999,8 @@
 				C9FD52E62C01D7260084E5E1 /* ECKWalletJournalEntry.swift */,
 				C9FD52E82C01D9750084E5E1 /* ECKWalletJournalEntryRefType.swift */,
 				C9FD52E42C01D3B30084E5E1 /* ECKWalletTransactionEntry.swift */,
+				C9C7C41F2DA11BF60079DF82 /* EVEUnit.swift */,
+				C9F055B72DE2F74700340A05 /* Fitting */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1100,6 +1112,7 @@
 				C91672C12BEAC734009EC580 /* ECKKeychain.swift */,
 				C9DEF2ED2C14AEA000815AF0 /* ECKLogger.swift */,
 				C9DEDD342DADAA9000781E8A /* ECKMarketGroupManager.swift */,
+				C96E4F152EC3B76B002BC743 /* ECKMarketDataManager.swift */,
 				C900820B2DC5FA4A007660AE /* ECKNotificationManager.swift */,
 				C96430872CC445CF00E8D6A6 /* ECKPlanetaryColonyManager.swift */,
 				C99528D92BEE18DF00CA6E06 /* ECKSDEManager.swift */,
@@ -1398,7 +1411,6 @@
 		C9C7C41E2DA11BE80079DF82 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				C9C7C4222DA11F3A0079DF82 /* EVEUnit+Formatted.swift */,
 				C9E93B182DB19CED005458BC /* CharacterSelection.swift */,
 			);
 			path = Utils;
@@ -1511,7 +1523,7 @@
 			isa = PBXGroup;
 			children = (
 				C9EA45FA2D90A7F200FE4365 /* ItemView.swift */,
-				C9C7C4242DA1227A0079DF82 /* Item+Traits.swift */,
+				C96E58332EC3CCDC002BC743 /* ItemMarketDataView.swift */,
 				C9C87AD02D9E783A00EF5D45 /* ItemAttributeCell.swift */,
 				C94BEAB82D94AA8700F39C0E /* ItemViewHeaderSection.swift */,
 			);
@@ -1870,7 +1882,7 @@
 		C9CB97AE2C124FF100366D1A /* swift-package-list */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputFileListPaths = (
@@ -1884,7 +1896,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nOUTPUT_PATH=$SOURCE_ROOT/$TARGETNAME\nmint run swift-package-list \"$PROJECT_FILE_PATH\" --output-type json --output-path \"$OUTPUT_PATH\" --requires-license\n";
+			shellScript = "if [ \"${CONFIGURATION}\" = \"Release\" ]; then\n  export PATH=\"$PATH:/opt/homebrew/bin\"\n  OUTPUT_PATH=$SOURCE_ROOT/$TARGETNAME\n  mint run swift-package-list \"$PROJECT_FILE_PATH\" --output-type json --output-path \"$OUTPUT_PATH\" --requires-license\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1955,7 +1967,7 @@
 				C95980C32C2229EE007C9FD9 /* IndustryJobsView.swift in Sources */,
 				C952624A2BFA22130014B5F5 /* MailboxSectionHeaderView.swift in Sources */,
 				C9F055C02DE3040800340A05 /* FittingCell.swift in Sources */,
-				C9C7C4252DA1227A0079DF82 /* Item+Traits.swift in Sources */,
+				C96E58342EC3CCDC002BC743 /* ItemMarketDataView.swift in Sources */,
 				C9BBEC552C6E9C0B008CB3F2 /* ContentEmptyView.swift in Sources */,
 				C9E93B152DB0DB2B005458BC /* SkillRequirementsView.swift in Sources */,
 				C91FE0A62D8EBF5600BA7303 /* CapitalNavigationAlternativeSystemPickerView.swift in Sources */,
@@ -1992,7 +2004,6 @@
 				C9B449F82BF3A66300968754 /* SingleAxisGeometryReader.swift in Sources */,
 				C9FD52FF2C026BBF0084E5E1 /* LoyaltyPointCell.swift in Sources */,
 				C9EC4BA72BF5580D00D46CC4 /* UniverseView.swift in Sources */,
-				C9C7C4232DA11F3A0079DF82 /* EVEUnit+Formatted.swift in Sources */,
 				C952BC972BEC156B0070C504 /* CharacterCell.swift in Sources */,
 				C9012AF32C032D4E00407A81 /* WalletTransactionsView.swift in Sources */,
 				C996A5E82BF2B8340038277C /* ContractListCell.swift in Sources */,
@@ -2074,6 +2085,7 @@
 				C9012AF02C03282600407A81 /* ECKItem.swift in Sources */,
 				C91672A82BEA00CC009EC580 /* ECKAPIHost.swift in Sources */,
 				C9E2FFEB2BFD121100754C2D /* ECKAllianceResource.swift in Sources */,
+				C96E4F162EC3B76B002BC743 /* ECKMarketDataManager.swift in Sources */,
 				C9D570A62C5B836E00985587 /* ECKSDEVersionResource.swift in Sources */,
 				C96430862CC1AD3F00E8D6A6 /* ECKPlanetaryColoniesResource.swift in Sources */,
 				C9955A232C3443D30045D925 /* ECKSovereigntyCampaign.swift in Sources */,
@@ -2086,12 +2098,13 @@
 				C952BC852BEB992C0070C504 /* ECKPublicCharacterInfoResource.swift in Sources */,
 				C96F989F2BEFA6DB00DEC34F /* ECKContractManager.swift in Sources */,
 				C9C7C4212DA11C2B0079DF82 /* EVEUnit.swift in Sources */,
-				C99750AA2C14897E00DE5B96 /* ECKMarketOrder.swift in Sources */,
+				C99750AA2C14897E00DE5B96 /* ECKCharacterMarketOrder.swift in Sources */,
 				C906BAC72EB4C51E00A9E3F3 /* ECKBackgroundTaskManager.swift in Sources */,
 				C983AABF2BF64FB9002EDECB /* ECKUpdateMailResource.swift in Sources */,
 				C91672B32BEA044B009EC580 /* ECKWebError.swift in Sources */,
 				C9A7C55F2BF0C545003478AD /* ECKSettingsManager.swift in Sources */,
 				C94257242C29B50600FAEE5C /* ECKAssetName.swift in Sources */,
+				C98F253B2EC510F600D0269A /* ECKMarketHistoryResource.swift in Sources */,
 				C9EAA52A2C6FDBDB00ABB30F /* ECKCapitalJumpPathfinder.swift in Sources */,
 				C91FE0A42D8E07CB00BA7303 /* ECKGlobals.swift in Sources */,
 				C94257282C2A140800FAEE5C /* Array+Chunked.swift in Sources */,
@@ -2108,6 +2121,7 @@
 				C9381AAB2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift in Sources */,
 				C9AD0E312DF782C700E762AC /* ECKESITypeResource.swift in Sources */,
 				C9FD52F72C0235E20084E5E1 /* ECKLoyaltyPointsEntry.swift in Sources */,
+				C96E52202EC3BACB002BC743 /* ECKMarketOrdersResource.swift in Sources */,
 				C952BC812BEB858D0070C504 /* ECKCharacterStorage.swift in Sources */,
 				C9CA6B972C14DD7F0057F290 /* ECKConstellation.swift in Sources */,
 				C92D17CB2C2760FE00D6FF5A /* ECKHomeLocation.swift in Sources */,
@@ -2134,6 +2148,7 @@
 				C90D50982BF91EB500DEC0F3 /* ECKLoadingState.swift in Sources */,
 				C9F055B92DE2F79200340A05 /* ECKCharacterFittingItem.swift in Sources */,
 				C91FE09E2D8DA69300BA7303 /* ECKSovereigntyMapResource.swift in Sources */,
+				C98F253D2EC5148000D0269A /* ECKMarketHistoryEntry.swift in Sources */,
 				C9955A252C3449460045D925 /* ECKSovereigntyCampaignsResource.swift in Sources */,
 				C996A5EA2BF2B9340038277C /* NestedObservableObject.swift in Sources */,
 				C952BC8F2BEC10310070C504 /* Notification+Name.swift in Sources */,
@@ -2189,6 +2204,7 @@
 				C9FD52E52C01D3B30084E5E1 /* ECKWalletTransactionEntry.swift in Sources */,
 				C92D17BA2C23323100D6FF5A /* ECKIndustryJob.swift in Sources */,
 				C9F055C92DE3B89F00340A05 /* ECKCharacterFitting+Stats.swift in Sources */,
+				C96E58322EC3BD7E002BC743 /* ECKMarketOrder.swift in Sources */,
 				C9FD52EF2C022D9E0084E5E1 /* ECKURLSessionAutoLogging.swift in Sources */,
 				C9DEDD372DADAB9600781E8A /* ECKMarketGroup.swift in Sources */,
 				C9DCC40F2EA6B34700D2F643 /* ECKCharacterCurrentShip.swift in Sources */,
@@ -2468,6 +2484,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"EVECompanion/Preview Content\"";
 				DEVELOPMENT_TEAM = H4K6BXTR7Y;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EVECompanion/Info.plist;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
@@ -2512,6 +2529,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"EVECompanion/Preview Content\"";
 				DEVELOPMENT_TEAM = H4K6BXTR7Y;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EVECompanion/Info.plist;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;

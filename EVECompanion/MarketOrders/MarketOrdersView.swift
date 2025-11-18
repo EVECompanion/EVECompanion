@@ -12,11 +12,11 @@ struct MarketOrdersView: View {
     
     @ObservedObject var character: ECKCharacter
     
-    var sellOrders: [ECKMarketOrder] {
+    var sellOrders: [ECKCharacterMarketOrder] {
         return (character.marketOrders ?? []).filter({ $0.isBuyOrder == false })
     }
     
-    var buyOrders: [ECKMarketOrder] {
+    var buyOrders: [ECKCharacterMarketOrder] {
         return (character.marketOrders ?? []).filter({ $0.isBuyOrder })
     }
     
@@ -84,7 +84,7 @@ struct MarketOrdersView: View {
         .navigationTitle("Market Orders")
     }
     
-    func totalIsk(for orders: [ECKMarketOrder]) -> Double {
+    func totalIsk(for orders: [ECKCharacterMarketOrder]) -> Double {
         return orders.reduce(0) { partialResult, order in
             return partialResult + (order.price * Double(order.volumeRemain))
         }

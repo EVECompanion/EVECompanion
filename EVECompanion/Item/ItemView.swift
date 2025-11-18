@@ -11,11 +11,13 @@ import EVECompanionKit
 struct ItemView: View {
     let item: ECKItem
     
+    @State var marketHistoryData: [ECKMarketHistoryEntry] = []
+    
     var body: some View {
         List {
             ItemViewHeaderSection(item: item)
             
-            ForEach(item.bonusTexts, id: \.header) { entry in
+            ForEach(Array(item.bonusTexts.enumerated()), id: \.offset) { (_, entry) in
                 Section {
                     AttributedTextView(entry.text)
                 } header: {
@@ -28,6 +30,12 @@ struct ItemView: View {
                 SkillRequirementsView(item: item)
             }
             
+            if marketHistoryData.isEmpty == false {
+                Section("Price History") {
+                    ItemMarketDataView(history: marketHistoryData)
+                }
+            }
+             
             ForEach(item.itemAttributeCategories, id: \.name) { attributeCategory in
                 Section(attributeCategory.name) {
                     ForEach(attributeCategory.attributes, id: \.id) { attribute in
@@ -38,6 +46,11 @@ struct ItemView: View {
         }
         .listStyle(.plain)
         .navigationTitle(item.name)
+        .onAppear {
+            Task { @MainActor in
+                self.marketHistoryData = await ECKMarketDataManager.shared.marketHistoryData(forTypeId: item.typeId)
+            }
+        }
     }
 }
 #Preview("Avatar") {

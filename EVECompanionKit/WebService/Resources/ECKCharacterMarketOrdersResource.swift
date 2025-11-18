@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKCharacterMarketOrdersResource: ECKWebResource<[ECKMarketOrder]> {
+class ECKCharacterMarketOrdersResource: ECKWebResource<[ECKCharacterMarketOrder]> {
     
     init(token: ECKToken) {
         super.init(host: .esi,

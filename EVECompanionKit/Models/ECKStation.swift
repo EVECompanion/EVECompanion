@@ -10,7 +10,7 @@ public import Combine
 public class ECKStation: ObservableObject, Decodable {
     
     let stationId: Int
-    let token: ECKToken
+    let token: ECKToken?
     @Published public var solarSystem: ECKSolarSystem?
     @Published public var stationName: String?
     @Published public var typeId: Int?
@@ -29,12 +29,11 @@ public class ECKStation: ObservableObject, Decodable {
     public required convenience init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
         let stationId = try container.decode(Int.self)
-        // swiftlint:disable:next force_cast
-        let token = decoder.userInfo[ECKWebService.tokenCodingUserInfoKey] as! ECKToken
+        let token = decoder.userInfo[ECKWebService.tokenCodingUserInfoKey] as? ECKToken
         self.init(stationId: stationId, token: token)
     }
     
-    init(stationId: Int, token: ECKToken) {
+    init(stationId: Int, token: ECKToken?) {
         self.stationId = stationId
         self.token = token
         if stationId > 1000000000000 {
@@ -53,6 +52,12 @@ public class ECKStation: ObservableObject, Decodable {
     
     @MainActor
     func loadStructureData() async {
+        guard let token else {
+            self.solarSystem = nil
+            self.stationName = "Unknown Structure"
+            return
+        }
+        
         let resource = ECKStructureResource(structureId: stationId, token: token)
         do {
             let response = try await ECKWebService().loadResource(resource: resource).response

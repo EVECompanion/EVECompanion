@@ -32,7 +32,7 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
     @Published public var walletJournal: [ECKWalletJournalEntry]?
     @Published public var walletTransactions: [ECKWalletTransactionEntry]?
     @Published public var loyaltyPoints: [ECKLoyaltyPointsEntry]?
-    @Published public var marketOrders: [ECKMarketOrder]?
+    @Published public var marketOrders: [ECKCharacterMarketOrder]?
     @Published public var jumpFatigue: ECKJumpFatigue?
     @Published public var location: ECKCharacterLocation?
     @Published public var currentShip: ECKCharacterCurrentShip?
