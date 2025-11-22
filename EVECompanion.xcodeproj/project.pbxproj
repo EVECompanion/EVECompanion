@@ -77,6 +77,11 @@
 		C91FE0A22D8DF2BF00BA7303 /* ECKAllianceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91FE0A12D8DF2BF00BA7303 /* ECKAllianceManager.swift */; };
 		C91FE0A42D8E07CB00BA7303 /* ECKGlobals.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91FE0A32D8E07CB00BA7303 /* ECKGlobals.swift */; };
 		C91FE0A62D8EBF5600BA7303 /* CapitalNavigationAlternativeSystemPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91FE0A52D8EBF5600BA7303 /* CapitalNavigationAlternativeSystemPickerView.swift */; };
+		C92B4EB32ED101D200E3D9B4 /* CorporationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92B4EB22ED101D200E3D9B4 /* CorporationListView.swift */; };
+		C92B4EB52ED102F200E3D9B4 /* ECKAuthenticationTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92B4EB42ED102F200E3D9B4 /* ECKAuthenticationTarget.swift */; };
+		C92B4EB72ED1C53500E3D9B4 /* ECKCorporationStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92B4EB62ED1C53500E3D9B4 /* ECKCorporationStorage.swift */; };
+		C92B4EB92ED1D1F800E3D9B4 /* ECKAuthenticatedCorporation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92B4EB82ED1D1F800E3D9B4 /* ECKAuthenticatedCorporation.swift */; };
+		C92B4EBB2ED1DB5500E3D9B4 /* AuthenticatedCorporationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92B4EBA2ED1DB5500E3D9B4 /* AuthenticatedCorporationCell.swift */; };
 		C92D17BA2C23323100D6FF5A /* ECKIndustryJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92D17B92C23323100D6FF5A /* ECKIndustryJob.swift */; };
 		C92D17BC2C23344C00D6FF5A /* ECKCharacterIndustryJobsResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92D17BB2C23344C00D6FF5A /* ECKCharacterIndustryJobsResource.swift */; };
 		C92D17BE2C23348B00D6FF5A /* ECKIndustryJobManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92D17BD2C23348B00D6FF5A /* ECKIndustryJobManager.swift */; };
@@ -466,6 +471,11 @@
 		C91FE0A32D8E07CB00BA7303 /* ECKGlobals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKGlobals.swift; sourceTree = "<group>"; };
 		C91FE0A52D8EBF5600BA7303 /* CapitalNavigationAlternativeSystemPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalNavigationAlternativeSystemPickerView.swift; sourceTree = "<group>"; };
 		C92373D12BEE66B500EEE639 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		C92B4EB22ED101D200E3D9B4 /* CorporationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorporationListView.swift; sourceTree = "<group>"; };
+		C92B4EB42ED102F200E3D9B4 /* ECKAuthenticationTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKAuthenticationTarget.swift; sourceTree = "<group>"; };
+		C92B4EB62ED1C53500E3D9B4 /* ECKCorporationStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCorporationStorage.swift; sourceTree = "<group>"; };
+		C92B4EB82ED1D1F800E3D9B4 /* ECKAuthenticatedCorporation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKAuthenticatedCorporation.swift; sourceTree = "<group>"; };
+		C92B4EBA2ED1DB5500E3D9B4 /* AuthenticatedCorporationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedCorporationCell.swift; sourceTree = "<group>"; };
 		C92D17B92C23323100D6FF5A /* ECKIndustryJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKIndustryJob.swift; sourceTree = "<group>"; };
 		C92D17BB2C23344C00D6FF5A /* ECKCharacterIndustryJobsResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterIndustryJobsResource.swift; sourceTree = "<group>"; };
 		C92D17BD2C23348B00D6FF5A /* ECKIndustryJobManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKIndustryJobManager.swift; sourceTree = "<group>"; };
@@ -949,6 +959,7 @@
 				C9E2FFEC2BFD128B00754C2D /* ECKAlliance.swift */,
 				C942571B2C29A97800FAEE5C /* ECKAsset.swift */,
 				C942571F2C29AC7D00FAEE5C /* ECKAssetLocation.swift */,
+				C92B4EB82ED1D1F800E3D9B4 /* ECKAuthenticatedCorporation.swift */,
 				C942571D2C29A9C500FAEE5C /* ECKAssetLocationFlag.swift */,
 				C94257232C29B50600FAEE5C /* ECKAssetName.swift */,
 				C952BC822BEB85C50070C504 /* ECKCharacter.swift */,
@@ -1033,10 +1044,8 @@
 			isa = PBXGroup;
 			children = (
 				C9ACC07B2DC9DD0C0000D0FC /* AppDelegate.swift */,
-				C9BCEA052EB63B3000357E2D /* GoogleService-Info.plist */,
 				C959777C2C28B35F0008F719 /* Assets */,
 				C91EEEBE2BE9730100352175 /* Assets.xcassets */,
-				C93E8FDC2E5CD26900187846 /* EVECompanionIcon.icon */,
 				C98483FF2D7F7CEB0076016B /* CapitalNavigation */,
 				C92F9C972D8A0F5700306DD7 /* CapitalNavigationTab */,
 				C99528CF2BEE0CDB00CA6E06 /* CharacterDetail */,
@@ -1044,12 +1053,15 @@
 				C9E2FFE72BFD0F1C00754C2D /* CharacterSheet */,
 				C96F989B2BEF7FE600DEC34F /* Contracts */,
 				C956D90D2DA8F7A000D56C27 /* Coordinator */,
+				C92B4EB12ED101C600E3D9B4 /* CorporationList */,
 				C90931FC2DAB9E8600A88120 /* Deeplink */,
 				C900820A2DC568A3007660AE /* EVECompanion.entitlements */,
 				C91EEEBA2BE9730000352175 /* EVECompanionApp.swift */,
+				C93E8FDC2E5CD26900187846 /* EVECompanionIcon.icon */,
 				C9EC4BA82BF558B700D46CC4 /* EVECompanionTabView.swift */,
 				C99528D22BEE102400CA6E06 /* Extensions */,
 				C9F055BC2DE2FC8200340A05 /* Fitting */,
+				C9BCEA052EB63B3000357E2D /* GoogleService-Info.plist */,
 				C9CA6B9E2C14E2690057F290 /* Incursions */,
 				C95980C12C2229DF007C9FD9 /* IndustryJobs */,
 				C92373D12BEE66B500EEE639 /* Info.plist */,
@@ -1099,7 +1111,9 @@
 				C906BAC62EB4C51E00A9E3F3 /* ECKBackgroundTaskManager.swift */,
 				C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */,
 				C916729F2BE97A5B009EC580 /* ECKAuthenticationSession.swift */,
+				C92B4EB42ED102F200E3D9B4 /* ECKAuthenticationTarget.swift */,
 				C952BC802BEB858D0070C504 /* ECKCharacterStorage.swift */,
+				C92B4EB62ED1C53500E3D9B4 /* ECKCorporationStorage.swift */,
 				C91672B82BEA9E68009EC580 /* ECKConstants.swift */,
 				C96F989E2BEFA6DB00DEC34F /* ECKContractManager.swift */,
 				C9B39FAF2E8C754B0049C83D /* ECKESIFittingManager.swift */,
@@ -1130,6 +1144,15 @@
 				C91672A92BEA0147009EC580 /* WebService */,
 			);
 			path = EVECompanionKit;
+			sourceTree = "<group>";
+		};
+		C92B4EB12ED101C600E3D9B4 /* CorporationList */ = {
+			isa = PBXGroup;
+			children = (
+				C92B4EB22ED101D200E3D9B4 /* CorporationListView.swift */,
+				C92B4EBA2ED1DB5500E3D9B4 /* AuthenticatedCorporationCell.swift */,
+			);
+			path = CorporationList;
 			sourceTree = "<group>";
 		};
 		C92D17C32C275F4D00D6FF5A /* JumpClones */ = {
@@ -2012,6 +2035,7 @@
 				C9B638C32E088B6200E9F6F4 /* FittingDetailDronesView.swift in Sources */,
 				C952BC952BEC12C80070C504 /* CharacterListView.swift in Sources */,
 				C9955A2A2C3528370045D925 /* SovereigntyCampaignsView.swift in Sources */,
+				C92B4EBB2ED1DB5500E3D9B4 /* AuthenticatedCorporationCell.swift in Sources */,
 				C98484012D7F7CFB0076016B /* CapitalNavigationView.swift in Sources */,
 				C9DEF4AE2C03C379000238DF /* SkillCell.swift in Sources */,
 				C952624D2BFA72ED0014B5F5 /* AttributedTextView.swift in Sources */,
@@ -2027,6 +2051,7 @@
 				C956D90E2DA8F7A000D56C27 /* CoordinatorView.swift in Sources */,
 				C956D90F2DA8F7A000D56C27 /* Coordinator.swift in Sources */,
 				C956D9102DA8F7A000D56C27 /* AppScreen.swift in Sources */,
+				C92B4EB32ED101D200E3D9B4 /* CorporationListView.swift in Sources */,
 				C9B449FB2BF40B5700968754 /* SkillQueueView.swift in Sources */,
 				C90931FE2DAB9E9000A88120 /* Deeplink.swift in Sources */,
 				C95262482BF9439F0014B5F5 /* MailDetailView.swift in Sources */,
@@ -2092,6 +2117,7 @@
 				C91672BD2BEAC2E7009EC580 /* Data+Base64URLEncoded.swift in Sources */,
 				C91672C22BEAC734009EC580 /* ECKKeychain.swift in Sources */,
 				C99528D82BEE18D100CA6E06 /* ECKCharacterSkill.swift in Sources */,
+				C92B4EB52ED102F200E3D9B4 /* ECKAuthenticationTarget.swift in Sources */,
 				C91672B92BEA9E68009EC580 /* ECKConstants.swift in Sources */,
 				C942571C2C29A97800FAEE5C /* ECKAsset.swift in Sources */,
 				C94257222C29B15500FAEE5C /* ECKCharacterAssetsResource.swift in Sources */,
@@ -2161,6 +2187,7 @@
 				C91672BB2BEA9F4D009EC580 /* ECKToken.swift in Sources */,
 				C99528D62BEE152F00CA6E06 /* ECKCharacterSkillqueueResource.swift in Sources */,
 				C964308E2CC4576700E8D6A6 /* ECKPlanetSchematic.swift in Sources */,
+				C92B4EB92ED1D1F800E3D9B4 /* ECKAuthenticatedCorporation.swift in Sources */,
 				C92D17C02C23383000D6FF5A /* ECKIndustryActivity.swift in Sources */,
 				C9B079082C32C9A00059785D /* ECKTokenExpired.swift in Sources */,
 				C9ACC0782DC9612D0000D0FC /* ECKSkillCompletedNotificationRequest.swift in Sources */,
@@ -2200,6 +2227,7 @@
 				C95977802C28B56E0008F719 /* ECKAssetManager.swift in Sources */,
 				C9955A272C3525080045D925 /* ECKSovereigntyCampaignManager.swift in Sources */,
 				C95F604E2D860F820007A74A /* ECKCapitalJumpPathFinderError.swift in Sources */,
+				C92B4EB72ED1C53500E3D9B4 /* ECKCorporationStorage.swift in Sources */,
 				C91672A02BE97A5B009EC580 /* ECKAuthenticationSession.swift in Sources */,
 				C9FD52E52C01D3B30084E5E1 /* ECKWalletTransactionEntry.swift in Sources */,
 				C92D17BA2C23323100D6FF5A /* ECKIndustryJob.swift in Sources */,

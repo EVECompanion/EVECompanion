@@ -52,8 +52,112 @@ internal enum ECKAPIScope: String, CaseIterable {
     case readTitles = "esi-characters.read_titles.v1"
     case readFWStats = "esi-characters.read_fw_stats.v1"
     
-    static var allScopesString: String {
-        return Self.allCases.map({ $0.rawValue }).joined(separator: " ")
+    case corpReadStructures = "esi-corporations.read_structures.v1"
+    case characterReadCorpRoles = "esi-characters.read_corporation_roles.v1"
+    case corpReadKillmails = "esi-killmails.read_corporation_killmails.v1"
+    case corpTrackMembers = "esi-corporations.track_members.v1"
+    case corpReadWallets = "esi-wallet.read_corporation_wallets.v1"
+    case corpReadDivisions = "esi-corporations.read_divisions.v1"
+    case corpReadContacts = "esi-corporations.read_contacts.v1"
+    case corpReadAssets = "esi-assets.read_corporation_assets.v1"
+    case corpReadTitles = "esi-corporations.read_titles.v1"
+    case corpReadBlueprints = "esi-corporations.read_blueprints.v1"
+    case corpReadContracts = "esi-contracts.read_corporation_contracts.v1"
+    case corpReadStandings = "esi-corporations.read_standings.v1"
+    case corpReadStarbases = "esi-corporations.read_starbases.v1"
+    case corpReadJobs = "esi-industry.read_corporation_jobs.v1"
+    case corpReadOrders = "esi-markets.read_corporation_orders.v1"
+    case corpReadContainerLogs = "esi-corporations.read_container_logs.v1"
+    case corpReadMining = "esi-industry.read_corporation_mining.v1"
+    case corpReadFacilities = "esi-corporations.read_facilities.v1"
+    case corpReadMedals = "esi-corporations.read_medals.v1"
+    case alliancesReadContacts = "esi-alliances.read_contacts.v1"
+    case corpReadFWStats = "esi-corporations.read_fw_stats.v1"
+    case corpReadProjects = "esi-corporations.read_projects.v1"
+    case corpReadCustomsOffices = "esi-planets.read_customs_offices.v1"
+    
+    static var characterScopes: [ECKAPIScope] {
+        return [
+            .publicData,
+            .respondCalendarEvents,
+            .readCalendarEvents,
+            .readLocation,
+            .readShipType,
+            .organizeMail,
+            .readMail,
+            .sendMail,
+            .readSkills,
+            .readSkillQueue,
+            .readCharacterWallet,
+            .searchStructures,
+            .readClones,
+            .readContacts,
+            .readStructures,
+            .readKillmails,
+            .readAssets,
+            .managePlanets,
+            .readFleet,
+            .writeFleet,
+            .openWindow,
+            .writeWaypoint,
+            .writeContacts,
+            .readFittings,
+            .writeFittings,
+            .structureMarkets,
+            .readLoyalty,
+            .readChatChannels,
+            .readMedals,
+            .readStandings,
+            .readAgentsResearch,
+            .readCharacterJobs,
+            .readCharacterOrders,
+            .readCharacterBlueprints,
+            .readOnline,
+            .readCharacterContracts,
+            .readImplants,
+            .readFatigue,
+            .readNotifications,
+            .readCharacterMining,
+            .readTitles,
+            .readFWStats,
+            .corpReadProjects
+        ]
+    }
+    
+    static var corpScopes: [ECKAPIScope] {
+        return [
+            .corpReadStructures,
+            .characterReadCorpRoles,
+            .corpReadKillmails,
+            .corpTrackMembers,
+            .corpReadWallets,
+            .corpReadDivisions,
+            .corpReadContacts,
+            .corpReadAssets,
+            .corpReadTitles,
+            .corpReadBlueprints,
+            .corpReadContracts,
+            .corpReadStandings,
+            .corpReadStarbases,
+            .corpReadJobs,
+            .corpReadOrders,
+            .corpReadContainerLogs,
+            .corpReadMining,
+            .corpReadFacilities,
+            .corpReadMedals,
+            .alliancesReadContacts,
+            .corpReadFWStats,
+            .corpReadProjects,
+            .corpReadCustomsOffices
+        ]
+    }
+    
+}
+
+extension Array where Element == ECKAPIScope {
+    
+    var scopesString: String {
+        return self.map({ $0.rawValue }).joined(separator: " ")
     }
     
 }

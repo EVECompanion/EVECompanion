@@ -9,7 +9,7 @@ import Foundation
 
 extension Notification.Name {
     
-    static let charactersDidChange = Notification.Name("CharactersDidChange")
+    static let tokensDidChange = Notification.Name("TokensDidChange")
     static let sdeUpdated = Notification.Name("SDEUpdated")
     static let sdeDeleted = Notification.Name("SDEDeleted")
     static let pushPermissionGranted = Notification.Name("PushPermissionGranted")

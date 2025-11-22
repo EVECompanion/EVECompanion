@@ -48,12 +48,19 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
     
     static public let dummy: ECKCharacter = .init()
     
-    internal init(token: ECKToken) {
+    internal init(token: ECKToken, dataLoadingTarget: ECKAuthenticationTarget) {
         self.token = token
         Task { @MainActor in
-            loadInitialData()
+            switch dataLoadingTarget {
+                
+            case .character:
+                self.loadInitialData()
+                
+            case .corp:
+                self.loadInitialCorpData()
+                
+            }
         }
-        
     }
     
     @MainActor
@@ -81,6 +88,21 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
     }
     
     @MainActor
+    private func loadPublicInfo() async throws {
+        let publicInfoResource = ECKPublicCharacterInfoResource(token: token)
+        self.publicInfo = try await ECKWebService().loadResource(resource: publicInfoResource).response
+    }
+    
+    @MainActor
+    public func loadInitialCorpData() {
+        initialDataLoadingTask = Task { @MainActor in
+            self.initialDataLoadingState = .loading
+            await self.loadAllianceAndCorpData()
+            self.initialDataLoadingState = .ready
+        }
+    }
+    
+    @MainActor
     public func loadInitialData() {
         initialDataLoadingTask = Task { @MainActor in
             self.initialDataLoadingState = .loading
@@ -96,21 +118,18 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
                 let skillqueueResourcce = ECKCharacterSkillqueueResource(token: token)
                 async let skillqueueResponse = try ECKWebService().loadResource(resource: skillqueueResourcce).response
                 
-                let publicInfoResource = ECKPublicCharacterInfoResource(token: token)
-                async let publicInfoResponse = try ECKWebService().loadResource(resource: publicInfoResource).response
-                
                 let mailboxResource = ECKFetchMailResource(token: token,
                                                            lastMailId: nil)
                 async let mailboxResponse = try ECKWebService().loadResource(resource: mailboxResource).response
                 
+                try? await loadPublicInfo()
+                
                 (self.wallet,
                  self.skills,
                  self.skillqueue,
-                 self.publicInfo,
                  self.mailbox) = await (try? wallet,
                                         try? skillsResponse,
                                         try? skillqueueResponse,
-                                        try? publicInfoResponse,
                                         try? mailboxResponse)
                 if let skillqueue {
                     self.skills?.updateWithSkillQueue(skillqueue)
@@ -174,6 +193,22 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
         }
     }
     
+    private func loadAllianceAndCorpData() async {
+        if publicInfo == nil {
+            try? await loadPublicInfo()
+        }
+        
+        if let allianceId = publicInfo?.allianceId {
+            self.alliance = await ECKAllianceManager.shared.get(allianceId: allianceId)
+        }
+        
+        if let corporationId = publicInfo?.corporationId {
+            let corporationResource = ECKCorporationResource(corporationId: corporationId)
+            let corporationResponse = try? await ECKWebService().loadResource(resource: corporationResource).response
+            self.corporation = corporationResponse
+        }
+    }
+    
     @MainActor
     public func loadSheetData() async {
         guard UserDefaults.standard.isDemoModeEnabled == false else {
@@ -182,20 +217,6 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
         
         // Update all the other data
         loadInitialData()
-        
-        if let allianceId = publicInfo?.allianceId {
-            Task { @MainActor in
-                self.alliance = await ECKAllianceManager.shared.get(allianceId: allianceId)
-            }
-        }
-        
-        if let corporationId = publicInfo?.corporationId {
-            Task { @MainActor in
-                let corporationResource = ECKCorporationResource(corporationId: corporationId)
-                let corporationResponse = try? await ECKWebService().loadResource(resource: corporationResource).response
-                self.corporation = corporationResponse
-            }
-        }
         
         Task {
             do {
