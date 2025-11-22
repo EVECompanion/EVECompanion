@@ -59,7 +59,8 @@ struct CharacterListView: View {
                     }
                     
                     Task {
-                        try? await ECKAuthenticationSession.start(authenticationHandler: { url, scheme in
+                        try? await ECKAuthenticationSession.start(target: .character,
+                                                                  authenticationHandler: { url, scheme in
                             return try await webAuthenticationSession.authenticate(using: url, callbackURLScheme: scheme)
                         })
                     }

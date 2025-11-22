@@ -49,7 +49,7 @@ internal struct ECKKeychain {
         set(tokens: currentTokens)
         if isNewToken {
             logger.debug("Detected new token, refreshing app.")
-            NotificationCenter.default.post(name: .charactersDidChange, object: nil)
+            NotificationCenter.default.post(name: .tokensDidChange, object: nil)
         }
     }
     
@@ -64,7 +64,7 @@ internal struct ECKKeychain {
         let updatedTokens = currentTokens.filter({ $0.id != token.id })
         set(tokens: updatedTokens)
         
-        NotificationCenter.default.post(name: .charactersDidChange, object: nil)
+        NotificationCenter.default.post(name: .tokensDidChange, object: nil)
     }
     
     @MainActor
@@ -84,7 +84,13 @@ internal struct ECKKeychain {
     }
     
     @MainActor
-    static func getTokens() -> [ECKToken] {
+    static func getTokens(target: ECKAuthenticationTarget) -> [ECKToken] {
+        let allTokens = getTokens()
+        return allTokens.filter({ $0.tokenTarget == target })
+    }
+    
+    @MainActor
+    private static func getTokens() -> [ECKToken] {
         guard let tokenData = keychain.getData(tokenKey) else {
             logger.warning("Keychain has no tokens for key \(tokenKey)")
             return []

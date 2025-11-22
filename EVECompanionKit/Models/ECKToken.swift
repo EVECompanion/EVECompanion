@@ -10,17 +10,11 @@ import JWTDecode
 
 internal final class ECKToken: Hashable, Equatable, Codable, Identifiable {
     
-    static func == (lhs: ECKToken, rhs: ECKToken) -> Bool {
-        return lhs.accessToken == rhs.accessToken &&
-        lhs.refreshToken == rhs.refreshToken &&
-        lhs.characterId == rhs.characterId &&
-        lhs.characterName == rhs.characterName
-    }
-    
     enum CodingKeys: String, CodingKey {
         case accessToken = "access_token"
         case refreshToken = "refresh_token"
         case isValid
+        case tokenTarget
     }
     
     private(set) internal var accessToken: String
@@ -29,6 +23,7 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable {
     private(set) internal var characterName: String
     private(set) internal var isValid: Bool
     private(set) internal var accessTokenExpiredFlag: Bool = false
+    internal var tokenTarget: ECKAuthenticationTarget = .character
     
     @MainActor
     internal var refreshTask: Task<Void, any Error>?
@@ -55,13 +50,13 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable {
             let jwt = try JWTDecode.decode(jwt: accessToken)
             guard let subject = jwt.subject else {
                 logger.error("\(jwt) has no subject.")
-                return UUID().uuidString
+                return UUID().uuidString + "-\(tokenTarget.rawValue)"
             }
             
-            return subject
+            return subject + "-\(tokenTarget.rawValue)"
         } catch {
             logger.error("Error decoding jwt \(error)")
-            return UUID().uuidString
+            return UUID().uuidString + "-\(tokenTarget.rawValue)"
         }
     }()
     
@@ -78,6 +73,7 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable {
         self.accessToken = try container.decode(String.self, forKey: .accessToken)
         self.refreshToken = try container.decode(String.self, forKey: .refreshToken)
         self.isValid = try container.decodeIfPresent(Bool.self, forKey: .isValid) ?? true
+        self.tokenTarget = try container.decodeIfPresent(ECKAuthenticationTarget.self, forKey: .tokenTarget) ?? .character
         
         do {
             let jwt = try JWTDecode.decode(jwt: accessToken)
@@ -119,6 +115,15 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable {
         hasher.combine(refreshToken)
         hasher.combine(characterId)
         hasher.combine(characterName)
+        hasher.combine(tokenTarget)
+    }
+    
+    static func == (lhs: ECKToken, rhs: ECKToken) -> Bool {
+        return lhs.accessToken == rhs.accessToken &&
+        lhs.refreshToken == rhs.refreshToken &&
+        lhs.characterId == rhs.characterId &&
+        lhs.characterName == rhs.characterName &&
+        lhs.tokenTarget == rhs.tokenTarget
     }
     
 }

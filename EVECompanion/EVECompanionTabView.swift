@@ -12,6 +12,7 @@ struct EVECompanionTabView: View {
     
     @StateObject var sdeUpdater = ECKSDEUpdater()
     @Binding var selectedCharacter: CharacterSelection
+    @AppStorage(ECKDefaultKeys.showCorpTab.rawValue) private var showCorpTab: Bool = true
     
     init(selectedCharacter: Binding<CharacterSelection>) {
         self._selectedCharacter = selectedCharacter
@@ -24,9 +25,16 @@ struct EVECompanionTabView: View {
                     Label("Characters", systemImage: "person.3")
                 }
             
+            if showCorpTab {
+                CoordinatorView(initialScreen: .corporationList)
+                    .tabItem {
+                        Label("Corporations", systemImage: "briefcase")
+                    }
+            }
+            
             CapitalNavigationTabView()
                 .tabItem {
-                    Label("Capital Navigation", systemImage: "point.topright.arrow.triangle.backward.to.point.bottomleft.filled.scurvepath")
+                    Label("Navigation", systemImage: "point.topright.arrow.triangle.backward.to.point.bottomleft.filled.scurvepath")
                 }
             
             CoordinatorView(initialScreen: .universe)
@@ -39,6 +47,7 @@ struct EVECompanionTabView: View {
                     Label("Settings", systemImage: "gear")
                 }
         }
+        .animation(.spring, value: showCorpTab)
         .sheet(isPresented: .init(get: {
             sdeUpdater.state != .noUpdateAvailable
         }, set: { _ in

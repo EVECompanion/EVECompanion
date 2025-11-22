@@ -10,9 +10,9 @@ import CryptoKit
 
 public struct ECKAuthenticationSession {
     
-    public static func start(authenticationHandler: (URL, String) async throws -> URL) async throws {
+    public static func start(target: ECKAuthenticationTarget, authenticationHandler: (URL, String) async throws -> URL) async throws {
         guard UserDefaults.standard.isDemoModeEnabled == false else {
-            NotificationCenter.default.post(name: .charactersDidChange, object: nil)
+            NotificationCenter.default.post(name: .tokensDidChange, object: nil)
             return
         }
         
@@ -35,10 +35,19 @@ public struct ECKAuthenticationSession {
         var signInURLComponents = URLComponents(string: "https://login.eveonline.com/v2/oauth/authorize/")!
         var signInURLQueryItems = [URLQueryItem]()
         
+        let requiredScopes: [ECKAPIScope]
+        
+        switch target {
+        case .character:
+            requiredScopes = ECKAPIScope.characterScopes
+        case .corp:
+            requiredScopes = ECKAPIScope.corpScopes
+        }
+        
         signInURLQueryItems.append(.init(name: "response_type", value: "code"))
         signInURLQueryItems.append(.init(name: "redirect_uri", value: ECKConstants.redirectURI))
         signInURLQueryItems.append(.init(name: "client_id", value: ECKConstants.clientId))
-        signInURLQueryItems.append(.init(name: "scope", value: ECKAPIScope.allScopesString))
+        signInURLQueryItems.append(.init(name: "scope", value: requiredScopes.scopesString))
         signInURLQueryItems.append(.init(name: "code_challenge_method", value: "S256"))
         signInURLQueryItems.append(.init(name: "state", value: state))
         signInURLQueryItems.append(.init(name: "code_challenge", value: codeVerifierHashString))
@@ -62,7 +71,10 @@ public struct ECKAuthenticationSession {
                                                                                                   codeVerifier: codeVerifier,
                                                                                                   code: code))
         
-        await ECKKeychain.add(token: tokenResult.response)
+        let token = tokenResult.response
+        token.tokenTarget = target
+        
+        await ECKKeychain.add(token: token)
     }
     
 }
