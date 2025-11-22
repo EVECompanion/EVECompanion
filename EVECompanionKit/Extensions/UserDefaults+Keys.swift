@@ -16,6 +16,7 @@ public enum ECKDefaultKeys: String {
     case didDismissPushCTA = "didDismissPushCTA"
     case enableEmptySkillQueueNotifications = "enableEmptySkillQueueNotifications"
     case enableSkillCompletedNotifications = "enableSkillCompletedNotifications"
+    case showCorpTab = "showCorpTab"
 }
 
 public extension UserDefaults {
@@ -67,6 +68,19 @@ public extension UserDefaults {
         }
         set {
             setValue(newValue, forKey: ECKDefaultKeys.enableSkillCompletedNotifications.rawValue)
+        }
+    }
+    
+    @objc dynamic var showCorpTab: Bool {
+        get {
+            if value(forKey: ECKDefaultKeys.showCorpTab.rawValue) == nil {
+                return true
+            }
+            
+            return bool(forKey: ECKDefaultKeys.showCorpTab.rawValue)
+        }
+        set {
+            setValue(newValue, forKey: ECKDefaultKeys.showCorpTab.rawValue)
         }
     }
 }

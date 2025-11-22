@@ -51,7 +51,7 @@ public class ECKCharacterStorage: ObservableObject, @unchecked Sendable {
         
         NotificationCenter
             .default
-            .publisher(for: .charactersDidChange)
+            .publisher(for: .tokensDidChange)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self else {
@@ -173,8 +173,8 @@ public class ECKCharacterStorage: ObservableObject, @unchecked Sendable {
     @MainActor
     private func reloadCharactersNormalMode() async {
         lastReloadDate = .init()
-        let tokens = await ECKKeychain.getTokens()
-        characters = tokens.map({ .init(token: $0) })
+        let tokens = await ECKKeychain.getTokens(target: .character)
+        characters = tokens.map({ .init(token: $0, dataLoadingTarget: .character) })
         await reloadNotifications()
         WidgetCenter.shared.reloadAllTimelines()
     }

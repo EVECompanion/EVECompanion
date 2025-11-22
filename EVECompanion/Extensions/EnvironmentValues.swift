@@ -20,6 +20,10 @@ private struct ServiceManagerKey: EnvironmentKey {
     static let defaultValue: ECKServiceManager = .init()
 }
 
+private struct CorporationStorageKey: EnvironmentKey {
+    static let defaultValue: ECKCorporationStorage = .init()
+}
+
 extension EnvironmentValues {
     
     var characterStorage: ECKCharacterStorage {
@@ -35,6 +39,11 @@ extension EnvironmentValues {
     var serviceManager: ECKServiceManager {
         get { self[ServiceManagerKey.self] }
         set { self[ServiceManagerKey.self] = newValue }
+    }
+    
+    var corporationStorage: ECKCorporationStorage {
+      get { self[CorporationStorageKey.self] }
+      set { self[CorporationStorageKey.self] = newValue }
     }
     
 }

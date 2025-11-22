@@ -84,6 +84,8 @@ class Coordinator: ObservableObject {
             SovereigntyCampaignsView()
         case .settings:
             SettingsView()
+        case .corporationList:
+            CorporationListView()
         }
     }
     

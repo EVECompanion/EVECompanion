@@ -15,6 +15,8 @@ enum AppScreen: Hashable {
     case characterDetail(ECKCharacter, Binding<CharacterSelection>)
     case characterSheet(ECKCharacter)
     
+    case corporationList
+    
     case assetList(manager: ECKAssetManager)
     case contracts(manager: ECKContractManager)
     case marketOrders(ECKCharacter)
@@ -100,6 +102,8 @@ enum AppScreen: Hashable {
             return "skillPlanList"
         case .skillPlanDetail:
             return "skillPlanDetail"
+        case .corporationList:
+            return "corporationList"
         }
     }
     
@@ -109,7 +113,8 @@ enum AppScreen: Hashable {
              (.universe, .universe),
              (.incursions, .incursions),
              (.sovereigntyCampaigns, .sovereigntyCampaigns),
-             (.settings, .settings):
+             (.settings, .settings),
+             (.corporationList, .corporationList):
             return true
         case (.characterDetail(let lhsCharacter, _), .characterDetail(let rhsCharacter, _)),
              (.characterSheet(let lhsCharacter), .characterSheet(let rhsCharacter)),
@@ -229,6 +234,9 @@ enum AppScreen: Hashable {
         case .sovereigntyCampaigns:
             return
         case .settings:
+            return
+        case .corporationList:
+            // TODO
             return
         }
     }

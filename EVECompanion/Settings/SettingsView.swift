@@ -18,6 +18,7 @@ struct SettingsView: View {
     @AppStorage(ECKDefaultKeys.isDemoModeEnabled.rawValue) var isDemoModeEnabled = false
     @AppStorage(ECKDefaultKeys.showDatesInUTC.rawValue) var showDatesInUTC = false
     @AppStorage(ECKDefaultKeys.localSDEVersion.rawValue) var databaseVersion: Int?
+    @AppStorage(ECKDefaultKeys.showCorpTab.rawValue) var showCorpTab: Bool = true
     
     @Binding var enableEmptySkillQueueNotifications: Bool
     @Binding var enableSkillCompletedNotifications: Bool
@@ -58,6 +59,7 @@ struct SettingsView: View {
         Form {
             Section(header: Text("General")) {
                 Toggle("Show dates in EVE Time", isOn: $showDatesInUTC)
+                Toggle("Show Corporation Tab", isOn: $showCorpTab)
             }
             
             if let didGrantPushPermission = notificationManager.didGrantPermission {
