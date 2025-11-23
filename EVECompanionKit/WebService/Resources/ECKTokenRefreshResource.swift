@@ -24,6 +24,7 @@ class ECKTokenRefreshResource: ECKWebResource<ECKToken> {
         
         super.init(host: .eveLogin,
                    endpoint: "/v2/oauth/token",
+                   requiredScope: nil,
                    headers: headers,
                    method: .post,
                    body: urlComponents.query?.data(using: .utf8))

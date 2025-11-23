@@ -11,7 +11,8 @@ class ECKIncursionsResource: ECKWebResource<[ECKIncursion]> {
     
     init() {
         super.init(host: .esi,
-                   endpoint: "/v1/incursions/")
+                   endpoint: "/v1/incursions/",
+                   requiredScope: nil)
     }
     
 }

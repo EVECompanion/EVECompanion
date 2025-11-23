@@ -13,6 +13,7 @@ class ECKCharacterLocationResource: ECKWebResource<ECKCharacterLocation> {
         super.init(host: .esi,
                    endpoint: "/characters/\(token.characterId)/location",
                    token: token,
+                   requiredScope: .readLocation,
                    headers: ["X-Compatibility-Date": "2025-09-30"])
     }
     

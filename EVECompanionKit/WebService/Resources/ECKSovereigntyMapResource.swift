@@ -18,6 +18,7 @@ class ECKSovereigntyMapResource: ECKWebResource<[ECKSolarSystemSovereignty]> {
         
         super.init(host: .esi,
                    endpoint: "/v1/sovereignty/map/",
+                   requiredScope: nil,
                    headers: headers)
     }
     

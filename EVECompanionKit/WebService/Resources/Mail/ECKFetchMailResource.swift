@@ -19,6 +19,7 @@ class ECKFetchMailResource: ECKWebResource<[ECKMail]> {
         super.init(host: .esi,
                    endpoint: "/v1/characters/\(token.characterId)/mail/",
                    token: token,
+                   requiredScope: .readMail,
                    queryItems: queryItems)
     }
     

@@ -13,6 +13,7 @@ class ECKCharacterAssetsResource: ECKWebResource<[ECKAsset]> {
         super.init(host: .esi,
                    endpoint: "/v5/characters/\(token.characterId)/assets/",
                    token: token,
+                   requiredScope: .readAssets,
                    queryItems: [.init(name: "page", value: page.description)])
     }
     

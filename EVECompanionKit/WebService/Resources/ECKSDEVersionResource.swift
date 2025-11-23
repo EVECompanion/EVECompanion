@@ -11,7 +11,8 @@ class ECKSDEVersionResource: ECKWebResource<ECKSDEVersion> {
     
     init() {
         super.init(host: .evecompanionAPI,
-                   endpoint: "/v2/version")
+                   endpoint: "/v2/version",
+                   requiredScope: nil)
     }
     
 }

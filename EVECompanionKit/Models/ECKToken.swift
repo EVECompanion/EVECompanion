@@ -45,6 +45,21 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable {
         }
     }
     
+    private var scopes: [String] {
+        do {
+            let jwt = try JWTDecode.decode(jwt: accessToken)
+            guard let scopes = jwt.body["scp"] as? [String] else {
+                logger.error("\(jwt) has no scopes.")
+                return []
+            }
+            
+            return scopes
+        } catch {
+            logger.error("Error decoding jwt \(error)")
+            return []
+        }
+    }
+    
     lazy var id: String = {
         do {
             let jwt = try JWTDecode.decode(jwt: accessToken)
@@ -108,6 +123,11 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable {
     internal func markAccessTokenExpired() {
         self.accessTokenExpiredFlag = true
         ECKKeychain.add(token: self)
+    }
+    
+    @MainActor
+    internal func includesScope(scope: ECKAPIScope) -> Bool {
+        return scopes.contains(scope.rawValue)
     }
     
     func hash(into hasher: inout Hasher) {

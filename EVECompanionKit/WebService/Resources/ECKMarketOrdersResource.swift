@@ -22,6 +22,7 @@ class ECKMarketOrdersResource: ECKWebResource<[ECKMarketOrder]> {
         
         super.init(host: .esi,
                    endpoint: "/markets/\(requestRegionId)/orders",
+                   requiredScope: nil,
                    queryItems: [
                     URLQueryItem(name: "type_id", value: "\(typeId)")
                    ],

@@ -14,4 +14,5 @@ enum ECKWebError: Error {
     case serverError
     case unknownError
     case statusCode(Int, Data)
+    case insufficientScopes
 }

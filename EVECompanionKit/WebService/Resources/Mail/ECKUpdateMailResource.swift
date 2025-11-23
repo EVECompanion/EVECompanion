@@ -17,6 +17,7 @@ class ECKUpdateMailResource: ECKWebResource<ECKEmptyResponse> {
         super.init(host: .esi,
                    endpoint: "/v1/characters/\(token.characterId)/mail/\(mailId.description)/",
                    token: token,
+                   requiredScope: .organizeMail,
                    method: .put,
                    body: ECKUpdateMailRequest(read: read))
     }

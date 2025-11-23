@@ -16,7 +16,8 @@ class ECKFetchMailBodyResource: ECKWebResource<ECKFetchMailBodyResponse> {
     init(token: ECKToken, mailId: Int) {
         super.init(host: .esi,
                    endpoint: "/v1/characters/\(token.characterId)/mail/\(mailId.description)/",
-                   token: token)
+                   token: token,
+                   requiredScope: .readMail)
     }
     
 }

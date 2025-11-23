@@ -18,6 +18,7 @@ class ECKServerStatusResource: ECKWebResource<ECKServerStatus> {
         
         super.init(host: .esi,
                    endpoint: "/v2/status/",
+                   requiredScope: nil,
                    headers: headers)
     }
     

@@ -13,6 +13,7 @@ class ECKCharacterCurrentShipResource: ECKWebResource<ECKCharacterCurrentShip> {
         super.init(host: .esi,
                    endpoint: "/characters/\(token.characterId)/ship",
                    token: token,
+                   requiredScope: .readShipType,
                    headers: ["X-Compatibility-Date": "2025-09-30"])
     }
     

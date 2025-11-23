@@ -19,6 +19,17 @@ class ECKWebResource<DecodeTo: Decodable> {
     var method: ECKHTTPMethod
     var body: (any Encodable)?
     var token: ECKToken?
+    var requiredScope: ECKAPIScope?
+    
+    @MainActor
+    var tokenContainsRequiredScopes: Bool {
+        guard let requiredScope,
+              let token else {
+            return true
+        }
+        
+        return token.includesScope(scope: requiredScope)
+    }
     
     var url: URL? {
         var components = URLComponents()
@@ -34,6 +45,7 @@ class ECKWebResource<DecodeTo: Decodable> {
     init(host: Host,
          endpoint: String,
          token: ECKToken? = nil,
+         requiredScope: ECKAPIScope?,
          queryItems: [URLQueryItem] = [],
          headers: [String: String] = [:],
          method: ECKHTTPMethod = .get,

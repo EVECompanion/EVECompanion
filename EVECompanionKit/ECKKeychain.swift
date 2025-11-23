@@ -16,7 +16,12 @@ internal struct ECKKeychain {
 
         init(from decoder: any Decoder) throws {
             let container = try decoder.singleValueContainer()
-            self.base = try? container.decode(Base.self)
+            do {
+                self.base = try container.decode(Base.self)
+            } catch {
+                logger.error("Error decoding data to \(Base.self): \(error)")
+                self.base = nil
+            }
         }
     }
     

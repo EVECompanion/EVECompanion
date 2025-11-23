@@ -12,7 +12,8 @@ class ECKCharacterContractResource: ECKWebResource<[ECKContract]> {
     init(token: ECKToken) {
         super.init(host: .esi,
                    endpoint: "/v1/characters/\(token.characterId)/contracts/",
-                   token: token)
+                   token: token,
+                   requiredScope: .readCharacterContracts)
     }
     
 }

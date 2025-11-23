@@ -19,6 +19,7 @@ class ECKSendMailResource: ECKWebResource<Int> {
         super.init(host: .esi,
                    endpoint: "/v1/characters/\(token.characterId)mail/",
                    token: token,
+                   requiredScope: .sendMail,
                    method: .post,
                    body: SendMailRequest(subject: subject,
                                          body: body,
