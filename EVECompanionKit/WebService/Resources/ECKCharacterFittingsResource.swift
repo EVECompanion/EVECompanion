@@ -12,7 +12,8 @@ class ECKCharacterFittingsResource: ECKWebResource<[ESIFitting]>, @unchecked Sen
     init(token: ECKToken) {
         super.init(host: .esi,
                    endpoint: "/v2/characters/\(token.characterId)/fittings/",
-                   token: token)
+                   token: token,
+                   requiredScope: .readFittings)
     }
     
 }

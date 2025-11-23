@@ -70,6 +70,11 @@ final class ECKWebService: Sendable {
             throw ECKWebError.unknownError
         }
         
+        guard await resource.tokenContainsRequiredScopes else {
+            logger.error("Resource \(resource) does not have the required scopes.")
+            throw ECKWebError.insufficientScopes
+        }
+        
         let fetchedData = try await self.loadData(url: url, resource: resource)
         
         if fetchedData.response.isEmpty {

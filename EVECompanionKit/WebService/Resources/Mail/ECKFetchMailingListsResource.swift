@@ -12,7 +12,8 @@ class FetchMailingListsResource: ECKWebResource<[ECKMailingList]>, @unchecked Se
     init(token: ECKToken) {
         super.init(host: .esi,
                    endpoint: "/v1/characters/\(token.characterId)/mail/lists/",
-                   token: token)
+                   token: token,
+                   requiredScope: .readMail)
     }
     
 }

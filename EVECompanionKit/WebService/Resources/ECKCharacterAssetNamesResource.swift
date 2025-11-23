@@ -13,6 +13,7 @@ class ECKCharacterAssetNamesResource: ECKWebResource<[ECKAssetName]>, @unchecked
         super.init(host: .esi,
                    endpoint: "/v1/characters/\(token.characterId)/assets/names/",
                    token: token,
+                   requiredScope: .readAssets,
                    method: .post,
                    body: itemIds)
     }
