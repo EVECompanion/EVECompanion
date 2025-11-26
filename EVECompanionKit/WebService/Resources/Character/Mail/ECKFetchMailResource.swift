@@ -20,6 +20,7 @@ class ECKFetchMailResource: ECKWebResource<[ECKMail]> {
                    endpoint: "/v1/characters/\(token.characterId)/mail/",
                    token: token,
                    requiredScope: .readMail,
+                   requiredCorpRole: nil,
                    queryItems: queryItems)
     }
     

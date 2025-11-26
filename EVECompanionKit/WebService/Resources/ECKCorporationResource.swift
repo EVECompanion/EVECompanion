@@ -12,7 +12,8 @@ class ECKCorporationResource: ECKWebResource<ECKOptionalResponse<ECKCorporation>
     init(corporationId: Int) {
         super.init(host: .esi,
                    endpoint: "/v5/corporations/\(corporationId.description)/",
-                   requiredScope: nil)
+                   requiredScope: nil,
+                   requiredCorpRole: nil)
     }
     
 }

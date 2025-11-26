@@ -13,7 +13,8 @@ class ECKLoyaltyPointsResource: ECKWebResource<[ECKLoyaltyPointsEntry]> {
         super.init(host: .esi,
                    endpoint: "/v1/characters/\(token.characterId)/loyalty/points/",
                    token: token,
-                   requiredScope: .readLoyalty)
+                   requiredScope: .readLoyalty,
+                   requiredCorpRole: nil)
     }
     
 }

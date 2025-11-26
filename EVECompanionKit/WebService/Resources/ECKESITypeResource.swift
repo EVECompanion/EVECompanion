@@ -10,7 +10,10 @@ import Foundation
 class ECKESITypeResource: ECKWebResource<String> {
     
     init(typeId: Int) {
-        super.init(host: .esi, endpoint: "/universe/types/\(typeId)/", requiredScope: nil)
+        super.init(host: .esi,
+                   endpoint: "/universe/types/\(typeId)/",
+                   requiredScope: nil,
+                   requiredCorpRole: nil)
     }
     
 }

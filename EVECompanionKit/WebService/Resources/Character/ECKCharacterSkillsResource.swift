@@ -13,7 +13,8 @@ class ECKCharacterSkillsResource: ECKWebResource<ECKCharacterSkills> {
         super.init(host: .esi,
                    endpoint: "/v4/characters/\(token.characterId)/skills/",
                    token: token,
-                   requiredScope: .readSkills)
+                   requiredScope: .readSkills,
+                   requiredCorpRole: nil)
     }
     
 }

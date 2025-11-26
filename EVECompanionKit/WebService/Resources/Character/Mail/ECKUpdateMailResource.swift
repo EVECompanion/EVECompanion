@@ -18,6 +18,7 @@ class ECKUpdateMailResource: ECKWebResource<ECKEmptyResponse> {
                    endpoint: "/v1/characters/\(token.characterId)/mail/\(mailId.description)/",
                    token: token,
                    requiredScope: .organizeMail,
+                   requiredCorpRole: nil,
                    method: .put,
                    body: ECKUpdateMailRequest(read: read))
     }

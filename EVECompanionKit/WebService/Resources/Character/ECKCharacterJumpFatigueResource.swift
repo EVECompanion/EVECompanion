@@ -13,7 +13,8 @@ class ECKCharacterJumpFatigueResource: ECKWebResource<ECKJumpFatigue> {
         super.init(host: .esi,
                    endpoint: "/v2/characters/\(token.characterId)/fatigue/",
                    token: token,
-                   requiredScope: .readFatigue)
+                   requiredScope: .readFatigue,
+                   requiredCorpRole: nil)
     }
     
 }

@@ -13,7 +13,8 @@ class ECKCharacterWalletResource: ECKWebResource<Double> {
         super.init(host: .esi,
                    endpoint: "/v1/characters/\(token.characterId)/wallet/",
                    token: token,
-                   requiredScope: .readCharacterWallet)
+                   requiredScope: .readCharacterWallet,
+                   requiredCorpRole: nil)
     }
     
 }

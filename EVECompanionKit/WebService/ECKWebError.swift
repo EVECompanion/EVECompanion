@@ -15,4 +15,5 @@ enum ECKWebError: Error {
     case unknownError
     case statusCode(Int, Data)
     case insufficientScopes
+    case insufficientCorpRole
 }

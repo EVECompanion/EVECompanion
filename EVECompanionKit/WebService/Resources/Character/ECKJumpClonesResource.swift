@@ -13,7 +13,8 @@ class ECKJumpClonesResource: ECKWebResource<ECKJumpClones> {
         super.init(host: .esi,
                    endpoint: "/v4/characters/\(token.characterId)/clones/",
                    token: token,
-                   requiredScope: .readClones)
+                   requiredScope: .readClones,
+                   requiredCorpRole: nil)
     }
     
 }

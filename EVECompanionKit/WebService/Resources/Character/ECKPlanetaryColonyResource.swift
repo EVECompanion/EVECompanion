@@ -13,7 +13,8 @@ class ECKPlanetaryColonyResource: ECKWebResource<ECKPlanetaryColonyDetails> {
         super.init(host: .esi,
                    endpoint: "/v3/characters/\(token.characterId)/planets/\(colonyId)/",
                    token: token,
-                   requiredScope: .managePlanets)
+                   requiredScope: .managePlanets,
+                   requiredCorpRole: nil)
     }
     
 }

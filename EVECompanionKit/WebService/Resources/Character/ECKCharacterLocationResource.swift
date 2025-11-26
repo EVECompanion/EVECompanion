@@ -14,6 +14,7 @@ class ECKCharacterLocationResource: ECKWebResource<ECKCharacterLocation> {
                    endpoint: "/characters/\(token.characterId)/location",
                    token: token,
                    requiredScope: .readLocation,
+                   requiredCorpRole: nil,
                    headers: ["X-Compatibility-Date": "2025-09-30"])
     }
     

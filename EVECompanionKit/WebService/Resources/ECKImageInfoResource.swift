@@ -12,7 +12,8 @@ class ECKImageInfoResource: ECKWebResource<[String]> {
     init(category: String, id: Int) {
         super.init(host: .image,
                    endpoint: "/\(category)/\(id.description)/",
-                   requiredScope: nil)
+                   requiredScope: nil,
+                   requiredCorpRole: nil)
     }
     
 }

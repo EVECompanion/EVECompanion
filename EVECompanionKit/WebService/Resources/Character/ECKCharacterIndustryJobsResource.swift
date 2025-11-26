@@ -13,7 +13,8 @@ class ECKCharacterIndustryJobsResource: ECKWebResource<[ECKIndustryJob]> {
         super.init(host: .esi,
                    endpoint: "/v1/characters/\(token.characterId)/industry/jobs/",
                    token: token,
-                   requiredScope: .readCharacterJobs)
+                   requiredScope: .readCharacterJobs,
+                   requiredCorpRole: nil)
     }
     
 }

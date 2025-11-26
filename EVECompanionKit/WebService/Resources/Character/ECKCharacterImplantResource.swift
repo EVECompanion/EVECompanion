@@ -13,7 +13,8 @@ class ECKCharacterImplantResource: ECKWebResource<[ECKItem]> {
         super.init(host: .esi,
                    endpoint: "/v2/characters/\(token.characterId)/implants/",
                    token: token,
-                   requiredScope: .readImplants)
+                   requiredScope: .readImplants,
+                   requiredCorpRole: nil)
     }
     
 }

@@ -14,6 +14,7 @@ class ECKCharacterAssetsResource: ECKWebResource<[ECKAsset]> {
                    endpoint: "/v5/characters/\(token.characterId)/assets/",
                    token: token,
                    requiredScope: .readAssets,
+                   requiredCorpRole: nil,
                    queryItems: [.init(name: "page", value: page.description)])
     }
     

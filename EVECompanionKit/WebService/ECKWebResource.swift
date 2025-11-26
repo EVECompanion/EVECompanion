@@ -20,6 +20,7 @@ class ECKWebResource<DecodeTo: Decodable> {
     var body: (any Encodable)?
     var token: ECKToken?
     var requiredScope: ECKAPIScope?
+    var requiredCorpRole: ECKCorporationRole?
     
     @MainActor
     var tokenContainsRequiredScopes: Bool {
@@ -46,6 +47,7 @@ class ECKWebResource<DecodeTo: Decodable> {
          endpoint: String,
          token: ECKToken? = nil,
          requiredScope: ECKAPIScope?,
+         requiredCorpRole: ECKCorporationRole?,
          queryItems: [URLQueryItem] = [],
          headers: [String: String] = [:],
          method: ECKHTTPMethod = .get,

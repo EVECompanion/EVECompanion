@@ -26,6 +26,7 @@ class ECKCreateTokenResource: ECKWebResource<ECKToken> {
         super.init(host: .eveLogin,
                    endpoint: "/v2/oauth/token",
                    requiredScope: nil,
+                   requiredCorpRole: nil,
                    headers: headers,
                    method: .post,
                    body: urlComponents.query?.data(using: .utf8))

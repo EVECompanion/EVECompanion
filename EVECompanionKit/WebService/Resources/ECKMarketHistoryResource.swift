@@ -13,6 +13,7 @@ class ECKMarketHistoryResource: ECKWebResource<[ECKMarketHistoryEntry]> {
         super.init(host: .esi,
                    endpoint: "/markets/\(regionId)/history",
                    requiredScope: nil,
+                   requiredCorpRole: nil,
                    queryItems: [.init(name: "type_id", value: "\(typeId)")],
                    headers: ["X-Compatibility-Date": "2025-11-11"],
                    method: .get)

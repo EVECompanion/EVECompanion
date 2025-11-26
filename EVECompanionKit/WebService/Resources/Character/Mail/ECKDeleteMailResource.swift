@@ -13,7 +13,8 @@ class ECKDeleteMailResource: ECKWebResource<ECKEmptyResponse> {
         super.init(host: .esi,
                    endpoint: "/v1/characters/\(token.characterId)/mail/\(mailId.description)/",
                    token: token,
-                   requiredScope: .organizeMail)
+                   requiredScope: .organizeMail,
+                   requiredCorpRole: nil)
     }
     
 }
