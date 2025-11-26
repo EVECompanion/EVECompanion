@@ -23,6 +23,7 @@ class ECKMarketOrdersResource: ECKWebResource<[ECKMarketOrder]>, @unchecked Send
         super.init(host: .esi,
                    endpoint: "/markets/\(requestRegionId)/orders",
                    requiredScope: nil,
+                   requiredCorpRole: nil,
                    queryItems: [
                     URLQueryItem(name: "type_id", value: "\(typeId)")
                    ],

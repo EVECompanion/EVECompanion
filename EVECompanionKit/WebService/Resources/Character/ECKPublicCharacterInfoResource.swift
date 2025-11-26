@@ -13,7 +13,8 @@ class ECKPublicCharacterInfoResource: ECKWebResource<ECKPublicCharacterInfo>, @u
         super.init(host: .esi,
                    endpoint: "/v5/characters/\(token.characterId)",
                    token: token,
-                   requiredScope: nil)
+                   requiredScope: nil,
+                   requiredCorpRole: nil)
     }
     
 }

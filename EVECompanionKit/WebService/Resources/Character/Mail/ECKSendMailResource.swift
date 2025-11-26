@@ -20,6 +20,7 @@ class ECKSendMailResource: ECKWebResource<Int>, @unchecked Sendable {
                    endpoint: "/v1/characters/\(token.characterId)mail/",
                    token: token,
                    requiredScope: .sendMail,
+                   requiredCorpRole: nil,
                    method: .post,
                    body: SendMailRequest(subject: subject,
                                          body: body,

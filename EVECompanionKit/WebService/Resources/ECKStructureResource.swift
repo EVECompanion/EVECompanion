@@ -27,7 +27,8 @@ class ECKStructureResource: ECKWebResource<ECKStructureResource.StructureRespons
         super.init(host: .esi,
                    endpoint: "/v2/universe/structures/\(structureId)/",
                    token: token,
-                   requiredScope: .readStructures)
+                   requiredScope: .readStructures,
+                   requiredCorpRole: nil)
     }
     
 }

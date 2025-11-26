@@ -13,7 +13,8 @@ class ECKCharacterContractResource: ECKWebResource<[ECKContract]>, @unchecked Se
         super.init(host: .esi,
                    endpoint: "/v1/characters/\(token.characterId)/contracts/",
                    token: token,
-                   requiredScope: .readCharacterContracts)
+                   requiredScope: .readCharacterContracts,
+                   requiredCorpRole: nil)
     }
     
 }

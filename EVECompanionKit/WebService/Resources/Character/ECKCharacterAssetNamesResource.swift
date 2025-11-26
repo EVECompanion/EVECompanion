@@ -14,6 +14,7 @@ class ECKCharacterAssetNamesResource: ECKWebResource<[ECKAssetName]>, @unchecked
                    endpoint: "/v1/characters/\(token.characterId)/assets/names/",
                    token: token,
                    requiredScope: .readAssets,
+                   requiredCorpRole: nil,
                    method: .post,
                    body: itemIds)
     }

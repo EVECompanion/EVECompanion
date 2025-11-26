@@ -12,7 +12,8 @@ class ECKAllianceResource: ECKWebResource<ECKOptionalResponse<ECKAlliance>>, @un
     init(allianceId: Int) {
         super.init(host: .esi,
                    endpoint: "/v4/alliances/\(allianceId.description)/",
-                   requiredScope: nil)
+                   requiredScope: nil,
+                   requiredCorpRole: nil)
     }
     
 }

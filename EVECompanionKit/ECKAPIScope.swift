@@ -148,7 +148,8 @@ internal enum ECKAPIScope: String, CaseIterable {
             .alliancesReadContacts,
             .corpReadFWStats,
             .corpReadProjects,
-            .corpReadCustomsOffices
+            .corpReadCustomsOffices,
+            .readStructures
         ]
     }
     

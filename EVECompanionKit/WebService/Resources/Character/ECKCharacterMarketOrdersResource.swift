@@ -13,7 +13,8 @@ class ECKCharacterMarketOrdersResource: ECKWebResource<[ECKCharacterMarketOrder]
         super.init(host: .esi,
                    endpoint: "/v2/characters/\(token.characterId)/orders/",
                    token: token,
-                   requiredScope: .readCharacterOrders)
+                   requiredScope: .readCharacterOrders,
+                   requiredCorpRole: nil)
     }
     
 }
