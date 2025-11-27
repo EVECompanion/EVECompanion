@@ -24,6 +24,7 @@ extension ECKCharacterFitting {
     }
     
     public struct ResistanceStats {
+        public let ehp: Float
         public let hp: Float
         public let em: Float
         public let explosive: Float
@@ -36,6 +37,8 @@ extension ECKCharacterFitting {
             self.explosive = explosive
             self.kinetic = kinetic
             self.thermal = thermal
+            let averageResist = (em + explosive + kinetic + thermal) / 4.0
+            self.ehp = hp / (1.0 - averageResist)
         }
     }
     

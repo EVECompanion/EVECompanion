@@ -26,12 +26,16 @@ public class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Observabl
     public internal(set) var charge: ECKCharacterFittingItem?
     
     public internal(set) var attributes: [ECKCharacterFitting.AttributeID: ECKCharacterFitting.FittingAttribute] = [:]
-    @Published public var state: ECKDogmaEffect.Category = .active
-    internal var maxState: ECKDogmaEffect.Category = .passive
+    @Published public var state: ECKDogmaEffect.Category = .online
+    internal var maxState: ECKDogmaEffect.Category = .offline
     
     public var userSettableStates: [ECKDogmaEffect.Category] {
-        return [.passive, .active, .overload].filter { category in
-            return category.rawValue <= maxState.rawValue
+        if maxState == .online {
+            return [.offline, .online]
+        } else {
+            return [.offline, .online, .active, .overload].filter { category in
+                return category.rawValue <= maxState.rawValue
+            }
         }
     }
     

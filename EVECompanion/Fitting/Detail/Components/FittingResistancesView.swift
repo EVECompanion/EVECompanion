@@ -11,6 +11,7 @@ import EVECompanionKit
 struct FittingResistancesView: View {
     
     private let resistances: ECKCharacterFitting.Resistances
+    @State private var showEHP: Bool = true
     
     init(resistances: ECKCharacterFitting.Resistances) {
         self.resistances = resistances
@@ -62,14 +63,21 @@ struct FittingResistancesView: View {
             }
             
             GridRow {
-                Text("HP")
-                Text(EVEUnit.hitpoints.formatted(resistances.shield.hp))
+                Button {
+                    showEHP.toggle()
+                } label: {
+                    Text(showEHP ? "EHP" : "HP")
+                }
+
+                let unit: EVEUnit = showEHP ? .effectiveHitpoints : .hitpoints
+                Text(unit.formatted(showEHP ? resistances.shield.ehp : resistances.shield.hp))
                     .font(.footnote)
-                Text(EVEUnit.hitpoints.formatted(resistances.armor.hp))
+                Text(unit.formatted(showEHP ? resistances.armor.ehp : resistances.armor.hp))
                     .font(.footnote)
-                Text(EVEUnit.hitpoints.formatted(resistances.structure.hp))
+                Text(unit.formatted(showEHP ? resistances.structure.ehp : resistances.structure.hp))
                     .font(.footnote)
             }
+            .animation(.spring, value: showEHP)
         }
     }
     

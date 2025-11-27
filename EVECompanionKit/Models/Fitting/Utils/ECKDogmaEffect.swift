@@ -12,6 +12,7 @@ public class ECKDogmaEffect {
     
     public enum Category: Int, Identifiable {
         
+        case offline = -1
         case passive = 0
         case active = 1
         case target = 2
@@ -32,6 +33,8 @@ public class ECKDogmaEffect {
             }
             
             switch rawValue {
+            case -1:
+                self = .offline
             case 1:
                 self = .active
             case 2:
@@ -53,6 +56,8 @@ public class ECKDogmaEffect {
         
         public var title: String {
             switch self {
+            case .offline:
+                return "Offline"
             case .passive:
                 return "Passive"
             case .active:

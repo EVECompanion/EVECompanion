@@ -39,6 +39,7 @@ public enum EVEUnit: String, Sendable {
     case modifierPercent = "Modifier Percent"
     case inversedModifierPercent = "Inversed Modifier Percent"
     case radiansPerSecond = "Radians/Second"
+    case effectiveHitpoints
     case hitpoints = "Hitpoints"
     case capacitorUnits = "capacitor units"
     case groupId = "groupID"
@@ -154,7 +155,9 @@ public enum EVEUnit: String, Sendable {
         case .radiansPerSecond:
             return value.description
         case .hitpoints:
-            return ECFormatters.shortenedValue(value, maximumFractionDigits: 0) + " HP"
+            return ECFormatters.shortenedValue(value, maximumFractionDigits: 1) + " HP"
+        case .effectiveHitpoints:
+            return ECFormatters.shortenedValue(value, maximumFractionDigits: 1) + " EHP"
         case .capacitorUnits:
             return ECFormatters.attributeValue(value) + " GJ"
         case .groupId:
