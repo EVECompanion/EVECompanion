@@ -221,36 +221,45 @@ extension ECKCharacterFitting {
             _ = await currentAttributeCalculationTask.value
         }
         
-        let task = Task {
-            self.ship.attributes.removeAll()
-            self.character.attributes.removeAll()
-            self.target.attributes.removeAll()
-            self.structure.attributes.removeAll()
-            self.items.forEach({
-                $0.attributes.removeAll()
-                $0.charge?.attributes.removeAll()
-            })
-            self.skills.removeAll()
-            if let skills {
-                self.lastUsedSkills = skills
-            }
-            
-            pass1(skills: skills ?? lastUsedSkills ?? .empty)
-            await pass2()
-            await pass3()
-            pass4()
-            
-            await MainActor.run {
-                self.objectWillChange.send()
-                self.items.forEach {
-                    $0.objectWillChange.send()
-                }
-            }
+        guard nextAttributeCalculationTask == nil else {
+            return
         }
         
-        self.currentAttributeCalculationTask = task
-        await task.value
-        self.currentAttributeCalculationTask = nil
+        self.nextAttributeCalculationTask = Task { @MainActor in
+            let task = Task { @MainActor in
+                self.ship.attributes.removeAll()
+                self.character.attributes.removeAll()
+                self.target.attributes.removeAll()
+                self.structure.attributes.removeAll()
+                self.items.forEach({
+                    $0.attributes.removeAll()
+                    $0.charge?.attributes.removeAll()
+                })
+                self.skills.removeAll()
+                if let skills {
+                    self.lastUsedSkills = skills
+                }
+                
+                pass1(skills: skills ?? lastUsedSkills ?? .empty)
+                await pass2()
+                await pass3()
+                pass4()
+                
+                await MainActor.run {
+                    self.objectWillChange.send()
+                    self.items.forEach {
+                        $0.objectWillChange.send()
+                    }
+                }
+            }
+            
+            self.currentAttributeCalculationTask = task
+            await task.value
+            self.currentAttributeCalculationTask = nil
+        }
+        
+        await self.nextAttributeCalculationTask?.value
+        self.nextAttributeCalculationTask = nil
     }
     
 }

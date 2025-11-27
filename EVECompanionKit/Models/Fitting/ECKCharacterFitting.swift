@@ -457,6 +457,9 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     @MainActor
     internal var currentAttributeCalculationTask: Task<Void, Never>?
     
+    @MainActor
+    internal var nextAttributeCalculationTask: Task<Void, Never>?
+    
     public required init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.description = try container.decode(String.self, forKey: .description)
