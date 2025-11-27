@@ -42,6 +42,15 @@ struct FittingDetailInfoView: View {
                     FittingDamageProfileView(damageProfile: fitting.damageProfile)
                 }
             }
+            
+            if let capacitorCapacity = fitting.capacitorCapacity {
+                Section("Capacitor") {
+                    keyValueCell(attribute: "Capacitor Capacity",
+                                 valueText: ECFormatters.attributeValue(capacitorCapacity,
+                                                                        maximumFractionDigits: 1) + " GJ",
+                                 icon: "Fitting/capacitor")
+                }
+            }
 
             if [fitting.maximumLockedTargets,
                 fitting.maximumTargetingRange,
