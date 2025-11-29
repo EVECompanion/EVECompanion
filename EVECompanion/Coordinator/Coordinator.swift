@@ -80,6 +80,8 @@ class Coordinator: ObservableObject {
             SettingsView()
         case .corporationList:
             CorporationListView()
+        case .corporationDetail(let corp):
+            CorporationDetailView(corporation: corp)
         }
     }
     

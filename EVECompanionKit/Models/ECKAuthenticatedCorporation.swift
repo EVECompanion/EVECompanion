@@ -9,7 +9,7 @@ import Foundation
 
 public class ECKAuthenticatedCorporation: ObservableObject, Identifiable, Hashable {
     
-    public let authenticatingCharacter: ECKCharacter
+    @NestedObservableObject public var authenticatingCharacter: ECKCharacter
     
     public var corpId: Int? {
         authenticatingCharacter.publicInfo?.corporationId
