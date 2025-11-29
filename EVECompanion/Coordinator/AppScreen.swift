@@ -16,6 +16,7 @@ enum AppScreen: Hashable {
     case characterSheet(ECKCharacter)
     
     case corporationList
+    case corporationDetail(ECKAuthenticatedCorporation)
     
     case assetList(manager: ECKAssetManager)
     case contracts(manager: ECKContractManager)
@@ -104,6 +105,8 @@ enum AppScreen: Hashable {
             return "skillPlanDetail"
         case .corporationList:
             return "corporationList"
+        case .corporationDetail:
+            return "corporationDetail"
         }
     }
     
@@ -166,6 +169,9 @@ enum AppScreen: Hashable {
             
         case (.skillPlanDetail(let lhsSkillPlan, let lhsManager), .skillPlanDetail(let rhsSkillPlan, let rhsManager)):
             return lhsSkillPlan == rhsSkillPlan && lhsManager == rhsManager
+        
+        case (.corporationDetail(let lhsCorp), .corporationDetail(let rhsCorp)):
+            return lhsCorp.corpId == rhsCorp.corpId
             
         default:
             return false
@@ -229,6 +235,8 @@ enum AppScreen: Hashable {
             hasher.combine(groupFilter)
             hasher.combine(marketGroupFilter)
             hasher.combine(effectIdFilter)
+        case .corporationDetail(let corp):
+            hasher.combine(corp)
         case .incursions:
             return
         case .sovereigntyCampaigns:

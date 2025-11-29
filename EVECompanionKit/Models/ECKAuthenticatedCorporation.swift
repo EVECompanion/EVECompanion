@@ -8,9 +8,9 @@
 import Foundation
 public import Combine
 
-public final class ECKAuthenticatedCorporation: ObservableObject, Identifiable, Hashable, Sendable {
+public final class ECKAuthenticatedCorporation: ObservableObject, Identifiable, Hashable, @unchecked Sendable {
     
-    public let authenticatingCharacter: ECKCharacter
+    @NestedObservableObject public var authenticatingCharacter: ECKCharacter
     
     public var corpId: Int? {
         authenticatingCharacter.publicInfo?.corporationId

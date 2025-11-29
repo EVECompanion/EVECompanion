@@ -10,19 +10,19 @@ import EVECompanionKit
 
 struct AuthenticatedCorporationCell: View {
     
-    let corporation: ECKAuthenticatedCorporation
-    @ObservedObject private var character: ECKCharacter
+    @ObservedObject private var corporation: ECKAuthenticatedCorporation
     
     init(corporation: ECKAuthenticatedCorporation) {
         self.corporation = corporation
-        self.character = corporation.authenticatingCharacter
     }
     
     var body: some View {
         switch corporation.authenticatingCharacter.initialDataLoadingState {
         case .ready,
              .reloading:
-            normalView
+            NavigationLink(value: AppScreen.corporationDetail(corporation)) {
+                normalView
+            }
         case .loading:
             ProgressView()
         case .error:
@@ -68,12 +68,12 @@ struct AuthenticatedCorporationCell: View {
             Text("Via Character")
             
             HStack {
-                ECImage(id: character.id,
+                ECImage(id: corporation.authenticatingCharacter.id,
                         category: .character)
                 .frame(width: 30, height: 30)
                 .clipShape(Circle())
                 
-                Text(character.name)
+                Text(corporation.authenticatingCharacter.name)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
