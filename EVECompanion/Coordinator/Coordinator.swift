@@ -62,6 +62,10 @@ class Coordinator: ObservableObject {
             FittingsListView(fittingManager: manager)
         case .fittingDetail(let manager, let fitting):
             FittingDetailView(manager: manager, fitting: fitting)
+        case .skillPlanList(let manager):
+            SkillPlanListView(manager: manager)
+        case .skillPlanDetail(let skillPlan, let manager):
+            SkillPlanView(skillPlan: skillPlan, manager: manager)
         case .item(let item):
             ItemView(item: item)
         case .itemByTypeId(let typeId):

@@ -30,6 +30,8 @@ enum AppScreen: Hashable {
     case planetaryColony(ECKPlanetaryColonyManager.ECKColony)
     case fittingsList(ECKFittingManager)
     case fittingDetail(ECKFittingManager, ECKCharacterFitting)
+    case skillPlanList(ECKSkillPlanManager)
+    case skillPlanDetail(ECKSkillPlan, ECKSkillPlanManager)
     
     case itemByTypeId(Int)
     case item(ECKItem)
@@ -94,6 +96,10 @@ enum AppScreen: Hashable {
             return "fittingsList"
         case .fittingDetail:
             return "fittingDetail"
+        case .skillPlanList:
+            return "skillPlanList"
+        case .skillPlanDetail:
+            return "skillPlanDetail"
         }
     }
     
@@ -150,6 +156,12 @@ enum AppScreen: Hashable {
               .itemDatabase(let rhsGroupFilter, let rhsMarketGroupFilter, let rhsEffectIdFilter)):
             return lhsGroupFilter == rhsGroupFilter && lhsMarketGroupFilter == rhsMarketGroupFilter && lhsEffectIdFilter == rhsEffectIdFilter
             
+        case (.skillPlanList(let lhsManager), .skillPlanList(let rhsManager)):
+            return lhsManager.character == rhsManager.character
+            
+        case (.skillPlanDetail(let lhsSkillPlan, let lhsManager), .skillPlanDetail(let rhsSkillPlan, let rhsManager)):
+            return lhsSkillPlan == rhsSkillPlan && lhsManager == rhsManager
+            
         default:
             return false
             
@@ -201,6 +213,11 @@ enum AppScreen: Hashable {
         case .fittingDetail(let manager, let fitting):
             hasher.combine(manager.character)
             hasher.combine(fitting)
+        case .skillPlanList(let manager):
+            hasher.combine(manager)
+        case .skillPlanDetail(let skillPlan, let character):
+            hasher.combine(skillPlan)
+            hasher.combine(character)
         case .universe:
             return
         case .itemDatabase(let groupFilter, let marketGroupFilter, let effectIdFilter):

@@ -18,6 +18,7 @@ struct CharacterDetailView: View {
     @StateObject var jumpClonesManager: ECKJumpClonesManager
     @StateObject var planetaryColoniesManager: ECKPlanetaryColonyManager
     @StateObject var fittingManager: ECKFittingManager
+    @StateObject var skillPlanManager: ECKSkillPlanManager
     @Binding var selectedCharacter: CharacterSelection
     
     init(character: ECKCharacter, selectedCharacter: Binding<CharacterSelection>) {
@@ -28,6 +29,7 @@ struct CharacterDetailView: View {
         self._jumpClonesManager = StateObject(wrappedValue: .init(character: character))
         self._planetaryColoniesManager = StateObject(wrappedValue: .init(character: character))
         self._fittingManager = StateObject(wrappedValue: .init(character: character))
+        self._skillPlanManager = StateObject(wrappedValue: .init(character: character))
         self._selectedCharacter = selectedCharacter
     }
     
@@ -51,6 +53,7 @@ struct CharacterDetailView: View {
             
             Section("Skills and Clones") {
                 row(for: .skillQueue)
+                row(for: .skillPlans)
                 row(for: .skills)
                 row(for: .jumpClones)
             }
@@ -144,6 +147,8 @@ struct CharacterDetailView: View {
             return .planetaryColonies(planetaryColoniesManager)
         case .fittings:
             return .fittingsList(fittingManager)
+        case .skillPlans:
+            return .skillPlanList(skillPlanManager)
         }
     }
     

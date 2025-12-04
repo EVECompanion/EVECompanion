@@ -5,7 +5,6 @@
 //  Created by Jonas Schlabertz on 13.10.25.
 //
 
-import Foundation
 import ArgumentParser
 import SQLite
 

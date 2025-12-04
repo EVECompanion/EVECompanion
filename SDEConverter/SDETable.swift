@@ -5,7 +5,6 @@
 //  Created by Jonas Schlabertz on 14.10.25.
 //
 
-import Foundation
 import SQLite
 
 protocol SDETable {
