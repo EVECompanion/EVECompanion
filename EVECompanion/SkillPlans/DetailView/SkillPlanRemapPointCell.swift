@@ -42,12 +42,6 @@ struct SkillPlanRemapPointCell: View {
                 attributeView(icon: "Attributes/charisma",
                               attribute: "Charisma",
                               value: remap.charisma)
-            } else {
-                HStack {
-                    Spacer()
-                    ProgressView()
-                    Spacer()
-                }
             }
         }
     }

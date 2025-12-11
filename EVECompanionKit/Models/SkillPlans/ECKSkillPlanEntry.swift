@@ -17,21 +17,38 @@ public enum ECKSkillPlanEntry: Codable, Identifiable, Hashable {
         switch self {
         case .remap:
             return nil
-        case .skill(_, let level):
-            return level
+        case .skill(let entry):
+            return entry.level
+        }
+    }
+    
+    var isRemapPoint: Bool {
+        switch self {
+        case .remap:
+            return true
+        case .skill:
+            return false
+        }
+    }
+    
+    var isSkillEntry: Bool {
+        switch self {
+        case .remap:
+            return false
+        case .skill:
+            return true
         }
     }
     
     case remap(ECKSkillPlanRemap?)
-    case skill(skill: ECKItem, level: Int)
+    case skill(ECKSkillPlanSkillEntry)
     
     public func hash(into hasher: inout Hasher) {
         switch self {
         case .remap(let remap):
             hasher.combine(remap)
-        case .skill(let skill, let level):
-            hasher.combine(skill)
-            hasher.combine(level)
+        case .skill(let entry):
+            hasher.combine(entry)
         }
     }
     

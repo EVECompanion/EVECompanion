@@ -9,6 +9,8 @@ import Foundation
 
 public class ECKSkillPlanRemap: Codable, Hashable {
     
+    static private let baseAttributePoints: Int = 17
+    
     public let charisma: Int
     public let intelligence: Int
     public let memory: Int
@@ -25,6 +27,23 @@ public class ECKSkillPlanRemap: Codable, Hashable {
         self.memory = memory
         self.perception = perception
         self.willpower = willpower
+    }
+    
+    func value(attributeId: Int) -> Int {
+        switch attributeId {
+        case 164:
+            return charisma + Self.baseAttributePoints
+        case 165:
+            return intelligence + Self.baseAttributePoints
+        case 166:
+            return memory + Self.baseAttributePoints
+        case 167:
+            return perception + Self.baseAttributePoints
+        case 168:
+            return willpower + Self.baseAttributePoints
+        default:
+            return Self.baseAttributePoints
+        }
     }
     
     public func hash(into hasher: inout Hasher) {

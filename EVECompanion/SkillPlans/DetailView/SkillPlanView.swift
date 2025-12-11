@@ -28,14 +28,15 @@ struct SkillPlanView: View {
                 switch entry {
                 case .remap(let remap):
                     SkillPlanRemapPointCell(remap: remap)
-                case .skill(skill: let skill, level: let level):
-                    SkillPlanSkillCell(skill: skill, skillLevel: level)
+                        .deleteDisabled(true)
+                case .skill(let skillEntry):
+                    SkillPlanSkillCell(skill: skillEntry.skill, skillLevel: skillEntry.level)
                         .contextMenu {
-                            if level < 5 {
-                                ForEach((level + 1)...5, id: \.self) { level in
-                                    if skillPlan.contains(skillId: skill.id, level: level) == false {
+                            if skillEntry.level < 5 {
+                                ForEach((skillEntry.level + 1)...5, id: \.self) { level in
+                                    if skillPlan.contains(skillId: skillEntry.skill.id, level: level) == false {
                                         Button {
-                                            skillPlan.addSkill(skill, level: level, manager: manager)
+                                            skillPlan.addSkill(skillEntry.skill, level: level, manager: manager)
                                         } label: {
                                             Text("Train to \(level)")
                                         }

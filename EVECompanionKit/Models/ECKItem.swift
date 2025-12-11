@@ -45,6 +45,30 @@ public final class ECKItem: Codable, Identifiable, @unchecked Sendable, Hashable
         return ECKSDEManager.shared.itemAttributes(typeId)
     }()
     
+    private(set) lazy var skillTimeMultiplier: Float = {
+        if let value = ECKSDEManager.shared.itemAttribute(attributeId: 275, typeId: self.typeId)?.value {
+            return value
+        }
+        
+        return 0
+    }()
+    
+    private(set) lazy var primarySkillAttribute: Int = {
+        if let value = ECKSDEManager.shared.itemAttribute(attributeId: 180, typeId: self.typeId)?.value {
+            return Int(value)
+        }
+        
+        return 0
+    }()
+    
+    private(set) lazy var secondarySkillAttribute: Int = {
+        if let value = ECKSDEManager.shared.itemAttribute(attributeId: 181, typeId: self.typeId)?.value {
+            return Int(value)
+        }
+        
+        return 0
+    }()
+    
     public lazy var slotType: ECKCharacterFitting.ModuleSlotType? = {
         let effects = ECKSDEManager.shared.getEffects(for: typeId)
         
@@ -148,6 +172,14 @@ public final class ECKItem: Codable, Identifiable, @unchecked Sendable, Hashable
         self.capacity = itemData.capacity
         self.radius = itemData.radius
         self.iconId = itemData.iconId
+    }
+    
+    func skillTime(for attributes: ECKSkillPlanRemap, skillLevel: Int) -> TimeInterval {
+        let multiplier = skillTimeMultiplier
+        let neededSP = Float(250) * Float(multiplier) * sqrt(pow(32, Float(skillLevel - 1)))
+        // TODO: Subtract current SP
+        let spPerMinute = Float(attributes.value(attributeId: primarySkillAttribute)) + (Float(attributes.value(attributeId: secondarySkillAttribute)) / 2)
+        return Double((neededSP / spPerMinute) * 60)
     }
     
     public static func == (lhs: ECKItem, rhs: ECKItem) -> Bool {

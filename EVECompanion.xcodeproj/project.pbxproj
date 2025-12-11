@@ -294,6 +294,7 @@
 		C9DCC6332EA6C4D200D2F643 /* SolarSystemsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC60E2EA6C4D200D2F643 /* SolarSystemsTable.swift */; };
 		C9DCC6342EA6C4D200D2F643 /* FactionsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6062EA6C4D200D2F643 /* FactionsTable.swift */; };
 		C9DCC6352EA6C4D200D2F643 /* IndustryActivitiesTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DCC6082EA6C4D200D2F643 /* IndustryActivitiesTable.swift */; };
+		C9DDE9A72EE4A58E00DA279F /* ECKSkillPlanSkillEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DDE9A62EE4A58E00DA279F /* ECKSkillPlanSkillEntry.swift */; };
 		C9DEDD352DADAA9000781E8A /* ECKMarketGroupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEDD342DADAA9000781E8A /* ECKMarketGroupManager.swift */; };
 		C9DEDD372DADAB9600781E8A /* ECKMarketGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEDD362DADAB9600781E8A /* ECKMarketGroup.swift */; };
 		C9DEF2EE2C14AEA000815AF0 /* ECKLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEF2ED2C14AEA000815AF0 /* ECKLogger.swift */; };
@@ -685,6 +686,7 @@
 		C9DCC6182EA6C4D200D2F643 /* SDEConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDEConverter.swift; sourceTree = "<group>"; };
 		C9DCC6192EA6C4D200D2F643 /* SDEFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDEFile.swift; sourceTree = "<group>"; };
 		C9DCC61A2EA6C4D200D2F643 /* SDETable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDETable.swift; sourceTree = "<group>"; };
+		C9DDE9A62EE4A58E00DA279F /* ECKSkillPlanSkillEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSkillPlanSkillEntry.swift; sourceTree = "<group>"; };
 		C9DEDD342DADAA9000781E8A /* ECKMarketGroupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMarketGroupManager.swift; sourceTree = "<group>"; };
 		C9DEDD362DADAB9600781E8A /* ECKMarketGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMarketGroup.swift; sourceTree = "<group>"; };
 		C9DEF2ED2C14AEA000815AF0 /* ECKLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKLogger.swift; sourceTree = "<group>"; };
@@ -1216,6 +1218,7 @@
 			children = (
 				C9511D1B2EDC2B9A001CEED5 /* ECKSkillPlan.swift */,
 				C9511D202EDC2E94001CEED5 /* ECKSkillPlanEntry.swift */,
+				C9DDE9A62EE4A58E00DA279F /* ECKSkillPlanSkillEntry.swift */,
 				C9511D1D2EDC2E78001CEED5 /* ECKSkillPlanRemap.swift */,
 			);
 			path = SkillPlans;
@@ -2203,6 +2206,7 @@
 				C91672AB2BEA01E1009EC580 /* ECKAPIError.swift in Sources */,
 				C91672B62BEA9CC0009EC580 /* ECKCreateTokenResource.swift in Sources */,
 				C9BA46662DAFAB5200396025 /* String.swift in Sources */,
+				C9DDE9A72EE4A58E00DA279F /* ECKSkillPlanSkillEntry.swift in Sources */,
 				C9B638C82E091EC900E9F6F4 /* ESIFitting.swift in Sources */,
 				C9D095042DE7976200715479 /* ECKCharacterFitting+Calculate+Pass4.swift in Sources */,
 				C96430882CC445CF00E8D6A6 /* ECKPlanetaryColonyManager.swift in Sources */,

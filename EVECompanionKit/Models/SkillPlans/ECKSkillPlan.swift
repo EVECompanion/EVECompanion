@@ -9,6 +9,11 @@ import Foundation
 
 public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
     
+    // MARK: - Constants
+    
+    static private let maxRemappablePointsPerAttribute: Int = 10
+    static private let spareAttributePointsOnRemap: Int = 14
+    
     // MARK: - CodingKeys
     
     private enum CodingKeys: String, CodingKey {
@@ -23,11 +28,11 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
         return .init(id: .init(),
                      name: "Demo Skill Plan",
                      entries: [
-                        .skill(skill: .init(typeId: 3347), level: 1),
-                        .skill(skill: .init(typeId: 3347), level: 2),
-                        .skill(skill: .init(typeId: 3347), level: 3),
-                        .skill(skill: .init(typeId: 3347), level: 4),
-                        .skill(skill: .init(typeId: 3347), level: 5)
+                        .skill(.init(skill: .init(typeId: 3347), level: 1)),
+                        .skill(.init(skill: .init(typeId: 3347), level: 2)),
+                        .skill(.init(skill: .init(typeId: 3347), level: 3)),
+                        .skill(.init(skill: .init(typeId: 3347), level: 4)),
+                        .skill(.init(skill: .init(typeId: 3347), level: 5))
                      ])
     }()
     
@@ -76,6 +81,11 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
             return
         }
         
+        defer {
+            self.recalculateRemapPoints(manager: manager)
+            manager.saveSkillPlan(self)
+        }
+        
         if item.itemCategory.categoryId == 16 {
             // This item is a skill
             for level in 1...5 {
@@ -90,8 +100,6 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
                 addSkill(skillRequirement.skill, level: skillRequirement.requiredLevel, currentSkills: currentSkills)
             }
         }
-        
-        manager.saveSkillPlan(self)
     }
     
     public func addRemapPoint(manager: ECKSkillPlanManager) {
@@ -106,6 +114,7 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
         }
         
         addSkill(skill, level: level, currentSkills: currentSkills)
+        self.recalculateRemapPoints(manager: manager)
         manager.saveSkillPlan(self)
     }
     
@@ -138,8 +147,8 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
             switch entry {
             case .remap:
                 return false
-            case .skill(skill: let existingSkill, level: _):
-                return existingSkill.id == skill.id
+            case .skill(let existingEntry):
+                return existingEntry.skill.id == skill.id
             }
         }).compactMap({ $0.level }).max() ?? 0
         
@@ -152,7 +161,7 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
                 continue
             }
             
-            entries.append(.skill(skill: skill, level: level))
+            entries.append(.skill(.init(skill: skill, level: level)))
         }
     }
     
@@ -168,10 +177,11 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
         switch entry {
         case .remap:
             entries.remove(at: indexToRemove)
-        case .skill(skill: let skill, level: let level):
-            self.remove(skill, level: level)
+        case .skill(let entry):
+            self.remove(entry.skill, level: entry.level)
         }
         
+        self.recalculateRemapPoints(manager: manager)
         manager.saveSkillPlan(self)
     }
     
@@ -186,8 +196,8 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
             switch entry {
             case .remap:
                 return true
-            case .skill(skill: let skill, level: let existingLevel):
-                return (skill.id == skillId && existingLevel == level) == false
+            case .skill(let existingEntry):
+                return (existingEntry.skill.id == skillId && existingEntry.level == level) == false
             }
         }
         
@@ -203,18 +213,126 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
             switch entryToCheck {
             case .remap:
                 continue
-            case .skill(let skill, let level):
-                let requirements = skill.skillRequirements ?? []
+            case .skill(let entry):
+                let requirements = entry.skill.skillRequirements ?? []
                 
                 for requirement in requirements {
-                    if requirement.skill.id == skillId && requirement.requiredLevel >= level {
-                        result = removeSkill(skill.id, level: level, from: result)
+                    if requirement.skill.id == skillId && requirement.requiredLevel >= entry.level {
+                        result = removeSkill(entry.skill.id, level: entry.level, from: result)
                     }
                 }
             }
         }
         
         return result
+    }
+    
+    // MARK: - Attribute Calculation
+    
+    private func recalculateRemapPoints(manager: ECKSkillPlanManager) {
+        clearRemapPoints()
+        
+        let remapPoints = entries.filter { entry in
+            return entry.isRemapPoint
+        }
+        var chunks: [[ECKSkillPlanSkillEntry]] = []
+        
+        if remapPoints.isEmpty {
+            chunks.append(self.entries.compactMap({ entry in
+                switch entry {
+                case .remap:
+                    return nil
+                case .skill(let skill):
+                    return skill
+                }
+            }))
+        } else {
+            var currentChunkEntries: [ECKSkillPlanSkillEntry] = []
+            
+            for entry in entries {
+                if entry.isSkillEntry {
+                    if case .skill(let skill) = entry {
+                        currentChunkEntries.append(skill)
+                    }
+                } else {
+                    chunks.append(currentChunkEntries)
+                    currentChunkEntries = []
+                }
+            }
+            
+            if currentChunkEntries.isEmpty == false {
+                chunks.append(currentChunkEntries)
+            }
+        }
+        
+        var newEntries: [ECKSkillPlanEntry] = []
+        for chunk in chunks {
+            guard chunk.isEmpty == false else {
+                continue
+            }
+            
+            let optimizedChunk = optimizeChunk(chunk)
+            newEntries.append(contentsOf: optimizedChunk)
+        }
+        
+        self.entries = newEntries
+    }
+    
+    private func optimizeChunk(_ chunk: [ECKSkillPlanSkillEntry]) -> [ECKSkillPlanEntry] {
+        var bestRemap = ECKSkillPlanRemap(charisma: 0, intelligence: 0, memory: 0, perception: 0, willpower: 0)
+        var bestTime: TimeInterval = .greatestFiniteMagnitude
+        
+        for perception in 0...Self.maxRemappablePointsPerAttribute {
+            let maxWillpower = Self.spareAttributePointsOnRemap - perception
+            
+            for willpower in 0...min(maxWillpower, Self.maxRemappablePointsPerAttribute) {
+                let maxIntelligence = maxWillpower - willpower
+                
+                for intelligence in 0...min(maxIntelligence, Self.maxRemappablePointsPerAttribute) {
+                    let maxMemory = maxIntelligence - intelligence
+                    
+                    for memory in 0...min(maxMemory, Self.maxRemappablePointsPerAttribute) {
+                        let charisma = maxMemory - memory
+                        
+                        guard charisma <= Self.maxRemappablePointsPerAttribute else {
+                            continue
+                        }
+                        
+                        let remap = ECKSkillPlanRemap(charisma: charisma,
+                                                      intelligence: intelligence,
+                                                      memory: memory,
+                                                      perception: perception,
+                                                      willpower: willpower)
+                        
+                        var totalTrainingTime: TimeInterval = 0
+                        for entry in chunk {
+                            totalTrainingTime += entry.skill.skillTime(for: remap, skillLevel: entry.level)
+                        }
+                        
+                        if totalTrainingTime < bestTime {
+                            bestTime = totalTrainingTime
+                            bestRemap = remap
+                        }
+                    }
+                }
+            }
+        }
+        
+        var result: [ECKSkillPlanEntry] = []
+        result.append(.remap(bestRemap))
+        result.append(contentsOf: chunk.map({ .skill($0) }))
+        return result
+    }
+    
+    private func clearRemapPoints() {
+        self.entries = self.entries.map({ entry in
+            switch entry {
+            case .remap:
+                return .remap(nil)
+            case .skill(let entry):
+                return .skill(entry)
+            }
+        })
     }
     
     // MARK: - Utils
@@ -224,8 +342,8 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
             switch entry {
             case .remap:
                 return false
-            case .skill(let skill, let skillLevel):
-                return skill.id == skillId && skillLevel == level
+            case .skill(let entry):
+                return entry.skill.id == skillId && entry.level == level
             }
         })
     }
