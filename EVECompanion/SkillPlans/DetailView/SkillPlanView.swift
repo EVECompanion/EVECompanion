@@ -49,6 +49,9 @@ struct SkillPlanView: View {
             .onDelete { indexSet in
                 skillPlan.remove(indexSet, manager: manager)
             }
+            .onMove { fromOffsets, toOffset in
+                skillPlan.move(fromOffsets: fromOffsets, toOffset: toOffset, manager: manager)
+            }
         }
         .navigationTitle(skillPlan.name)
         .toolbar {

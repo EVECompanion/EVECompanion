@@ -82,7 +82,7 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
         }
         
         defer {
-            self.recalculateRemapPoints(manager: manager)
+            self.recalculateRemapPoints()
             manager.saveSkillPlan(self)
         }
         
@@ -114,7 +114,7 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
         }
         
         addSkill(skill, level: level, currentSkills: currentSkills)
-        self.recalculateRemapPoints(manager: manager)
+        self.recalculateRemapPoints()
         manager.saveSkillPlan(self)
     }
     
@@ -165,6 +165,67 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
         }
     }
     
+    // MARK: - Move
+    
+    public func move(fromOffsets: IndexSet, toOffset: Int, manager: ECKSkillPlanManager) {
+        var offsetsWithRequirements = fromOffsets
+        let entriesToMove = fromOffsets.map({ self.entries[$0] })
+        
+        for entry in entriesToMove {
+            offsetsWithRequirements.formUnion(requirementIndices(for: entry))
+        }
+        
+        entries.move(fromOffsets: offsetsWithRequirements, toOffset: toOffset)
+        self.recalculateRemapPoints()
+        manager.saveSkillPlan(self)
+    }
+    
+    private func requirementIndices(for entry: ECKSkillPlanEntry) -> IndexSet {
+        var result = IndexSet()
+        
+        if let skill = entry.skill {
+            for level in 1...skill.level {
+                if let requirementIndex = entries.firstIndex(where: { entry in
+                    switch entry {
+                    case .remap:
+                        return false
+                    case .skill(let entry):
+                        return entry.skill.id == skill.skill.id && entry.level == level
+                    }
+                }) {
+                    result.insert(requirementIndex)
+                }
+            }
+        }
+        
+        switch entry {
+        case .remap:
+            break
+        case .skill(let skill):
+            if let requirements = skill.skill.skillRequirements {
+                for requirement in requirements.enumerated() {
+                    for level in 1...requirement.element.requiredLevel where contains(skillId: requirement.element.skill.id, level: level) {
+                        if let requirementIndex = entries.firstIndex(where: { entry in
+                            switch entry {
+                            case .remap:
+                                return false
+                            case .skill(let entry):
+                                return entry.skill.id == requirement.element.skill.id && entry.level == level
+                            }
+                        }) {
+                            result.insert(requirementIndex)
+                        }
+                    }
+                }
+                
+            } else {
+                break
+            }
+        }
+        
+        return result
+    }
+    
     // MARK: - Remove
     
     public func remove(_ indices: IndexSet, manager: ECKSkillPlanManager) {
@@ -181,7 +242,7 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
             self.remove(entry.skill, level: entry.level)
         }
         
-        self.recalculateRemapPoints(manager: manager)
+        self.recalculateRemapPoints()
         manager.saveSkillPlan(self)
     }
     
@@ -229,7 +290,7 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
     
     // MARK: - Attribute Calculation
     
-    private func recalculateRemapPoints(manager: ECKSkillPlanManager) {
+    private func recalculateRemapPoints() {
         clearRemapPoints()
         
         let remapPoints = entries.filter { entry in

@@ -22,6 +22,15 @@ public enum ECKSkillPlanEntry: Codable, Identifiable, Hashable {
         }
     }
     
+    var skill: ECKSkillPlanSkillEntry? {
+        switch self {
+        case .remap(let eCKSkillPlanRemap):
+            return nil
+        case .skill(let entry):
+            return entry
+        }
+    }
+    
     var isRemapPoint: Bool {
         switch self {
         case .remap:
