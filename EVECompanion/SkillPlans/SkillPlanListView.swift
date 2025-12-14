@@ -24,6 +24,11 @@ struct SkillPlanListView: View {
                     Text(skillPlan.name)
                 }
             }
+            .onDelete { indicesToDelete in
+                if let indexToDelete = indicesToDelete.first {
+                    manager.deleteSkillPlan(manager.skillPlans[indexToDelete])
+                }
+            }
         }
         .navigationTitle("Skill Plans")
         .toolbar {

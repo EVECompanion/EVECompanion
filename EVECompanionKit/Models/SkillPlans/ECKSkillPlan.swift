@@ -172,7 +172,7 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
         let entriesToMove = fromOffsets.map({ self.entries[$0] })
         
         for entry in entriesToMove {
-            offsetsWithRequirements.formUnion(requirementIndices(for: entry))
+            offsetsWithRequirements.formUnion(requirementIndices(for: entry, destinationOffset: toOffset))
         }
         
         entries.move(fromOffsets: offsetsWithRequirements, toOffset: toOffset)
@@ -180,20 +180,25 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
         manager.saveSkillPlan(self)
     }
     
-    private func requirementIndices(for entry: ECKSkillPlanEntry) -> IndexSet {
+    private func requirementIndices(for entry: ECKSkillPlanEntry, destinationOffset: Int) -> IndexSet {
         var result = IndexSet()
         
         if let skill = entry.skill {
-            for level in 1...skill.level {
+            if skill.level > 1 {
                 if let requirementIndex = entries.firstIndex(where: { entry in
                     switch entry {
                     case .remap:
                         return false
                     case .skill(let entry):
-                        return entry.skill.id == skill.skill.id && entry.level == level
+                        return entry.skill.id == skill.skill.id && entry.level == skill.level - 1
                     }
                 }) {
-                    result.insert(requirementIndex)
+                    if requirementIndex >= destinationOffset {
+                        result.insert(requirementIndex)
+                    }
+                    result.formUnion(requirementIndices(for: .skill(.init(skill: skill.skill,
+                                                                          level: skill.level - 1)),
+                                                        destinationOffset: destinationOffset))
                 }
             }
         }
@@ -213,7 +218,12 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
                                 return entry.skill.id == requirement.element.skill.id && entry.level == level
                             }
                         }) {
-                            result.insert(requirementIndex)
+                            if requirementIndex >= destinationOffset {
+                                result.insert(requirementIndex)
+                            }
+                            result.formUnion(requirementIndices(for: .skill(ECKSkillPlanSkillEntry(skill: requirement.element.skill,
+                                                                                                   level: level)),
+                                                                destinationOffset: destinationOffset))
                         }
                     }
                 }
