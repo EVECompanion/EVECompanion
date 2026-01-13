@@ -201,6 +201,17 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
                                                         destinationOffset: destinationOffset))
                 }
             }
+            
+            let skillLevel = skill.level
+            let skillId = skill.skill.id
+            
+            let otherSkillEntries = entries.enumerated().filter({ $0.element.isSkillEntry && $0.element.skill!.skill.id == skillId })
+            
+            for otherSkillEntry in otherSkillEntries {
+                if otherSkillEntry.element.level! > skillLevel, otherSkillEntry.offset < destinationOffset {
+                    result.insert(otherSkillEntry.offset)
+                }
+            }
         }
         
         switch entry {

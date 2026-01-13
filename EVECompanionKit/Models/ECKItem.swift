@@ -9,6 +9,8 @@ import Foundation
 
 public final class ECKItem: Codable, Identifiable, @unchecked Sendable, Hashable {
     
+    internal static let amarrTitan: ECKItem = .init(typeId: 3347)
+    
     public var id: Int {
         return typeId
     }

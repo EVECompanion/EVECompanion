@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -150,6 +150,7 @@
 		C96430922CC46A0200E8D6A6 /* ECKPlanet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96430912CC46A0200E8D6A6 /* ECKPlanet.swift */; };
 		C96430AF2CC6BE5A00E8D6A6 /* PlanetaryColoniesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96430AE2CC6BE5A00E8D6A6 /* PlanetaryColoniesView.swift */; };
 		C96430B12CC7AE0D00E8D6A6 /* PlanetaryColonyPinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96430B02CC7AE0D00E8D6A6 /* PlanetaryColonyPinView.swift */; };
+		C9669A1E2F1267270046CB1F /* EVECompanionKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91EEEEA2BE975D000352175 /* EVECompanionKit.framework */; };
 		C96735202D8CBA1F004E059F /* CapitalJumpRouteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C967351F2D8CBA1F004E059F /* CapitalJumpRouteCell.swift */; };
 		C96E4F162EC3B76B002BC743 /* ECKMarketDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96E4F152EC3B76B002BC743 /* ECKMarketDataManager.swift */; };
 		C96E52202EC3BACB002BC743 /* ECKMarketOrdersResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96E521F2EC3BACB002BC743 /* ECKMarketOrdersResource.swift */; };
@@ -373,6 +374,20 @@
 			remoteGlobalIDString = C91EEEE92BE975D000352175;
 			remoteInfo = EVECompanionKit;
 		};
+		C9669A1F2F1267270046CB1F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C91EEEAF2BE9730000352175 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C91EEEE92BE975D000352175;
+			remoteInfo = EVECompanionKit;
+		};
+		C9669A2C2F16D2340046CB1F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C91EEEAF2BE9730000352175 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C91EEEB62BE9730000352175;
+			remoteInfo = EVECompanion;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -549,6 +564,7 @@
 		C96430912CC46A0200E8D6A6 /* ECKPlanet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKPlanet.swift; sourceTree = "<group>"; };
 		C96430AE2CC6BE5A00E8D6A6 /* PlanetaryColoniesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryColoniesView.swift; sourceTree = "<group>"; };
 		C96430B02CC7AE0D00E8D6A6 /* PlanetaryColonyPinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryColonyPinView.swift; sourceTree = "<group>"; };
+		C9669A1A2F1267270046CB1F /* EVECompanionKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EVECompanionKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C967351C2D8C26BD004E059F /* CapitalNavigationShipPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalNavigationShipPickerView.swift; sourceTree = "<group>"; };
 		C967351F2D8CBA1F004E059F /* CapitalJumpRouteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalJumpRouteCell.swift; sourceTree = "<group>"; };
 		C96E4F152EC3B76B002BC743 /* ECKMarketDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMarketDataManager.swift; sourceTree = "<group>"; };
@@ -740,6 +756,10 @@
 		C9FD52FE2C026BBF0084E5E1 /* LoyaltyPointCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyaltyPointCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		C9669A1B2F1267270046CB1F /* EVECompanionKitTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = EVECompanionKitTests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		C906BA872EA8F87300A9E3F3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -789,6 +809,14 @@
 				C9DEF2F42C14AEF200815AF0 /* ZipArchive in Frameworks */,
 				C9D095092DE7BA8A00715479 /* Yams in Frameworks */,
 				C9EAA52D2C6FED7400ABB30F /* SwiftPriorityQueue in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C9669A172F1267270046CB1F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9669A1E2F1267270046CB1F /* EVECompanionKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1033,6 +1061,7 @@
 				C91EEEEB2BE975D000352175 /* EVECompanionKit */,
 				C906BAA12EA8F89400A9E3F3 /* EVECompanionWidgets */,
 				C9DCC61B2EA6C4D200D2F643 /* SDEConverter */,
+				C9669A1B2F1267270046CB1F /* EVECompanionKitTests */,
 				C91EEEB82BE9730000352175 /* Products */,
 				C9BDB1892DB3C3D700DA4375 /* Recovered References */,
 				C90BD0532E9D317800BB0EB9 /* Frameworks */,
@@ -1046,6 +1075,7 @@
 				C91EEEEA2BE975D000352175 /* EVECompanionKit.framework */,
 				C90BD04C2E9D304D00BB0EB9 /* SDEConverter */,
 				C906BA8A2EA8F87300A9E3F3 /* WidgetsExtension.appex */,
+				C9669A1A2F1267270046CB1F /* EVECompanionKitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1830,6 +1860,30 @@
 			productReference = C91EEEEA2BE975D000352175 /* EVECompanionKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		C9669A192F1267270046CB1F /* EVECompanionKitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C9669A232F1267270046CB1F /* Build configuration list for PBXNativeTarget "EVECompanionKitTests" */;
+			buildPhases = (
+				C9669A162F1267270046CB1F /* Sources */,
+				C9669A172F1267270046CB1F /* Frameworks */,
+				C9669A182F1267270046CB1F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C9669A202F1267270046CB1F /* PBXTargetDependency */,
+				C9669A2D2F16D2340046CB1F /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				C9669A1B2F1267270046CB1F /* EVECompanionKitTests */,
+			);
+			name = EVECompanionKitTests;
+			packageProductDependencies = (
+			);
+			productName = EVECompanionKitTests;
+			productReference = C9669A1A2F1267270046CB1F /* EVECompanionKitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1837,7 +1891,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2600;
+				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					C906BA892EA8F87300A9E3F3 = {
@@ -1852,6 +1906,10 @@
 					C91EEEE92BE975D000352175 = {
 						CreatedOnToolsVersion = 15.2;
 						LastSwiftMigration = 1520;
+					};
+					C9669A192F1267270046CB1F = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = C91EEEB62BE9730000352175;
 					};
 				};
 			};
@@ -1886,6 +1944,7 @@
 				C91EEEE92BE975D000352175 /* EVECompanionKit */,
 				C90BD04B2E9D304D00BB0EB9 /* SDEConverter */,
 				C906BA892EA8F87300A9E3F3 /* WidgetsExtension */,
+				C9669A192F1267270046CB1F /* EVECompanionKitTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1913,6 +1972,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C91EEEE82BE975D000352175 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C9669A182F1267270046CB1F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2300,6 +2366,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C9669A162F1267270046CB1F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -2317,6 +2390,16 @@
 			isa = PBXTargetDependency;
 			target = C91EEEE92BE975D000352175 /* EVECompanionKit */;
 			targetProxy = C91EEEFB2BE975D000352175 /* PBXContainerItemProxy */;
+		};
+		C9669A202F1267270046CB1F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C91EEEE92BE975D000352175 /* EVECompanionKit */;
+			targetProxy = C9669A1F2F1267270046CB1F /* PBXContainerItemProxy */;
+		};
+		C9669A2D2F16D2340046CB1F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C91EEEB62BE9730000352175 /* EVECompanion */;
+			targetProxy = C9669A2C2F16D2340046CB1F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2725,6 +2808,50 @@
 			};
 			name = Release;
 		};
+		C9669A212F1267270046CB1F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H4K6BXTR7Y;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.schlabertz.EVECompanionKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EVECompanion.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EVECompanion";
+			};
+			name = Debug;
+		};
+		C9669A222F1267270046CB1F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H4K6BXTR7Y;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.schlabertz.EVECompanionKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EVECompanion.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EVECompanion";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2769,6 +2896,15 @@
 			buildConfigurations = (
 				C91EEF002BE975D000352175 /* Debug */,
 				C91EEF012BE975D000352175 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9669A232F1267270046CB1F /* Build configuration list for PBXNativeTarget "EVECompanionKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9669A212F1267270046CB1F /* Debug */,
+				C9669A222F1267270046CB1F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

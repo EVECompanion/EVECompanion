@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "B24726F1-CA72-403E-A915-4906182E9675",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:EVECompanion.xcodeproj",
+        "identifier" : "C9669A192F1267270046CB1F",
+        "name" : "EVECompanionKitTests"
+      }
+    }
+  ],
+  "version" : 1
+}
