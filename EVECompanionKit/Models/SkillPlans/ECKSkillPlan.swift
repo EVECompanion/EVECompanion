@@ -168,6 +168,10 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
     // MARK: - Move
     
     public func move(fromOffsets: IndexSet, toOffset: Int, manager: ECKSkillPlanManager) {
+        guard fromOffsets.contains(toOffset) == false else {
+            return
+        }
+        
         var offsetsWithRequirements = fromOffsets
         let entriesToMove = fromOffsets.map({ self.entries[$0] })
         
@@ -210,6 +214,20 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
             for otherSkillEntry in otherSkillEntries {
                 if otherSkillEntry.element.level! > skillLevel, otherSkillEntry.offset < destinationOffset {
                     result.insert(otherSkillEntry.offset)
+                }
+            }
+        }
+        
+        for (index, otherEntry) in entries.enumerated() {
+            guard index <= destinationOffset else {
+                break
+            }
+            
+            if let requirements = otherEntry.skill?.skill.skillRequirements {
+                for requirement in requirements {
+                    if requirement.skill.id == entry.skill?.skill.id, requirement.requiredLevel <= entry.level ?? -1 {
+                        result.insert(index)
+                    }
                 }
             }
         }

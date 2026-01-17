@@ -10,6 +10,8 @@ import Foundation
 public final class ECKItem: Codable, Identifiable, @unchecked Sendable, Hashable {
     
     internal static let amarrTitan: ECKItem = .init(typeId: 3347)
+    internal static let missileLauncherOperation: ECKItem = .init(typeId: 3319)
+    internal static let lightMissiles: ECKItem = .init(typeId: 3321)
     
     public var id: Int {
         return typeId

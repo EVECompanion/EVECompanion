@@ -70,6 +70,56 @@ struct ECKSkillPlanReorderingTests {
                 .remap(nil),
                 .skill(.init(skill: .amarrTitan, level: 2)),
                 .skill(.init(skill: .amarrTitan, level: 3))
+              ]),
+        .init(description: "Cannot move skill before a requirement of that skill.",
+              initialEntries: [
+                .remap(nil),
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2)),
+                .skill(.init(skill: .lightMissiles, level: 1))
+              ],
+              moveFromoOffsets: .init(integer: 3),
+              moveToOffset: 2,
+              expectedEntries: [
+                .remap(nil),
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2)),
+                .skill(.init(skill: .lightMissiles, level: 1))
+              ]),
+        .init(description: "Cannot move skill after a skill that requires that skill.",
+              initialEntries: [
+                .remap(nil),
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2)),
+                .skill(.init(skill: .lightMissiles, level: 1))
+              ],
+              moveFromoOffsets: .init(integer: 2),
+              moveToOffset: 4,
+              expectedEntries: [
+                .remap(nil),
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2)),
+                .skill(.init(skill: .lightMissiles, level: 1))
+              ]),
+        .init(description: "Does not delete remap points when dropping them on themselves.",
+              initialEntries: [
+                .remap(nil)
+              ],
+              moveFromoOffsets: .init(integer: 0),
+              moveToOffset: 0,
+              expectedEntries: [
+                .remap(nil)
+              ]),
+        .init(description: "Does not delete remap points when dropping them on themselves.",
+              initialEntries: [
+                .remap(nil),
+                .skill(.init(skill: .missileLauncherOperation, level: 1))
+              ],
+              moveFromoOffsets: .init(integer: 0),
+              moveToOffset: 0,
+              expectedEntries: [
+                .remap(nil),
+                .skill(.init(skill: .missileLauncherOperation, level: 1))
               ])
     ]
     
@@ -98,7 +148,7 @@ struct ECKSkillPlanReorderingTests {
     let skillPlanManager = DummySkillPlanManager()
     
     @Test(arguments: testCases)
-    func performReorderingTest(for testCase: TestCase) {
+    func runSkillPlanReorderingTests(for testCase: TestCase) {
         let skillPlan = ECKSkillPlan(id: UUID(),
                                      name: "",
                                      entries: testCase.initialEntries)
