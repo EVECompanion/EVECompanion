@@ -13,7 +13,7 @@ struct ECKSkillPlanReorderingTests {
     struct TestCase {
         let description: Comment
         let initialEntries: [ECKSkillPlanEntry]
-        let moveFromoOffsets: IndexSet
+        let moveFromOffsets: IndexSet
         let moveToOffset: Int
         let expectedEntries: [ECKSkillPlanEntry]
     }
@@ -22,54 +22,58 @@ struct ECKSkillPlanReorderingTests {
         .init(description: "Cannot drop skill after the next level of that skill.",
               initialEntries: [
                 .remap(nil),
-                .skill(.init(skill: .amarrTitan, level: 1)),
-                .skill(.init(skill: .amarrTitan, level: 2))
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2))
               ],
-              moveFromoOffsets: .init(integer: 1),
+              moveFromOffsets: .init(integer: 1),
               moveToOffset: 3,
               expectedEntries: [
                 .remap(nil),
-                .skill(.init(skill: .amarrTitan, level: 1)),
-                .skill(.init(skill: .amarrTitan, level: 2))
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2))
               ]),
         .init(description: "Cannot drop skill after the next level of that skill.",
               initialEntries: [
                 .remap(nil),
-                .skill(.init(skill: .amarrTitan, level: 2)),
-                .skill(.init(skill: .amarrTitan, level: 3))
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2)),
+                .skill(.init(skill: .missileLauncherOperation, level: 3))
               ],
-              moveFromoOffsets: .init(integer: 1),
-              moveToOffset: 3,
+              moveFromOffsets: .init(integer: 2),
+              moveToOffset: 4,
               expectedEntries: [
                 .remap(nil),
-                .skill(.init(skill: .amarrTitan, level: 2)),
-                .skill(.init(skill: .amarrTitan, level: 3))
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2)),
+                .skill(.init(skill: .missileLauncherOperation, level: 3))
               ]),
         .init(description: "Cannot move skill before the previous level of that skill.",
               initialEntries: [
                 .remap(nil),
-                .skill(.init(skill: .amarrTitan, level: 1)),
-                .skill(.init(skill: .amarrTitan, level: 2))
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2))
               ],
-              moveFromoOffsets: .init(integer: 2),
+              moveFromOffsets: .init(integer: 2),
               moveToOffset: 1,
               expectedEntries: [
                 .remap(nil),
-                .skill(.init(skill: .amarrTitan, level: 1)),
-                .skill(.init(skill: .amarrTitan, level: 2))
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2))
               ]),
         .init(description: "Cannot move skill before the previous level of that skill.",
               initialEntries: [
                 .remap(nil),
-                .skill(.init(skill: .amarrTitan, level: 2)),
-                .skill(.init(skill: .amarrTitan, level: 3))
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2)),
+                .skill(.init(skill: .missileLauncherOperation, level: 3))
               ],
-              moveFromoOffsets: .init(integer: 2),
-              moveToOffset: 1,
+              moveFromOffsets: .init(integer: 3),
+              moveToOffset: 2,
               expectedEntries: [
                 .remap(nil),
-                .skill(.init(skill: .amarrTitan, level: 2)),
-                .skill(.init(skill: .amarrTitan, level: 3))
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2)),
+                .skill(.init(skill: .missileLauncherOperation, level: 3))
               ]),
         .init(description: "Cannot move skill before a requirement of that skill.",
               initialEntries: [
@@ -78,7 +82,7 @@ struct ECKSkillPlanReorderingTests {
                 .skill(.init(skill: .missileLauncherOperation, level: 2)),
                 .skill(.init(skill: .lightMissiles, level: 1))
               ],
-              moveFromoOffsets: .init(integer: 3),
+              moveFromOffsets: .init(integer: 3),
               moveToOffset: 2,
               expectedEntries: [
                 .remap(nil),
@@ -93,7 +97,7 @@ struct ECKSkillPlanReorderingTests {
                 .skill(.init(skill: .missileLauncherOperation, level: 2)),
                 .skill(.init(skill: .lightMissiles, level: 1))
               ],
-              moveFromoOffsets: .init(integer: 2),
+              moveFromOffsets: .init(integer: 2),
               moveToOffset: 4,
               expectedEntries: [
                 .remap(nil),
@@ -105,7 +109,7 @@ struct ECKSkillPlanReorderingTests {
               initialEntries: [
                 .remap(nil)
               ],
-              moveFromoOffsets: .init(integer: 0),
+              moveFromOffsets: .init(integer: 0),
               moveToOffset: 0,
               expectedEntries: [
                 .remap(nil)
@@ -115,11 +119,34 @@ struct ECKSkillPlanReorderingTests {
                 .remap(nil),
                 .skill(.init(skill: .missileLauncherOperation, level: 1))
               ],
-              moveFromoOffsets: .init(integer: 0),
+              moveFromOffsets: .init(integer: 0),
               moveToOffset: 0,
               expectedEntries: [
                 .remap(nil),
                 .skill(.init(skill: .missileLauncherOperation, level: 1))
+              ]),
+        .init(description: "Cannot move skills after a skill that requires it recursively.",
+              initialEntries: [
+                .remap(nil),
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2)),
+                .skill(.init(skill: .missileLauncherOperation, level: 3)),
+                .skill(.init(skill: .lightMissiles, level: 1)),
+                .skill(.init(skill: .lightMissiles, level: 2)),
+                .skill(.init(skill: .lightMissiles, level: 3)),
+                .skill(.init(skill: .heavyMissiles, level: 1))
+              ],
+              moveFromOffsets: .init(integer: 1),
+              moveToOffset: 8,
+              expectedEntries: [
+                .remap(nil),
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2)),
+                .skill(.init(skill: .missileLauncherOperation, level: 3)),
+                .skill(.init(skill: .lightMissiles, level: 1)),
+                .skill(.init(skill: .lightMissiles, level: 2)),
+                .skill(.init(skill: .lightMissiles, level: 3)),
+                .skill(.init(skill: .heavyMissiles, level: 1))
               ])
     ]
     
@@ -153,7 +180,7 @@ struct ECKSkillPlanReorderingTests {
                                      name: "",
                                      entries: testCase.initialEntries)
         
-        skillPlan.move(fromOffsets: testCase.moveFromoOffsets,
+        skillPlan.move(fromOffsets: testCase.moveFromOffsets,
                        toOffset: testCase.moveToOffset,
                        manager: skillPlanManager)
         

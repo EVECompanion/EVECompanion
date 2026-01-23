@@ -12,6 +12,10 @@ public final class ECKItem: Codable, Identifiable, @unchecked Sendable, Hashable
     internal static let amarrTitan: ECKItem = .init(typeId: 3347)
     internal static let missileLauncherOperation: ECKItem = .init(typeId: 3319)
     internal static let lightMissiles: ECKItem = .init(typeId: 3321)
+    internal static let heavyMissiles: ECKItem = .init(typeId: 3324)
+    internal static let torpedoes: ECKItem = .init(typeId: 3325)
+    internal static let XLTorpedoes: ECKItem = .init(typeId: 21668)
+    internal static let XLTorpedoSpec: ECKItem = .init(typeId: 41409)
     
     public var id: Int {
         return typeId

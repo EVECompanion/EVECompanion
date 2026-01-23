@@ -172,97 +172,86 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
             return
         }
         
-        var offsetsWithRequirements = fromOffsets
-        let entriesToMove = fromOffsets.map({ self.entries[$0] })
-        
-        for entry in entriesToMove {
-            offsetsWithRequirements.formUnion(requirementIndices(for: entry, destinationOffset: toOffset))
+        guard let currentSkills = manager.currentSkills else {
+            return
         }
         
-        entries.move(fromOffsets: offsetsWithRequirements, toOffset: toOffset)
-        self.recalculateRemapPoints()
+        entries.move(fromOffsets: fromOffsets, toOffset: toOffset)
+        fixSkillOrder(currentSkills: currentSkills)
+        recalculateRemapPoints()
         manager.saveSkillPlan(self)
     }
     
-    private func requirementIndices(for entry: ECKSkillPlanEntry, destinationOffset: Int) -> IndexSet {
-        var result = IndexSet()
+    private func fixSkillOrder(currentSkills: ECKCharacterSkills) {
+        var requirements: [ECKSkillPlanSkillEntry: [ECKItem.SkillRequirement]] = [:]
         
-        if let skill = entry.skill {
-            if skill.level > 1 {
-                if let requirementIndex = entries.firstIndex(where: { entry in
-                    switch entry {
-                    case .remap:
-                        return false
-                    case .skill(let entry):
-                        return entry.skill.id == skill.skill.id && entry.level == skill.level - 1
-                    }
-                }) {
-                    if requirementIndex >= destinationOffset {
-                        result.insert(requirementIndex)
-                    }
-                    result.formUnion(requirementIndices(for: .skill(.init(skill: skill.skill,
-                                                                          level: skill.level - 1)),
-                                                        destinationOffset: destinationOffset))
-                }
-            }
-            
-            let skillLevel = skill.level
-            let skillId = skill.skill.id
-            
-            let otherSkillEntries = entries.enumerated().filter({ $0.element.isSkillEntry && $0.element.skill!.skill.id == skillId })
-            
-            for otherSkillEntry in otherSkillEntries {
-                if otherSkillEntry.element.level! > skillLevel, otherSkillEntry.offset < destinationOffset {
-                    result.insert(otherSkillEntry.offset)
+        var entries = self.entries
+        var newEntries: [ECKSkillPlanEntry] = []
+        
+        for entry in entries {
+            if let skill = entry.skill {
+                if skill.level == 1 {
+                    requirements[skill] = skill.skill.skillRequirements
+                } else {
+                    requirements[skill] = [.init(skill: skill.skill, requiredLevel: skill.level - 1)]
                 }
             }
         }
         
-        for (index, otherEntry) in entries.enumerated() {
-            guard index <= destinationOffset else {
+        while entries.isEmpty == false {
+            guard let entryToAdd = entries.first(where: { dependencies(for: $0, currentSkills: currentSkills, currentEntries: newEntries).isEmpty }) else {
+                // TODO
                 break
             }
             
-            if let requirements = otherEntry.skill?.skill.skillRequirements {
-                for requirement in requirements {
-                    if requirement.skill.id == entry.skill?.skill.id, requirement.requiredLevel <= entry.level ?? -1 {
-                        result.insert(index)
-                    }
-                }
-            }
+            newEntries.append(entryToAdd)
+            entries = entries.filter({ $0 != entryToAdd })
         }
         
-        switch entry {
-        case .remap:
-            break
-        case .skill(let skill):
-            if let requirements = skill.skill.skillRequirements {
-                for requirement in requirements.enumerated() {
-                    for level in 1...requirement.element.requiredLevel where contains(skillId: requirement.element.skill.id, level: level) {
-                        if let requirementIndex = entries.firstIndex(where: { entry in
-                            switch entry {
-                            case .remap:
-                                return false
-                            case .skill(let entry):
-                                return entry.skill.id == requirement.element.skill.id && entry.level == level
-                            }
-                        }) {
-                            if requirementIndex >= destinationOffset {
-                                result.insert(requirementIndex)
-                            }
-                            result.formUnion(requirementIndices(for: .skill(ECKSkillPlanSkillEntry(skill: requirement.element.skill,
-                                                                                                   level: level)),
-                                                                destinationOffset: destinationOffset))
-                        }
-                    }
+        self.entries = newEntries
+    }
+    
+    private func dependencies(for entry: ECKSkillPlanEntry, currentSkills: ECKCharacterSkills, currentEntries: [ECKSkillPlanEntry]) -> [ECKSkillPlanEntry] {
+        let currentEntriesContain: (ECKSkillPlanSkillEntry) -> Bool = { entryToCheck in
+            return currentEntries.contains(where: { entry in
+                switch entry {
+                case .remap:
+                    return false
+                case .skill(let entry):
+                    return entry.skill.id == entryToCheck.skill.id && entry.level == entryToCheck.level
                 }
-                
+            })
+        }
+        
+        guard let skill = entry.skill else {
+            return []
+        }
+        
+        guard skill.level <= 1 else {
+            let requirement: ECKSkillPlanSkillEntry = .init(skill: skill.skill, level: skill.level - 1)
+            
+            if currentEntriesContain(requirement) || currentSkills.isTrained(skillId: requirement.skill.id, level: requirement.level) {
+                return []
             } else {
-                break
+                return [.skill(requirement)]
             }
         }
         
-        return result
+        guard let requirements = skill.skill.skillRequirements, requirements.isEmpty == false else {
+            return []
+        }
+        
+        var requirementEntries: [ECKSkillPlanSkillEntry] = []
+        
+        for requirement in requirements {
+            let requirementEntry: ECKSkillPlanSkillEntry = .init(skill: requirement.skill, level: requirement.requiredLevel)
+            
+            if currentEntriesContain(requirementEntry) == false && currentSkills.isTrained(skillId: requirement.skill.id, level: requirement.requiredLevel) == false {
+                requirementEntries.append(.init(skill: requirement.skill, level: requirement.requiredLevel))
+            }
+        }
+        
+        return requirementEntries.map({ .skill($0) })
     }
     
     // MARK: - Remove
