@@ -183,29 +183,28 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
     }
     
     private func fixSkillOrder(currentSkills: ECKCharacterSkills) {
-        var requirements: [ECKSkillPlanSkillEntry: [ECKItem.SkillRequirement]] = [:]
-        
         var entries = self.entries
         var newEntries: [ECKSkillPlanEntry] = []
         
-        for entry in entries {
-            if let skill = entry.skill {
-                if skill.level == 1 {
-                    requirements[skill] = skill.skill.skillRequirements
-                } else {
-                    requirements[skill] = [.init(skill: skill.skill, requiredLevel: skill.level - 1)]
-                }
-            }
-        }
-        
         while entries.isEmpty == false {
-            guard let entryToAdd = entries.enumerated().first(where: { dependencies(for: $0.element, currentSkills: currentSkills, currentEntries: newEntries).isEmpty }) else {
-                // TODO
-                break
-            }
+            let entryToAdd = Array(entries.enumerated()).first!
             
+            let dependencies = dependencies(
+                for: entryToAdd.element,
+                currentSkills: currentSkills,
+                currentEntries: newEntries
+            )
+            
+            newEntries.append(contentsOf: dependencies)
             newEntries.append(entryToAdd.element)
-            entries = entries.enumerated().filter({ $0 != entryToAdd }).map({ $0.element })
+            entries = entries.enumerated().filter({ entryToFilter in
+                switch entryToFilter.element {
+                case .remap:
+                    return entryToFilter != entryToAdd
+                case .skill:
+                    return entryToFilter != entryToAdd && dependencies.contains(where: { $0 == entryToFilter.element }) == false
+                }
+            }).map({ $0.element })
         }
         
         self.entries = newEntries
@@ -233,7 +232,10 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
             if currentEntriesContain(requirement) || currentSkills.isTrained(skillId: requirement.skill.id, level: requirement.level) {
                 return []
             } else {
-                return [.skill(requirement)]
+                var newEntryDependencies = self.dependencies(for: .skill(requirement), currentSkills: currentSkills, currentEntries: currentEntries)
+                    .compactMap({ $0.skill })
+                newEntryDependencies.append(requirement)
+                return newEntryDependencies.map({ .skill($0) })
             }
         }
         
@@ -247,7 +249,14 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
             let requirementEntry: ECKSkillPlanSkillEntry = .init(skill: requirement.skill, level: requirement.requiredLevel)
             
             if currentEntriesContain(requirementEntry) == false && currentSkills.isTrained(skillId: requirement.skill.id, level: requirement.requiredLevel) == false {
-                requirementEntries.append(.init(skill: requirement.skill, level: requirement.requiredLevel))
+                let newEntry: ECKSkillPlanSkillEntry = .init(skill: requirement.skill, level: requirement.requiredLevel)
+                let newEntryDependencies = self.dependencies(for: .skill(newEntry), currentSkills: currentSkills, currentEntries: currentEntries)
+                    .compactMap({ $0.skill })
+                    .filter({ entryToFilter in
+                        requirementEntries.contains(where: { entryToFilter == $0 }) == false
+                    })
+                requirementEntries.append(contentsOf: newEntryDependencies)
+                requirementEntries.append(newEntry)
             }
         }
         
