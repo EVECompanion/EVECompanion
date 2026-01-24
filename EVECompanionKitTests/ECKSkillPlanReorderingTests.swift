@@ -60,6 +60,21 @@ struct ECKSkillPlanReorderingTests {
                 .skill(.init(skill: .missileLauncherOperation, level: 1)),
                 .skill(.init(skill: .missileLauncherOperation, level: 2))
               ]),
+        .init(description: "Remap Points at the end of the list should not vanish on a failed reordering.",
+              initialEntries: [
+                .remap(nil),
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2)),
+                .remap(nil)
+              ],
+              moveFromOffsets: .init(integer: 2),
+              moveToOffset: 1,
+              expectedEntries: [
+                .remap(nil),
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2)),
+                .remap(nil)
+              ]),
         .init(description: "Cannot move skill before the previous level of that skill.",
               initialEntries: [
                 .remap(nil),
@@ -147,6 +162,33 @@ struct ECKSkillPlanReorderingTests {
                 .skill(.init(skill: .lightMissiles, level: 2)),
                 .skill(.init(skill: .lightMissiles, level: 3)),
                 .skill(.init(skill: .heavyMissiles, level: 1))
+              ]),
+        .init(description: "Moves dependencies of a skill when that skill is moved.",
+              initialEntries: [
+                .remap(nil),
+                .skill(.init(skill: .navigation, level: 1)),
+                .skill(.init(skill: .navigation, level: 2)),
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2)),
+                .skill(.init(skill: .missileLauncherOperation, level: 3)),
+                .skill(.init(skill: .lightMissiles, level: 1)),
+                .skill(.init(skill: .lightMissiles, level: 2)),
+                .skill(.init(skill: .lightMissiles, level: 3)),
+                .skill(.init(skill: .heavyMissiles, level: 1))
+              ],
+              moveFromOffsets: .init(integer: 9),
+              moveToOffset: 2,
+              expectedEntries: [
+                .remap(nil),
+                .skill(.init(skill: .navigation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 1)),
+                .skill(.init(skill: .missileLauncherOperation, level: 2)),
+                .skill(.init(skill: .missileLauncherOperation, level: 3)),
+                .skill(.init(skill: .lightMissiles, level: 1)),
+                .skill(.init(skill: .lightMissiles, level: 2)),
+                .skill(.init(skill: .lightMissiles, level: 3)),
+                .skill(.init(skill: .heavyMissiles, level: 1)),
+                .skill(.init(skill: .navigation, level: 2))
               ])
     ]
     

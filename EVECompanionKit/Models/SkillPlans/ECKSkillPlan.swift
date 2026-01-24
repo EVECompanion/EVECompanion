@@ -199,13 +199,13 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
         }
         
         while entries.isEmpty == false {
-            guard let entryToAdd = entries.first(where: { dependencies(for: $0, currentSkills: currentSkills, currentEntries: newEntries).isEmpty }) else {
+            guard let entryToAdd = entries.enumerated().first(where: { dependencies(for: $0.element, currentSkills: currentSkills, currentEntries: newEntries).isEmpty }) else {
                 // TODO
                 break
             }
             
-            newEntries.append(entryToAdd)
-            entries = entries.filter({ $0 != entryToAdd })
+            newEntries.append(entryToAdd.element)
+            entries = entries.enumerated().filter({ $0 != entryToAdd }).map({ $0.element })
         }
         
         self.entries = newEntries
@@ -338,25 +338,24 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
         } else {
             var currentChunkEntries: [ECKSkillPlanSkillEntry] = []
             
-            for entry in entries {
-                if entry.isSkillEntry {
-                    if case .skill(let skill) = entry {
+            for entry in entries.enumerated() {
+                if entry.element.isSkillEntry {
+                    if case .skill(let skill) = entry.element {
                         currentChunkEntries.append(skill)
                     }
-                } else {
+                } else if entry.offset > 0 {
                     chunks.append(currentChunkEntries)
                     currentChunkEntries = []
                 }
             }
             
-            if currentChunkEntries.isEmpty == false {
-                chunks.append(currentChunkEntries)
-            }
+            chunks.append(currentChunkEntries)
         }
         
         var newEntries: [ECKSkillPlanEntry] = []
         for chunk in chunks {
             guard chunk.isEmpty == false else {
+                newEntries.append(.remap(nil))
                 continue
             }
             

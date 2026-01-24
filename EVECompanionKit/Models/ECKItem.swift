@@ -16,6 +16,7 @@ public final class ECKItem: Codable, Identifiable, @unchecked Sendable, Hashable
     internal static let torpedoes: ECKItem = .init(typeId: 3325)
     internal static let XLTorpedoes: ECKItem = .init(typeId: 21668)
     internal static let XLTorpedoSpec: ECKItem = .init(typeId: 41409)
+    internal static let navigation: ECKItem = .init(typeId: 3449)
     
     public var id: Int {
         return typeId
