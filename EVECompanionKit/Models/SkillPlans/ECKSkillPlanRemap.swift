@@ -11,6 +11,8 @@ public class ECKSkillPlanRemap: Codable, Hashable {
     
     static private let baseAttributePoints: Int = 17
     
+    public internal(set) var totalTrainingTime: TimeInterval?
+    
     public let charisma: Int
     public let intelligence: Int
     public let memory: Int
@@ -52,6 +54,7 @@ public class ECKSkillPlanRemap: Codable, Hashable {
         hasher.combine(memory)
         hasher.combine(perception)
         hasher.combine(willpower)
+        hasher.combine(totalTrainingTime)
     }
     
     public static func == (lhs: ECKSkillPlanRemap, rhs: ECKSkillPlanRemap) -> Bool {
@@ -60,6 +63,7 @@ public class ECKSkillPlanRemap: Codable, Hashable {
         && lhs.memory == rhs.memory
         && lhs.perception == rhs.perception
         && lhs.willpower == rhs.willpower
+        && lhs.totalTrainingTime == rhs.totalTrainingTime
     }
     
 }

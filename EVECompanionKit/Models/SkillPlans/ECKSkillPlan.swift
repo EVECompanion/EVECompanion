@@ -327,7 +327,7 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
     
     // MARK: - Attribute Calculation
     
-    private func recalculateRemapPoints() {
+    public func recalculateRemapPoints() {
         clearRemapPoints()
         
         let remapPoints = entries.filter { entry in
@@ -415,9 +415,20 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
             }
         }
         
+        var totalTrainingTime: TimeInterval = 0
         var result: [ECKSkillPlanEntry] = []
         result.append(.remap(bestRemap))
-        result.append(contentsOf: chunk.map({ .skill($0) }))
+        result.append(contentsOf: chunk.map({
+            var skill = $0
+            skill.skillTime = $0.skill.skillTime(
+                for: bestRemap,
+                skillLevel: skill.level
+            )
+            totalTrainingTime += skill.skillTime ?? 0
+            skill.earliestFinishDate = Date().addingTimeInterval(totalTrainingTime)
+            return .skill(skill)
+        }))
+        bestRemap.totalTrainingTime = totalTrainingTime
         return result
     }
     

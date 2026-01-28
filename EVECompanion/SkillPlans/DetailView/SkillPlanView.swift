@@ -30,7 +30,7 @@ struct SkillPlanView: View {
                     SkillPlanRemapPointCell(remap: remap)
                         .deleteDisabled(true)
                 case .skill(let skillEntry):
-                    SkillPlanSkillCell(skill: skillEntry.skill, skillLevel: skillEntry.level)
+                    SkillPlanSkillCell(entry: skillEntry)
                         .contextMenu {
                             if skillEntry.level < 5 {
                                 ForEach((skillEntry.level + 1)...5, id: \.self) { level in
@@ -108,6 +108,9 @@ struct SkillPlanView: View {
                 skillPlan.addItem(item,
                                   manager: manager)
             }
+        }
+        .onAppear {
+            skillPlan.recalculateRemapPoints()
         }
     }
     

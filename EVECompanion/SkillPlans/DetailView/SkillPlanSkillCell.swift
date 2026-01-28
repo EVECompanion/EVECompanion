@@ -11,8 +11,7 @@ import EVECompanionKit
 
 struct SkillPlanSkillCell: View {
     
-    let skill: ECKItem
-    let skillLevel: Int
+    let entry: ECKSkillPlanSkillEntry
     
     @EnvironmentObject private var coordinator: Coordinator
     
@@ -22,23 +21,33 @@ struct SkillPlanSkillCell: View {
                 .resizable()
                 .frame(width: 40, height: 40)
             
-            Text("\(skill.name) \(ECFormatters.skillLevel(level: skillLevel))")
-            
-            Spacer()
-            
-            HStack(spacing: 5) {
-                ForEach(1...5, id: \.self) { index in
-                    RoundedRectangle(cornerRadius: 3)
-                        .stroke(Color.primary, lineWidth: 2)
-                        .frame(width: 20, height: 20)
-                        .background {
-                            indicatorColor(for: index)
+            VStack(alignment: .leading) {
+                HStack {
+                    Text("\(entry.skill.name) \(ECFormatters.skillLevel(level: entry.level))")
+                    
+                    Spacer()
+                    
+                    HStack(spacing: 5) {
+                        ForEach(1...5, id: \.self) { index in
+                            RoundedRectangle(cornerRadius: 3)
+                                .stroke(Color.primary, lineWidth: 2)
+                                .frame(width: 20, height: 20)
+                                .background {
+                                    indicatorColor(for: index)
+                                }
                         }
+                    }
+                }
+                
+                if let time = entry.skillTime,
+                    let earliestFinishDate = entry.earliestFinishDate {
+                    Text("\(ECFormatters.remainingTime(remainingTime: time)) (\(ECFormatters.dateFormatter(date: earliestFinishDate)))")
+                        .foregroundStyle(.secondary)
                 }
             }
             
             Button {
-                coordinator.push(screen: .item(skill))
+                coordinator.push(screen: .item(entry.skill))
             } label: {
                 Image(systemName: "info.circle")
                     .resizable()
@@ -50,9 +59,9 @@ struct SkillPlanSkillCell: View {
     }
     
     private func indicatorColor(for index: Int) -> Color {
-        if index < skillLevel {
+        if index < entry.level {
             return Color.blue
-        } else if index == skillLevel {
+        } else if index == entry.level {
             return Color.red
         } else {
             return Color.clear
@@ -63,7 +72,7 @@ struct SkillPlanSkillCell: View {
 
 #Preview {
     List {
-        SkillPlanSkillCell(skill: .init(typeId: 27906), skillLevel: 4)
+        SkillPlanSkillCell(entry: .dummy)
     }
     .environmentObject(Coordinator(initialScreen: .incursions))
 }

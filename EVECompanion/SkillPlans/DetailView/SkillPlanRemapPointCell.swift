@@ -23,7 +23,15 @@ struct SkillPlanRemapPointCell: View {
                     .resizable()
                     .frame(width: 40, height: 40)
                 
-                Text("Remap Point")
+                VStack {
+                    Text("Remap Point")
+                    
+                    if let totalTrainingTime = remap?.totalTrainingTime,
+                       totalTrainingTime > 0 {
+                        Text("\(ECFormatters.remainingTime(remainingTime: totalTrainingTime))")
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
             
             if let remap {
