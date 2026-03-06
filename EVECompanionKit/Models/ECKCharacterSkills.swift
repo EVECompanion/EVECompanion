@@ -15,7 +15,10 @@ public class ECKCharacterSkills: Decodable, Equatable, Hashable {
         case unallocatedSP = "unallocated_sp"
     }
     
-    public var skillLevels: [ECKCharacterSkillLevel]
+    public var skillLevels: [ECKCharacterSkillLevel] {
+        skillLevelsDict.values.sorted(by: { $0.skill.skillId < $1.skill.skillId })
+    }
+    private var skillLevelsDict: [Int: ECKCharacterSkillLevel] = [:]
     public var totalSP: Int
     public var unallocatedSP: Int?
     
@@ -23,25 +26,28 @@ public class ECKCharacterSkills: Decodable, Equatable, Hashable {
     
     public static let empty: ECKCharacterSkills = {
         let res = ECKCharacterSkills()
-        res.skillLevels = []
         res.totalSP = 0
         res.unallocatedSP = nil
         return res
     }()
     
-    // Key: SkillId, Value: SkillLevel
-    internal lazy var skillSet: [Int: Int] = {
-        var result: [Int: Int] = [:]
-        skillLevels.forEach { skillLevel in
-            result[skillLevel.skill.skillId] = skillLevel.trainedSkillLevel
-        }
-        return result
-    }()
-    
     private init() {
-        self.skillLevels = [.dummy1, .dummy2]
+        self.skillLevelsDict = [
+            ECKCharacterSkill.dummy1.skillId: .dummy1,
+            ECKCharacterSkill.dummy2.skillId: .dummy2
+        ]
         self.totalSP = 15672976
         self.unallocatedSP = 1679235
+    }
+    
+    public required init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let skillLevels = try container.decode([ECKCharacterSkillLevel].self, forKey: .skillLevels)
+        for skillLevel in skillLevels {
+            skillLevelsDict[skillLevel.skill.skillId] = skillLevel
+        }
+        self.totalSP = try container.decode(Int.self, forKey: .totalSP)
+        self.unallocatedSP = try container.decodeIfPresent(Int.self, forKey: .unallocatedSP)
     }
     
     public static func == (lhs: ECKCharacterSkills, rhs: ECKCharacterSkills) -> Bool {
@@ -57,11 +63,11 @@ public class ECKCharacterSkills: Decodable, Equatable, Hashable {
     }
     
     public func isTrained(skillId: Int, level: Int) -> Bool {
-        return (skillSet[skillId] ?? -1) >= level
+        return (skillLevelsDict[skillId]?.trainedSkillLevel ?? -1) >= level
     }
     
     public func skillLevel(typeId: Int) -> ECKCharacterSkillLevel? {
-        return skillLevels.first(where: { $0.skill.skillId == typeId })
+        return skillLevelsDict[typeId]
     }
     
     internal func updateWithSkillQueue(_ queue: ECKCharacterSkillQueue) {

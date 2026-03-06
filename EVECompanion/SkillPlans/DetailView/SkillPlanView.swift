@@ -14,7 +14,6 @@ struct SkillPlanView: View {
     private let manager: ECKSkillPlanManager
     @State private var showChangeNameAlert: Bool = false
     @State private var changeNameInput: String
-    @State private var showEntrySelectionView: Bool = false
     @State private var sheet: SheetItem?
     
     enum SheetItem: Identifiable {
@@ -88,7 +87,11 @@ struct SkillPlanView: View {
                     }
                     
                     Button {
-                        showEntrySelectionView = true
+                        guard let currentSkills = manager.currentSkills else {
+                            return
+                        }
+                        
+                        sheet = .skillAdd(currentSkills)
                     } label: {
                         HStack {
                             Image("Neocom/Skills")
@@ -96,6 +99,7 @@ struct SkillPlanView: View {
                             Text("Add Skill")
                         }
                     }
+                    .disabled(manager.currentSkills == nil)
                 } label: {
                     Image(systemName: "plus")
                 }
@@ -118,9 +122,11 @@ struct SkillPlanView: View {
         .sheet(item: $sheet, content: { sheet in
             switch sheet {
             case .skillAdd(let skills):
-                SkillPlanSelectionView(currentSkills: skills) { item in
-                    skillPlan.addItem(item,
-                                      manager: manager)
+                SkillPlanSelectionView(currentSkills: skills) { item, level in
+                    skillPlan.addItem(
+                        item,
+                        manager: manager
+                    )
                 }
             }
         })

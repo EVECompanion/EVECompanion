@@ -11,7 +11,7 @@ import EVECompanionKit
 struct SkillPlanSelectionView: View {
     
     let currentSkills: ECKCharacterSkills
-    let selectionHandler: (ECKItem) -> Void
+    let selectionHandler: (ECKItem, Int) -> Void
     @StateObject private var manager: ECKMarketGroupManager = .init(
         groupIdFilter: nil,
         marketGroupIdFilter: 150,
@@ -26,11 +26,10 @@ struct SkillPlanSelectionView: View {
                     OutlineGroup(manager.marketGroups, children: \.children) { type in
                         switch type {
                         case .item(let item):
-                            Button {
-                                selectionHandler(item)
-                            } label: {
-                                itemCell(for: item, currentLevel: currentSkills.skillLevel(typeId: item.typeId))
-                            }
+                            itemButton(
+                                for: item, currentLevel:
+                                    currentSkills.skillLevel(typeId: item.typeId)
+                            )
                             .disabled(canAddSkill(typeId: item.typeId) == false)
                             .buttonStyle(.plain)
                             
@@ -54,35 +53,45 @@ struct SkillPlanSelectionView: View {
     }
     
     @ViewBuilder
-    func itemCell(for item: ECKItem, currentLevel: ECKCharacterSkillLevel?) -> some View {
-        HStack {
-            ECImage(id: item.typeId,
-                    category: .types)
+    func itemButton(for item: ECKItem, currentLevel: ECKCharacterSkillLevel?) -> some View {
+        Menu {
+            ForEach(((currentLevel?.trainedSkillLevel ?? 0) + 1)...5, id: \.self) { level in
+                Button {
+                    selectionHandler(item, level)
+                } label: {
+                    Text("Train to \(level)")
+                }
+            }
+        } label: {
+            HStack {
+                ECImage(id: item.typeId,
+                        category: .types)
                 .frame(width: 40,
                        height: 40)
-            
-            HStack {
-                VStack(alignment: .leading) {
-                    Text(item.name)
-                    
-                    HStack(spacing: 5) {
-                        ForEach(1...5, id: \.self) { index in
-                            RoundedRectangle(cornerRadius: 3)
-                                .stroke(Color.primary, lineWidth: 2)
-                                .frame(width: 20, height: 20)
-                                .background {
-                                    indicatorColor(for: index, skillLevel: currentLevel?.trainedSkillLevel ?? 0)
-                                }
+                
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text(item.name)
+                        
+                        HStack(spacing: 5) {
+                            ForEach(1...5, id: \.self) { index in
+                                RoundedRectangle(cornerRadius: 3)
+                                    .stroke(Color.primary, lineWidth: 2)
+                                    .frame(width: 20, height: 20)
+                                    .background {
+                                        indicatorColor(for: index, skillLevel: currentLevel?.trainedSkillLevel ?? 0)
+                                    }
+                            }
                         }
                     }
-                }
-                
-                Spacer()
-                
-                if currentLevel == nil {
-                    Text("Not injected")
-                        .foregroundStyle(.secondary)
-                        .font(.footnote)
+                    
+                    Spacer()
+                    
+                    if currentLevel == nil {
+                        Text("Not injected")
+                            .foregroundStyle(.secondary)
+                            .font(.footnote)
+                    }
                 }
             }
         }
@@ -101,7 +110,7 @@ struct SkillPlanSelectionView: View {
 #Preview {
     Color.clear
         .sheet(isPresented: .constant(true)) {
-            SkillPlanSelectionView(currentSkills: .dummy) { _ in
+            SkillPlanSelectionView(currentSkills: .dummy) { _, _ in
                 return
             }
         }
