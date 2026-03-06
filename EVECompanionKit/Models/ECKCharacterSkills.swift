@@ -19,7 +19,7 @@ public class ECKCharacterSkills: Decodable, Equatable, Hashable {
     public var totalSP: Int
     public var unallocatedSP: Int?
     
-    static let dummy: ECKCharacterSkills = .init()
+    public static let dummy: ECKCharacterSkills = .init()
     
     public static let empty: ECKCharacterSkills = {
         let res = ECKCharacterSkills()
@@ -58,6 +58,10 @@ public class ECKCharacterSkills: Decodable, Equatable, Hashable {
     
     public func isTrained(skillId: Int, level: Int) -> Bool {
         return (skillSet[skillId] ?? -1) >= level
+    }
+    
+    public func skillLevel(typeId: Int) -> ECKCharacterSkillLevel? {
+        return skillLevels.first(where: { $0.skill.skillId == typeId })
     }
     
     internal func updateWithSkillQueue(_ queue: ECKCharacterSkillQueue) {

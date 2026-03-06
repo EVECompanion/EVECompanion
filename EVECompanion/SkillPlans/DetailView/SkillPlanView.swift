@@ -15,6 +15,18 @@ struct SkillPlanView: View {
     @State private var showChangeNameAlert: Bool = false
     @State private var changeNameInput: String
     @State private var showEntrySelectionView: Bool = false
+    @State private var sheet: SheetItem?
+    
+    enum SheetItem: Identifiable {
+        var id: String {
+            switch self {
+            case .skillAdd(let skills):
+                return "skillAdd-\(skills.hashValue)"
+            }
+        }
+        
+        case skillAdd(ECKCharacterSkills)
+    }
     
     init(skillPlan: ECKSkillPlan, manager: ECKSkillPlanManager) {
         self.skillPlan = skillPlan
@@ -103,12 +115,15 @@ struct SkillPlanView: View {
                 Text("Cancel")
             }
         }
-        .sheet(isPresented: $showEntrySelectionView) {
-            SkillPlanSelectionView { item in
-                skillPlan.addItem(item,
-                                  manager: manager)
+        .sheet(item: $sheet, content: { sheet in
+            switch sheet {
+            case .skillAdd(let skills):
+                SkillPlanSelectionView(currentSkills: skills) { item in
+                    skillPlan.addItem(item,
+                                      manager: manager)
+                }
             }
-        }
+        })
         .onAppear {
             skillPlan.recalculateRemapPoints()
         }
