@@ -122,7 +122,7 @@ struct SkillPlanView: View {
         .sheet(item: $sheet, content: { sheet in
             switch sheet {
             case .skillAdd(let skills):
-                SkillPlanSelectionView(currentSkills: skills) { item, level in
+                SkillPlanSelectionView(currentSkills: skills, skillPlan: skillPlan) { item, level in
                     if item.isSkill, let level {
                         skillPlan.addSkill(
                             item,
