@@ -11,7 +11,7 @@ import EVECompanionKit
 struct SkillPlanSelectionView: View {
     
     let currentSkills: ECKCharacterSkills
-    let selectionHandler: (ECKItem, Int) -> Void
+    let selectionHandler: (ECKItem, Int?) -> Void
     @StateObject private var manager: ECKMarketGroupManager = .init(
         groupIdFilter: nil,
         marketGroupIdFilter: 150,

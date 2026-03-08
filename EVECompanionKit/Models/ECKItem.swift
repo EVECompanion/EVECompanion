@@ -102,6 +102,10 @@ public final class ECKItem: Codable, Identifiable, @unchecked Sendable, Hashable
         return nil
     }()
     
+    public var isSkill: Bool {
+        return itemCategory.categoryId == 16
+    }
+    
     public lazy var bonusTexts: [(header: AttributedString, text: AttributedString)] = {
         var result: [(header: AttributedString, text: AttributedString)] = []
         

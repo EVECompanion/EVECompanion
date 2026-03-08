@@ -123,10 +123,18 @@ struct SkillPlanView: View {
             switch sheet {
             case .skillAdd(let skills):
                 SkillPlanSelectionView(currentSkills: skills) { item, level in
-                    skillPlan.addItem(
-                        item,
-                        manager: manager
-                    )
+                    if item.isSkill, let level {
+                        skillPlan.addSkill(
+                            item,
+                            level: level,
+                            manager: manager
+                        )
+                    } else {
+                        skillPlan.addItem(
+                            item,
+                            manager: manager
+                        )
+                    }
                 }
             }
         })

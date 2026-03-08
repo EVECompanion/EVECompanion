@@ -86,8 +86,7 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
             manager.saveSkillPlan(self)
         }
         
-        if item.itemCategory.categoryId == 16 {
-            // This item is a skill
+        if item.isSkill {
             for level in 1...5 {
                 if currentSkills.isTrained(skillId: item.typeId, level: level) == false
                     && contains(skillId: item.typeId, level: level) == false {
