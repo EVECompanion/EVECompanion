@@ -201,7 +201,8 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
                 case .remap:
                     return entryToFilter != entryToAdd
                 case .skill:
-                    return entryToFilter != entryToAdd && dependencies.contains(where: { $0 == entryToFilter.element }) == false
+                    return entryToFilter.element.isEqualIgnoringDynamicData(to: entryToAdd.element) == false
+                    && dependencies.contains(where: { entryToFilter.element.isEqualIgnoringDynamicData(to: $0) }) == false
                 }
             }).map({ $0.element })
         }

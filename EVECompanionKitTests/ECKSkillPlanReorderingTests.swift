@@ -189,6 +189,21 @@ struct ECKSkillPlanReorderingTests {
                 .skill(.init(skill: .lightMissiles, level: 3)),
                 .skill(.init(skill: .heavyMissiles, level: 1)),
                 .skill(.init(skill: .navigation, level: 2))
+              ]),
+        .init(description: "Cannot train level 2 before level 1.",
+              initialEntries: [
+                .remap(nil),
+                .skill(.init(skill: .navigation, level: 1)),
+                .skill(.init(skill: .navigation, level: 2)),
+                .skill(.init(skill: .navigation, level: 3))
+              ],
+              moveFromOffsets: .init(integer: 1),
+              moveToOffset: 3,
+              expectedEntries: [
+                .remap(nil),
+                .skill(.init(skill: .navigation, level: 1)),
+                .skill(.init(skill: .navigation, level: 2)),
+                .skill(.init(skill: .navigation, level: 3))
               ])
     ]
     
@@ -233,7 +248,7 @@ struct ECKSkillPlanReorderingTests {
             
             switch (elements.0, elements.1) {
             case (.skill(let lhsEntry), .skill(let rhsEntry)):
-                #expect(lhsEntry == rhsEntry, testCase.description)
+                #expect(lhsEntry.skill.typeId == rhsEntry.skill.typeId && lhsEntry.level == rhsEntry.level, testCase.description)
             default:
                 continue
             }

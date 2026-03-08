@@ -29,18 +29,16 @@ public struct NestedObservableObject<Value: ObservableObject> {
             return instance[keyPath: storageKeyPath].storage
          }
          set {
-             DispatchQueue.main.async {
-                 if let cancellable = instance[keyPath: storageKeyPath].cancellable {
-                     cancellable.cancel()
-                 }
-                 if let publisher = instance.objectWillChange as? ObservableObjectPublisher {
-                     instance[keyPath: storageKeyPath].cancellable =
-                         newValue.objectWillChange.sink { _ in
-                                 publisher.send()
-                         }
-                 }
-                 instance[keyPath: storageKeyPath].storage = newValue
+             if let cancellable = instance[keyPath: storageKeyPath].cancellable {
+                 cancellable.cancel()
              }
+             if let publisher = instance.objectWillChange as? ObservableObjectPublisher {
+                 instance[keyPath: storageKeyPath].cancellable =
+                 newValue.objectWillChange.sink { _ in
+                     publisher.send()
+                 }
+             }
+             instance[keyPath: storageKeyPath].storage = newValue
          }
     }
     

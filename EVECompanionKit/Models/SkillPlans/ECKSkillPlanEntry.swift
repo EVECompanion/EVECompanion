@@ -61,4 +61,17 @@ public enum ECKSkillPlanEntry: Codable, Identifiable, Hashable {
         }
     }
     
+    internal func isEqualIgnoringDynamicData(to entry: ECKSkillPlanEntry) -> Bool {
+        switch (self, entry) {
+        case (.remap, .skill):
+            return false
+        case (.skill, .remap):
+            return false
+        case (.remap, .remap):
+            return true
+        case (.skill(let lhs), .skill(let rhs)):
+            return lhs.skill.typeId == rhs.skill.typeId && lhs.level == rhs.level
+        }
+    }
+    
 }
