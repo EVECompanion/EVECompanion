@@ -315,7 +315,7 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
                 let requirements = entry.skill.skillRequirements ?? []
                 
                 for requirement in requirements {
-                    if requirement.skill.id == skillId && requirement.requiredLevel >= entry.level {
+                    if requirement.skill.id == skillId && requirement.requiredLevel >= level {
                         result = removeSkill(entry.skill.id, level: entry.level, from: result)
                     }
                 }
