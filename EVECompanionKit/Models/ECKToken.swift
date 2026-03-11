@@ -102,16 +102,16 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable {
     }
     
     @MainActor
-    internal func markAsInvalid() {
+    internal func markAsInvalid() async {
         self.isValid = false
         self.accessTokenExpiredFlag = true
-        ECKKeychain.add(token: self)
+        await ECKKeychain.add(token: self)
     }
     
     @MainActor
-    internal func markAccessTokenExpired() {
+    internal func markAccessTokenExpired() async {
         self.accessTokenExpiredFlag = true
-        ECKKeychain.add(token: self)
+        await ECKKeychain.add(token: self)
     }
     
     func hash(into hasher: inout Hasher) {

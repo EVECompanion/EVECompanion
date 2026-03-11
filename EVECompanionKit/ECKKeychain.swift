@@ -31,15 +31,17 @@ internal struct ECKKeychain {
     private static let tokenKey = "tokens"
     
     @MainActor
-    static func add(token: ECKToken) {
+    static func add(token: ECKToken) async {
         var currentTokens = getTokens()
         var isNewToken: Bool = false
         logger.info("Adding token \(token.id)")
         
-        if let existingToken = currentTokens.enumerated().first(where: { $0.element.id == token.id }) {
+        if let existingToken = currentTokens.first(where: { $0.id == token.id }) {
             logger.info("Token \(token.id) is replacing an existing token.")
-            currentTokens[existingToken.offset] = token
-            isNewToken = existingToken.element.isValid == false && token.isValid
+            remove(token: existingToken, refreshApp: false)
+            try? await Task.sleep(nanoseconds: 50 * NSEC_PER_MSEC)
+            currentTokens.append(token)
+            isNewToken = existingToken.isValid == false && token.isValid
         } else {
             logger.info("Token \(token.id) is a new token.")
             isNewToken = true
@@ -55,16 +57,20 @@ internal struct ECKKeychain {
     
     @MainActor
     static func update(token: ECKToken) {
-        add(token: token)
+        Task { @MainActor in
+            await add(token: token)
+        }
     }
     
     @MainActor
-    static func remove(token: ECKToken) {
+    static func remove(token: ECKToken, refreshApp: Bool = true) {
         let currentTokens = getTokens()
         let updatedTokens = currentTokens.filter({ $0.id != token.id })
         set(tokens: updatedTokens)
         
-        NotificationCenter.default.post(name: .charactersDidChange, object: nil)
+        if refreshApp {
+            NotificationCenter.default.post(name: .charactersDidChange, object: nil)
+        }
     }
     
     @MainActor

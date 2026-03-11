@@ -226,7 +226,7 @@ class ECKWebService {
                 if statusCode == 400 {
                     let tokenError = try decoder.decode(ECKTokenRefreshError.self, from: data)
                     if tokenError.error == "invalid_grant" {
-                        token.markAsInvalid()
+                        await token.markAsInvalid()
                     }
                 }
                 
