@@ -40,6 +40,7 @@ internal struct ECKKeychain {
             logger.info("Token \(token.id) is replacing an existing token.")
             remove(token: existingToken, refreshApp: false)
             try? await Task.sleep(nanoseconds: 50 * NSEC_PER_MSEC)
+            currentTokens = getTokens()
             currentTokens.append(token)
             isNewToken = existingToken.isValid == false && token.isValid
         } else {
