@@ -464,7 +464,7 @@ class SDEBuilder {
                                         ],
                                         to: db)
         
-        try industryActivitiesTable.add(id: 11,
+        try industryActivitiesTable.add(id: 9,
                                         data: [
                                             "name": "Reactions",
                                             "description": "The process of combining raw and intermediate materials to create advanced components"
