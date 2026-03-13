@@ -147,6 +147,13 @@ struct SettingsView: View {
                         
                     Text("\(ECKAppInfo.appName) \(ECKAppInfo.version), Build \(ECKAppInfo.build) by Jonas Schlabertz")
                     
+                    Link(destination: URL(string: "https://www.eveonline.com/partners")!) {
+                        Image("partner")
+                            .resizable()
+                            .scaledToFit()
+                            .ignoresSafeArea(.container, edges: .horizontal)
+                    }
+                    
                     Text("© 2014 CCP hf. All rights reserved. \"EVE\", \"EVE Online\", \"CCP\", and all related logos and images are trademarks or registered trademarks of CCP hf.")
                 }
             })
@@ -202,4 +209,5 @@ struct SettingsView: View {
 
 #Preview {
     CoordinatorView(initialScreen: .settings)
+        .environmentObject(ECKNotificationManager.shared)
 }
