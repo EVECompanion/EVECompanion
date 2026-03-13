@@ -8,6 +8,7 @@
 import Foundation
 @preconcurrency import KeychainSwift
 
+@ECKTokenActor
 internal struct ECKKeychain {
     
     internal struct FailableDecodable<Base: Decodable>: Decodable {
@@ -30,8 +31,15 @@ internal struct ECKKeychain {
     private static let jsonEncoder = JSONEncoder()
     private static let tokenKey = "tokens"
     
-    @MainActor
+    private static let tokenLock = NSLock()
+    
+    @ECKTokenActor
     static func add(token: ECKToken) {
+        tokenLock.lock()
+        defer {
+            tokenLock.unlock()
+        }
+        
         var currentTokens = getTokens()
         var isNewToken: Bool = false
         logger.info("Adding token \(token.id)")
@@ -53,12 +61,7 @@ internal struct ECKKeychain {
         }
     }
     
-    @MainActor
-    static func update(token: ECKToken) {
-        add(token: token)
-    }
-    
-    @MainActor
+    @ECKTokenActor
     static func remove(token: ECKToken) {
         let currentTokens = getTokens()
         let updatedTokens = currentTokens.filter({ $0.id != token.id })
@@ -67,7 +70,7 @@ internal struct ECKKeychain {
         NotificationCenter.default.post(name: .charactersDidChange, object: nil)
     }
     
-    @MainActor
+    @ECKTokenActor
     private static func set(tokens: [ECKToken]) {
         let sortedTokens = tokens.sorted { lhsToken, rhsToken in
             return lhsToken.characterName < rhsToken.characterName
@@ -83,7 +86,7 @@ internal struct ECKKeychain {
         }
     }
     
-    @MainActor
+    @ECKTokenActor
     static func getTokens() -> [ECKToken] {
         guard let tokenData = keychain.getData(tokenKey) else {
             logger.warning("Keychain has no tokens for key \(tokenKey)")

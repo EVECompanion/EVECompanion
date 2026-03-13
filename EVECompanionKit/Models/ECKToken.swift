@@ -8,6 +8,13 @@
 import Foundation
 import JWTDecode
 
+@globalActor
+internal actor ECKTokenActor {
+    static let shared = ECKTokenActor()
+    
+    private init() { }
+}
+
 internal final class ECKToken: Hashable, Equatable, Codable, Identifiable {
     
     static func == (lhs: ECKToken, rhs: ECKToken) -> Bool {
@@ -30,7 +37,7 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable {
     private(set) internal var isValid: Bool
     private(set) internal var accessTokenExpiredFlag: Bool = false
     
-    @MainActor
+    @ECKTokenActor
     internal var refreshTask: Task<Void, any Error>?
     
     static let dummy: ECKToken = .init()
@@ -93,22 +100,22 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable {
         }
     }
     
-    @MainActor
+    @ECKTokenActor
     internal func updateToken(accessToken: String, refreshToken: String) {
         self.accessToken = accessToken
         self.refreshToken = refreshToken
         self.accessTokenExpiredFlag = false
-        ECKKeychain.update(token: self)
+        ECKKeychain.add(token: self)
     }
     
-    @MainActor
+    @ECKTokenActor
     internal func markAsInvalid() {
         self.isValid = false
         self.accessTokenExpiredFlag = true
         ECKKeychain.add(token: self)
     }
     
-    @MainActor
+    @ECKTokenActor
     internal func markAccessTokenExpired() {
         self.accessTokenExpiredFlag = true
         ECKKeychain.add(token: self)

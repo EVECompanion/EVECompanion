@@ -194,14 +194,14 @@ class ECKWebService {
         
     }
     
-    @MainActor
+    @ECKTokenActor
     private func refreshToken(oldToken: ECKToken) async throws {
         if let task = oldToken.refreshTask {
             try await task.value
             return
         }
 
-        let task: Task<Void, any Error> = Task { @MainActor in
+        let task: Task<Void, any Error> = Task { @ECKTokenActor in
             try await performTokenRefresh(token: oldToken)
         }
         
@@ -214,14 +214,16 @@ class ECKWebService {
         }
     }
     
-    @MainActor
+    @ECKTokenActor
     private func performTokenRefresh(token: ECKToken) async throws {
-        let task: Task<Void, any Error> = Task { @MainActor in
+        let task: Task<Void, any Error> = Task { @ECKTokenActor in
             let resource = ECKTokenRefreshResource(token: token, clientId: ECKConstants.clientId)
             do {
                 let newToken = try await loadResource(resource: resource)
-                token.updateToken(accessToken: newToken.response.accessToken,
-                                  refreshToken: newToken.response.refreshToken)
+                token.updateToken(
+                    accessToken: newToken.response.accessToken,
+                    refreshToken: newToken.response.refreshToken
+                )
             } catch ECKWebError.statusCode(let statusCode, let data) {
                 if statusCode == 400 {
                     let tokenError = try decoder.decode(ECKTokenRefreshError.self, from: data)
