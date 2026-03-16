@@ -153,9 +153,13 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable {
     }
     
     @MainActor
-    public func reloadSkills() async {
+    public func reloadSkills(reloadSkillQueue: Bool = false) async {
         guard UserDefaults.standard.isDemoModeEnabled == false else {
             return
+        }
+        
+        if reloadSkillQueue {
+            await self.reloadSkillQueue()
         }
         
         let skillsResource = ECKCharacterSkillsResource(token: token)

@@ -26,6 +26,7 @@ public class ECKCharacterSkills: Decodable, Equatable, Hashable {
     
     public static let empty: ECKCharacterSkills = {
         let res = ECKCharacterSkills()
+        res.skillLevelsDict = [:]
         res.totalSP = 0
         res.unallocatedSP = nil
         return res

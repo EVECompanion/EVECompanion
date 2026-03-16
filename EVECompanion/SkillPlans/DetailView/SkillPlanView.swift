@@ -15,6 +15,11 @@ struct SkillPlanView: View {
     @State private var showChangeNameAlert: Bool = false
     @State private var changeNameInput: String
     @State private var sheet: SheetItem?
+    @State private var isLoadingSkillData: Bool = false
+    
+    private var readOnlyMode: Bool {
+        return manager.currentSkills == nil
+    }
     
     enum SheetItem: Identifiable {
         var id: String {
@@ -35,33 +40,77 @@ struct SkillPlanView: View {
     
     var body: some View {
         List {
-            ForEach(skillPlan.entries) { entry in
-                switch entry {
-                case .remap(let remap):
-                    SkillPlanRemapPointCell(remap: remap)
-                        .deleteDisabled(true)
-                case .skill(let skillEntry):
-                    SkillPlanSkillCell(entry: skillEntry)
-                        .contextMenu {
-                            if skillEntry.level < 5 {
-                                ForEach((skillEntry.level + 1)...5, id: \.self) { level in
-                                    if skillPlan.contains(skillId: skillEntry.skill.id, level: level) == false {
-                                        Button {
-                                            skillPlan.addSkill(skillEntry.skill, level: level, manager: manager)
-                                        } label: {
-                                            Text("Train to \(level)")
+            if readOnlyMode {
+                Section {
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("Character Skill Data Not Loaded")
+                                .font(.headline)
+                                .bold()
+                            Image(systemName: "exclamationmark.triangle")
+                                .foregroundStyle(.yellow)
+                        }
+                        
+                        Text("Skill data for \(manager.character.name) is not available. This skillplan is now in read-only mode until that data is available.")
+                        
+                        Button {
+                            loadSkillData()
+                        } label: {
+                            ZStack {
+                                ProgressView()
+                                    .opacity(isLoadingSkillData ? 1 : 0)
+                                Text("Reload Skill Data")
+                                    .padding()
+                                    .opacity(isLoadingSkillData ? 0 : 1)
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(Color.blue)
+                        .disabled(isLoadingSkillData)
+                    }
+                }
+            }
+            
+            Section {
+                ForEach(skillPlan.entries) { entry in
+                    switch entry {
+                    case .remap(let remap):
+                        SkillPlanRemapPointCell(remap: remap)
+                            .deleteDisabled(true)
+                    case .skill(let skillEntry):
+                        SkillPlanSkillCell(entry: skillEntry)
+                            .contextMenu {
+                                if skillEntry.level < 5 {
+                                    ForEach((skillEntry.level + 1)...5, id: \.self) { level in
+                                        if skillPlan.contains(skillId: skillEntry.skill.id, level: level) == false {
+                                            Button {
+                                                skillPlan.addSkill(skillEntry.skill, level: level, manager: manager)
+                                            } label: {
+                                                Text("Train to \(level)")
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
+                    }
                 }
-            }
-            .onDelete { indexSet in
-                skillPlan.remove(indexSet, manager: manager)
-            }
-            .onMove { fromOffsets, toOffset in
-                skillPlan.move(fromOffsets: fromOffsets, toOffset: toOffset, manager: manager)
+                .onDelete { indexSet in
+                    guard let currentSkills = manager.currentSkills else {
+                        return
+                    }
+                    
+                    skillPlan.remove(
+                        indexSet,
+                        currentSkills: currentSkills,
+                        manager: manager
+                    )
+                }
+                .onMove { fromOffsets, toOffset in
+                    skillPlan.move(fromOffsets: fromOffsets, toOffset: toOffset, manager: manager)
+                }
+                .deleteDisabled(readOnlyMode)
+                .moveDisabled(readOnlyMode)
             }
         }
         .navigationTitle(skillPlan.name)
@@ -85,6 +134,7 @@ struct SkillPlanView: View {
                             Text("Add Remap Point")
                         }
                     }
+                    .disabled(readOnlyMode)
                     
                     Button {
                         guard let currentSkills = manager.currentSkills else {
@@ -99,10 +149,11 @@ struct SkillPlanView: View {
                             Text("Add Skill")
                         }
                     }
-                    .disabled(manager.currentSkills == nil)
+                    .disabled(readOnlyMode)
                 } label: {
                     Image(systemName: "plus")
                 }
+                .disabled(readOnlyMode)
             }
         }
         .alert("Change name", isPresented: $showChangeNameAlert) {
@@ -139,12 +190,40 @@ struct SkillPlanView: View {
             }
         })
         .onAppear {
-            skillPlan.recalculateRemapPoints()
+            if let currentSkills = manager.currentSkills {
+                skillPlan.update(with: currentSkills, manager: manager)
+            } else {
+                skillPlan.recalculateRemapPoints()
+            }
+        }
+    }
+    
+    private func loadSkillData() {
+        isLoadingSkillData = true
+        Task { @MainActor in
+            await manager.character.reloadSkills(reloadSkillQueue: true)
+            defer {
+                isLoadingSkillData = false
+            }
+                
+            guard let skills = manager.currentSkills else {
+                return
+            }
+            
+            skillPlan.update(with: skills, manager: manager)
         }
     }
     
 }
 
 #Preview {
-    CoordinatorView(initialScreen: .skillPlanDetail(.dummy, .init(character: .dummy, isPreview: true)))
+    CoordinatorView(
+        initialScreen: .skillPlanDetail(
+            .dummy,
+            .init(
+                character: .dummy,
+                isPreview: true
+            )
+        )
+    )
 }

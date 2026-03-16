@@ -73,6 +73,25 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
         manager.saveSkillPlan(self)
     }
     
+    // MARK: - Update with current Skills
+    
+    public func update(with currentSkills: ECKCharacterSkills, manager: ECKSkillPlanManager) {
+        let currentEntries = entries
+        
+        for entry in currentEntries {
+            if let skill = entry.skill?.skill,
+               let plannedLevel = entry.skill?.level,
+               let trainedLevel = currentSkills.skillLevel(typeId: skill.id),
+               trainedLevel.trainedSkillLevel >= plannedLevel {
+                logger.info("Removing \(skill.name) \(plannedLevel) since it is already trained.")
+                self.remove(skill, level: plannedLevel, currentSkills: currentSkills)
+            }
+        }
+        
+        recalculateRemapPoints()
+        manager.saveSkillPlan(self)
+    }
+    
     // MARK: - Add Entry
     
     public func addItem(_ item: ECKItem, manager: ECKSkillPlanManager) {
@@ -265,7 +284,7 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
     
     // MARK: - Remove
     
-    public func remove(_ indices: IndexSet, manager: ECKSkillPlanManager) {
+    public func remove(_ indices: IndexSet, currentSkills: ECKCharacterSkills, manager: ECKSkillPlanManager) {
         guard let indexToRemove = indices.first else {
             return
         }
@@ -276,19 +295,19 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
         case .remap:
             entries.remove(at: indexToRemove)
         case .skill(let entry):
-            self.remove(entry.skill, level: entry.level)
+            self.remove(entry.skill, level: entry.level, currentSkills: currentSkills)
         }
         
         self.recalculateRemapPoints()
         manager.saveSkillPlan(self)
     }
     
-    private func remove(_ skill: ECKItem, level: Int) {
-        let newEntries = removeSkill(skill.id, level: level, from: entries)
+    private func remove(_ skill: ECKItem, level: Int, currentSkills: ECKCharacterSkills) {
+        let newEntries = removeSkill(skill.id, level: level, from: entries, currentSkills: currentSkills)
         self.entries = newEntries
     }
     
-    private func removeSkill(_ skillId: Int, level: Int, from entries: [ECKSkillPlanEntry]) -> [ECKSkillPlanEntry] {
+    private func removeSkill(_ skillId: Int, level: Int, from entries: [ECKSkillPlanEntry], currentSkills: ECKCharacterSkills) -> [ECKSkillPlanEntry] {
         // First: Remove this skill from the list
         var result = entries.filter { entry in
             switch entry {
@@ -302,7 +321,7 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
         // Second: Remove all entries which are the same skill but with a higher level than the skill to remove.
         if level < 5 {
             for level in (level + 1)...5 {
-                result = removeSkill(skillId, level: level, from: result)
+                result = removeSkill(skillId, level: level, from: result, currentSkills: currentSkills)
             }
         }
         
@@ -315,8 +334,8 @@ public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
                 let requirements = entry.skill.skillRequirements ?? []
                 
                 for requirement in requirements {
-                    if requirement.skill.id == skillId && requirement.requiredLevel >= level {
-                        result = removeSkill(entry.skill.id, level: entry.level, from: result)
+                    if requirement.skill.id == skillId && requirement.requiredLevel >= level && currentSkills.isTrained(skillId: requirement.skill.id, level: requirement.requiredLevel) == false {
+                        result = removeSkill(entry.skill.id, level: entry.level, from: result, currentSkills: currentSkills)
                     }
                 }
             }
