@@ -16,6 +16,10 @@ private struct SelectedCharacterKey: EnvironmentKey {
     static let defaultValue: CharacterSelection = .empty
 }
 
+private struct ServiceManagerKey: EnvironmentKey {
+    static let defaultValue: ECKServiceManager = .init()
+}
+
 extension EnvironmentValues {
     
     var characterStorage: ECKCharacterStorage {
@@ -26,6 +30,11 @@ extension EnvironmentValues {
     var selectedCharacter: CharacterSelection {
         get { self[SelectedCharacterKey.self] }
         set { self[SelectedCharacterKey.self] = newValue }
+    }
+    
+    var serviceManager: ECKServiceManager {
+        get { self[ServiceManagerKey.self] }
+        set { self[ServiceManagerKey.self] = newValue }
     }
     
 }

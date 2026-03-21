@@ -18,7 +18,7 @@ struct CharacterDetailView: View {
     @StateObject var jumpClonesManager: ECKJumpClonesManager
     @StateObject var planetaryColoniesManager: ECKPlanetaryColonyManager
     @StateObject var fittingManager: ECKFittingManager
-    @StateObject var skillPlanManager: ECKSkillPlanManager
+    @Environment(\.serviceManager) var serviceManager: ECKServiceManager
     @Binding var selectedCharacter: CharacterSelection
     
     init(character: ECKCharacter, selectedCharacter: Binding<CharacterSelection>) {
@@ -29,7 +29,6 @@ struct CharacterDetailView: View {
         self._jumpClonesManager = StateObject(wrappedValue: .init(character: character))
         self._planetaryColoniesManager = StateObject(wrappedValue: .init(character: character))
         self._fittingManager = StateObject(wrappedValue: .init(character: character))
-        self._skillPlanManager = StateObject(wrappedValue: .init(character: character))
         self._selectedCharacter = selectedCharacter
     }
     
@@ -148,7 +147,7 @@ struct CharacterDetailView: View {
         case .fittings:
             return .fittingsList(fittingManager)
         case .skillPlans:
-            return .skillPlanList(skillPlanManager)
+            return .skillPlanList(serviceManager.skillPlanManager(character: character))
         }
     }
     

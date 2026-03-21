@@ -12,11 +12,15 @@ import Kingfisher
 struct CharacterCell: View {
     
     @ObservedObject var character: ECKCharacter
+    @Environment(\.serviceManager) private var serviceManager
     @Binding var selectedCharacter: CharacterSelection
     
     var body: some View {
         if character.hasValidToken {
-            NavigationLink(value: AppScreen.characterDetail(character, $selectedCharacter)) {
+            NavigationLink(value: AppScreen.characterDetail(
+                character,
+                $selectedCharacter
+            )) {
                 contentView
             }
         } else {
@@ -157,6 +161,9 @@ struct CharacterCell: View {
 
 #Preview {
     List {
-        CharacterCell(character: .dummy, selectedCharacter: .constant(.empty))
+        CharacterCell(
+            character: .dummy,
+            selectedCharacter: .constant(.empty)
+        )
     }
 }

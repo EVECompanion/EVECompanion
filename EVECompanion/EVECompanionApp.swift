@@ -16,6 +16,7 @@ struct EVECompanionApp: App {
     
     @StateObject var characterStorage: ECKCharacterStorage = .init()
     @StateObject var notificationManager: ECKNotificationManager = .shared
+    @StateObject var serviceManager: ECKServiceManager = .init()
     @State var selectedCharacter: CharacterSelection = .empty
     @Environment(\.scenePhase) var scenePhase
     
@@ -29,6 +30,7 @@ struct EVECompanionApp: App {
             EVECompanionTabView(selectedCharacter: $selectedCharacter)
                 .environment(\.characterStorage, characterStorage)
                 .environment(\.selectedCharacter, selectedCharacter)
+                .environment(\.serviceManager, serviceManager)
                 .environmentObject(notificationManager)
                 .onChange(of: scenePhase) { newPhase in
                     Task {

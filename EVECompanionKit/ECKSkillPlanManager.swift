@@ -20,13 +20,10 @@ public class ECKSkillPlanManager: ObservableObject, Hashable {
     
     public init(character: ECKCharacter, isPreview: Bool = false) {
         self.character = character
-        Task {
-            await loadSkillPlans()
-        }
+        loadSkillPlans()
     }
     
-    @MainActor
-    public func loadSkillPlans() async {
+    public func loadSkillPlans() {
         do {
             let skillPlansDir = try getSkillPlansDir()
             let skillPlansURLs = try FileManager.default.contentsOfDirectory(at: skillPlansDir,

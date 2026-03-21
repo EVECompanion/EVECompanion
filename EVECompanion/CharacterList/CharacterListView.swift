@@ -40,8 +40,10 @@ struct CharacterListView: View {
             }
             
             ForEach(characterStorage.characters) { character in
-                CharacterCell(character: character,
-                              selectedCharacter: $selectedCharacter)
+                CharacterCell(
+                    character: character,
+                    selectedCharacter: $selectedCharacter
+                )
             }
             
         }
