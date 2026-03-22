@@ -224,7 +224,7 @@ struct ECKSkillPlanReorderingTests {
             return
         }
         
-        override func loadSkillPlans() async {
+        override func loadSkillPlans() {
             return
         }
     }

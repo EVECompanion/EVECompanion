@@ -12,6 +12,7 @@ struct SkillPlanListView: View {
     
     @ObservedObject private var manager: ECKSkillPlanManager
     @EnvironmentObject private var coordinator: Coordinator
+    @State private var skillPlanToDelete: ECKSkillPlan?
     
     init(manager: ECKSkillPlanManager) {
         self.manager = manager
@@ -26,10 +27,30 @@ struct SkillPlanListView: View {
             }
             .onDelete { indicesToDelete in
                 if let indexToDelete = indicesToDelete.first {
-                    manager.deleteSkillPlan(manager.skillPlans[indexToDelete])
+                    skillPlanToDelete = manager.skillPlans[indexToDelete]
                 }
             }
         }
+        .alert(isPresented: .init(get: {
+            return skillPlanToDelete != nil
+        }, set: { _ in
+            return
+        }),
+               content: {
+            Alert(title: Text("Do you really want to delete the Skill Plan \"\(skillPlanToDelete?.name ?? "")\"?"),
+                  primaryButton: .cancel({
+                self.skillPlanToDelete = nil
+            }),
+                  secondaryButton: .destructive(Text("Delete"),
+                                                action: {
+                guard let skillPlanToDelete else {
+                    return
+                }
+                
+                manager.deleteSkillPlan(skillPlanToDelete)
+                self.skillPlanToDelete = nil
+            }))
+        })
         .navigationTitle("Skill Plans")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
