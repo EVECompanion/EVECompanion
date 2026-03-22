@@ -51,7 +51,17 @@ public final class ECKItem: Codable, Identifiable, @unchecked Sendable, Hashable
     }()
     
     public private(set) lazy var itemAttributeCategories: ECKSDEManager.ItemAttributes = {
-        return ECKSDEManager.shared.itemAttributes(typeId)
+        return ECKSDEManager.shared.itemAttributes(typeId).map { category in
+            return (name: category.name, attributes: category.attributes.map({ attribute in
+                // Warp Speed
+                var attribute = attribute
+                if attribute.id == 1281 {
+                    let warpSpeedMult = ECKSDEManager.shared.itemAttribute(attributeId: 600, typeId: typeId)?.value ?? 1
+                    attribute.value *= warpSpeedMult
+                }
+                return attribute
+            }))
+        }
     }()
     
     private(set) lazy var skillTimeMultiplier: Float = {
