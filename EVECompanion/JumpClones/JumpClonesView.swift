@@ -11,18 +11,36 @@ import EVECompanionKit
 struct JumpClonesView: View {
     
     @StateObject var jumpClonesManager: ECKJumpClonesManager
+    @State private var timelineStartDate: Date = .init()
     
     var body: some View {
         Group {
             switch jumpClonesManager.loadingState {
             case .ready,
                  .reloading:
-                List(jumpClonesManager.jumpClones?.jumpClones ?? []) { jumpClone in
-                    JumpCloneCell(jumpClone: jumpClone)
+                List {
+                    if let nextCloneJumpDate = jumpClonesManager.nextCloneJumpDate, nextCloneJumpDate > Date() {
+                        Label {
+                            VStack(alignment: .leading) {
+                                Text("Next jump clone available in")
+                                Text(ECFormatters.remainingTime(remainingTime: nextCloneJumpDate.timeIntervalSinceNow))
+                                    .foregroundStyle(.secondary)
+                            }
+                        } icon: {
+                            Image(systemName: "exclamationmark.triangle")
+                                .foregroundStyle(.yellow)
+                        }
+                        .foregroundStyle(.primary)
+                    }
+                    
+                    ForEach(jumpClonesManager.jumpClones?.jumpClones ?? []) { jumpClone in
+                        JumpCloneCell(jumpClone: jumpClone)
+                    }
                 }
                 .refreshable {
                     await jumpClonesManager.loadJumpClones()
                 }
+                .animation(.spring, value: (jumpClonesManager.nextCloneJumpDate ?? Date()) > Date())
                 
             case .loading:
                 ProgressView()

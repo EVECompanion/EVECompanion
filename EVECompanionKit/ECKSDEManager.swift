@@ -466,6 +466,7 @@ public class ECKSDEManager {
                     \(effectIdFilter != nil ? "INNER JOIN dgmTypeEffects ON invTypes.typeID = dgmTypeEffects.typeID" : "")
                 WHERE
                     marketGroupID = ?
+                    AND published = 1
                     \(effectIdFilter != nil ? "AND effectID = \(effectIdFilter!)" : "")
                 ORDER BY
                     typeName

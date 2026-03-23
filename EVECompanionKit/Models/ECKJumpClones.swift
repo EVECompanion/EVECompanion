@@ -23,10 +23,10 @@ public class ECKJumpClones: Decodable {
     
     public static let dummy: ECKJumpClones = .init(homeLocation: .dummy,
                                                    jumpClones: [.dummy],
-                                                   lastJumpCloneDate: Date() - .fromHours(hours: 5),
+                                                   lastJumpCloneDate: Date() - .fromHours(hours: 23) - .fromMinutes(minutes: 59),
                                                    lastStationChangeDate: Date() - .fromDays(days: 1))
     
-    init(homeLocation: ECKHomeLocation, 
+    init(homeLocation: ECKHomeLocation,
          jumpClones: [ECKJumpClone],
          lastJumpCloneDate: Date?,
          lastStationChangeDate: Date?) {
@@ -42,6 +42,19 @@ public class ECKJumpClones: Decodable {
         self.jumpClones = try container.decode([ECKJumpClone].self, forKey: .jumpClones)
         self.lastJumpCloneDate = try container.decodeIfPresent(Date.self, forKey: .lastJumpCloneDate)
         self.lastStationChangeDate = try container.decodeIfPresent(Date.self, forKey: .lastStationChangeDate)
+    }
+    
+    public func nextJumpCloneDate(with skills: ECKCharacterSkills) -> Date? {
+        guard let lastJumpCloneDate else {
+            return nil
+        }
+        
+        let defaultCloneInterval = TimeInterval.fromHours(hours: 24)
+        guard let infomorphSyncLevel = skills.skillLevel(typeId: 33399) else {
+            return lastJumpCloneDate + defaultCloneInterval
+        }
+        
+        return lastJumpCloneDate + (defaultCloneInterval - .fromHours(hours: Double(infomorphSyncLevel.trainedSkillLevel)))
     }
     
 }

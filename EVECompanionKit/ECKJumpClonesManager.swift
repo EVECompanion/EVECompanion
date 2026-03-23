@@ -9,11 +9,19 @@ public import Combine
 
 public class ECKJumpClonesManager: ObservableObject {
     
-    public let character: ECKCharacter
+    @NestedObservableObject public var character: ECKCharacter
     let isPreview: Bool
     
     @Published public var loadingState: ECKLoadingState = .loading
     @Published public var jumpClones: ECKJumpClones?
+    
+    public var nextCloneJumpDate: Date? {
+        guard let skills = character.skills else {
+            return nil
+        }
+        
+        return jumpClones?.nextJumpCloneDate(with: skills)
+    }
     
     public init(character: ECKCharacter, isPreview: Bool = false) {
         self.character = character
