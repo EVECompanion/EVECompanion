@@ -113,6 +113,7 @@
 		C94257282C2A140800FAEE5C /* Array+Chunked.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94257272C2A140800FAEE5C /* Array+Chunked.swift */; };
 		C94A27042E0DA7D5006CC8DC /* FittingStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A27032E0DA7D5006CC8DC /* FittingStatsView.swift */; };
 		C94BEAB92D94AA8700F39C0E /* ItemViewHeaderSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94BEAB82D94AA8700F39C0E /* ItemViewHeaderSection.swift */; };
+		C9511D152EDB1669001CEED5 /* CorporationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9511D142EDB1669001CEED5 /* CorporationDetailView.swift */; };
 		C9511D182EDC2870001CEED5 /* SkillPlanListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9511D172EDC2870001CEED5 /* SkillPlanListView.swift */; };
 		C9511D1A2EDC2AC7001CEED5 /* ECKSkillPlanManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9511D192EDC2AC7001CEED5 /* ECKSkillPlanManager.swift */; };
 		C9511D1C2EDC2B9A001CEED5 /* ECKSkillPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9511D1B2EDC2B9A001CEED5 /* ECKSkillPlan.swift */; };
@@ -122,7 +123,6 @@
 		C9511D262EDC5FB3001CEED5 /* SkillPlanRemapPointCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9511D252EDC5FB3001CEED5 /* SkillPlanRemapPointCell.swift */; };
 		C9511D282EDC6628001CEED5 /* SkillPlanSkillCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9511D272EDC6628001CEED5 /* SkillPlanSkillCell.swift */; };
 		C9511D2B2EDCCF49001CEED5 /* SkillPlanSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9511D2A2EDCCF49001CEED5 /* SkillPlanSelectionView.swift */; };
-		C9511D152EDB1669001CEED5 /* CorporationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9511D142EDB1669001CEED5 /* CorporationDetailView.swift */; };
 		C95262482BF9439F0014B5F5 /* MailDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95262472BF9439F0014B5F5 /* MailDetailView.swift */; };
 		C952624A2BFA22130014B5F5 /* MailboxSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95262492BFA22130014B5F5 /* MailboxSectionHeaderView.swift */; };
 		C952624D2BFA72ED0014B5F5 /* AttributedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C952624C2BFA72ED0014B5F5 /* AttributedTextView.swift */; };
@@ -537,6 +537,7 @@
 		C94257272C2A140800FAEE5C /* Array+Chunked.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Chunked.swift"; sourceTree = "<group>"; };
 		C94A27032E0DA7D5006CC8DC /* FittingStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingStatsView.swift; sourceTree = "<group>"; };
 		C94BEAB82D94AA8700F39C0E /* ItemViewHeaderSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemViewHeaderSection.swift; sourceTree = "<group>"; };
+		C9511D142EDB1669001CEED5 /* CorporationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorporationDetailView.swift; sourceTree = "<group>"; };
 		C9511D172EDC2870001CEED5 /* SkillPlanListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillPlanListView.swift; sourceTree = "<group>"; };
 		C9511D192EDC2AC7001CEED5 /* ECKSkillPlanManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSkillPlanManager.swift; sourceTree = "<group>"; };
 		C9511D1B2EDC2B9A001CEED5 /* ECKSkillPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSkillPlan.swift; sourceTree = "<group>"; };
@@ -546,7 +547,6 @@
 		C9511D252EDC5FB3001CEED5 /* SkillPlanRemapPointCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillPlanRemapPointCell.swift; sourceTree = "<group>"; };
 		C9511D272EDC6628001CEED5 /* SkillPlanSkillCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillPlanSkillCell.swift; sourceTree = "<group>"; };
 		C9511D2A2EDCCF49001CEED5 /* SkillPlanSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillPlanSelectionView.swift; sourceTree = "<group>"; };
-		C9511D142EDB1669001CEED5 /* CorporationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorporationDetailView.swift; sourceTree = "<group>"; };
 		C95262472BF9439F0014B5F5 /* MailDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailDetailView.swift; sourceTree = "<group>"; };
 		C95262492BFA22130014B5F5 /* MailboxSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailboxSectionHeaderView.swift; sourceTree = "<group>"; };
 		C952624C2BFA72ED0014B5F5 /* AttributedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedTextView.swift; sourceTree = "<group>"; };
@@ -1148,7 +1148,6 @@
 				C959777F2C28B56E0008F719 /* ECKAssetManager.swift */,
 				C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */,
 				C916729F2BE97A5B009EC580 /* ECKAuthenticationSession.swift */,
-				C906BAC62EB4C51E00A9E3F3 /* ECKBackgroundTaskManager.swift */,
 				C98B73A62F6AAC920026E76D /* ECKServiceManager.swift */,
 				C92B4EB42ED102F200E3D9B4 /* ECKAuthenticationTarget.swift */,
 				C906BAC62EB4C51E00A9E3F3 /* ECKBackgroundTaskManager.swift */,
@@ -1290,6 +1289,14 @@
 			path = Formatters;
 			sourceTree = "<group>";
 		};
+		C9511D132EDB1658001CEED5 /* CorporationDetail */ = {
+			isa = PBXGroup;
+			children = (
+				C9511D142EDB1669001CEED5 /* CorporationDetailView.swift */,
+			);
+			path = CorporationDetail;
+			sourceTree = "<group>";
+		};
 		C9511D162EDC2865001CEED5 /* SkillPlans */ = {
 			isa = PBXGroup;
 			children = (
@@ -1327,14 +1334,6 @@
 				C9511D2A2EDCCF49001CEED5 /* SkillPlanSelectionView.swift */,
 			);
 			path = Selection;
-			sourceTree = "<group>";
-		};
-		C9511D132EDB1658001CEED5 /* CorporationDetail */ = {
-			isa = PBXGroup;
-			children = (
-				C9511D142EDB1669001CEED5 /* CorporationDetailView.swift */,
-			);
-			path = CorporationDetail;
 			sourceTree = "<group>";
 		};
 		C952624B2BFA72E70014B5F5 /* SharedUI */ = {
