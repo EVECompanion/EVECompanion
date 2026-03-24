@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKConstellation: Decodable {
+public final class ECKConstellation: Decodable, Sendable {
     
     public let constellationId: Int
     public let name: String

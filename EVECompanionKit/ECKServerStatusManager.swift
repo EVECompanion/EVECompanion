@@ -7,7 +7,7 @@
 
 public import Combine
 
-public class ECKServerStatusManager: ObservableObject {
+public class ECKServerStatusManager: ObservableObject, @unchecked Sendable {
     
     @Published public var loadingState: ECKLoadingState = .loading
     @Published public var status: ECKServerStatus?

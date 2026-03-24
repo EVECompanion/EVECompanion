@@ -22,7 +22,7 @@ public class ECKSDEUpdater: NSObject, ObservableObject {
     @Published public var state: State = .noUpdateAvailable
     @Published public var fileSize: Double = 0
     @MainActor
-    private var downloadProgressHandler: ((CGFloat) -> Void)?
+    private var downloadProgressHandler: (@MainActor (CGFloat) -> Void)?
     @MainActor
     private var downloadProgressObservation: NSKeyValueObservation?
     private var subscriptions = Set<AnyCancellable>()
@@ -70,7 +70,7 @@ public class ECKSDEUpdater: NSObject, ObservableObject {
     }
     
     @MainActor
-    public func performSDEUpdate(downloadProgress: @escaping (CGFloat) -> Void) async throws {
+    public func performSDEUpdate(downloadProgress: @MainActor @escaping (CGFloat) -> Void) async throws {
         self.downloadProgressHandler = downloadProgress
         do {
             let result = try await downloadSDE()

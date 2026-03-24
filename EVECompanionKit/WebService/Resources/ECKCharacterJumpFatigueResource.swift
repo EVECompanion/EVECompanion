@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKCharacterJumpFatigueResource: ECKWebResource<ECKJumpFatigue> {
+class ECKCharacterJumpFatigueResource: ECKWebResource<ECKJumpFatigue>, @unchecked Sendable {
     
     init(token: ECKToken) {
         super.init(host: .esi,

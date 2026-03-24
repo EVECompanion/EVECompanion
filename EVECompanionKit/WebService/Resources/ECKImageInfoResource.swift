@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKImageInfoResource: ECKWebResource<[String]> {
+class ECKImageInfoResource: ECKWebResource<[String]>, @unchecked Sendable {
     
     init(category: String, id: Int) {
         super.init(host: .image,

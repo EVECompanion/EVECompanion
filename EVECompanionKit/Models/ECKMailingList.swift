@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKMailingList: Decodable {
+final class ECKMailingList: Decodable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case mailingListId = "mailing_list_id"

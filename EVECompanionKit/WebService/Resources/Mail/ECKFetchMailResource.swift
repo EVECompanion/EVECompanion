@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKFetchMailResource: ECKWebResource<[ECKMail]> {
+class ECKFetchMailResource: ECKWebResource<[ECKMail]>, @unchecked Sendable {
     
     init(token: ECKToken, lastMailId: Int?) {
         var queryItems: [URLQueryItem] = []

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class ECKAsset: Decodable, Identifiable {
+public final class ECKAsset: Decodable, Identifiable, @unchecked Sendable {
     
     enum CodingKeys: String, CodingKey {
         case isBlueprintCopy = "is_blueprint_copy"

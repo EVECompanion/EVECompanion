@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKHomeLocation: Decodable {
+public final class ECKHomeLocation: Decodable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case location = "location_id"

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKESITypeResource: ECKWebResource<String> {
+class ECKESITypeResource: ECKWebResource<String>, @unchecked Sendable {
     
     init(typeId: Int) {
         super.init(host: .esi, endpoint: "/universe/types/\(typeId)/")

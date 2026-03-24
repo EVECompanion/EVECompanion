@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKIncursionsResource: ECKWebResource<[ECKIncursion]> {
+class ECKIncursionsResource: ECKWebResource<[ECKIncursion]>, @unchecked Sendable {
     
     init() {
         super.init(host: .esi,

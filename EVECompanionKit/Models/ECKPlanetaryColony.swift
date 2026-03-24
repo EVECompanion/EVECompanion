@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKPlanetaryColony: Decodable, Hashable {
+public final class ECKPlanetaryColony: Decodable, Hashable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case lastUpdate = "last_update"

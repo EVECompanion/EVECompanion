@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKAllianceResource: ECKWebResource<ECKOptionalResponse<ECKAlliance>> {
+class ECKAllianceResource: ECKWebResource<ECKOptionalResponse<ECKAlliance>>, @unchecked Sendable {
     
     init(allianceId: Int) {
         super.init(host: .esi,

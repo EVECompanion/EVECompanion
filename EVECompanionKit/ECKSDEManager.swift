@@ -8,7 +8,7 @@
 import Foundation
 import SQLite
 
-public class ECKSDEManager {
+public class ECKSDEManager: @unchecked Sendable {
     
     static public let shared: ECKSDEManager = .init()
     

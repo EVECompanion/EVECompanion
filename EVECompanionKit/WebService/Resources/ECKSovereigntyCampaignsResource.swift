@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKSovereigntyCampaignsResource: ECKWebResource<[ECKSovereigntyCampaign]> {
+class ECKSovereigntyCampaignsResource: ECKWebResource<[ECKSovereigntyCampaign]>, @unchecked Sendable {
     
     init(etag: String?) {
         var headers: [String: String] = [:]

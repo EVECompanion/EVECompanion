@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKFaction: Decodable, Equatable {
+public final class ECKFaction: Decodable, Equatable, Sendable {
     
     public let factionId: Int
     public let name: String

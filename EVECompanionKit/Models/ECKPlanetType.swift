@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ECKPlanetType: String, Codable, Hashable {
+public enum ECKPlanetType: String, Codable, Hashable, Sendable {
     case temperate
     case barren
     case oceanic

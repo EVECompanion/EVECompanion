@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKPlanet: Decodable, Identifiable, Hashable {
+public final class ECKPlanet: Decodable, Identifiable, Hashable, Sendable {
     
     public let planetId: Int
     public let typeId: Int

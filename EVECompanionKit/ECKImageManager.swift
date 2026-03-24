@@ -53,7 +53,7 @@ public struct ECKImageManager: Sendable {
         return URL(string: "https://images.evetech.net/\(category.rawValue)/\(id.description)/\(variation)")!
     }
     
-    private func loadImageVariation(id: Int, category: Category) async -> String? {
+    nonisolated(nonsending)private func loadImageVariation(id: Int, category: Category) async -> String? {
         let resource = ECKImageInfoResource(category: category.rawValue, id: id)
         let variations: [String]
         do {

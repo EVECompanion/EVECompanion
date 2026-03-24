@@ -44,7 +44,7 @@ extension ECKCharacterFitting {
     
     // MARK: - Damage
     
-    public struct DamageProfile {
+    public struct DamageProfile: Sendable {
         public let em: Float
         public let explosive: Float
         public let kinetic: Float
@@ -128,7 +128,7 @@ extension ECKCharacterFitting {
     
     // MARK: - Slot Type
     
-    public enum ModuleSlotType: String {
+    public enum ModuleSlotType: String, Sendable {
         case rig
         case subsystem
         case high

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKCharacterWalletTransactionResource: ECKWebResource<[ECKWalletTransactionEntry]> {
+class ECKCharacterWalletTransactionResource: ECKWebResource<[ECKWalletTransactionEntry]>, @unchecked Sendable {
     
     init(token: ECKToken) {
         super.init(host: .esi,

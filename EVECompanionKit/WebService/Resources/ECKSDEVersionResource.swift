@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKSDEVersionResource: ECKWebResource<ECKSDEVersion> {
+class ECKSDEVersionResource: ECKWebResource<ECKSDEVersion>, @unchecked Sendable {
     
     init() {
         super.init(host: .evecompanionAPI,

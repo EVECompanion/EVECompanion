@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKCreateTokenResource: ECKWebResource<ECKToken> {
+class ECKCreateTokenResource: ECKWebResource<ECKToken>, @unchecked Sendable {
     
     init(clientId: String, codeVerifier: String, code: String) {
         var headers: [String: String] = [:]

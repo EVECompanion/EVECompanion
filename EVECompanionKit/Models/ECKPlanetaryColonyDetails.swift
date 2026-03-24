@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKPlanetaryColonyDetails: Decodable {
+public final class ECKPlanetaryColonyDetails: Decodable, @unchecked Sendable {
     
     enum CodingKeys: CodingKey {
         case links
@@ -57,7 +57,7 @@ public class ECKPlanetaryColonyDetails: Decodable {
     
 }
 
-public class ECKPlanetaryColonyLink: Decodable {
+public final class ECKPlanetaryColonyLink: Decodable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case destinationPinId = "destination_pin_id"
@@ -102,7 +102,7 @@ public class ECKPlanetaryColonyLink: Decodable {
     
 }
 
-public class ECKPlanetaryColonyRoute: Decodable {
+public final class ECKPlanetaryColonyRoute: Decodable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case contentTypeId = "content_type_id"
@@ -167,7 +167,7 @@ public class ECKPlanetaryColonyRoute: Decodable {
     
 }
 
-public class ECKPlanetaryColonyPin: Decodable {
+public final class ECKPlanetaryColonyPin: Decodable, @unchecked Sendable {
     
     enum CodingKeys: String, CodingKey {
         case contents
@@ -384,7 +384,7 @@ public class ECKPlanetaryColonyPin: Decodable {
     
 }
 
-public struct ECKPlanetaryColonyPinContent: Decodable {
+public struct ECKPlanetaryColonyPinContent: Decodable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case item = "type_id"
@@ -412,7 +412,7 @@ public struct ECKPlanetaryColonyPinContent: Decodable {
     
 }
 
-public class ECKPlanetaryColonyPinExtractorDetails: Decodable {
+public final class ECKPlanetaryColonyPinExtractorDetails: Decodable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case cycleTime = "cycle_time"
@@ -446,7 +446,7 @@ public class ECKPlanetaryColonyPinExtractorDetails: Decodable {
     
 }
 
-public class ECKPlanetaryColonyPinFactoryDetails: Decodable {
+public final class ECKPlanetaryColonyPinFactoryDetails: Decodable, Sendable {
 
     enum CodingKeys: String, CodingKey {
         case schematic = "schematic_id"

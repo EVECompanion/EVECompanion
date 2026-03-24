@@ -7,9 +7,9 @@
 
 public import Combine
 
-public class ECKPlanetaryColonyManager: ObservableObject {
+public class ECKPlanetaryColonyManager: ObservableObject, @unchecked Sendable {
     
-    public struct ECKColony: Identifiable {
+    public struct ECKColony: Identifiable, Sendable {
         public var id: String { "\(colony.planet.id)" }
         
         public init(colony: ECKPlanetaryColony, details: ECKPlanetaryColonyDetails) {
@@ -51,10 +51,11 @@ public class ECKPlanetaryColonyManager: ObservableObject {
             let coloniesResource = ECKPlanetaryColoniesResource(token: character.token)
             let colonies = try await ECKWebService().loadResource(resource: coloniesResource).response
             
+            let character = self.character
             self.colonies = try await withThrowingTaskGroup(of: ECKColony.self, returning: [ECKColony].self) { group -> [ECKColony] in
                 for colony in colonies {
                     group.addTask {
-                        let detailsResource = ECKPlanetaryColonyResource(token: self.character.token,
+                        let detailsResource = ECKPlanetaryColonyResource(token: character.token,
                                                                          colonyId: "\(colony.planet.planetId)")
                         let details = try await ECKWebService().loadResource(resource: detailsResource).response
                         return .init(colony: colony, details: details)

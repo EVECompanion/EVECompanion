@@ -7,7 +7,7 @@
 
 public import Combine
 
-public class ECKAssetManager: ObservableObject {
+public class ECKAssetManager: ObservableObject, @unchecked Sendable {
     
     public let character: ECKCharacter
     let isPreview: Bool

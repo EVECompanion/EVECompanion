@@ -7,7 +7,7 @@
 
 public import Combine
 
-public class ECKJumpClonesManager: ObservableObject {
+public class ECKJumpClonesManager: ObservableObject, @unchecked Sendable {
     
     @NestedObservableObject public var character: ECKCharacter
     let isPreview: Bool

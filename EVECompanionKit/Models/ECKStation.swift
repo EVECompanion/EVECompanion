@@ -7,7 +7,7 @@
 
 public import Combine
 
-public class ECKStation: ObservableObject, Decodable {
+public class ECKStation: ObservableObject, Decodable, @unchecked Sendable {
     
     let stationId: Int
     let token: ECKToken?

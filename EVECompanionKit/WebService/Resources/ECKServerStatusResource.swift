@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKServerStatusResource: ECKWebResource<ECKServerStatus> {
+class ECKServerStatusResource: ECKWebResource<ECKServerStatus>, @unchecked Sendable {
     
     init(etag: String?) {
         var headers: [String: String] = [:]

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKSovereigntyMapResource: ECKWebResource<[ECKSolarSystemSovereignty]> {
+class ECKSovereigntyMapResource: ECKWebResource<[ECKSolarSystemSovereignty]>, @unchecked Sendable {
     
     init(etag: String?) {
         var headers: [String: String] = [:]

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKCharacterCurrentShip: Decodable {
+public final class ECKCharacterCurrentShip: Decodable, Sendable {
     
     private enum CodingKeys: String, CodingKey {
         case shipName = "ship_name"

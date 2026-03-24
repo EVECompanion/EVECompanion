@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ECKAssetLocation: Decodable, Hashable, Identifiable {
+public enum ECKAssetLocation: Decodable, Hashable, Identifiable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case locationId = "location_id"

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKStructureResource: ECKWebResource<ECKStructureResource.StructureResponse> {
+class ECKStructureResource: ECKWebResource<ECKStructureResource.StructureResponse>, @unchecked Sendable {
     
     struct StructureResponse: Decodable {
         enum CodingKeys: String, CodingKey {

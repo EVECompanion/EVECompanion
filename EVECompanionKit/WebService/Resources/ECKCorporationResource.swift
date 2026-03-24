@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKCorporationResource: ECKWebResource<ECKOptionalResponse<ECKCorporation>> {
+class ECKCorporationResource: ECKWebResource<ECKOptionalResponse<ECKCorporation>>, @unchecked Sendable {
     
     init(corporationId: Int) {
         super.init(host: .esi,

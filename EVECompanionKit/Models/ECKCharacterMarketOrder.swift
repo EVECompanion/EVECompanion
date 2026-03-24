@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class ECKCharacterMarketOrder: Decodable, Identifiable {
+public final class ECKCharacterMarketOrder: Decodable, Identifiable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case duration

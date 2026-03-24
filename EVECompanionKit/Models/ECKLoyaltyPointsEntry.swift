@@ -8,7 +8,7 @@
 import Foundation
 public import Combine
 
-public class ECKLoyaltyPointsEntry: Decodable, ObservableObject, Identifiable {
+public class ECKLoyaltyPointsEntry: Decodable, ObservableObject, Identifiable, @unchecked Sendable {
     
     enum CodingKeys: String, CodingKey {
         case corporationId = "corporation_id"

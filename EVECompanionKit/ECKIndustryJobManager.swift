@@ -7,7 +7,7 @@
 
 public import Combine
 
-public class ECKIndustryJobManager: ObservableObject {
+public class ECKIndustryJobManager: ObservableObject, @unchecked Sendable {
     
     public let character: ECKCharacter
     let isPreview: Bool

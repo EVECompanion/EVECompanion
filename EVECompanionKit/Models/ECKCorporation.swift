@@ -8,7 +8,7 @@
 import Foundation
 public import Combine
 
-public class ECKCorporation: Decodable, ObservableObject {
+public class ECKCorporation: Decodable, ObservableObject, @unchecked Sendable {
     
     enum CodingKeys: String, CodingKey {
         case allianceId = "alliance_id"

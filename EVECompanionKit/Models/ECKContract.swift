@@ -9,7 +9,7 @@ import Foundation
 public import Combine
 public import SwiftUI
 
-public class ECKContract: Decodable, Identifiable, ObservableObject {
+public final class ECKContract: Decodable, Identifiable, ObservableObject, @unchecked Sendable {
     
     private enum CodingKeys: String, CodingKey {
         case acceptorId = "acceptor_id"

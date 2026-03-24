@@ -8,7 +8,7 @@
 import Foundation
 public import Combine
 
-public class ECKJumpClone: Decodable, ObservableObject, Identifiable {
+public final class ECKJumpClone: Decodable, ObservableObject, Identifiable, @unchecked Sendable {
     
     enum CodingKeys: String, CodingKey {
         case implants

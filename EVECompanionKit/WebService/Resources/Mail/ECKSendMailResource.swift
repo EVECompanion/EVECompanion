@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKSendMailResource: ECKWebResource<Int> {
+class ECKSendMailResource: ECKWebResource<Int>, @unchecked Sendable {
     
     private struct SendMailRequest: Encodable {
         let subject: String

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ESIFitting: Decodable {
+struct ESIFitting: Decodable, Sendable {
     
     private enum CodingKeys: String, CodingKey {
         case description

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class ECKWalletTransactionEntry: Decodable, Identifiable {
+public final class ECKWalletTransactionEntry: Decodable, Identifiable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case clientId = "client_id"

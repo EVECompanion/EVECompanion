@@ -7,7 +7,7 @@
 
 import Foundation
 
-class FetchMailingListsResource: ECKWebResource<[ECKMailingList]> {
+class FetchMailingListsResource: ECKWebResource<[ECKMailingList]>, @unchecked Sendable {
     
     init(token: ECKToken) {
         super.init(host: .esi,

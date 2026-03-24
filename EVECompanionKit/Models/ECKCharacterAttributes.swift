@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKCharacterAttributes: Decodable {
+public final class ECKCharacterAttributes: Decodable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case accruedRemapCooldownDate = "accrued_remap_cooldown_date"

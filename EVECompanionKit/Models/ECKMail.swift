@@ -7,7 +7,7 @@
 
 public import Combine
 
-public class ECKMail: ObservableObject, Identifiable, Decodable, Equatable {
+public final class ECKMail: ObservableObject, Identifiable, Decodable, Equatable, @unchecked Sendable {
     
     enum CodingKeys: String, CodingKey {
         case from

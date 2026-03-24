@@ -7,7 +7,7 @@
 
 public import Combine
 
-public class ECKContractManager: ObservableObject {
+public class ECKContractManager: ObservableObject, @unchecked Sendable {
     
     public let character: ECKCharacter
     let isPreview: Bool
@@ -55,7 +55,7 @@ public class ECKContractManager: ObservableObject {
     public init(character: ECKCharacter, isPreview: Bool = false) {
         self.character = character
         self.isPreview = isPreview
-        Task {
+        Task { @MainActor in
             await loadContracts()
         }
     }

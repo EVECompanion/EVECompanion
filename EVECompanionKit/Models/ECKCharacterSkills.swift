@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKCharacterSkills: Decodable, Equatable, Hashable {
+public final class ECKCharacterSkills: Decodable, Equatable, Hashable, @unchecked Sendable {
     
     private enum CodingKeys: String, CodingKey {
         case skillLevels = "skills"
@@ -82,7 +82,7 @@ public class ECKCharacterSkills: Decodable, Equatable, Hashable {
     
 }
 
-public class ECKCharacterSkillLevel: Decodable, Identifiable, Equatable, Hashable {
+public final class ECKCharacterSkillLevel: Decodable, Identifiable, Equatable, Hashable, @unchecked Sendable {
     
     private enum CodingKeys: String, CodingKey {
         case activeSkillLevel = "active_skill_level"

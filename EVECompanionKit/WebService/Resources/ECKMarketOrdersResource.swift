@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKMarketOrdersResource: ECKWebResource<[ECKMarketOrder]> {
+class ECKMarketOrdersResource: ECKWebResource<[ECKMarketOrder]>, @unchecked Sendable {
     
     init(typeId: Int, regionId: Int) {
         let headers: [String: String] = ["X-Compatibility-Date": "2025-11-11"]

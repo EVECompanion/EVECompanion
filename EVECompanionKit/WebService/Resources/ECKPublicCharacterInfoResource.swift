@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKPublicCharacterInfoResource: ECKWebResource<ECKPublicCharacterInfo> {
+class ECKPublicCharacterInfoResource: ECKWebResource<ECKPublicCharacterInfo>, @unchecked Sendable {
     
     init(token: ECKToken) {
         super.init(host: .esi,

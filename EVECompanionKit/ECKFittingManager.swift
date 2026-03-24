@@ -7,7 +7,7 @@
 
 public import Combine
 
-public class ECKFittingManager: ObservableObject {
+public class ECKFittingManager: ObservableObject, @unchecked Sendable {
     
     public let character: ECKCharacter
     public let isPreview: Bool
@@ -29,7 +29,7 @@ public class ECKFittingManager: ObservableObject {
     public init(character: ECKCharacter, isPreview: Bool = false) {
         self.character = character
         self.isPreview = isPreview
-        Task {
+        Task { @MainActor in
             await loadFittings()
         }
     }

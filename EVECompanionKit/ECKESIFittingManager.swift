@@ -8,7 +8,7 @@
 import Foundation
 public import Combine
 
-public class ECKESIFittingManager: ObservableObject {
+public class ECKESIFittingManager: ObservableObject, @unchecked Sendable {
     
     public let character: ECKCharacter
     private let isPreview: Bool

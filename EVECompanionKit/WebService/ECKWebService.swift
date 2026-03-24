@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKWebService {
+final class ECKWebService: Sendable {
     
     private let decoder: JSONDecoder = {
         let decoder = JSONDecoder()
@@ -34,7 +34,6 @@ class ECKWebService {
     
     init() { }
     
-    @MainActor
     func loadResource(resource: ECKWebResource<ECKEmptyResponse>) async throws -> (response: ECKEmptyResponse, headers: [AnyHashable: Any]) {
         do {
             return try await self.handleResource(resource: resource)
@@ -45,7 +44,6 @@ class ECKWebService {
         }
     }
     
-    @MainActor
     func loadResource<DecodeTo>(resource: ECKWebResource<ECKOptionalResponse<DecodeTo>>) async throws -> (response: DecodeTo?, headers: [AnyHashable: Any]) where DecodeTo: Decodable {
         do {
             let response = try await self.handleResource(resource: resource)
@@ -62,12 +60,11 @@ class ECKWebService {
         }
     }
     
-    @MainActor
-    func loadResource<DecodeTo>(resource: ECKWebResource<DecodeTo>) async throws -> (response: DecodeTo, headers: [AnyHashable: Any]) where DecodeTo: Decodable {
+    func loadResource<DecodeTo>(resource: ECKWebResource<DecodeTo>) async throws -> (response: DecodeTo, headers: [AnyHashable: Any]) where DecodeTo: Decodable & Sendable {
         return try await handleResource(resource: resource)
     }
     
-    private func handleResource<DecodeTo>(resource: ECKWebResource<DecodeTo>) async throws -> (response: DecodeTo, headers: [AnyHashable: Any]) where DecodeTo: Decodable {
+    private func handleResource<DecodeTo>(resource: ECKWebResource<DecodeTo>) async throws -> (response: DecodeTo, headers: [AnyHashable: Any]) where DecodeTo: Decodable & SendableMetatype {
         guard let url = resource.url else {
             logger.error("Resource \(resource) does not have a valid URL")
             throw ECKWebError.unknownError
@@ -110,7 +107,7 @@ class ECKWebService {
         }
     }
     
-    private func loadData<DecodeTo>(url: URL, resource: ECKWebResource<DecodeTo>) async throws -> (response: Data, headers: [AnyHashable: Any]) {
+    private func loadData<DecodeTo>(url: URL, resource: ECKWebResource<DecodeTo>) async throws -> (response: Data, headers: [AnyHashable: Any]) where DecodeTo: Decodable & SendableMetatype {
         return try await withCheckedThrowingContinuation { continuation in
             Task { @MainActor in
                 var request = URLRequest(url: url, timeoutInterval: timeout)

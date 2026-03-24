@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKDeleteMailResource: ECKWebResource<ECKEmptyResponse> {
+class ECKDeleteMailResource: ECKWebResource<ECKEmptyResponse>, @unchecked Sendable {
     
     init(token: ECKToken, mailId: Int) {
         super.init(host: .esi,

@@ -7,11 +7,11 @@
 
 import Foundation
 
-class ECKFetchMailBodyResponse: Decodable {
+final class ECKFetchMailBodyResponse: Decodable, Sendable {
     let body: String?
 }
 
-class ECKFetchMailBodyResource: ECKWebResource<ECKFetchMailBodyResponse> {
+class ECKFetchMailBodyResource: ECKWebResource<ECKFetchMailBodyResponse>, @unchecked Sendable {
     
     init(token: ECKToken, mailId: Int) {
         super.init(host: .esi,

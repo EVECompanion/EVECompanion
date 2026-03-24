@@ -9,6 +9,7 @@ import Foundation
 public import Combine
 public import SwiftUI
 
+@MainActor
 public class ECKCapitalNavigationManager: ObservableObject {
     
     @AppStorage("CapitalNavigation.JDC") public var jdcSkillLevel: Int = 5 {

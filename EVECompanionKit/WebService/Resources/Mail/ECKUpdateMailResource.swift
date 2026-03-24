@@ -11,7 +11,7 @@ struct ECKUpdateMailRequest: Encodable {
     let read: Bool
 }
 
-class ECKUpdateMailResource: ECKWebResource<ECKEmptyResponse> {
+class ECKUpdateMailResource: ECKWebResource<ECKEmptyResponse>, @unchecked Sendable {
     
     init(token: ECKToken, mailId: Int, read: Bool) {
         super.init(host: .esi,

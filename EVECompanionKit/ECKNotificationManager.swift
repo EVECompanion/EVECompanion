@@ -6,7 +6,7 @@
 //
 
 import Foundation
-public import UserNotifications
+@preconcurrency public import UserNotifications
 import UIKit
 public import Combine
 
@@ -190,8 +190,8 @@ public actor ECKNotificationManager: NSObject, ObservableObject, UNUserNotificat
         }
     }
     
-    public func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                       willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+    nonisolated public func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                                   willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
         return [.sound, .banner, .list]
     }
     

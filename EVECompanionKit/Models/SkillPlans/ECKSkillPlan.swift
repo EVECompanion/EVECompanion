@@ -9,7 +9,7 @@ import Foundation
 public import Combine
 import SwiftUI
 
-public class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable {
+public final class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashable, @unchecked Sendable {
     
     // MARK: - Constants
     

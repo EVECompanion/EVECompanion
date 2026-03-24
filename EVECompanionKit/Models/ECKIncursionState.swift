@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ECKIncursionState: String, Decodable {
+public enum ECKIncursionState: String, Decodable, Sendable {
     
     case withdrawing
     case mobilizing

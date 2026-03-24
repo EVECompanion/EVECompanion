@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKIncursion: Decodable, Identifiable {
+public final class ECKIncursion: Decodable, Identifiable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case constellation = "constellation_id"

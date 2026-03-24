@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKPlanetaryColoniesResource: ECKWebResource<[ECKPlanetaryColony]> {
+class ECKPlanetaryColoniesResource: ECKWebResource<[ECKPlanetaryColony]>, @unchecked Sendable {
     
     init(token: ECKToken) {
         super.init(host: .esi,

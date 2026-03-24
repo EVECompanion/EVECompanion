@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKPlanetSchematic: Decodable, Identifiable, Hashable {
+public final class ECKPlanetSchematic: Decodable, Identifiable, Hashable, Sendable {
     
     public var id: Int {
         return schematicId
@@ -63,7 +63,7 @@ public class ECKPlanetSchematic: Decodable, Identifiable, Hashable {
     
 }
 
-public class ECKPlanetSchematicInOut: Hashable {
+public final class ECKPlanetSchematicInOut: Hashable, Sendable {
     
     public let item: ECKItem
     public let quantity: Int

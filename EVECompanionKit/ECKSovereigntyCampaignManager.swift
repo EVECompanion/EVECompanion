@@ -7,7 +7,7 @@
 
 public import Combine
 
-public class ECKSovereigntyCampaignManager: ObservableObject {
+public class ECKSovereigntyCampaignManager: ObservableObject, @unchecked Sendable {
     
     let isPreview: Bool
     

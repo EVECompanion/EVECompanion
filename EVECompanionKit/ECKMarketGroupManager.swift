@@ -8,7 +8,7 @@
 import Foundation
 public import Combine
 
-public class ECKMarketGroupManager: ObservableObject {
+public class ECKMarketGroupManager: ObservableObject, @unchecked Sendable {
     
     public var marketGroups: [ECKMarketGroup.ChildType] {
         if searchString.isEmpty {

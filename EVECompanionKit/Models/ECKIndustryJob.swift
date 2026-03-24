@@ -8,7 +8,7 @@
 import Foundation
 public import Combine
 
-public class ECKIndustryJob: Decodable, Identifiable, ObservableObject {
+public final class ECKIndustryJob: Decodable, Identifiable, ObservableObject, @unchecked Sendable {
     
     private enum CodingKeys: String, CodingKey {
         case activity = "activity_id"

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKJumpClonesResource: ECKWebResource<ECKJumpClones> {
+class ECKJumpClonesResource: ECKWebResource<ECKJumpClones>, @unchecked Sendable {
     
     init(token: ECKToken) {
         super.init(host: .esi,

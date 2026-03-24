@@ -8,7 +8,7 @@
 import Foundation
 import simd
 
-public class ECKCapitalJumpRoute: Identifiable, Equatable, Codable {
+public class ECKCapitalJumpRoute: Identifiable, Equatable, Codable, @unchecked Sendable {
     
     private enum CodingKeys: CodingKey {
         case id

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ECKSkillPlanSkillEntry: Codable, Hashable {
+public struct ECKSkillPlanSkillEntry: Codable, Hashable, Sendable {
     
     enum CodingKeys: CodingKey {
         case skill

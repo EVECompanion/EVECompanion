@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKAssetName: Decodable {
+final class ECKAssetName: Decodable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case itemId = "item_id"

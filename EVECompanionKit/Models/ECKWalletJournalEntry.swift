@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKWalletJournalEntry: Decodable, Identifiable {
+public final class ECKWalletJournalEntry: Decodable, Identifiable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case amount

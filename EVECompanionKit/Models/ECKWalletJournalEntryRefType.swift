@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ECKWalletJournalEntryRefType: String, Decodable {
+public enum ECKWalletJournalEntryRefType: String, Decodable, Sendable {
     
     case accelerationGateFee = "acceleration_gate_fee"
     case advertisementListingFee = "advertisement_listing_fee"

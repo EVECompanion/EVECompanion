@@ -7,7 +7,7 @@
 
 public import Combine
 
-public class ECKSolarSystemSovereignty: Decodable, ObservableObject, Equatable {
+public class ECKSolarSystemSovereignty: Decodable, ObservableObject, Equatable, @unchecked Sendable {
     
     private enum CodingKeys: String, CodingKey {
         case allianceId = "alliance_id"

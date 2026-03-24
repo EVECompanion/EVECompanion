@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKWebResource<DecodeTo: Decodable> {
+class ECKWebResource<DecodeTo: Decodable>: @unchecked Sendable {
     
     var host: Host
     var endpoint: String

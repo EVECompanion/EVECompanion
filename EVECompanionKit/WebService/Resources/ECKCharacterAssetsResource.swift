@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKCharacterAssetsResource: ECKWebResource<[ECKAsset]> {
+class ECKCharacterAssetsResource: ECKWebResource<[ECKAsset]>, @unchecked Sendable {
     
     init(token: ECKToken, page: Int) {
         super.init(host: .esi,

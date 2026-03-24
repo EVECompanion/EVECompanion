@@ -97,7 +97,7 @@ public class ECKCharacterStorage: ObservableObject, @unchecked Sendable {
             .publisher(for: \.enableEmptySkillQueueNotifications, options: .new)
             .removeDuplicates()
             .sink { [weak self] _ in
-                Task {
+                Task { [weak self] in
                     await self?.reloadNotifications()
                 }
             }
@@ -108,7 +108,7 @@ public class ECKCharacterStorage: ObservableObject, @unchecked Sendable {
             .publisher(for: \.enableSkillCompletedNotifications, options: .new)
             .removeDuplicates()
             .sink { [weak self] _ in
-                Task {
+                Task { [weak self] in
                     await self?.reloadNotifications()
                 }
             }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKLoyaltyPointsResource: ECKWebResource<[ECKLoyaltyPointsEntry]> {
+class ECKLoyaltyPointsResource: ECKWebResource<[ECKLoyaltyPointsEntry]>, @unchecked Sendable {
     
     init(token: ECKToken) {
         super.init(host: .esi,

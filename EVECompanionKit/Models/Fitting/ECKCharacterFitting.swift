@@ -8,7 +8,7 @@
 import Foundation
 public import Combine
 
-public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObject {
+public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObject, @unchecked Sendable {
     
     private enum CodingKeys: CodingKey {
         case description

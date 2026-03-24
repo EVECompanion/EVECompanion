@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKCharacterSkillqueueResource: ECKWebResource<ECKCharacterSkillQueue> {
+class ECKCharacterSkillqueueResource: ECKWebResource<ECKCharacterSkillQueue>, @unchecked Sendable {
     
     init(token: ECKToken) {
         super.init(host: .esi,

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKJumpFatigue: Decodable {
+public final class ECKJumpFatigue: Decodable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case expiryDate = "jump_fatigue_expire_date"

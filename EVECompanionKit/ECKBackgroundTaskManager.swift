@@ -9,7 +9,7 @@ import Foundation
 public import Combine
 import BackgroundTasks
 
-public class ECKBackgroundTaskManager: ObservableObject {
+public final class ECKBackgroundTaskManager: ObservableObject, Sendable {
     
     public enum TaskType: String {
         case refreshTask = "de.schlabertz.EVECompanion.refreshTask"

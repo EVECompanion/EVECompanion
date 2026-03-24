@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ECKMarketHistoryResource: ECKWebResource<[ECKMarketHistoryEntry]> {
+class ECKMarketHistoryResource: ECKWebResource<[ECKMarketHistoryEntry]>, @unchecked Sendable {
     
     init(regionId: Int, typeId: Int) {
         super.init(host: .esi,

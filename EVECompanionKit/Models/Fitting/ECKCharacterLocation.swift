@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKCharacterLocation: Decodable {
+public final class ECKCharacterLocation: Decodable, @unchecked Sendable {
     
     private enum CodingKeys: String, CodingKey {
         case solarSystem = "solar_system_id"
