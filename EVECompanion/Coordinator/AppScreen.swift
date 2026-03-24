@@ -36,6 +36,9 @@ enum AppScreen: Hashable {
     case skillPlanList(ECKSkillPlanManager)
     case skillPlanDetail(ECKSkillPlan, ECKSkillPlanManager)
     
+    case corpMarketOrders(ECKAuthenticatedCorporation)
+    case corpContracts(manager: ECKContractManager)
+    
     case itemByTypeId(Int)
     case item(ECKItem)
     
@@ -107,6 +110,10 @@ enum AppScreen: Hashable {
             return "corporationList"
         case .corporationDetail:
             return "corporationDetail"
+        case .corpMarketOrders:
+            return "corpMarketOrders"
+        case .corpContracts:
+            return "corpContracts"
         }
     }
     
@@ -172,6 +179,13 @@ enum AppScreen: Hashable {
         
         case (.corporationDetail(let lhsCorp), .corporationDetail(let rhsCorp)):
             return lhsCorp.corpId == rhsCorp.corpId
+            
+        case (.corpMarketOrders(let lhsCorp), .corpMarketOrders(let rhsCorp)):
+            return lhsCorp.corpId == rhsCorp.corpId
+            
+        case (.corpContracts(manager: let lhsManager), .corpContracts(manager: let rhsManager)):
+            // TODO: Replace with corp id
+            return lhsManager.character.id == rhsManager.character.id
             
         default:
             return false
@@ -246,6 +260,11 @@ enum AppScreen: Hashable {
         case .corporationList:
             // TODO
             return
+        case .corpMarketOrders(let corp):
+            hasher.combine(corp)
+        case .corpContracts(manager: let manager):
+            // TODO: Replace with corp
+            hasher.combine(manager.character)
         }
     }
     

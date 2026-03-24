@@ -71,6 +71,7 @@
 		C91EEEFD2BE975D000352175 /* EVECompanionKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91EEEEA2BE975D000352175 /* EVECompanionKit.framework */; };
 		C91EEEFE2BE975D000352175 /* EVECompanionKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C91EEEEA2BE975D000352175 /* EVECompanionKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C91EEF072BE975ED00352175 /* ECKAPIScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91EEF062BE975ED00352175 /* ECKAPIScope.swift */; };
+		C91F70102F7341420078C1DB /* CorporationDetailRowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91F700F2F7341420078C1DB /* CorporationDetailRowType.swift */; };
 		C91FE09C2D8DA5AE00BA7303 /* ECKSolarSystemSovereignty.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91FE09B2D8DA5AD00BA7303 /* ECKSolarSystemSovereignty.swift */; };
 		C91FE09E2D8DA69300BA7303 /* ECKSovereigntyMapResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91FE09D2D8DA69300BA7303 /* ECKSovereigntyMapResource.swift */; };
 		C91FE0A02D8DA73600BA7303 /* ECKSovereigntyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91FE09F2D8DA73600BA7303 /* ECKSovereigntyManager.swift */; };
@@ -492,6 +493,7 @@
 		C91EEEEA2BE975D000352175 /* EVECompanionKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EVECompanionKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C91EEEEC2BE975D000352175 /* EVECompanionKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EVECompanionKit.h; sourceTree = "<group>"; };
 		C91EEF062BE975ED00352175 /* ECKAPIScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKAPIScope.swift; sourceTree = "<group>"; };
+		C91F700F2F7341420078C1DB /* CorporationDetailRowType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorporationDetailRowType.swift; sourceTree = "<group>"; };
 		C91FE09B2D8DA5AD00BA7303 /* ECKSolarSystemSovereignty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSolarSystemSovereignty.swift; sourceTree = "<group>"; };
 		C91FE09D2D8DA69300BA7303 /* ECKSovereigntyMapResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSovereigntyMapResource.swift; sourceTree = "<group>"; };
 		C91FE09F2D8DA73600BA7303 /* ECKSovereigntyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSovereigntyManager.swift; sourceTree = "<group>"; };
@@ -1293,6 +1295,7 @@
 			isa = PBXGroup;
 			children = (
 				C9511D142EDB1669001CEED5 /* CorporationDetailView.swift */,
+				C91F700F2F7341420078C1DB /* CorporationDetailRowType.swift */,
 			);
 			path = CorporationDetail;
 			sourceTree = "<group>";
@@ -2202,6 +2205,7 @@
 				C9012AF32C032D4E00407A81 /* WalletTransactionsView.swift in Sources */,
 				C996A5E82BF2B8340038277C /* ContractListCell.swift in Sources */,
 				C9E6F7E12DA45E7D00573E80 /* MarketGroupsView.swift in Sources */,
+				C91F70102F7341420078C1DB /* CorporationDetailRowType.swift in Sources */,
 				C9C87AD12D9E783A00EF5D45 /* ItemAttributeCell.swift in Sources */,
 				C9B638C32E088B6200E9F6F4 /* FittingDetailDronesView.swift in Sources */,
 				C952BC952BEC12C80070C504 /* CharacterListView.swift in Sources */,

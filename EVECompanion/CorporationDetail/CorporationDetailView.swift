@@ -19,52 +19,45 @@ struct CorporationDetailView: View {
     var body: some View {
         List {
             Section {
-                if let corpId = corporation.corpId,
-                   let corpInfo = corporation.publicCorpInfo {
-                    HStack {
-                        ECImage(id: corpId,
-                                category: .corporation)
-                        .frame(width: 50, height: 50)
-                        .clipShape(Circle())
-                        
-                        Text(corpInfo.name)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .font(.title2)
-                    }
-                }
-                
-                if let allianceId = corporation.allianceId,
-                   let allianceInfo = corporation.publicAllianceInfo {
-                    HStack {
-                        ECImage(id: allianceId,
-                                category: .alliance)
-                        .frame(width: 50, height: 50)
-                        .clipShape(Circle())
-                        
-                        Text(allianceInfo.name)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .font(.title2)
-                    }
-                }
-                
-                VStack(alignment: .leading) {
-                    Text("Via Character")
-                    
-                    HStack {
-                        ECImage(id: corporation.authenticatingCharacter.id,
-                                category: .character)
-                        .frame(width: 30, height: 30)
-                        .clipShape(Circle())
-                        
-                        Text(corporation.authenticatingCharacter.name)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
+                AuthenticatedCorporationCell(corporation: corporation)
+            }
+            
+            Section("Finance") {
+                row(for: .marketOrders)
+                row(for: .contracts)
             }
         }
         .navigationTitle(corporation.publicCorpInfo?.name ?? "")
     }
     
+    @ViewBuilder
+    func row(for row: CorporationDetailRowType) -> some View {
+        NavigationLink(value: destination(for: row)) {
+            HStack(content: {
+                Image(row.image)
+                    .resizable()
+                    .frame(width: 50, height: 50)
+                VStack(alignment: .leading) {
+                    Text(row.title)
+                    
+                    if let secondaryText = row.secondaryText {
+                        Text(secondaryText)
+                            .foregroundStyle(Color.secondary)
+                    }
+                }
+                
+            })
+        }
+    }
+    
+    func destination(for row: CorporationDetailRowType) -> AppScreen {
+        switch row {
+        case .contracts:
+            return .corpContracts(manager: .init(character: corporation.authenticatingCharacter))
+        case .marketOrders:
+            return .corpMarketOrders(corporation)
+        }
+    }
 }
 
 #Preview {
