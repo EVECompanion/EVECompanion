@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKSkillPlanRemap: Codable, Hashable {
+public final class ECKSkillPlanRemap: Codable, Hashable, @unchecked Sendable {
     
     static private let baseAttributePoints: Int = 17
     

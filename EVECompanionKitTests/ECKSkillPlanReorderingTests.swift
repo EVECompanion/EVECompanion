@@ -10,7 +10,7 @@ import Testing
 
 struct ECKSkillPlanReorderingTests {
 
-    struct TestCase {
+    struct TestCase: Sendable {
         let description: Comment
         let initialEntries: [ECKSkillPlanEntry]
         let moveFromOffsets: IndexSet

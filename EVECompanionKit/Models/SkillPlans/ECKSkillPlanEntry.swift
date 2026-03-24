@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ECKSkillPlanEntry: Codable, Identifiable, Hashable {
+public enum ECKSkillPlanEntry: Codable, Identifiable, Hashable, Sendable {
     
     public var id: Int {
         return self.hashValue
