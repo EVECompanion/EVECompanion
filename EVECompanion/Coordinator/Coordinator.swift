@@ -7,6 +7,8 @@
 
 import Foundation
 import SwiftUI
+import Combine
+import EVECompanionKit
 
 @MainActor
 class Coordinator: ObservableObject {

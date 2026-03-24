@@ -6,6 +6,7 @@
 //
 
 import Foundation
+public import Combine
 
 public final class ECKSovereigntyCampaign: Decodable, ObservableObject, Identifiable, Equatable {
     

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import EVECompanionKit
+import Combine
 
 struct FittingDetailDroneView: View {
     

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 /// Reference: https://github.com/EVEShipFit/dogma-engine?tab=readme-ov-file#implementation
 

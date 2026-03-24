@@ -6,6 +6,8 @@
 //
 
 import Foundation
+public import Combine
+import SwiftUI
 
 public class ECKCapitalRouteManager: ObservableObject {
     

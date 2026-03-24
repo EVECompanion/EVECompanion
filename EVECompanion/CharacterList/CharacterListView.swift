@@ -8,6 +8,7 @@
 import SwiftUI
 import AuthenticationServices
 import EVECompanionKit
+import Combine
 
 struct CharacterListView: View {
     

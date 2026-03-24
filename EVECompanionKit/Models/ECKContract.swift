@@ -6,6 +6,7 @@
 //
 
 import Foundation
+public import Combine
 public import SwiftUI
 
 public class ECKContract: Decodable, Identifiable, ObservableObject {

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+public import UIKit
 
 extension String {
 

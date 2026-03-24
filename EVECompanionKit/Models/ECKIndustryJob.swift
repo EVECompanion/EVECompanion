@@ -6,6 +6,7 @@
 //
 
 import Foundation
+public import Combine
 
 public class ECKIndustryJob: Decodable, Identifiable, ObservableObject {
     

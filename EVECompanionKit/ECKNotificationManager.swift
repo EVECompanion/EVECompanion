@@ -8,6 +8,7 @@
 import Foundation
 public import UserNotifications
 import UIKit
+public import Combine
 
 public actor ECKNotificationManager: NSObject, ObservableObject, UNUserNotificationCenterDelegate {
     

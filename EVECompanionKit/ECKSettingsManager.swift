@@ -5,7 +5,7 @@
 //  Created by Jonas Schlabertz on 12.05.24.
 //
 
-import SwiftUI
+public import Combine
 
 public class ECKSettingsManager: ObservableObject {
     
