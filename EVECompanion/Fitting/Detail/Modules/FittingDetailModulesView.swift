@@ -239,7 +239,7 @@ struct FittingDetailModulesView: View {
                 ModuleSelectionView(moduleType: moduleType,
                                     targetShip: fitting.ship.item,
                                     itemToReplace: moduleToReplace.item) { result in
-                    Task {
+                    Task { @MainActor in
                         switch result {
                         case .item(let item):
                             do throws(ECKAddModuleError) {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ECKMarketHistoryEntry: Decodable, Equatable {
+public final class ECKMarketHistoryEntry: Decodable, Equatable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case average

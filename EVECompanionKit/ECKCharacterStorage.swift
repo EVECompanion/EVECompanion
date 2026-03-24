@@ -13,7 +13,7 @@ import Pulse
 #endif
 import WidgetKit
 
-public class ECKCharacterStorage: ObservableObject {
+public class ECKCharacterStorage: ObservableObject, @unchecked Sendable {
     
     @Published public var characters: [ECKCharacter] = []
     
@@ -132,6 +132,7 @@ public class ECKCharacterStorage: ObservableObject {
         await reloadCharactersNormalMode()
     }
     
+    @MainActor
     public func reloadCharacters() async {
         if UserDefaults.standard.isDemoModeEnabled {
             await reloadCharactersDemoMode()

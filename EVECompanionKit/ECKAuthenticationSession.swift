@@ -10,7 +10,7 @@ import CryptoKit
 
 public struct ECKAuthenticationSession {
     
-    public static func start(authenticationHandler: (URL, String) async throws -> URL) async throws {
+    public static func start(authenticationHandler: @Sendable (URL, String) async throws -> URL) async throws {
         guard UserDefaults.standard.isDemoModeEnabled == false else {
             NotificationCenter.default.post(name: .charactersDidChange, object: nil)
             return

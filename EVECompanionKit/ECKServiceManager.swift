@@ -8,12 +8,11 @@
 import Foundation
 public import Combine
 
-public class ECKServiceManager: ObservableObject {
+public class ECKServiceManager: ObservableObject, @unchecked Sendable {
     
     private var skillPlanManagers: [Int: ECKSkillPlanManager] = [:]
     
     public init() { }
-    
     
     public func skillPlanManager(character: ECKCharacter) -> ECKSkillPlanManager {
         guard let skillPlanManager = skillPlanManagers[character.id] else {

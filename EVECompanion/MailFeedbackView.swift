@@ -16,7 +16,7 @@ struct MailFeedbackView: UIViewControllerRepresentable {
     @Binding var isShowing: Bool
     @Binding var result: Result<MFMailComposeResult, any Error>?
 
-    class Coordinator: NSObject, MFMailComposeViewControllerDelegate {
+    class Coordinator: NSObject, MFMailComposeViewControllerDelegate, @unchecked Sendable {
 
         @Binding var isShowing: Bool
         @Binding var result: Result<MFMailComposeResult, any Error>?

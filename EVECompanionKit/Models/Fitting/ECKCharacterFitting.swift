@@ -903,7 +903,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         manager.saveFitting(self)
     }
     
-    public func removeModule(item: ECKCharacterFittingItem, manager: ECKFittingManager?) async {
+    nonisolated(nonsending) public func removeModule(item: ECKCharacterFittingItem, manager: ECKFittingManager?) async {
         switch item.item.slotType {
         case .high:
             highSlotModules = highSlotModules.filter { $0.id != item.id }

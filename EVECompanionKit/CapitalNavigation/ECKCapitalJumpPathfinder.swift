@@ -13,36 +13,17 @@ public actor ECKCapitalJumpPathfinder {
     
     private static let dispatchQueueLabel: String = "CapitalJumpPathFinderQueue"
     
-    lazy var jumpDistances: [Int: [Int: Double]] = {
-        let allLSDistances = ECKSDEManager.shared.capitalLSJumpDistances()
-        let allHSDistances = ECKSDEManager.shared.capitalHSToLSJumpDistances()
-        
-        var distances: [Int: [Int: Double]] = [:]
-        
-        for distanceValue in allLSDistances {
-            if distances[distanceValue.systemAId] == nil {
-                distances[distanceValue.systemAId] = [:]
-            }
-            
-            distances[distanceValue.systemAId]?[distanceValue.systemBId] = distanceValue.distance
-            
-            if distances[distanceValue.systemBId] == nil {
-                distances[distanceValue.systemBId] = [:]
-            }
-            
-            distances[distanceValue.systemBId]?[distanceValue.systemAId] = distanceValue.distance
+    nonisolated(unsafe) private var _jumpDistances: [Int: [Int: Double]]?
+    
+    nonisolated var jumpDistances: [Int: [Int: Double]] {
+        guard let _jumpDistances else {
+            let distances = initializeJumpDistances()
+            _jumpDistances = distances
+            return distances
         }
         
-        for distanceValue in allHSDistances {
-            if distances[distanceValue.systemAId] == nil {
-                distances[distanceValue.systemAId] = [:]
-            }
-            
-            distances[distanceValue.systemAId]?[distanceValue.systemBId] = distanceValue.distance
-        }
-        
-        return distances
-    }()
+        return _jumpDistances
+    }
     
     private class JumpPathNode: Comparable {
         
@@ -106,6 +87,37 @@ public actor ECKCapitalJumpPathfinder {
     
     public init() {
         
+    }
+    
+    nonisolated private func initializeJumpDistances() -> [Int: [Int: Double]] {
+        let allLSDistances = ECKSDEManager.shared.capitalLSJumpDistances()
+        let allHSDistances = ECKSDEManager.shared.capitalHSToLSJumpDistances()
+        
+        var distances: [Int: [Int: Double]] = [:]
+        
+        for distanceValue in allLSDistances {
+            if distances[distanceValue.systemAId] == nil {
+                distances[distanceValue.systemAId] = [:]
+            }
+            
+            distances[distanceValue.systemAId]?[distanceValue.systemBId] = distanceValue.distance
+            
+            if distances[distanceValue.systemBId] == nil {
+                distances[distanceValue.systemBId] = [:]
+            }
+            
+            distances[distanceValue.systemBId]?[distanceValue.systemAId] = distanceValue.distance
+        }
+        
+        for distanceValue in allHSDistances {
+            if distances[distanceValue.systemAId] == nil {
+                distances[distanceValue.systemAId] = [:]
+            }
+            
+            distances[distanceValue.systemAId]?[distanceValue.systemBId] = distanceValue.distance
+        }
+        
+        return distances
     }
     
     @MainActor

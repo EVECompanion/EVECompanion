@@ -8,7 +8,7 @@
 import Foundation
 import EVECompanionKit
 
-enum CharacterSelection: Hashable {
+enum CharacterSelection: Hashable, Sendable {
     case empty
     case character(ECKCharacter)
     

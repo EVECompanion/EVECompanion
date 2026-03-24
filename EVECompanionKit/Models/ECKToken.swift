@@ -15,7 +15,7 @@ internal actor ECKTokenActor {
     private init() { }
 }
 
-internal final class ECKToken: Hashable, Equatable, Codable, Identifiable {
+internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unchecked Sendable {
     
     static func == (lhs: ECKToken, rhs: ECKToken) -> Bool {
         return lhs.accessToken == rhs.accessToken &&

@@ -105,10 +105,12 @@ public class ECKCapitalNavigationManager: ObservableObject {
         isInitialized = true
     }
     
-    public func alternativeSystems(previousSystem: ECKSolarSystem,
-                                   systemToReplace: ECKSolarSystem,
-                                   nextSystem: ECKSolarSystem,
-                                   jumpRange: Double) async -> [ECKSolarSystem] {
+    nonisolated(nonsending) public func alternativeSystems(
+        previousSystem: ECKSolarSystem,
+        systemToReplace: ECKSolarSystem,
+        nextSystem: ECKSolarSystem,
+        jumpRange: Double
+    ) async -> [ECKSolarSystem] {
         return await pathFinder.alternativeSystems(previousSystem: previousSystem,
                                                    systemToReplace: systemToReplace,
                                                    nextSystem: nextSystem,

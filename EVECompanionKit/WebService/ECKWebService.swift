@@ -180,7 +180,7 @@ class ECKWebService {
                     }
                     
                     guard response.statusCode <= 299 else {
-                        logger.error("Received status code \(response.statusCode) for \(url). Character: \(String(describing: characterId)). Request: \(String(describing: String(decoding: body ?? Data(), as: UTF8.self))) Response: \(String(decoding: data, as: UTF8.self))")
+                        logger.error("Received status code \(response.statusCode) for \(url). Character: \(String(describing: characterId)). Request: \(String(describing: String(data: body ?? Data(), encoding: .utf8))) Response: \(String(data: data, encoding: .utf8) ?? "EMPTY")")
                         continuation.resume(throwing: ECKWebError.statusCode(response.statusCode, data))
                         return
                     }

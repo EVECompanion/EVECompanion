@@ -11,6 +11,7 @@ import EVECompanionKit
 struct ItemView: View {
     let item: ECKItem
     
+    @MainActor
     @State var marketHistoryData: [ECKMarketHistoryEntry] = []
     
     var body: some View {

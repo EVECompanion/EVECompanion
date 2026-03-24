@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ECKImageManager {
+public struct ECKImageManager: Sendable {
     
     public enum Category: String {
         case alliance = "alliances"
@@ -20,7 +20,7 @@ public struct ECKImageManager {
         return
     }
     
-    public func loadURL(id: Int, category: Category, isBPC: Bool?) async -> URL? {
+    nonisolated(nonsending) public func loadURL(id: Int, category: Category, isBPC: Bool?) async -> URL? {
         let variation: String
         
         switch category {

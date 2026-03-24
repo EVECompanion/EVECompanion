@@ -8,7 +8,7 @@
 import Foundation
 public import Combine
 
-public class ECKCharacter: ObservableObject, Identifiable, Hashable {
+public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked Sendable {
     
     internal let token: ECKToken
     
