@@ -53,7 +53,7 @@ actor ECKSovereigntyManager {
             do {
                 let resource = ECKSovereigntyMapResource(etag: lastEtag)
                 let response = try await ECKWebService().loadResource(resource: resource)
-                self.lastEtag = ((response.headers["Etag"] ?? response.headers["ETag"]) as? String)
+                self.lastEtag = response.headers["Etag"] ?? response.headers["ETag"]
                 self.lastRequestDate = Date()
                 var newData = [Int: ECKSolarSystemSovereignty]()
                 response.response.forEach { sov in

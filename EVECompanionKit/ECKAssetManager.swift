@@ -172,7 +172,7 @@ public class ECKAssetManager: ObservableObject, @unchecked Sendable {
         let firstPageResponse = try await ECKWebService().loadResource(resource: firstAssetPageResource)
         let firstPageAssets: [ECKAsset] = firstPageResponse.response
         
-        let totalPages: Int = Int(firstPageResponse.headers["x-pages"] as? String ?? "") ?? 1
+        let totalPages: Int = Int(firstPageResponse.headers["x-pages"] ?? "") ?? 1
         
         let otherPageAssets: [ECKAsset] = try await withThrowingTaskGroup(of: [ECKAsset].self) { group -> [ECKAsset] in
             guard totalPages >= 2 else {

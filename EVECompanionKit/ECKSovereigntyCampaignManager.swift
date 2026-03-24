@@ -93,7 +93,7 @@ public class ECKSovereigntyCampaignManager: ObservableObject, @unchecked Sendabl
         do {
             let response = try await ECKWebService().loadResource(resource: resource)
             let fetchedCampaigns = response.response.sorted(by: { $0.startTime < $1.startTime })
-            self.lastEtag = ((response.headers["Etag"] ?? response.headers["ETag"]) as? String)
+            self.lastEtag = (response.headers["Etag"] ?? response.headers["ETag"])
             let newCampaigns = fetchedCampaigns.map({ campaign in
                 if let existingCampaign = self.campaigns.first(where: { $0.campaignId == campaign.campaignId }) {
                     existingCampaign.attackersScore = campaign.attackersScore

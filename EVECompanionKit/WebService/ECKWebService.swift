@@ -34,7 +34,7 @@ final class ECKWebService: Sendable {
     
     init() { }
     
-    func loadResource(resource: ECKWebResource<ECKEmptyResponse>) async throws -> (response: ECKEmptyResponse, headers: [AnyHashable: Any]) {
+    func loadResource(resource: ECKWebResource<ECKEmptyResponse>) async throws -> (response: ECKEmptyResponse, headers: [String: String]) {
         do {
             return try await self.handleResource(resource: resource)
         } catch ECKWebError.emptyResponse {
@@ -44,7 +44,7 @@ final class ECKWebService: Sendable {
         }
     }
     
-    func loadResource<DecodeTo>(resource: ECKWebResource<ECKOptionalResponse<DecodeTo>>) async throws -> (response: DecodeTo?, headers: [AnyHashable: Any]) where DecodeTo: Decodable {
+    func loadResource<DecodeTo>(resource: ECKWebResource<ECKOptionalResponse<DecodeTo>>) async throws -> (response: DecodeTo?, headers: [String: String]) where DecodeTo: Decodable {
         do {
             let response = try await self.handleResource(resource: resource)
             return (response: response.response.response,
@@ -60,11 +60,11 @@ final class ECKWebService: Sendable {
         }
     }
     
-    func loadResource<DecodeTo>(resource: ECKWebResource<DecodeTo>) async throws -> (response: DecodeTo, headers: [AnyHashable: Any]) where DecodeTo: Decodable & Sendable {
+    func loadResource<DecodeTo>(resource: ECKWebResource<DecodeTo>) async throws -> (response: DecodeTo, headers: [String: String]) where DecodeTo: Decodable & Sendable {
         return try await handleResource(resource: resource)
     }
     
-    private func handleResource<DecodeTo>(resource: ECKWebResource<DecodeTo>) async throws -> (response: DecodeTo, headers: [AnyHashable: Any]) where DecodeTo: Decodable & SendableMetatype {
+    private func handleResource<DecodeTo>(resource: ECKWebResource<DecodeTo>) async throws -> (response: DecodeTo, headers: [String: String]) where DecodeTo: Decodable & SendableMetatype {
         guard let url = resource.url else {
             logger.error("Resource \(resource) does not have a valid URL")
             throw ECKWebError.unknownError
@@ -107,7 +107,7 @@ final class ECKWebService: Sendable {
         }
     }
     
-    private func loadData<DecodeTo>(url: URL, resource: ECKWebResource<DecodeTo>) async throws -> (response: Data, headers: [AnyHashable: Any]) where DecodeTo: Decodable & SendableMetatype {
+    private func loadData<DecodeTo>(url: URL, resource: ECKWebResource<DecodeTo>) async throws -> (response: Data, headers: [String: String]) where DecodeTo: Decodable & SendableMetatype {
         return try await withCheckedThrowingContinuation { continuation in
             Task { @MainActor in
                 var request = URLRequest(url: url, timeoutInterval: timeout)
@@ -182,7 +182,7 @@ final class ECKWebService: Sendable {
                         return
                     }
                     
-                    continuation.resume(returning: (response: data, headers: response.allHeaderFields))
+                    continuation.resume(returning: (response: data, headers: response.allHeaderFields as? [String: String] ?? [:]))
                 }
                 
                 dataTask.resume()

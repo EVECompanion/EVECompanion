@@ -33,7 +33,7 @@ public class ECKServerStatusManager: ObservableObject, @unchecked Sendable {
         let resource = ECKServerStatusResource(etag: lastEtag)
         do {
             let response = try await ECKWebService().loadResource(resource: resource)
-            self.lastEtag = ((response.headers["Etag"] ?? response.headers["ETag"]) as? String)
+            self.lastEtag = response.headers["Etag"] ?? response.headers["ETag"]
             self.status = response.response
             self.loadingState = .ready
         } catch {
