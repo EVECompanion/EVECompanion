@@ -11,18 +11,25 @@ import EVECompanionKit
 struct AuthenticatedCorporationCell: View {
     
     @ObservedObject private var corporation: ECKAuthenticatedCorporation
+    private let allowsNavigation: Bool
     
-    init(corporation: ECKAuthenticatedCorporation) {
+    init(corporation: ECKAuthenticatedCorporation, allowsNavigation: Bool) {
         self.corporation = corporation
+        self.allowsNavigation = allowsNavigation
     }
     
     var body: some View {
         switch corporation.authenticatingCharacter.initialDataLoadingState {
         case .ready,
              .reloading:
-            NavigationLink(value: AppScreen.corporationDetail(corporation)) {
+            if corporation.authenticatingCharacter.hasValidToken && allowsNavigation {
+                NavigationLink(value: AppScreen.corporationDetail(corporation)) {
+                    normalView
+                }
+            } else {
                 normalView
             }
+            
         case .loading:
             ProgressView()
         case .error:
@@ -83,6 +90,6 @@ struct AuthenticatedCorporationCell: View {
 
 #Preview {
     List {
-        AuthenticatedCorporationCell(corporation: .dummy)
+        AuthenticatedCorporationCell(corporation: .dummy, allowsNavigation: false)
     }
 }

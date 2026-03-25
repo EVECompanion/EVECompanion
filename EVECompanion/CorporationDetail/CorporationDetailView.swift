@@ -11,15 +11,20 @@ import EVECompanionKit
 struct CorporationDetailView: View {
     
     @ObservedObject private var corporation: ECKAuthenticatedCorporation
+    @StateObject var contractManager: ECKContractManager
     
     init(corporation: ECKAuthenticatedCorporation) {
         self.corporation = corporation
+        self._contractManager = StateObject(wrappedValue: .init(corporation: corporation))
     }
     
     var body: some View {
         List {
             Section {
-                AuthenticatedCorporationCell(corporation: corporation)
+                AuthenticatedCorporationCell(
+                    corporation: corporation,
+                    allowsNavigation: false
+                )
             }
             
             Section("Finance") {
@@ -53,7 +58,7 @@ struct CorporationDetailView: View {
     func destination(for row: CorporationDetailRowType) -> AppScreen {
         switch row {
         case .contracts:
-            return .corpContracts(manager: .init(character: corporation.authenticatingCharacter))
+            return .corpContracts(manager: contractManager)
         case .marketOrders:
             return .corpMarketOrders(corporation)
         }

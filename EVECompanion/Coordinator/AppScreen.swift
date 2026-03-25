@@ -141,7 +141,7 @@ enum AppScreen: Hashable {
             return lhsManager.character == rhsManager.character
             
         case (.contracts(manager: let lhsManager), .contracts(manager: let rhsManager)):
-            return lhsManager.character == rhsManager.character
+            return lhsManager.source == rhsManager.source
             
         case (.industryJobs(manager: let lhsManager), .industryJobs(manager: let rhsManager)):
             return lhsManager.character == rhsManager.character
@@ -184,8 +184,7 @@ enum AppScreen: Hashable {
             return lhsCorp.corpId == rhsCorp.corpId
             
         case (.corpContracts(manager: let lhsManager), .corpContracts(manager: let rhsManager)):
-            // TODO: Replace with corp id
-            return lhsManager.character.id == rhsManager.character.id
+            return lhsManager.source == rhsManager.source
             
         default:
             return false
@@ -206,7 +205,7 @@ enum AppScreen: Hashable {
         case .assetList(let manager):
             hasher.combine(manager.character)
         case .contracts(let manager):
-            hasher.combine(manager.character)
+            hasher.combine(manager.source)
         case .marketOrders(let character):
             hasher.combine(character)
         case .walletJournal(let character):
@@ -263,8 +262,7 @@ enum AppScreen: Hashable {
         case .corpMarketOrders(let corp):
             hasher.combine(corp)
         case .corpContracts(manager: let manager):
-            // TODO: Replace with corp
-            hasher.combine(manager.character)
+            hasher.combine(manager.source)
         }
     }
     

@@ -58,16 +58,15 @@ public class ECKStation: ObservableObject, Decodable, @unchecked Sendable {
             return
         }
         
-        let resource = ECKStructureResource(structureId: stationId, token: token)
-        do {
-            let response = try await ECKWebService().loadResource(resource: resource).response
-            self.solarSystem = .init(solarSystemId: response.solarSystemId)
-            self.typeId = response.typeId
-            self.stationName = response.name
-        } catch {
+        guard let structure = await ECKStructureCache.shared.get(structureId: stationId, using: token) else {
             self.solarSystem = nil
             self.stationName = "Unknown Structure"
+            return
         }
+        
+        self.solarSystem = .init(solarSystemId: structure.solarSystemId)
+        self.typeId = structure.typeId
+        self.stationName = structure.name
     }
     
 }

@@ -88,8 +88,8 @@ class Coordinator: ObservableObject {
             CorporationListView()
         case .corporationDetail(let corp):
             CorporationDetailView(corporation: corp)
-        case .corpContracts(manager: _):
-            Text("CORP CONTRACTS")
+        case .corpContracts(manager: let manager):
+            ContractsListView(contractManager: manager)
         case .corpMarketOrders(let corp):
             Text("CORP MARKET ORDERS FOR \(corp.publicCorpInfo?.name ?? "UNKNOWN")")
         }

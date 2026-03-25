@@ -9,7 +9,34 @@ public import Combine
 
 public class ECKContractManager: ObservableObject, @unchecked Sendable {
     
-    public let character: ECKCharacter
+    public enum Source: Equatable, Hashable {
+        case character(ECKCharacter)
+        case corporation(ECKAuthenticatedCorporation)
+        
+        internal var resource: ECKWebResource<[ECKContract]>? {
+            switch self {
+            case .character(let character):
+                return ECKCharacterContractResource(token: character.token)
+            case .corporation(let corporation):
+                guard let corpId = corporation.corpId else {
+                    return nil
+                }
+                
+                return ECKCorporationContractResource(corporationId: corpId, token: corporation.authenticatingCharacter.token)
+            }
+        }
+        
+        public var id: Int {
+            switch self {
+            case .character(let character):
+                return character.id
+            case .corporation(let corporation):
+                return corporation.corpId ?? -1
+            }
+        }
+    }
+    
+    public let source: Source
     let isPreview: Bool
     
     @Published public var loadingState: ECKLoadingState = .loading
@@ -52,8 +79,16 @@ public class ECKContractManager: ObservableObject, @unchecked Sendable {
         }
     }
     
-    public init(character: ECKCharacter, isPreview: Bool = false) {
-        self.character = character
+    public convenience init(corporation: ECKAuthenticatedCorporation, isPreview: Bool = false) {
+        self.init(source: .corporation(corporation), isPreview: isPreview)
+    }
+    
+    public convenience init(character: ECKCharacter, isPreview: Bool = false) {
+        self.init(source: .character(character), isPreview: isPreview)
+    }
+    
+    public init(source: Source, isPreview: Bool = false) {
+        self.source = source
         self.isPreview = isPreview
         Task { @MainActor in
             await loadContracts()
@@ -81,7 +116,10 @@ public class ECKContractManager: ObservableObject, @unchecked Sendable {
             loadingState = .reloading
         }
         
-        let resource = ECKCharacterContractResource(token: character.token)
+        guard let resource = source.resource else {
+            return
+        }
+        
         do {
             self.contracts = (try await ECKWebService().loadResource(resource: resource)).response.reversed()
             loadingState = .ready

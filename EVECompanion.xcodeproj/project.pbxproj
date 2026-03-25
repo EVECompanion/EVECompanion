@@ -84,6 +84,8 @@
 		C92B4EB72ED1C53500E3D9B4 /* ECKCorporationStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92B4EB62ED1C53500E3D9B4 /* ECKCorporationStorage.swift */; };
 		C92B4EB92ED1D1F800E3D9B4 /* ECKAuthenticatedCorporation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92B4EB82ED1D1F800E3D9B4 /* ECKAuthenticatedCorporation.swift */; };
 		C92B4EBB2ED1DB5500E3D9B4 /* AuthenticatedCorporationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92B4EBA2ED1DB5500E3D9B4 /* AuthenticatedCorporationCell.swift */; };
+		C92CF6692F740F6600647402 /* ECKCorporationContractResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92CF6682F740F6600647402 /* ECKCorporationContractResource.swift */; };
+		C92CF66B2F74130500647402 /* ECKStructureCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92CF66A2F74130500647402 /* ECKStructureCache.swift */; };
 		C92D17BA2C23323100D6FF5A /* ECKIndustryJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92D17B92C23323100D6FF5A /* ECKIndustryJob.swift */; };
 		C92D17BC2C23344C00D6FF5A /* ECKCharacterIndustryJobsResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92D17BB2C23344C00D6FF5A /* ECKCharacterIndustryJobsResource.swift */; };
 		C92D17BE2C23348B00D6FF5A /* ECKIndustryJobManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92D17BD2C23348B00D6FF5A /* ECKIndustryJobManager.swift */; };
@@ -507,6 +509,8 @@
 		C92B4EB62ED1C53500E3D9B4 /* ECKCorporationStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCorporationStorage.swift; sourceTree = "<group>"; };
 		C92B4EB82ED1D1F800E3D9B4 /* ECKAuthenticatedCorporation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKAuthenticatedCorporation.swift; sourceTree = "<group>"; };
 		C92B4EBA2ED1DB5500E3D9B4 /* AuthenticatedCorporationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedCorporationCell.swift; sourceTree = "<group>"; };
+		C92CF6682F740F6600647402 /* ECKCorporationContractResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCorporationContractResource.swift; sourceTree = "<group>"; };
+		C92CF66A2F74130500647402 /* ECKStructureCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKStructureCache.swift; sourceTree = "<group>"; };
 		C92D17B92C23323100D6FF5A /* ECKIndustryJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKIndustryJob.swift; sourceTree = "<group>"; };
 		C92D17BB2C23344C00D6FF5A /* ECKCharacterIndustryJobsResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterIndustryJobsResource.swift; sourceTree = "<group>"; };
 		C92D17BD2C23348B00D6FF5A /* ECKIndustryJobManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKIndustryJobManager.swift; sourceTree = "<group>"; };
@@ -971,19 +975,19 @@
 			children = (
 				C920A6A42ED3513800868D58 /* Auth */,
 				C920A6A32ED350CF00868D58 /* Character */,
-				C920A6A52ED351A200868D58 /* Corporation */,
+				C92CF6672F740F4C00647402 /* Corporation */,
 				C9E2FFEA2BFD121100754C2D /* ECKAllianceResource.swift */,
 				C9FD52F82C02369B0084E5E1 /* ECKCorporationResource.swift */,
 				C9AD0E302DF782C700E762AC /* ECKESITypeResource.swift */,
 				C90EFAD42CF9014D00691A38 /* ECKImageInfoResource.swift */,
 				C9CA6B9A2C14E1360057F290 /* ECKIncursionsResource.swift */,
+				C98F253A2EC510F600D0269A /* ECKMarketHistoryResource.swift */,
 				C96E521F2EC3BACB002BC743 /* ECKMarketOrdersResource.swift */,
 				C9D570A52C5B836E00985587 /* ECKSDEVersionResource.swift */,
 				C9F055AC2DE2502B00340A05 /* ECKServerStatusResource.swift */,
 				C9955A242C3449460045D925 /* ECKSovereigntyCampaignsResource.swift */,
 				C91FE09D2D8DA69300BA7303 /* ECKSovereigntyMapResource.swift */,
 				C996A5EB2BF2BBCA0038277C /* ECKStructureResource.swift */,
-				C98F253A2EC510F600D0269A /* ECKMarketHistoryResource.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1149,6 +1153,7 @@
 				C9FBF7572DACF285007FF7E7 /* ECKAppVariant.swift */,
 				C959777F2C28B56E0008F719 /* ECKAssetManager.swift */,
 				C9B638BB2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift */,
+				C92CF66A2F74130500647402 /* ECKStructureCache.swift */,
 				C916729F2BE97A5B009EC580 /* ECKAuthenticationSession.swift */,
 				C98B73A62F6AAC920026E76D /* ECKServiceManager.swift */,
 				C92B4EB42ED102F200E3D9B4 /* ECKAuthenticationTarget.swift */,
@@ -1227,13 +1232,6 @@
 			path = Auth;
 			sourceTree = "<group>";
 		};
-		C920A6A52ED351A200868D58 /* Corporation */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Corporation;
-			sourceTree = "<group>";
-		};
 		C92B4EB12ED101C600E3D9B4 /* CorporationList */ = {
 			isa = PBXGroup;
 			children = (
@@ -1241,6 +1239,14 @@
 				C92B4EBA2ED1DB5500E3D9B4 /* AuthenticatedCorporationCell.swift */,
 			);
 			path = CorporationList;
+			sourceTree = "<group>";
+		};
+		C92CF6672F740F4C00647402 /* Corporation */ = {
+			isa = PBXGroup;
+			children = (
+				C92CF6682F740F6600647402 /* ECKCorporationContractResource.swift */,
+			);
+			path = Corporation;
 			sourceTree = "<group>";
 		};
 		C92D17C32C275F4D00D6FF5A /* JumpClones */ = {
@@ -2294,6 +2300,7 @@
 				C9D570A62C5B836E00985587 /* ECKSDEVersionResource.swift in Sources */,
 				C96430862CC1AD3F00E8D6A6 /* ECKPlanetaryColoniesResource.swift in Sources */,
 				C9955A232C3443D30045D925 /* ECKSovereigntyCampaign.swift in Sources */,
+				C92CF6692F740F6600647402 /* ECKCorporationContractResource.swift in Sources */,
 				C91672BD2BEAC2E7009EC580 /* Data+Base64URLEncoded.swift in Sources */,
 				C91672C22BEAC734009EC580 /* ECKKeychain.swift in Sources */,
 				C99528D82BEE18D100CA6E06 /* ECKCharacterSkill.swift in Sources */,
@@ -2434,6 +2441,7 @@
 				C9B079062C32C0080059785D /* ECKTokenRefreshError.swift in Sources */,
 				C9DCC40B2EA62A6A00D2F643 /* ECKCharacterCurrentShipResource.swift in Sources */,
 				C9A645AF2C32A18E00E2E68D /* ECKJumpFatigue.swift in Sources */,
+				C92CF66B2F74130500647402 /* ECKStructureCache.swift in Sources */,
 				C906BAB72EAC275800A9E3F3 /* ECKWidgetDataStorage.swift in Sources */,
 				C9FD52E72C01D7260084E5E1 /* ECKWalletJournalEntry.swift in Sources */,
 				C91FE09C2D8DA5AE00BA7303 /* ECKSolarSystemSovereignty.swift in Sources */,

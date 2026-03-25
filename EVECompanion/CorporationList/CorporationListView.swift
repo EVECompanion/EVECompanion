@@ -20,7 +20,10 @@ struct CorporationListView: View {
     var body: some View {
         List {
             ForEach(corporationStorage.corporations) { corporation in
-                AuthenticatedCorporationCell(corporation: corporation)
+                AuthenticatedCorporationCell(
+                    corporation: corporation,
+                    allowsNavigation: true
+                )
             }
         }
         .refreshable {
