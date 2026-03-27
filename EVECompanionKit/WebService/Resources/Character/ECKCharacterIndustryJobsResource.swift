@@ -14,7 +14,7 @@ class ECKCharacterIndustryJobsResource: ECKWebResource<[ECKIndustryJob]>, @unche
                    endpoint: "/v1/characters/\(token.characterId)/industry/jobs/",
                    token: token,
                    requiredScope: .readCharacterJobs,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

@@ -14,7 +14,7 @@ class ECKCharacterFittingsResource: ECKWebResource<[ESIFitting]>, @unchecked Sen
                    endpoint: "/v2/characters/\(token.characterId)/fittings/",
                    token: token,
                    requiredScope: .readFittings,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

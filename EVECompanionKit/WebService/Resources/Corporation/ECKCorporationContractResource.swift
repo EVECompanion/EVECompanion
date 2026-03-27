@@ -14,7 +14,7 @@ class ECKCorporationContractResource: ECKWebResource<[ECKContract]>, @unchecked 
                    endpoint: "/corporations/\(corporationId)/contracts",
                    token: token,
                    requiredScope: .corpReadContracts,
-                   requiredCorpRole: nil,
+                   requiredCorpRole: [],
                    headers: ["X-Compatibility-Date": "2026-03-25"])
     }
     

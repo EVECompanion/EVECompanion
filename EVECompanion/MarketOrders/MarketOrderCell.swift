@@ -10,7 +10,7 @@ import EVECompanionKit
 
 struct MarketOrderCell: View {
     
-    let order: ECKCharacterMarketOrder
+    let order: ECKMarketOrder
     
     var body: some View {
         NavigationLink(value: AppScreen.item(order.item)) {

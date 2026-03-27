@@ -14,7 +14,7 @@ class ECKPlanetaryColoniesResource: ECKWebResource<[ECKPlanetaryColony]>, @unche
                    endpoint: "/v1/characters/\(token.characterId)/planets/",
                    token: token,
                    requiredScope: .managePlanets,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

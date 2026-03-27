@@ -8,21 +8,34 @@
 import SwiftUI
 import EVECompanionKit
 
-struct MarketOrdersView: View {
+protocol MarketOrdersViewSource: ObservableObject {
+    var marketOrders: [ECKMarketOrder]? { get }
+    var marketOrdersLoadingState: ECKLoadingState { get }
+    func loadMarketOrders() async
+}
+
+extension ECKCharacter: MarketOrdersViewSource { }
+extension ECKAuthenticatedCorporation: MarketOrdersViewSource { }
+
+struct MarketOrdersView<Source: MarketOrdersViewSource>: View {
     
-    @ObservedObject var character: ECKCharacter
+    @ObservedObject private var source: Source
     
-    var sellOrders: [ECKCharacterMarketOrder] {
-        return (character.marketOrders ?? []).filter({ $0.isBuyOrder == false })
+    init(source: Source) {
+        self.source = source
     }
     
-    var buyOrders: [ECKCharacterMarketOrder] {
-        return (character.marketOrders ?? []).filter({ $0.isBuyOrder })
+    var sellOrders: [ECKMarketOrder] {
+        return (source.marketOrders ?? []).filter({ $0.isBuyOrder == false })
+    }
+    
+    var buyOrders: [ECKMarketOrder] {
+        return (source.marketOrders ?? []).filter({ $0.isBuyOrder })
     }
     
     var body: some View {
         Group {
-            switch character.marketOrdersLoadingState {
+            switch source.marketOrdersLoadingState {
             case .ready,
                  .reloading:
                 List {
@@ -63,7 +76,7 @@ struct MarketOrdersView: View {
                     }
                 }
                 .refreshable {
-                    await character.loadMarketOrders()
+                    await source.loadMarketOrders()
                 }
                 
             case .loading:
@@ -71,20 +84,20 @@ struct MarketOrdersView: View {
                 
             case .error:
                 RetryButton {
-                    await character.loadMarketOrders()
+                    await source.loadMarketOrders()
                 }
                 
             }
         }
         .onAppear(perform: {
             Task {
-                await character.loadMarketOrders()
+                await source.loadMarketOrders()
             }
         })
         .navigationTitle("Market Orders")
     }
     
-    func totalIsk(for orders: [ECKCharacterMarketOrder]) -> Double {
+    func totalIsk(for orders: [ECKMarketOrder]) -> Double {
         return orders.reduce(0) { partialResult, order in
             return partialResult + (order.price * Double(order.volumeRemain))
         }
@@ -92,8 +105,14 @@ struct MarketOrdersView: View {
     
 }
 
-#Preview {
+#Preview("Character") {
     NavigationStack {
-        MarketOrdersView(character: .dummy)
+        MarketOrdersView(source: ECKCharacter.dummy)
+    }
+}
+
+#Preview("Corp") {
+    NavigationStack {
+        MarketOrdersView(source: ECKAuthenticatedCorporation.dummy)
     }
 }

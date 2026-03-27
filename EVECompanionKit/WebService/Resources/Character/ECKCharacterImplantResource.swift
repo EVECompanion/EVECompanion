@@ -14,7 +14,7 @@ class ECKCharacterImplantResource: ECKWebResource<[ECKItem]>, @unchecked Sendabl
                    endpoint: "/v2/characters/\(token.characterId)/implants/",
                    token: token,
                    requiredScope: .readImplants,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

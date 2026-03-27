@@ -13,7 +13,7 @@ class ECKImageInfoResource: ECKWebResource<[String]>, @unchecked Sendable {
         super.init(host: .image,
                    endpoint: "/\(category)/\(id.description)/",
                    requiredScope: nil,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

@@ -19,7 +19,7 @@ class ECKServerStatusResource: ECKWebResource<ECKServerStatus>, @unchecked Senda
         super.init(host: .esi,
                    endpoint: "/v2/status/",
                    requiredScope: nil,
-                   requiredCorpRole: nil,
+                   requiredCorpRole: [],
                    headers: headers)
     }
     

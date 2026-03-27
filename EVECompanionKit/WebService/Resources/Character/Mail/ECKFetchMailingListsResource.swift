@@ -14,7 +14,7 @@ class FetchMailingListsResource: ECKWebResource<[ECKMailingList]>, @unchecked Se
                    endpoint: "/v1/characters/\(token.characterId)/mail/lists/",
                    token: token,
                    requiredScope: .readMail,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

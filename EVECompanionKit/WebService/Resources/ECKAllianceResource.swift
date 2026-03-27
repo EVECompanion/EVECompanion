@@ -13,7 +13,7 @@ class ECKAllianceResource: ECKWebResource<ECKOptionalResponse<ECKAlliance>>, @un
         super.init(host: .esi,
                    endpoint: "/v4/alliances/\(allianceId.description)/",
                    requiredScope: nil,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

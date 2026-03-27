@@ -14,7 +14,7 @@ class ECKCharacterWalletJournalResource: ECKWebResource<[ECKWalletJournalEntry]>
                    endpoint: "/v6/characters/\(token.characterId)/wallet/journal/",
                    token: token,
                    requiredScope: .readCharacterWallet,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

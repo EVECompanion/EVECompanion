@@ -14,7 +14,7 @@ class ECKCharacterWalletResource: ECKWebResource<Double>, @unchecked Sendable {
                    endpoint: "/v1/characters/\(token.characterId)/wallet/",
                    token: token,
                    requiredScope: .readCharacterWallet,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

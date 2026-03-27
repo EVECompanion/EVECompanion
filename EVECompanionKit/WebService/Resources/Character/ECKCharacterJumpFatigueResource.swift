@@ -14,7 +14,7 @@ class ECKCharacterJumpFatigueResource: ECKWebResource<ECKJumpFatigue>, @unchecke
                    endpoint: "/v2/characters/\(token.characterId)/fatigue/",
                    token: token,
                    requiredScope: .readFatigue,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

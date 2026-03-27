@@ -14,7 +14,7 @@ class ECKLoyaltyPointsResource: ECKWebResource<[ECKLoyaltyPointsEntry]>, @unchec
                    endpoint: "/v1/characters/\(token.characterId)/loyalty/points/",
                    token: token,
                    requiredScope: .readLoyalty,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

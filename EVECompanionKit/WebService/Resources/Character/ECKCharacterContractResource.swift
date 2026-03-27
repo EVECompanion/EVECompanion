@@ -14,7 +14,7 @@ class ECKCharacterContractResource: ECKWebResource<[ECKContract]>, @unchecked Se
                    endpoint: "/v1/characters/\(token.characterId)/contracts/",
                    token: token,
                    requiredScope: .readCharacterContracts,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

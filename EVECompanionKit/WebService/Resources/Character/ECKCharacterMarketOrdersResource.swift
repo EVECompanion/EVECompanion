@@ -7,14 +7,15 @@
 
 import Foundation
 
-class ECKCharacterMarketOrdersResource: ECKWebResource<[ECKCharacterMarketOrder]>, @unchecked Sendable {
+class ECKCharacterMarketOrdersResource: ECKWebResource<[ECKMarketOrder]>, @unchecked Sendable {
     
+    // TODO: Paging
     init(token: ECKToken) {
         super.init(host: .esi,
                    endpoint: "/v2/characters/\(token.characterId)/orders/",
                    token: token,
                    requiredScope: .readCharacterOrders,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

@@ -28,7 +28,7 @@ class ECKStructureResource: ECKWebResource<ECKStructureResource.StructureRespons
                    endpoint: "/v2/universe/structures/\(structureId)/",
                    token: token,
                    requiredScope: .readStructures,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

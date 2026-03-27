@@ -13,7 +13,7 @@ class ECKESITypeResource: ECKWebResource<String>, @unchecked Sendable {
         super.init(host: .esi,
                    endpoint: "/universe/types/\(typeId)/",
                    requiredScope: nil,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

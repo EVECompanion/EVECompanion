@@ -14,7 +14,7 @@ class ECKDeleteMailResource: ECKWebResource<ECKEmptyResponse>, @unchecked Sendab
                    endpoint: "/v1/characters/\(token.characterId)/mail/\(mailId.description)/",
                    token: token,
                    requiredScope: .organizeMail,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

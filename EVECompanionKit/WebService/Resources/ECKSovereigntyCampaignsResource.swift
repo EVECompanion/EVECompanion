@@ -19,7 +19,7 @@ class ECKSovereigntyCampaignsResource: ECKWebResource<[ECKSovereigntyCampaign]>,
         super.init(host: .esi,
                    endpoint: "/v1/sovereignty/campaigns/",
                    requiredScope: nil,
-                   requiredCorpRole: nil,
+                   requiredCorpRole: [],
                    headers: headers)
     }
     

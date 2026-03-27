@@ -14,7 +14,7 @@ class ECKCharacterSkillqueueResource: ECKWebResource<ECKCharacterSkillQueue>, @u
                    endpoint: "/v2/characters/\(token.characterId)/skillqueue/",
                    token: token,
                    requiredScope: .readSkillQueue,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

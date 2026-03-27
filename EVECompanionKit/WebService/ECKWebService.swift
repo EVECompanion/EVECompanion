@@ -7,6 +7,8 @@
 
 import Foundation
 
+// TODO: Check Corp Roles
+
 final class ECKWebService: Sendable {
     
     private let decoder: JSONDecoder = {

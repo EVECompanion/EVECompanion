@@ -18,7 +18,7 @@ class ECKFetchMailBodyResource: ECKWebResource<ECKFetchMailBodyResponse>, @unche
                    endpoint: "/v1/characters/\(token.characterId)/mail/\(mailId.description)/",
                    token: token,
                    requiredScope: .readMail,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

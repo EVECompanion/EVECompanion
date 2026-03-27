@@ -39,7 +39,7 @@ class Coordinator: ObservableObject {
         case .contracts(manager: let manager):
             ContractsListView(contractManager: manager)
         case .marketOrders(let character):
-            MarketOrdersView(character: character)
+            MarketOrdersView(source: character)
         case .walletJournal(let character):
             WalletJournalView(character: character)
         case .walletTransactions(let character):
@@ -91,7 +91,7 @@ class Coordinator: ObservableObject {
         case .corpContracts(manager: let manager):
             ContractsListView(contractManager: manager)
         case .corpMarketOrders(let corp):
-            Text("CORP MARKET ORDERS FOR \(corp.publicCorpInfo?.name ?? "UNKNOWN")")
+            MarketOrdersView(source: corp)
         }
     }
     

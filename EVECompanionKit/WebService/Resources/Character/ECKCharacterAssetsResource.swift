@@ -14,7 +14,7 @@ class ECKCharacterAssetsResource: ECKWebResource<[ECKAsset]>, @unchecked Sendabl
                    endpoint: "/v5/characters/\(token.characterId)/assets/",
                    token: token,
                    requiredScope: .readAssets,
-                   requiredCorpRole: nil,
+                   requiredCorpRole: [],
                    queryItems: [.init(name: "page", value: page.description)])
     }
     

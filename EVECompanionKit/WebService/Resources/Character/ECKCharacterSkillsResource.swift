@@ -14,7 +14,7 @@ class ECKCharacterSkillsResource: ECKWebResource<ECKCharacterSkills>, @unchecked
                    endpoint: "/v4/characters/\(token.characterId)/skills/",
                    token: token,
                    requiredScope: .readSkills,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

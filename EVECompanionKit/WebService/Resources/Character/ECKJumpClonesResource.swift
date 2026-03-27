@@ -14,7 +14,7 @@ class ECKJumpClonesResource: ECKWebResource<ECKJumpClones>, @unchecked Sendable 
                    endpoint: "/v4/characters/\(token.characterId)/clones/",
                    token: token,
                    requiredScope: .readClones,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

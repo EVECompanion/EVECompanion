@@ -13,7 +13,7 @@ class ECKSDEVersionResource: ECKWebResource<ECKSDEVersion>, @unchecked Sendable 
         super.init(host: .evecompanionAPI,
                    endpoint: "/v2/version",
                    requiredScope: nil,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

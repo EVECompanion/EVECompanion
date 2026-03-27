@@ -14,7 +14,7 @@ class ECKCharacterAttributesResource: ECKWebResource<ECKCharacterAttributes>, @u
                    endpoint: "/v1/characters/\(token.characterId)/attributes/",
                    token: token,
                    requiredScope: .readSkills,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }

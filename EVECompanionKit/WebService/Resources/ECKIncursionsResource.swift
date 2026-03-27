@@ -13,7 +13,7 @@ class ECKIncursionsResource: ECKWebResource<[ECKIncursion]>, @unchecked Sendable
         super.init(host: .esi,
                    endpoint: "/v1/incursions/",
                    requiredScope: nil,
-                   requiredCorpRole: nil)
+                   requiredCorpRole: [])
     }
     
 }
