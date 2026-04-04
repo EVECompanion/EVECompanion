@@ -32,7 +32,6 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
     @Published public var walletJournal: [ECKWalletJournalEntry]?
     @Published public var walletTransactions: [ECKWalletTransactionEntry]?
     @Published public var loyaltyPoints: [ECKLoyaltyPointsEntry]?
-    @Published public var marketOrders: [ECKMarketOrder]?
     @Published public var jumpFatigue: ECKJumpFatigue?
     @Published public var location: ECKCharacterLocation?
     @Published public var currentShip: ECKCharacterCurrentShip?
@@ -40,7 +39,6 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
     @Published public var initialDataLoadingState: ECKLoadingState = .loading
     @Published public var walletJournalLoadingState: ECKLoadingState = .loading
     @Published public var walletTransactionsLoadingState: ECKLoadingState = .loading
-    @Published public var marketOrdersLoadingState: ECKLoadingState = .loading
     
     public var hasValidToken: Bool {
         return token.isValid
@@ -79,10 +77,8 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
         self.corporation = .dummy
         self.alliance = .dummy
         self.attributes = .dummy
-        self.marketOrders = [.dummy1, .dummy2]
         self.jumpFatigue = .dummy
         self.initialDataLoadingState = .ready
-        self.marketOrdersLoadingState = .ready
         self.location = .dummyDocked
         self.currentShip = .dummy
     }
@@ -343,29 +339,6 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
             self.jumpFatigue = try await ECKWebService().loadResource(resource: resource).response
         } catch {
             logger.error("Error loading jump fatigue: \(String(describing: error))")
-        }
-    }
-    
-    @MainActor
-    public func loadMarketOrders() async {
-        guard UserDefaults.standard.isDemoModeEnabled == false else {
-            marketOrdersLoadingState = .ready
-            return
-        }
-        
-        if marketOrders != nil {
-            marketOrdersLoadingState = .reloading
-        } else {
-            marketOrdersLoadingState = .loading
-        }
-        
-        let resource = ECKCharacterMarketOrdersResource(token: token)
-        do {
-            self.marketOrders = try await ECKWebService().loadResource(resource: resource).response.sorted(by: { $0.item.name < $1.item.name })
-            self.marketOrdersLoadingState = .ready
-        } catch {
-            logger.error("Error loading loyalty points: \(String(describing: error))")
-            self.marketOrdersLoadingState = .error
         }
     }
     

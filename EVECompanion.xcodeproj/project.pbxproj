@@ -167,6 +167,7 @@
 		C96F989A2BEF7DDE00DEC34F /* CharacterDetailRowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F98992BEF7DDE00DEC34F /* CharacterDetailRowType.swift */; };
 		C96F989D2BEF7FEF00DEC34F /* ContractsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F989C2BEF7FEF00DEC34F /* ContractsListView.swift */; };
 		C96F989F2BEFA6DB00DEC34F /* ECKContractManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F989E2BEFA6DB00DEC34F /* ECKContractManager.swift */; };
+		C96F98B02F00000100DEC34F /* ECKMarketOrderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F98AF2F00000100DEC34F /* ECKMarketOrderManager.swift */; };
 		C96F98A12BEFA72D00DEC34F /* ECKContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F98A02BEFA72D00DEC34F /* ECKContract.swift */; };
 		C96F98A32BEFA74000DEC34F /* ECKCharacterContractResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F98A22BEFA74000DEC34F /* ECKCharacterContractResource.swift */; };
 		C96F98A52BF017DA00DEC34F /* ECKPublicCharacterInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F98A42BF017DA00DEC34F /* ECKPublicCharacterInfo.swift */; };
@@ -594,6 +595,7 @@
 		C96F98992BEF7DDE00DEC34F /* CharacterDetailRowType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailRowType.swift; sourceTree = "<group>"; };
 		C96F989C2BEF7FEF00DEC34F /* ContractsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractsListView.swift; sourceTree = "<group>"; };
 		C96F989E2BEFA6DB00DEC34F /* ECKContractManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKContractManager.swift; sourceTree = "<group>"; };
+		C96F98AF2F00000100DEC34F /* ECKMarketOrderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMarketOrderManager.swift; sourceTree = "<group>"; };
 		C96F98A02BEFA72D00DEC34F /* ECKContract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKContract.swift; sourceTree = "<group>"; };
 		C96F98A22BEFA74000DEC34F /* ECKCharacterContractResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterContractResource.swift; sourceTree = "<group>"; };
 		C96F98A42BF017DA00DEC34F /* ECKPublicCharacterInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKPublicCharacterInfo.swift; sourceTree = "<group>"; };
@@ -1157,6 +1159,7 @@
 				C952BC802BEB858D0070C504 /* ECKCharacterStorage.swift */,
 				C91672B82BEA9E68009EC580 /* ECKConstants.swift */,
 				C96F989E2BEFA6DB00DEC34F /* ECKContractManager.swift */,
+				C96F98AF2F00000100DEC34F /* ECKMarketOrderManager.swift */,
 				C920A6A62ED3526F00868D58 /* ECKCorporationRole.swift */,
 				C92B4EB62ED1C53500E3D9B4 /* ECKCorporationStorage.swift */,
 				C9B39FAF2E8C754B0049C83D /* ECKESIFittingManager.swift */,
@@ -2316,6 +2319,7 @@
 				C94257222C29B15500FAEE5C /* ECKCharacterAssetsResource.swift in Sources */,
 				C952BC852BEB992C0070C504 /* ECKPublicCharacterInfoResource.swift in Sources */,
 				C96F989F2BEFA6DB00DEC34F /* ECKContractManager.swift in Sources */,
+				C96F98B02F00000100DEC34F /* ECKMarketOrderManager.swift in Sources */,
 				C9C7C4212DA11C2B0079DF82 /* EVEUnit.swift in Sources */,
 				C99750AA2C14897E00DE5B96 /* ECKMarketOrder.swift in Sources */,
 				C906BAC72EB4C51E00A9E3F3 /* ECKBackgroundTaskManager.swift in Sources */,

@@ -12,10 +12,12 @@ struct CorporationDetailView: View {
     
     @ObservedObject private var corporation: ECKAuthenticatedCorporation
     @StateObject var contractManager: ECKContractManager
+    @StateObject var marketOrderManager: ECKMarketOrderManager
     
     init(corporation: ECKAuthenticatedCorporation) {
         self.corporation = corporation
         self._contractManager = StateObject(wrappedValue: .init(corporation: corporation))
+        self._marketOrderManager = StateObject(wrappedValue: .init(corporation: corporation))
     }
     
     var body: some View {
@@ -60,7 +62,7 @@ struct CorporationDetailView: View {
         case .contracts:
             return .corpContracts(manager: contractManager)
         case .marketOrders:
-            return .corpMarketOrders(corporation)
+            return .marketOrders(manager: marketOrderManager)
         }
     }
 }

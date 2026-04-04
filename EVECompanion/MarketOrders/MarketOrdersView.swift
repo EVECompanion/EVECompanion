@@ -8,93 +8,110 @@
 import SwiftUI
 import EVECompanionKit
 
-protocol MarketOrdersViewSource: ObservableObject {
-    var marketOrders: [ECKMarketOrder]? { get }
-    var marketOrdersLoadingState: ECKLoadingState { get }
-    func loadMarketOrders() async
-}
-
-extension ECKCharacter: MarketOrdersViewSource { }
-extension ECKAuthenticatedCorporation: MarketOrdersViewSource { }
-
-struct MarketOrdersView<Source: MarketOrdersViewSource>: View {
-    
-    @ObservedObject private var source: Source
-    
-    init(source: Source) {
-        self.source = source
-    }
+struct MarketOrdersView: View {
+    @ObservedObject var manager: ECKMarketOrderManager
     
     var sellOrders: [ECKMarketOrder] {
-        return (source.marketOrders ?? []).filter({ $0.isBuyOrder == false })
+        manager.sellOrders
     }
     
     var buyOrders: [ECKMarketOrder] {
-        return (source.marketOrders ?? []).filter({ $0.isBuyOrder })
+        manager.buyOrders
     }
     
     var body: some View {
         Group {
-            switch source.marketOrdersLoadingState {
+            switch manager.marketOrdersLoadingState {
             case .ready,
                  .reloading:
                 List {
-                    Section {
-                        if sellOrders.isEmpty {
-                            Text("No sell orders")
-                        } else {
-                            ForEach(sellOrders) { order in
-                                MarketOrderCell(order: order)
+                    if manager.typeFilter != .buy {
+                        Section {
+                            if sellOrders.isEmpty {
+                                Text("No sell orders")
+                            } else {
+                                ForEach(sellOrders) { order in
+                                    MarketOrderCell(order: order)
+                                }
                             }
-                        }
-                    } header: {
-                        VStack(alignment: .leading) {
-                            Text("Sell Orders")
-                            
-                            if sellOrders.isEmpty == false {
-                                Text("Total ISK: \(ECFormatters.iskLong(totalIsk(for: sellOrders)))")
+                        } header: {
+                            VStack(alignment: .leading) {
+                                Text("Sell Orders")
+                                
+                                if sellOrders.isEmpty == false {
+                                    Text("Total ISK: \(ECFormatters.iskLong(totalIsk(for: sellOrders)))")
+                                }
                             }
                         }
                     }
                     
-                    Section {
-                        if buyOrders.isEmpty {
-                            Text("No buy orders")
-                        } else {
-                            ForEach(buyOrders) { order in
-                                MarketOrderCell(order: order)
+                    if manager.typeFilter != .sell {
+                        Section {
+                            if buyOrders.isEmpty {
+                                Text("No buy orders")
+                            } else {
+                                ForEach(buyOrders) { order in
+                                    MarketOrderCell(order: order)
+                                }
                             }
-                        }
-                    } header: {
-                        VStack(alignment: .leading) {
-                            Text("Buy Orders")
-                            
-                            if buyOrders.isEmpty == false {
-                                Text("Total ISK: \(ECFormatters.iskLong(totalIsk(for: buyOrders)))")
+                        } header: {
+                            VStack(alignment: .leading) {
+                                Text("Buy Orders")
+                                
+                                if buyOrders.isEmpty == false {
+                                    Text("Total ISK: \(ECFormatters.iskLong(totalIsk(for: buyOrders)))")
+                                }
                             }
                         }
                     }
                 }
                 .refreshable {
-                    await source.loadMarketOrders()
+                    await manager.loadMarketOrders()
                 }
+                .searchable(text: $manager.searchText,
+                            placement: .navigationBarDrawer)
                 
             case .loading:
                 ProgressView()
                 
             case .error:
                 RetryButton {
-                    await source.loadMarketOrders()
+                    await manager.loadMarketOrders()
                 }
                 
             }
         }
         .onAppear(perform: {
             Task {
-                await source.loadMarketOrders()
+                await manager.loadMarketOrders()
             }
         })
         .navigationTitle("Market Orders")
+        .toolbar {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Menu {
+                    Picker("Order Type", selection: $manager.typeFilter) {
+                        ForEach(ECKMarketOrderTypeFilter.allCases) { filter in
+                            Text(filter.title)
+                                .tag(filter)
+                        }
+                    }
+                } label: {
+                    Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
+                }
+                
+                Menu {
+                    Picker("Sort Orders", selection: $manager.sortOption) {
+                        ForEach(ECKMarketOrderSortOption.allCases) { option in
+                            Text(option.title)
+                                .tag(option)
+                        }
+                    }
+                } label: {
+                    Label("Sort", systemImage: "arrow.up.arrow.down.circle")
+                }
+            }
+        }
     }
     
     func totalIsk(for orders: [ECKMarketOrder]) -> Double {
@@ -107,12 +124,12 @@ struct MarketOrdersView<Source: MarketOrdersViewSource>: View {
 
 #Preview("Character") {
     NavigationStack {
-        MarketOrdersView(source: ECKCharacter.dummy)
+        MarketOrdersView(manager: .init(character: .dummy, isPreview: true))
     }
 }
 
 #Preview("Corp") {
     NavigationStack {
-        MarketOrdersView(source: ECKAuthenticatedCorporation.dummy)
+        MarketOrdersView(manager: .init(corporation: .dummy, isPreview: true))
     }
 }

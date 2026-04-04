@@ -20,7 +20,7 @@ enum AppScreen: Hashable {
     
     case assetList(manager: ECKAssetManager)
     case contracts(manager: ECKContractManager)
-    case marketOrders(ECKCharacter)
+    case marketOrders(manager: ECKMarketOrderManager)
     case walletJournal(ECKCharacter)
     case walletTransactions(ECKCharacter)
     case loyaltyPoints(ECKCharacter)
@@ -36,7 +36,6 @@ enum AppScreen: Hashable {
     case skillPlanList(ECKSkillPlanManager)
     case skillPlanDetail(ECKSkillPlan, ECKSkillPlanManager)
     
-    case corpMarketOrders(ECKAuthenticatedCorporation)
     case corpContracts(manager: ECKContractManager)
     
     case itemByTypeId(Int)
@@ -110,8 +109,6 @@ enum AppScreen: Hashable {
             return "corporationList"
         case .corporationDetail:
             return "corporationDetail"
-        case .corpMarketOrders:
-            return "corpMarketOrders"
         case .corpContracts:
             return "corpContracts"
         }
@@ -128,7 +125,6 @@ enum AppScreen: Hashable {
             return true
         case (.characterDetail(let lhsCharacter, _), .characterDetail(let rhsCharacter, _)),
              (.characterSheet(let lhsCharacter), .characterSheet(let rhsCharacter)),
-             (.marketOrders(let lhsCharacter), .marketOrders(let rhsCharacter)),
              (.walletJournal(let lhsCharacter), .walletJournal(let rhsCharacter)),
              (.walletTransactions(let lhsCharacter), .walletTransactions(let rhsCharacter)),
              (.loyaltyPoints(let lhsCharacter), .loyaltyPoints(let rhsCharacter)),
@@ -136,6 +132,9 @@ enum AppScreen: Hashable {
              (.skills(let lhsCharacter), .skills(let rhsCharacter)),
              (.skillQueue(let lhsCharacter), .skillQueue(let rhsCharacter)):
             return lhsCharacter == rhsCharacter
+        
+        case (.marketOrders(manager: let lhsManager), .marketOrders(manager: let rhsManager)):
+            return lhsManager.source == rhsManager.source
             
         case (.assetList(manager: let lhsManager), .assetList(manager: let rhsManager)):
             return lhsManager.character == rhsManager.character
@@ -180,9 +179,6 @@ enum AppScreen: Hashable {
         case (.corporationDetail(let lhsCorp), .corporationDetail(let rhsCorp)):
             return lhsCorp.corpId == rhsCorp.corpId
             
-        case (.corpMarketOrders(let lhsCorp), .corpMarketOrders(let rhsCorp)):
-            return lhsCorp.corpId == rhsCorp.corpId
-            
         case (.corpContracts(manager: let lhsManager), .corpContracts(manager: let rhsManager)):
             return lhsManager.source == rhsManager.source
             
@@ -206,8 +202,8 @@ enum AppScreen: Hashable {
             hasher.combine(manager.character)
         case .contracts(let manager):
             hasher.combine(manager.source)
-        case .marketOrders(let character):
-            hasher.combine(character)
+        case .marketOrders(manager: let manager):
+            hasher.combine(manager.source)
         case .walletJournal(let character):
             hasher.combine(character)
         case .walletTransactions(let character):
@@ -259,8 +255,6 @@ enum AppScreen: Hashable {
         case .corporationList:
             // TODO
             return
-        case .corpMarketOrders(let corp):
-            hasher.combine(corp)
         case .corpContracts(manager: let manager):
             hasher.combine(manager.source)
         }
