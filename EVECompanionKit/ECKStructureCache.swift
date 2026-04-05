@@ -12,26 +12,43 @@ actor ECKStructureCache {
     
     typealias Structure = ECKStructureResource.StructureResponse
     
-    // TODO: Error Handling
+    private struct CacheEntry {
+        var structure: Structure?
+        var unavailableTokenIds: Set<String> = []
+    }
+    
+    private struct TaskKey: Hashable {
+        let structureId: Int
+        let tokenId: String
+    }
     
     static let shared = ECKStructureCache()
-    private var structures: [Int: Structure] = [:]
-    private var structureTasks: [Int: Task<Structure?, any Error>] = [:]
+    private var cachedResults: [Int: CacheEntry] = [:]
+    private var structureTasks: [TaskKey: Task<Structure?, Never>] = [:]
     
     private init() {}
     
     func get(structureId: Int, using token: ECKToken) async -> Structure? {
-        if let alliance = structures[structureId] {
-            return alliance
+        let tokenId = token.id
+        let taskKey = TaskKey(structureId: structureId, tokenId: tokenId)
+        
+        if let cachedEntry = cachedResults[structureId] {
+            if let structure = cachedEntry.structure {
+                return structure
+            }
+            
+            if cachedEntry.unavailableTokenIds.contains(tokenId) {
+                return nil
+            }
         }
         
-        if let allianceTask = structureTasks[structureId] {
-            return try? await allianceTask.value
+        if let structureTask = structureTasks[taskKey] {
+            return await structureTask.value
         }
         
-        let task: Task<Structure?, any Error> = Task {
+        let task: Task<Structure?, Never> = Task {
             defer {
-                structureTasks[structureId] = nil
+                structureTasks[taskKey] = nil
             }
             
             do {
@@ -41,18 +58,21 @@ actor ECKStructureCache {
                 )
                 let response = try await ECKWebService().loadResource(resource: resource)
                 let structure = response.response
-                structures[structureId] = structure
+                cachedResults[structureId] = CacheEntry(structure: structure)
                 logger.debug("Loaded structure \(String(describing: structure.name))")
                 return structure
             } catch {
+                var cachedEntry = cachedResults[structureId] ?? CacheEntry(structure: nil)
+                cachedEntry.unavailableTokenIds.insert(tokenId)
+                cachedResults[structureId] = cachedEntry
                 logger.error("Cannot load structure data for \(structureId): \(error)")
-                throw error
+                return nil
             }
         }
         
-        structureTasks[structureId] = task
+        structureTasks[taskKey] = task
         
-        return try? await task.value
+        return await task.value
     }
     
 }

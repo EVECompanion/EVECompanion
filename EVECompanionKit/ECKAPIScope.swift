@@ -126,6 +126,7 @@ internal enum ECKAPIScope: String, CaseIterable {
     
     static var corpScopes: [ECKAPIScope] {
         return [
+            .readStructures,
             .corpReadStructures,
             .characterReadCorpRoles,
             .corpReadKillmails,
