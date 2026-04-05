@@ -17,40 +17,16 @@ struct ContractsListView: View {
             case .ready,
                  .reloading:
                 List {
-                    if contractManager.outstandingContracts.isEmpty == false {
-                        Section("Outstanding") {
-                            ForEach(contractManager.outstandingContracts) { contract in
-                                ContractListCell(contract: contract)
-                            }
-                        }
-                    }
-                    
-                    if contractManager.inProgressContracts.isEmpty == false {
-                        Section("In Progress") {
-                            ForEach(contractManager.inProgressContracts) { contract in
-                                ContractListCell(contract: contract)
-                            }
-                        }
-                    }
-                    
-                    if contractManager.failedContracts.isEmpty == false {
-                        Section("Failed") {
-                            ForEach(contractManager.failedContracts) { contract in
-                                ContractListCell(contract: contract)
-                            }
-                        }
-                    }
-                    
-                    if contractManager.finishedContracts.isEmpty == false {
-                        Section("Finished") {
-                            ForEach(contractManager.finishedContracts) { contract in
+                    PageLoaderView(pageLoader: contractManager) { section in
+                        Section(section.title) {
+                            ForEach(section.contracts) { contract in
                                 ContractListCell(contract: contract)
                             }
                         }
                     }
                 }
                 .refreshable {
-                    await contractManager.loadContracts()
+                    await contractManager.reload()
                 }
                 .searchable(text: $contractManager.searchText,
                             placement: .navigationBarDrawer)

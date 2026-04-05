@@ -12,6 +12,8 @@ actor ECKStructureCache {
     
     typealias Structure = ECKStructureResource.StructureResponse
     
+    // TODO: Error Handling
+    
     static let shared = ECKStructureCache()
     private var structures: [Int: Structure] = [:]
     private var structureTasks: [Int: Task<Structure?, any Error>] = [:]

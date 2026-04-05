@@ -117,22 +117,33 @@ public enum ECKContractSortOption: String, CaseIterable, Identifiable, Sendable 
     }
 }
 
-public class ECKContractManager: ObservableObject, @unchecked Sendable {
+public struct ECKContractSection: Identifiable, Sendable {
+    public let title: String
+    public let contracts: [ECKContract]
     
-    public enum Source: Equatable, Hashable {
+    public var id: String {
+        title
+    }
+}
+
+public class ECKContractManager: ObservableObject, ECKPageLoadable, @unchecked Sendable {
+    
+    public enum Source: Equatable, Hashable, Sendable {
         case character(ECKCharacter)
         case corporation(ECKAuthenticatedCorporation)
         
-        internal var resource: ECKWebResource<[ECKContract]>? {
+        internal func resource(page: Int) -> ECKWebResource<[ECKContract]>? {
             switch self {
             case .character(let character):
-                return ECKCharacterContractResource(token: character.token)
+                return ECKCharacterContractResource(token: character.token, page: page)
             case .corporation(let corporation):
                 guard let corpId = corporation.corpId else {
                     return nil
                 }
                 
-                return ECKCorporationContractResource(corporationId: corpId, token: corporation.authenticatingCharacter.token)
+                return ECKCorporationContractResource(corporationId: corpId,
+                                                      page: page,
+                                                      token: corporation.authenticatingCharacter.token)
             }
         }
         
@@ -146,7 +157,7 @@ public class ECKContractManager: ObservableObject, @unchecked Sendable {
         }
     }
     
-    public let source: Source
+    nonisolated public let source: Source
     let isPreview: Bool
     
     @Published public var loadingState: ECKLoadingState = .loading
@@ -155,6 +166,22 @@ public class ECKContractManager: ObservableObject, @unchecked Sendable {
     @Published public var statusFilter: ECKContractStatusFilter = .all
     @Published public var typeFilter: ECKContractTypeFilter = .all
     @Published public var sortOption: ECKContractSortOption = .issuedNewest
+    
+    private var pagination = ECKPagination()
+    
+    public var elements: [ECKContractSection] {
+        [
+            ECKContractSection(title: "Outstanding", contracts: outstandingContracts),
+            ECKContractSection(title: "In Progress", contracts: inProgressContracts),
+            ECKContractSection(title: "Failed", contracts: failedContracts),
+            ECKContractSection(title: "Finished", contracts: finishedContracts)
+        ]
+        .filter { $0.contracts.isEmpty == false }
+    }
+    
+    public var hasNextPage: Bool {
+        pagination.hasNextPage
+    }
     
     public var outstandingContracts: [ECKContract] {
         return filteredContracts.filter { contract in
@@ -259,6 +286,10 @@ public class ECKContractManager: ObservableObject, @unchecked Sendable {
     
     @MainActor
     public func loadContracts() async {
+        guard pagination.isLoading == false else {
+            return
+        }
+        
         guard UserDefaults.standard.isDemoModeEnabled == false && isPreview == false else {
             self.contracts = [
                 .dummyCourierOutstanding,
@@ -268,6 +299,7 @@ public class ECKContractManager: ObservableObject, @unchecked Sendable {
                 .dummyItemExchangeOutstanding,
                 .dummyItemExchangeFinished
             ]
+            self.pagination = ECKPagination(totalPages: 1, lastLoadedPage: 1)
             self.loadingState = .ready
             return
         }
@@ -278,16 +310,68 @@ public class ECKContractManager: ObservableObject, @unchecked Sendable {
             loadingState = .reloading
         }
         
-        guard let resource = source.resource else {
+        guard let resource = source.resource(page: 1) else {
             return
         }
         
         do {
-            self.contracts = (try await ECKWebService().loadResource(resource: resource)).response.reversed()
+            pagination.reset()
+            try await loadPage(with: resource, isFirstPage: true)
+            
             loadingState = .ready
         } catch {
             logger.error("Error while fetching contracts \(error)")
             loadingState = .error
+        }
+    }
+    
+    @MainActor
+    public func reload() async {
+        pagination.reset()
+        await loadContracts()
+    }
+    
+    @MainActor
+    public func loadNextPage() async throws {
+        guard pagination.isLoading == false else {
+            return
+        }
+        
+        guard hasNextPage else {
+            return
+        }
+        
+        let nextPage = pagination.lastLoadedPage + 1
+        
+        guard let resource = source.resource(page: nextPage) else {
+            return
+        }
+        
+        try await loadPage(with: resource, isFirstPage: false)
+    }
+    
+    @MainActor
+    private func loadPage(with resource: ECKWebResource<[ECKContract]>, isFirstPage: Bool) async throws {
+        pagination.setIsLoading(true)
+        defer {
+            pagination.setIsLoading(false)
+        }
+        
+        let response = try await ECKWebService().loadResource(resource: resource)
+        let loadedContracts = response.response.reversed()
+        
+        if isFirstPage {
+            contracts = Array(loadedContracts)
+        } else {
+            contracts.append(contentsOf: loadedContracts)
+        }
+        
+        pagination.next()
+        pagination.setTotalPages(headers: response.headers)
+            
+        if loadedContracts.isEmpty,
+           pagination.totalPages == nil {
+            pagination.setTotalPages(pagination.lastLoadedPage)
         }
     }
     

@@ -167,10 +167,10 @@
 		C96F989A2BEF7DDE00DEC34F /* CharacterDetailRowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F98992BEF7DDE00DEC34F /* CharacterDetailRowType.swift */; };
 		C96F989D2BEF7FEF00DEC34F /* ContractsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F989C2BEF7FEF00DEC34F /* ContractsListView.swift */; };
 		C96F989F2BEFA6DB00DEC34F /* ECKContractManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F989E2BEFA6DB00DEC34F /* ECKContractManager.swift */; };
-		C96F98B02F00000100DEC34F /* ECKMarketOrderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F98AF2F00000100DEC34F /* ECKMarketOrderManager.swift */; };
 		C96F98A12BEFA72D00DEC34F /* ECKContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F98A02BEFA72D00DEC34F /* ECKContract.swift */; };
 		C96F98A32BEFA74000DEC34F /* ECKCharacterContractResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F98A22BEFA74000DEC34F /* ECKCharacterContractResource.swift */; };
 		C96F98A52BF017DA00DEC34F /* ECKPublicCharacterInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F98A42BF017DA00DEC34F /* ECKPublicCharacterInfo.swift */; };
+		C96F98B02F00000100DEC34F /* ECKMarketOrderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F98AF2F00000100DEC34F /* ECKMarketOrderManager.swift */; };
 		C96FA2412E905EC00057481C /* FittingDetailModuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96FA2402E905EC00057481C /* FittingDetailModuleView.swift */; };
 		C98169C22C11C2FB0033B932 /* ECKCharacterAttributesResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98169C12C11C2FB0033B932 /* ECKCharacterAttributesResource.swift */; };
 		C98169C42C11C34D0033B932 /* ECKCharacterAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98169C32C11C34D0033B932 /* ECKCharacterAttributes.swift */; };
@@ -218,6 +218,7 @@
 		C99822B02F7516740031B439 /* ECKSkillPlanReorderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99822AD2F7516740031B439 /* ECKSkillPlanReorderingTests.swift */; };
 		C99822B12F7516740031B439 /* EVECompanionKitTests.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = C99822AE2F7516740031B439 /* EVECompanionKitTests.xctestplan */; };
 		C99822B32F76858A0031B439 /* ECKCorporationMarketOrdersResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99822B22F76858A0031B439 /* ECKCorporationMarketOrdersResource.swift */; };
+		C99822B62F825E940031B439 /* Headers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99822B52F825E940031B439 /* Headers.swift */; };
 		C9A645AF2C32A18E00E2E68D /* ECKJumpFatigue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A645AE2C32A18E00E2E68D /* ECKJumpFatigue.swift */; };
 		C9A645B12C32A29700E2E68D /* ECKCharacterJumpFatigueResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A645B02C32A29700E2E68D /* ECKCharacterJumpFatigueResource.swift */; };
 		C9A7C55D2BF0C2E8003478AD /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A7C55C2BF0C2E8003478AD /* SettingsView.swift */; };
@@ -349,6 +350,9 @@
 		C9F055C42DE34D5B00340A05 /* FittingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F055C32DE34D5B00340A05 /* FittingDetailView.swift */; };
 		C9F055C72DE3AAE100340A05 /* FittingDetailInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F055C62DE3AAE100340A05 /* FittingDetailInfoView.swift */; };
 		C9F055C92DE3B89F00340A05 /* ECKCharacterFitting+Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F055C82DE3B89F00340A05 /* ECKCharacterFitting+Stats.swift */; };
+		C9F1A0012F8F100100A1B2C3 /* PageLoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F1A0002F8F100100A1B2C3 /* PageLoaderView.swift */; };
+		C9F1A0032F8F100100A1B2C3 /* ECKPageLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F1A0022F8F100100A1B2C3 /* ECKPageLoadable.swift */; };
+		C9F1A0052F8F180100A1B2C3 /* ECKPagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F1A0042F8F180100A1B2C3 /* ECKPagination.swift */; };
 		C9FBF7582DACF285007FF7E7 /* ECKAppVariant.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FBF7572DACF285007FF7E7 /* ECKAppVariant.swift */; };
 		C9FD52E12C01D25D0084E5E1 /* WalletJournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FD52E02C01D25D0084E5E1 /* WalletJournalView.swift */; };
 		C9FD52E32C01D35C0084E5E1 /* ECKCharacterWalletJournalResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FD52E22C01D35B0084E5E1 /* ECKCharacterWalletJournalResource.swift */; };
@@ -595,10 +599,10 @@
 		C96F98992BEF7DDE00DEC34F /* CharacterDetailRowType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailRowType.swift; sourceTree = "<group>"; };
 		C96F989C2BEF7FEF00DEC34F /* ContractsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractsListView.swift; sourceTree = "<group>"; };
 		C96F989E2BEFA6DB00DEC34F /* ECKContractManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKContractManager.swift; sourceTree = "<group>"; };
-		C96F98AF2F00000100DEC34F /* ECKMarketOrderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMarketOrderManager.swift; sourceTree = "<group>"; };
 		C96F98A02BEFA72D00DEC34F /* ECKContract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKContract.swift; sourceTree = "<group>"; };
 		C96F98A22BEFA74000DEC34F /* ECKCharacterContractResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterContractResource.swift; sourceTree = "<group>"; };
 		C96F98A42BF017DA00DEC34F /* ECKPublicCharacterInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKPublicCharacterInfo.swift; sourceTree = "<group>"; };
+		C96F98AF2F00000100DEC34F /* ECKMarketOrderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMarketOrderManager.swift; sourceTree = "<group>"; };
 		C96FA2402E905EC00057481C /* FittingDetailModuleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDetailModuleView.swift; sourceTree = "<group>"; };
 		C98169C12C11C2FB0033B932 /* ECKCharacterAttributesResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterAttributesResource.swift; sourceTree = "<group>"; };
 		C98169C32C11C34D0033B932 /* ECKCharacterAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterAttributes.swift; sourceTree = "<group>"; };
@@ -645,6 +649,7 @@
 		C99822AD2F7516740031B439 /* ECKSkillPlanReorderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSkillPlanReorderingTests.swift; sourceTree = "<group>"; };
 		C99822AE2F7516740031B439 /* EVECompanionKitTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EVECompanionKitTests.xctestplan; sourceTree = "<group>"; };
 		C99822B22F76858A0031B439 /* ECKCorporationMarketOrdersResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCorporationMarketOrdersResource.swift; sourceTree = "<group>"; };
+		C99822B52F825E940031B439 /* Headers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Headers.swift; sourceTree = "<group>"; };
 		C9A645AE2C32A18E00E2E68D /* ECKJumpFatigue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKJumpFatigue.swift; sourceTree = "<group>"; };
 		C9A645B02C32A29700E2E68D /* ECKCharacterJumpFatigueResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterJumpFatigueResource.swift; sourceTree = "<group>"; };
 		C9A7C55C2BF0C2E8003478AD /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -766,6 +771,9 @@
 		C9F055C32DE34D5B00340A05 /* FittingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDetailView.swift; sourceTree = "<group>"; };
 		C9F055C62DE3AAE100340A05 /* FittingDetailInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDetailInfoView.swift; sourceTree = "<group>"; };
 		C9F055C82DE3B89F00340A05 /* ECKCharacterFitting+Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacterFitting+Stats.swift"; sourceTree = "<group>"; };
+		C9F1A0002F8F100100A1B2C3 /* PageLoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageLoaderView.swift; sourceTree = "<group>"; };
+		C9F1A0022F8F100100A1B2C3 /* ECKPageLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKPageLoadable.swift; sourceTree = "<group>"; };
+		C9F1A0042F8F180100A1B2C3 /* ECKPagination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKPagination.swift; sourceTree = "<group>"; };
 		C9FBF7572DACF285007FF7E7 /* ECKAppVariant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKAppVariant.swift; sourceTree = "<group>"; };
 		C9FD52E02C01D25D0084E5E1 /* WalletJournalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletJournalView.swift; sourceTree = "<group>"; };
 		C9FD52E22C01D35B0084E5E1 /* ECKCharacterWalletJournalResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterWalletJournalResource.swift; sourceTree = "<group>"; };
@@ -957,6 +965,7 @@
 				C952BC8E2BEC10310070C504 /* Notification+Name.swift */,
 				C996A5E92BF2B9340038277C /* NestedObservableObject.swift */,
 				C94257272C2A140800FAEE5C /* Array+Chunked.swift */,
+				C99822B52F825E940031B439 /* Headers.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1021,6 +1030,8 @@
 				C92D17C62C27603700D6FF5A /* ECKJumpClones.swift */,
 				C9A645AE2C32A18E00E2E68D /* ECKJumpFatigue.swift */,
 				C90D50972BF91EB500DEC0F3 /* ECKLoadingState.swift */,
+				C9F1A0022F8F100100A1B2C3 /* ECKPageLoadable.swift */,
+				C9F1A0042F8F180100A1B2C3 /* ECKPagination.swift */,
 				C9FD52F62C0235E20084E5E1 /* ECKLoyaltyPointsEntry.swift */,
 				C983AAB22BF6466B002EDECB /* ECKMail.swift */,
 				C983AAC22BF650BB002EDECB /* ECKMailingList.swift */,
@@ -1352,6 +1363,7 @@
 				C952624C2BFA72ED0014B5F5 /* AttributedTextView.swift */,
 				C9DEF4A82C0386D5000238DF /* ECImage.swift */,
 				C99750A42C14606800DE5B96 /* RetryButton.swift */,
+				C9F1A0002F8F100100A1B2C3 /* PageLoaderView.swift */,
 				C9BBEC542C6E9C0B008CB3F2 /* ContentEmptyView.swift */,
 				C9B8853A2D8228C6005A32CA /* SolarSystemCell.swift */,
 				C9001DB72DA7942400ADAC52 /* CharacterLogoutButton.swift */,
@@ -2177,6 +2189,7 @@
 				C9F055C02DE3040800340A05 /* FittingCell.swift in Sources */,
 				C96E58342EC3CCDC002BC743 /* ItemMarketDataView.swift in Sources */,
 				C9BBEC552C6E9C0B008CB3F2 /* ContentEmptyView.swift in Sources */,
+				C9F1A0012F8F100100A1B2C3 /* PageLoaderView.swift in Sources */,
 				C9E93B152DB0DB2B005458BC /* SkillRequirementsView.swift in Sources */,
 				C91FE0A62D8EBF5600BA7303 /* CapitalNavigationAlternativeSystemPickerView.swift in Sources */,
 				C91B43EA2DB6BD90000F72A9 /* PlanetaryColonyView.swift in Sources */,
@@ -2371,6 +2384,8 @@
 				C983AAB52BF64786002EDECB /* ECKMailRecipient.swift in Sources */,
 				C92D17C92C27604F00D6FF5A /* ECKJumpClonesResource.swift in Sources */,
 				C90D50982BF91EB500DEC0F3 /* ECKLoadingState.swift in Sources */,
+				C9F1A0032F8F100100A1B2C3 /* ECKPageLoadable.swift in Sources */,
+				C9F1A0052F8F180100A1B2C3 /* ECKPagination.swift in Sources */,
 				C9F055B92DE2F79200340A05 /* ECKCharacterFittingItem.swift in Sources */,
 				C91FE09E2D8DA69300BA7303 /* ECKSovereigntyMapResource.swift in Sources */,
 				C98F253D2EC5148000D0269A /* ECKMarketHistoryEntry.swift in Sources */,
@@ -2433,6 +2448,7 @@
 				C92D17BA2C23323100D6FF5A /* ECKIndustryJob.swift in Sources */,
 				C9F055C92DE3B89F00340A05 /* ECKCharacterFitting+Stats.swift in Sources */,
 				C9511D1E2EDC2E78001CEED5 /* ECKSkillPlanRemap.swift in Sources */,
+				C99822B62F825E940031B439 /* Headers.swift in Sources */,
 				C9FD52EF2C022D9E0084E5E1 /* ECKURLSessionAutoLogging.swift in Sources */,
 				C9DEDD372DADAB9600781E8A /* ECKMarketGroup.swift in Sources */,
 				C9DCC40F2EA6B34700D2F643 /* ECKCharacterCurrentShip.swift in Sources */,
