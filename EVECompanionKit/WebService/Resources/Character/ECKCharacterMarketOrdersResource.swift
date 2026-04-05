@@ -9,13 +9,13 @@ import Foundation
 
 class ECKCharacterMarketOrdersResource: ECKWebResource<[ECKMarketOrder]>, @unchecked Sendable {
     
-    // TODO: Paging
-    init(token: ECKToken) {
+    init(token: ECKToken, page: Int) {
         super.init(host: .esi,
                    endpoint: "/v2/characters/\(token.characterId)/orders/",
                    token: token,
                    requiredScope: .readCharacterOrders,
-                   requiredCorpRole: [])
+                   requiredCorpRole: [],
+                   queryItems: [.init(name: "page", value: "\(page)")])
     }
     
 }

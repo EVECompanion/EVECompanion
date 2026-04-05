@@ -58,29 +58,39 @@ public enum ECKMarketOrderSortOption: String, CaseIterable, Identifiable, Sendab
     }
 }
 
-public class ECKMarketOrderManager: ObservableObject, @unchecked Sendable {
+public struct ECKMarketOrderSection: Identifiable, Sendable {
+    public let title: String
+    public let orders: [ECKMarketOrder]
+    public let emptyText: String
     
-    public enum Source: Equatable, Hashable {
+    public var id: String {
+        title
+    }
+}
+
+public class ECKMarketOrderManager: ObservableObject, ECKPageLoadable, @unchecked Sendable {
+    
+    public enum Source: Equatable, Hashable, Sendable {
         case character(ECKCharacter)
         case corporation(ECKAuthenticatedCorporation)
         
-        internal var resource: ECKWebResource<[ECKMarketOrder]>? {
+        internal func resource(page: Int) -> ECKWebResource<[ECKMarketOrder]>? {
             switch self {
             case .character(let character):
-                return ECKCharacterMarketOrdersResource(token: character.token)
+                return ECKCharacterMarketOrdersResource(token: character.token, page: page)
             case .corporation(let corporation):
                 guard let corpId = corporation.corpId else {
                     return nil
                 }
                 
                 return ECKCorporationMarketOrdersResource(corporationId: corpId,
-                                                          page: 1,
+                                                          page: page,
                                                           token: corporation.authenticatingCharacter.token)
             }
         }
     }
     
-    public let source: Source
+    nonisolated public let source: Source
     let isPreview: Bool
     
     @Published public var marketOrders: [ECKMarketOrder]?
@@ -88,6 +98,38 @@ public class ECKMarketOrderManager: ObservableObject, @unchecked Sendable {
     @Published public var searchText: String = ""
     @Published public var typeFilter: ECKMarketOrderTypeFilter = .all
     @Published public var sortOption: ECKMarketOrderSortOption = .issuedNewest
+    
+    private var pagination = ECKPagination()
+    
+    private var isSearching: Bool {
+        searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+    }
+    
+    public var elements: [ECKMarketOrderSection] {
+        var sections = [ECKMarketOrderSection]()
+        
+        if typeFilter != .buy {
+            sections.append(.init(title: "Sell Orders",
+                                  orders: sellOrders,
+                                  emptyText: "No sell orders"))
+        }
+        
+        if typeFilter != .sell {
+            sections.append(.init(title: "Buy Orders",
+                                  orders: buyOrders,
+                                  emptyText: "No buy orders"))
+        }
+        
+        if isSearching {
+            return sections.filter { $0.orders.isEmpty == false }
+        }
+        
+        return sections
+    }
+    
+    public var hasNextPage: Bool {
+        pagination.hasNextPage
+    }
     
     public var filteredMarketOrders: [ECKMarketOrder] {
         let trimmedSearchText = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -156,8 +198,13 @@ public class ECKMarketOrderManager: ObservableObject, @unchecked Sendable {
     
     @MainActor
     public func loadMarketOrders() async {
+        guard pagination.isLoading == false else {
+            return
+        }
+        
         guard UserDefaults.standard.isDemoModeEnabled == false && isPreview == false else {
             marketOrders = [.dummy1, .dummy2]
+            pagination = ECKPagination(totalPages: 1, lastLoadedPage: 1)
             marketOrdersLoadingState = .ready
             return
         }
@@ -168,16 +215,67 @@ public class ECKMarketOrderManager: ObservableObject, @unchecked Sendable {
             marketOrdersLoadingState = .loading
         }
         
-        guard let resource = source.resource else {
+        guard let resource = source.resource(page: 1) else {
             return
         }
         
         do {
-            self.marketOrders = try await ECKWebService().loadResource(resource: resource).response
+            pagination.reset()
+            try await loadPage(with: resource, isFirstPage: true)
             self.marketOrdersLoadingState = .ready
         } catch {
             logger.error("Error loading market orders: \(String(describing: error))")
             self.marketOrdersLoadingState = .error
+        }
+    }
+    
+    @MainActor
+    public func reload() async {
+        pagination.reset()
+        await loadMarketOrders()
+    }
+    
+    @MainActor
+    public func loadNextPage() async throws {
+        guard pagination.isLoading == false else {
+            return
+        }
+        
+        guard hasNextPage else {
+            return
+        }
+        
+        let nextPage = pagination.lastLoadedPage + 1
+        
+        guard let resource = source.resource(page: nextPage) else {
+            return
+        }
+        
+        try await loadPage(with: resource, isFirstPage: false)
+    }
+    
+    @MainActor
+    private func loadPage(with resource: ECKWebResource<[ECKMarketOrder]>, isFirstPage: Bool) async throws {
+        pagination.setIsLoading(true)
+        defer {
+            pagination.setIsLoading(false)
+        }
+        
+        let response = try await ECKWebService().loadResource(resource: resource)
+        let loadedOrders = response.response
+        
+        if isFirstPage {
+            marketOrders = loadedOrders
+        } else {
+            marketOrders = (marketOrders ?? []) + loadedOrders
+        }
+        
+        pagination.next()
+        pagination.setTotalPages(headers: response.headers)
+        
+        if loadedOrders.isEmpty,
+           pagination.totalPages == nil {
+            pagination.setTotalPages(pagination.lastLoadedPage)
         }
     }
     

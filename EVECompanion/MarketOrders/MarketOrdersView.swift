@@ -11,62 +11,34 @@ import EVECompanionKit
 struct MarketOrdersView: View {
     @ObservedObject var manager: ECKMarketOrderManager
     
-    var sellOrders: [ECKMarketOrder] {
-        manager.sellOrders
-    }
-    
-    var buyOrders: [ECKMarketOrder] {
-        manager.buyOrders
-    }
-    
     var body: some View {
         Group {
             switch manager.marketOrdersLoadingState {
             case .ready,
                  .reloading:
                 List {
-                    if manager.typeFilter != .buy {
+                    PageLoaderView(pageLoader: manager) { section in
                         Section {
-                            if sellOrders.isEmpty {
-                                Text("No sell orders")
+                            if section.orders.isEmpty {
+                                Text(section.emptyText)
                             } else {
-                                ForEach(sellOrders) { order in
+                                ForEach(section.orders) { order in
                                     MarketOrderCell(order: order)
                                 }
                             }
                         } header: {
                             VStack(alignment: .leading) {
-                                Text("Sell Orders")
+                                Text(section.title)
                                 
-                                if sellOrders.isEmpty == false {
-                                    Text("Total ISK: \(ECFormatters.iskLong(totalIsk(for: sellOrders)))")
-                                }
-                            }
-                        }
-                    }
-                    
-                    if manager.typeFilter != .sell {
-                        Section {
-                            if buyOrders.isEmpty {
-                                Text("No buy orders")
-                            } else {
-                                ForEach(buyOrders) { order in
-                                    MarketOrderCell(order: order)
-                                }
-                            }
-                        } header: {
-                            VStack(alignment: .leading) {
-                                Text("Buy Orders")
-                                
-                                if buyOrders.isEmpty == false {
-                                    Text("Total ISK: \(ECFormatters.iskLong(totalIsk(for: buyOrders)))")
+                                if section.orders.isEmpty == false {
+                                    Text("Total ISK: \(ECFormatters.iskLong(totalIsk(for: section.orders)))")
                                 }
                             }
                         }
                     }
                 }
                 .refreshable {
-                    await manager.loadMarketOrders()
+                    await manager.reload()
                 }
                 .searchable(text: $manager.searchText,
                             placement: .navigationBarDrawer)
@@ -81,12 +53,16 @@ struct MarketOrdersView: View {
                 
             }
         }
-        .onAppear(perform: {
-            Task {
-                await manager.loadMarketOrders()
-            }
-        })
         .navigationTitle("Market Orders")
+        .overlay {
+            if manager.filteredMarketOrders.isEmpty
+                && manager.searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+                && manager.marketOrdersLoadingState == .ready {
+                ContentEmptyView(image: Image("Neocom/MarketOrders"),
+                                 title: "No Matching Orders",
+                                 subtitle: "Adjust your search or filters to see more results")
+            }
+        }
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Menu {
