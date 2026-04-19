@@ -62,7 +62,6 @@
 		C91672BD2BEAC2E7009EC580 /* Data+Base64URLEncoded.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91672BC2BEAC2E7009EC580 /* Data+Base64URLEncoded.swift */; };
 		C91672C22BEAC734009EC580 /* ECKKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91672C12BEAC734009EC580 /* ECKKeychain.swift */; };
 		C91672C72BEAC9C1009EC580 /* ECKAppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91672C62BEAC9C1009EC580 /* ECKAppInfo.swift */; };
-		C91672CA2BEACA9D009EC580 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = C91672C92BEACA9D009EC580 /* KeychainSwift */; };
 		C91B43EA2DB6BD90000F72A9 /* PlanetaryColonyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91B43E92DB6BD90000F72A9 /* PlanetaryColonyView.swift */; };
 		C91EEEBB2BE9730000352175 /* EVECompanionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91EEEBA2BE9730000352175 /* EVECompanionApp.swift */; };
 		C91EEEBF2BE9730100352175 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C91EEEBE2BE9730100352175 /* Assets.xcassets */; };
@@ -834,7 +833,6 @@
 				C952BC8D2BEC0BE40070C504 /* JWTDecode in Frameworks */,
 				C9DEF2F12C14AECC00815AF0 /* SwiftyBeaver in Frameworks */,
 				C90D50932BF8BBF300DEC0F3 /* Pulse in Frameworks */,
-				C91672CA2BEACA9D009EC580 /* KeychainSwift in Frameworks */,
 				C98483FE2D7EDB0C0076016B /* SQLite in Frameworks */,
 				C9DEF2F42C14AEF200815AF0 /* ZipArchive in Frameworks */,
 				C9D095092DE7BA8A00715479 /* Yams in Frameworks */,
@@ -1941,7 +1939,6 @@
 			);
 			name = EVECompanionKit;
 			packageProductDependencies = (
-				C91672C92BEACA9D009EC580 /* KeychainSwift */,
 				C952BC8C2BEC0BE40070C504 /* JWTDecode */,
 				C90D50922BF8BBF300DEC0F3 /* Pulse */,
 				C9DEF2F02C14AECC00815AF0 /* SwiftyBeaver */,
@@ -2014,7 +2011,6 @@
 			);
 			mainGroup = C91EEEAE2BE9730000352175;
 			packageReferences = (
-				C91672C82BEACA9D009EC580 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				C952BC8B2BEC0BE40070C504 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */,
 				C952BC902BEC12AB0070C504 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				C90D50912BF8BBF300DEC0F3 /* XCRemoteSwiftPackageReference "Pulse" */,
@@ -2532,7 +2528,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.12;
 				PRODUCT_BUNDLE_IDENTIFIER = de.schlabertz.EVECompanion.dev.Widgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2565,7 +2561,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.12;
 				PRODUCT_BUNDLE_IDENTIFIER = de.schlabertz.EVECompanion.dev.Widgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2765,7 +2761,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.12;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = de.schlabertz.EVECompanion.dev;
 				PRODUCT_NAME = EVECompanion;
@@ -2817,7 +2813,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.12;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = de.schlabertz.EVECompanion.dev;
 				PRODUCT_NAME = EVECompanion;
@@ -3060,14 +3056,6 @@
 				minimumVersion = 4.1.1;
 			};
 		};
-		C91672C82BEACA9D009EC580 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 24.0.0;
-			};
-		};
 		C952BC8B2BEC0BE40070C504 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/auth0/JWTDecode.swift.git";
@@ -3172,11 +3160,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C90D50912BF8BBF300DEC0F3 /* XCRemoteSwiftPackageReference "Pulse" */;
 			productName = PulseUI;
-		};
-		C91672C92BEACA9D009EC580 /* KeychainSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C91672C82BEACA9D009EC580 /* XCRemoteSwiftPackageReference "keychain-swift" */;
-			productName = KeychainSwift;
 		};
 		C952BC8C2BEC0BE40070C504 /* JWTDecode */ = {
 			isa = XCSwiftPackageProductDependency;

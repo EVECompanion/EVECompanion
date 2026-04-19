@@ -30,6 +30,8 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unch
     private(set) internal var characterName: String
     private(set) internal var isValid: Bool
     private(set) internal var accessTokenExpiredFlag: Bool = false
+    @ECKTokenActor
+    private(set) internal var isRemoved: Bool = false
     internal var tokenTarget: ECKAuthenticationTarget = .character
     
     @ECKTokenActor
@@ -49,6 +51,16 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unch
         } catch {
             logger.error("Error decoding jwt \(error)")
             return true
+        }
+    }
+
+    internal var accessTokenExpirationDate: Date? {
+        do {
+            let jwt = try JWTDecode.decode(jwt: accessToken)
+            return jwt.expiresAt
+        } catch {
+            logger.error("Error decoding jwt \(error)")
+            return nil
         }
     }
     
@@ -113,6 +125,11 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unch
     
     @ECKTokenActor
     internal func updateToken(accessToken: String, refreshToken: String) {
+        guard isRemoved == false else {
+            logger.info("Skipping token update for removed token \(characterId)-\(tokenTarget.rawValue)")
+            return
+        }
+
         self.accessToken = accessToken
         self.refreshToken = refreshToken
         self.accessTokenExpiredFlag = false
@@ -121,6 +138,11 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unch
     
     @ECKTokenActor
     internal func markAsInvalid() {
+        guard isRemoved == false else {
+            logger.info("Skipping token invalidation for removed token \(characterId)-\(tokenTarget.rawValue)")
+            return
+        }
+
         self.isValid = false
         self.accessTokenExpiredFlag = true
         ECKKeychain.add(token: self)
@@ -128,8 +150,20 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unch
     
     @ECKTokenActor
     internal func markAccessTokenExpired() {
+        guard isRemoved == false else {
+            logger.info("Skipping token expiry mark for removed token \(characterId)-\(tokenTarget.rawValue)")
+            return
+        }
+
         self.accessTokenExpiredFlag = true
         ECKKeychain.add(token: self)
+    }
+
+    @ECKTokenActor
+    internal func prepareForRemoval() {
+        isRemoved = true
+        refreshTask?.cancel()
+        refreshTask = nil
     }
     
     @MainActor
