@@ -41,6 +41,8 @@ public final class ECKPagination: @unchecked Sendable {
     public func setTotalPages(headers: [String: String]) {
         if let totalPages = headers.xPages {
             setTotalPages(totalPages)
+        } else {
+            setTotalPages(1)
         }
     }
     
