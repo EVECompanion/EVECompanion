@@ -311,6 +311,8 @@ public class ECKContractManager: ObservableObject, ECKPageLoadable, @unchecked S
         }
         
         guard let resource = source.resource(page: 1) else {
+            pagination = ECKPagination(totalPages: 1, lastLoadedPage: 1)
+            loadingState = .ready
             return
         }
         

@@ -17,8 +17,10 @@ struct IndustryJobsView: View {
             switch industryJobsManager.loadingState {
             case .ready,
                  .reloading:
-                List(industryJobsManager.jobs) { job in
-                    IndustryJobCell(job: job)
+                List {
+                    PageLoaderView(pageLoader: industryJobsManager) { job in
+                        IndustryJobCell(job: job)
+                    }
                 }
                 .refreshable {
                     await industryJobsManager.loadJobs()
@@ -36,7 +38,7 @@ struct IndustryJobsView: View {
         }
         .navigationTitle("Industry Jobs")
         .overlay {
-            if industryJobsManager.jobs.isEmpty && industryJobsManager.loadingState == .ready {
+            if industryJobsManager.elements.isEmpty && industryJobsManager.loadingState == .ready {
                 ContentEmptyView(image: Image("Neocom/Industry"),
                                  title: "No Industry Jobs",
                                  subtitle: "New industry jobs will appear here")

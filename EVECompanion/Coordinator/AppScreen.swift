@@ -36,8 +36,6 @@ enum AppScreen: Hashable {
     case skillPlanList(ECKSkillPlanManager)
     case skillPlanDetail(ECKSkillPlan, ECKSkillPlanManager)
     
-    case corpContracts(manager: ECKContractManager)
-    
     case itemByTypeId(Int)
     case item(ECKItem)
     
@@ -109,8 +107,6 @@ enum AppScreen: Hashable {
             return "corporationList"
         case .corporationDetail:
             return "corporationDetail"
-        case .corpContracts:
-            return "corpContracts"
         }
     }
     
@@ -143,7 +139,7 @@ enum AppScreen: Hashable {
             return lhsManager.source == rhsManager.source
             
         case (.industryJobs(manager: let lhsManager), .industryJobs(manager: let rhsManager)):
-            return lhsManager.character == rhsManager.character
+            return lhsManager.source == rhsManager.source
             
         case (.jumpClones(manager: let lhsManager), .jumpClones(manager: let rhsManager)):
             return lhsManager.character == rhsManager.character
@@ -178,9 +174,6 @@ enum AppScreen: Hashable {
         
         case (.corporationDetail(let lhsCorp), .corporationDetail(let rhsCorp)):
             return lhsCorp.corpId == rhsCorp.corpId
-            
-        case (.corpContracts(manager: let lhsManager), .corpContracts(manager: let rhsManager)):
-            return lhsManager.source == rhsManager.source
             
         default:
             return false
@@ -217,7 +210,7 @@ enum AppScreen: Hashable {
         case .skillQueue(let character):
             hasher.combine(character)
         case .industryJobs(let manager):
-            hasher.combine(manager.character)
+            hasher.combine(manager.source)
         case .jumpClones(let manager):
             hasher.combine(manager.character)
         case .item(let item):
@@ -255,8 +248,6 @@ enum AppScreen: Hashable {
         case .corporationList:
             // TODO
             return
-        case .corpContracts(manager: let manager):
-            hasher.combine(manager.source)
         }
     }
     

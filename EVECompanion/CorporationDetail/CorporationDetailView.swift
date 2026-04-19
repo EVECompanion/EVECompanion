@@ -13,11 +13,13 @@ struct CorporationDetailView: View {
     @ObservedObject private var corporation: ECKAuthenticatedCorporation
     @StateObject var contractManager: ECKContractManager
     @StateObject var marketOrderManager: ECKMarketOrderManager
+    @StateObject var industryJobsManager: ECKIndustryJobManager
     
     init(corporation: ECKAuthenticatedCorporation) {
         self.corporation = corporation
         self._contractManager = StateObject(wrappedValue: .init(corporation: corporation))
         self._marketOrderManager = StateObject(wrappedValue: .init(corporation: corporation))
+        self._industryJobsManager = StateObject(wrappedValue: .init(corporation: corporation))
     }
     
     var body: some View {
@@ -32,6 +34,10 @@ struct CorporationDetailView: View {
             Section("Finance") {
                 row(for: .marketOrders)
                 row(for: .contracts)
+            }
+            
+            Section("Industry") {
+                row(for: .industryJobs)
             }
         }
         .navigationTitle(corporation.publicCorpInfo?.name ?? "")
@@ -60,9 +66,11 @@ struct CorporationDetailView: View {
     func destination(for row: CorporationDetailRowType) -> AppScreen {
         switch row {
         case .contracts:
-            return .corpContracts(manager: contractManager)
+            return .contracts(manager: contractManager)
         case .marketOrders:
             return .marketOrders(manager: marketOrderManager)
+        case .industryJobs:
+            return .industryJobs(manager: industryJobsManager)
         }
     }
 }

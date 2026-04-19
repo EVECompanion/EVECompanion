@@ -95,8 +95,6 @@ struct PageLoaderView<PageLoader: ECKPageLoadable, Content: View>: View {
     }
 }
 
-
-
 private struct PreviewPageLoaderItem: Identifiable {
     let id = UUID()
     let title: String

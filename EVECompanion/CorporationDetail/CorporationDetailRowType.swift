@@ -11,6 +11,7 @@ enum CorporationDetailRowType {
     
     case contracts
     case marketOrders
+    case industryJobs
     
     var title: String {
         switch self {
@@ -18,7 +19,8 @@ enum CorporationDetailRowType {
             return "Contracts"
         case .marketOrders:
             return "Market Orders"
-            
+        case .industryJobs:
+            return "Industry Jobs"
         }
     }
     
@@ -27,6 +29,8 @@ enum CorporationDetailRowType {
         case .contracts:
             return nil
         case .marketOrders:
+            return nil
+        case .industryJobs:
             return nil
         }
     }
@@ -37,6 +41,8 @@ enum CorporationDetailRowType {
             return "Neocom/Contracts"
         case .marketOrders:
             return "Neocom/MarketOrders"
+        case .industryJobs:
+            return "Neocom/Industry"
         }
     }
     
