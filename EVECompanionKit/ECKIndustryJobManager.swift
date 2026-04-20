@@ -22,10 +22,15 @@ public class ECKIndustryJobManager: ObservableObject, ECKPageLoadable, @unchecke
                     return nil
                 }
                 
+                guard let roles = corporation.authenticatingCharacter.corpRoles else {
+                    return nil
+                }
+                
                 return ECKCorporationIndustryJobsResource(
                     corporationId: corpId,
                     page: page,
-                    token: corporation.authenticatingCharacter.token
+                    token: corporation.authenticatingCharacter.token,
+                    currentRoles: roles.roles
                 )
             }
         }

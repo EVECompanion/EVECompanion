@@ -14,7 +14,7 @@ class ECKCharacterLocationResource: ECKWebResource<ECKCharacterLocation>, @unche
                    endpoint: "/characters/\(token.characterId)/location",
                    token: token,
                    requiredScope: .readLocation,
-                   requiredCorpRole: [],
+                   requiredCorpRoles: [],
                    headers: ["X-Compatibility-Date": "2025-09-30"])
     }
     

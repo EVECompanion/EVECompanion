@@ -9,13 +9,14 @@ import Foundation
 
 class ECKCorporationIndustryJobsResource: ECKWebResource<[ECKIndustryJob]>, @unchecked Sendable {
     
-    init(corporationId: Int, page: Int, token: ECKToken) {
+    init(corporationId: Int, page: Int, token: ECKToken, currentRoles: [ECKCorporationRole]) {
         super.init(
             host: .esi,
             endpoint: "/corporations/\(corporationId)/industry/jobs",
             token: token,
             requiredScope: .corpReadJobs,
-            requiredCorpRole: [.Factory_Manager],
+            requiredCorpRoles: [.Factory_Manager],
+            currentCorpRoles: currentRoles,
             queryItems: [.init(name: "page", value: "\(page)")],
             headers: ["X-Compatibility-Date": "2026-04-19"]
         )

@@ -28,6 +28,10 @@ public final class ECKAuthenticatedCorporation: ObservableObject, Identifiable, 
         return authenticatingCharacter.alliance
     }
     
+    public var roles: [ECKCorporationRole]? {
+        return authenticatingCharacter.corpRoles?.roles
+    }
+    
     public static let dummy: ECKAuthenticatedCorporation = .init()
     
     internal init(token: ECKToken) {

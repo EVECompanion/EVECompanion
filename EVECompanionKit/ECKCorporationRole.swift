@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ECKCorporationRole: String, Decodable {
+public enum ECKCorporationRole: String, Decodable, Sendable {
     
     case Account_Take_1
     case Account_Take_2

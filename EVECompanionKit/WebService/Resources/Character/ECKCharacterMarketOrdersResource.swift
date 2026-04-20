@@ -14,7 +14,7 @@ class ECKCharacterMarketOrdersResource: ECKWebResource<[ECKMarketOrder]>, @unche
                    endpoint: "/v2/characters/\(token.characterId)/orders/",
                    token: token,
                    requiredScope: .readCharacterOrders,
-                   requiredCorpRole: [],
+                   requiredCorpRoles: [],
                    queryItems: [.init(name: "page", value: "\(page)")])
     }
     

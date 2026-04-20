@@ -219,6 +219,8 @@
 		C99822B32F76858A0031B439 /* ECKCorporationMarketOrdersResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99822B22F76858A0031B439 /* ECKCorporationMarketOrdersResource.swift */; };
 		C99822B62F825E940031B439 /* Headers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99822B52F825E940031B439 /* Headers.swift */; };
 		C99CC7252F955F5F000BF4BC /* ECKCorporationIndustryJobsResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99CC7242F955F5F000BF4BC /* ECKCorporationIndustryJobsResource.swift */; };
+		C99CC7272F96BA85000BF4BC /* ECKCorporationRoles.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99CC7262F96BA85000BF4BC /* ECKCorporationRoles.swift */; };
+		C99CC7292F96BB06000BF4BC /* ECKCharacterCorpRolesResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99CC7282F96BB06000BF4BC /* ECKCharacterCorpRolesResource.swift */; };
 		C9A645AF2C32A18E00E2E68D /* ECKJumpFatigue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A645AE2C32A18E00E2E68D /* ECKJumpFatigue.swift */; };
 		C9A645B12C32A29700E2E68D /* ECKCharacterJumpFatigueResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A645B02C32A29700E2E68D /* ECKCharacterJumpFatigueResource.swift */; };
 		C9A7C55D2BF0C2E8003478AD /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A7C55C2BF0C2E8003478AD /* SettingsView.swift */; };
@@ -651,6 +653,8 @@
 		C99822B22F76858A0031B439 /* ECKCorporationMarketOrdersResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCorporationMarketOrdersResource.swift; sourceTree = "<group>"; };
 		C99822B52F825E940031B439 /* Headers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Headers.swift; sourceTree = "<group>"; };
 		C99CC7242F955F5F000BF4BC /* ECKCorporationIndustryJobsResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCorporationIndustryJobsResource.swift; sourceTree = "<group>"; };
+		C99CC7262F96BA85000BF4BC /* ECKCorporationRoles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCorporationRoles.swift; sourceTree = "<group>"; };
+		C99CC7282F96BB06000BF4BC /* ECKCharacterCorpRolesResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterCorpRolesResource.swift; sourceTree = "<group>"; };
 		C9A645AE2C32A18E00E2E68D /* ECKJumpFatigue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKJumpFatigue.swift; sourceTree = "<group>"; };
 		C9A645B02C32A29700E2E68D /* ECKCharacterJumpFatigueResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterJumpFatigueResource.swift; sourceTree = "<group>"; };
 		C9A7C55C2BF0C2E8003478AD /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -1172,6 +1176,7 @@
 				C96F989E2BEFA6DB00DEC34F /* ECKContractManager.swift */,
 				C96F98AF2F00000100DEC34F /* ECKMarketOrderManager.swift */,
 				C920A6A62ED3526F00868D58 /* ECKCorporationRole.swift */,
+				C99CC7262F96BA85000BF4BC /* ECKCorporationRoles.swift */,
 				C92B4EB62ED1C53500E3D9B4 /* ECKCorporationStorage.swift */,
 				C9B39FAF2E8C754B0049C83D /* ECKESIFittingManager.swift */,
 				C9F055B32DE2F55500340A05 /* ECKFittingManager.swift */,
@@ -1255,6 +1260,7 @@
 			isa = PBXGroup;
 			children = (
 				C92CF6682F740F6600647402 /* ECKCorporationContractResource.swift */,
+				C99CC7282F96BB06000BF4BC /* ECKCharacterCorpRolesResource.swift */,
 				C99822B22F76858A0031B439 /* ECKCorporationMarketOrdersResource.swift */,
 				C99CC7242F955F5F000BF4BC /* ECKCorporationIndustryJobsResource.swift */,
 			);
@@ -2383,6 +2389,7 @@
 				C983AAB52BF64786002EDECB /* ECKMailRecipient.swift in Sources */,
 				C92D17C92C27604F00D6FF5A /* ECKJumpClonesResource.swift in Sources */,
 				C90D50982BF91EB500DEC0F3 /* ECKLoadingState.swift in Sources */,
+				C99CC7292F96BB06000BF4BC /* ECKCharacterCorpRolesResource.swift in Sources */,
 				C9F1A0032F8F100100A1B2C3 /* ECKPageLoadable.swift in Sources */,
 				C9F1A0052F8F180100A1B2C3 /* ECKPagination.swift in Sources */,
 				C9F055B92DE2F79200340A05 /* ECKCharacterFittingItem.swift in Sources */,
@@ -2427,6 +2434,7 @@
 				C92F9C9D2D8AA72700306DD7 /* ECKCapitalJumpRoute.swift in Sources */,
 				C99CC7252F955F5F000BF4BC /* ECKCorporationIndustryJobsResource.swift in Sources */,
 				C952BCA22BED26C30070C504 /* ECKCharacterSkillsResource.swift in Sources */,
+				C99CC7272F96BA85000BF4BC /* ECKCorporationRoles.swift in Sources */,
 				C91672AF2BEA03A8009EC580 /* TimeInterval+From.swift in Sources */,
 				C983AAC12BF6506D002EDECB /* ECKFetchMailingListsResource.swift in Sources */,
 				C996A5EC2BF2BBCA0038277C /* ECKStructureResource.swift in Sources */,

@@ -35,6 +35,7 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
     @Published public var jumpFatigue: ECKJumpFatigue?
     @Published public var location: ECKCharacterLocation?
     @Published public var currentShip: ECKCharacterCurrentShip?
+    @Published public var corpRoles: ECKCorporationRoles?
     
     @Published public var initialDataLoadingState: ECKLoadingState = .loading
     @Published public var walletJournalLoadingState: ECKLoadingState = .loading
@@ -93,8 +94,12 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
     public func loadInitialCorpData() {
         initialDataLoadingTask = Task { @MainActor in
             self.initialDataLoadingState = .loading
-            await self.loadAllianceAndCorpData()
-            self.initialDataLoadingState = .ready
+            do {
+                try await self.loadAllianceAndCorpData()
+                self.initialDataLoadingState = .ready
+            } catch {
+                self.initialDataLoadingState = .error
+            }
         }
     }
     
@@ -194,7 +199,7 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
     }
     
     @MainActor
-    private func loadAllianceAndCorpData() async {
+    private func loadAllianceAndCorpData() async throws {
         if publicInfo == nil {
             try? await loadPublicInfo()
         }
@@ -208,6 +213,8 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
             let corporationResponse = try? await ECKWebService().loadResource(resource: corporationResource).response
             self.corporation = corporationResponse
         }
+        
+        self.corpRoles = try await ECKWebService().loadResource(resource: ECKCharacterCorpRolesResource(token: token)).response
     }
     
     @MainActor

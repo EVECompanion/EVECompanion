@@ -141,9 +141,16 @@ public class ECKContractManager: ObservableObject, ECKPageLoadable, @unchecked S
                     return nil
                 }
                 
-                return ECKCorporationContractResource(corporationId: corpId,
-                                                      page: page,
-                                                      token: corporation.authenticatingCharacter.token)
+                guard let roles = corporation.roles else {
+                    return nil
+                }
+                
+                return ECKCorporationContractResource(
+                    corporationId: corpId,
+                    page: page,
+                    token: corporation.authenticatingCharacter.token,
+                    currentRoles: roles
+                )
             }
         }
         

@@ -83,9 +83,16 @@ public class ECKMarketOrderManager: ObservableObject, ECKPageLoadable, @unchecke
                     return nil
                 }
                 
-                return ECKCorporationMarketOrdersResource(corporationId: corpId,
-                                                          page: page,
-                                                          token: corporation.authenticatingCharacter.token)
+                guard let roles = corporation.roles else {
+                    return nil
+                }
+                
+                return ECKCorporationMarketOrdersResource(
+                    corporationId: corpId,
+                    page: page,
+                    token: corporation.authenticatingCharacter.token,
+                    currentRoles: roles
+                )
             }
         }
     }

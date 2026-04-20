@@ -7,8 +7,6 @@
 
 import Foundation
 
-// TODO: Check Corp Roles
-
 final class ECKWebService: Sendable {
     
     private let decoder: JSONDecoder = {
@@ -75,6 +73,11 @@ final class ECKWebService: Sendable {
         guard await resource.tokenContainsRequiredScopes else {
             logger.error("Resource \(resource) does not have the required scopes.")
             throw ECKWebError.insufficientScopes
+        }
+        
+        guard await resource.tokenContainsRequiredRoles else {
+            logger.error("Resource \(resource) does not have the required corp roles.")
+            throw ECKWebError.insufficientCorpRole(requiredRoles: resource.requiredCorpRoles)
         }
         
         let fetchedData = try await self.loadData(url: url, resource: resource)

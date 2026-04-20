@@ -25,7 +25,7 @@ class ECKTokenRefreshResource: ECKWebResource<ECKToken>, @unchecked Sendable {
         super.init(host: .eveLogin,
                    endpoint: "/v2/oauth/token",
                    requiredScope: nil,
-                   requiredCorpRole: [],
+                   requiredCorpRoles: [],
                    headers: headers,
                    method: .post,
                    body: urlComponents.query?.data(using: .utf8))

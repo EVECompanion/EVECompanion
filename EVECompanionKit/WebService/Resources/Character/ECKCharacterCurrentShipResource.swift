@@ -14,7 +14,7 @@ class ECKCharacterCurrentShipResource: ECKWebResource<ECKCharacterCurrentShip>, 
                    endpoint: "/characters/\(token.characterId)/ship",
                    token: token,
                    requiredScope: .readShipType,
-                   requiredCorpRole: [],
+                   requiredCorpRoles: [],
                    headers: ["X-Compatibility-Date": "2025-09-30"])
     }
     

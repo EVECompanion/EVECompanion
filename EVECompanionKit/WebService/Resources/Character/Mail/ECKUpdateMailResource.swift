@@ -18,7 +18,7 @@ class ECKUpdateMailResource: ECKWebResource<ECKEmptyResponse>, @unchecked Sendab
                    endpoint: "/v1/characters/\(token.characterId)/mail/\(mailId.description)/",
                    token: token,
                    requiredScope: .organizeMail,
-                   requiredCorpRole: [],
+                   requiredCorpRoles: [],
                    method: .put,
                    body: ECKUpdateMailRequest(read: read))
     }

@@ -20,7 +20,8 @@ class ECKWebResource<DecodeTo: Decodable>: @unchecked Sendable {
     var body: (any Encodable)?
     var token: ECKToken?
     var requiredScope: ECKAPIScope?
-    var requiredCorpRole: [ECKCorporationRole]
+    var requiredCorpRoles: [ECKCorporationRole]
+    var currentCorpRoles: [ECKCorporationRole]?
     
     @MainActor
     var tokenContainsRequiredScopes: Bool {
@@ -30,6 +31,23 @@ class ECKWebResource<DecodeTo: Decodable>: @unchecked Sendable {
         }
         
         return token.includesScope(scope: requiredScope)
+    }
+    
+    @MainActor
+    var tokenContainsRequiredRoles: Bool {
+        guard requiredCorpRoles.isEmpty == false else {
+            return true
+        }
+        
+        guard let currentCorpRoles else {
+            return false
+        }
+        
+        for requiredCorpRole in requiredCorpRoles where currentCorpRoles.contains(requiredCorpRole) {
+            return true
+        }
+        
+        return false
     }
     
     var url: URL? {
@@ -47,7 +65,8 @@ class ECKWebResource<DecodeTo: Decodable>: @unchecked Sendable {
          endpoint: String,
          token: ECKToken? = nil,
          requiredScope: ECKAPIScope?,
-         requiredCorpRole: [ECKCorporationRole],
+         requiredCorpRoles: [ECKCorporationRole],
+         currentCorpRoles: [ECKCorporationRole]? = nil,
          queryItems: [URLQueryItem] = [],
          headers: [String: String] = [:],
          method: ECKHTTPMethod = .get,
@@ -55,7 +74,8 @@ class ECKWebResource<DecodeTo: Decodable>: @unchecked Sendable {
         self.host = host
         self.endpoint = endpoint
         self.token = token
-        self.requiredCorpRole = requiredCorpRole
+        self.requiredCorpRoles = requiredCorpRoles
+        self.currentCorpRoles = currentCorpRoles
         self.queryItems = queryItems
         self.headers = headers
         self.method = method
