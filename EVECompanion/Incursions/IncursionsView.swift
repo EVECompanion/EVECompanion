@@ -44,8 +44,8 @@ struct IncursionsView: View {
             case .loading:
                 ProgressView()
                 
-            case .error:
-                RetryButton {
+            case .error(let error):
+                ErrorView(error: error) {
                     await incursionManager.loadIncursions()
                 }
                 

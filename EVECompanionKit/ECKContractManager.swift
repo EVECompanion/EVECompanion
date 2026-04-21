@@ -330,7 +330,7 @@ public class ECKContractManager: ObservableObject, ECKPageLoadable, @unchecked S
             loadingState = .ready
         } catch {
             logger.error("Error while fetching contracts \(error)")
-            loadingState = .error
+            loadingState = .error(error)
         }
     }
     
@@ -341,7 +341,7 @@ public class ECKContractManager: ObservableObject, ECKPageLoadable, @unchecked S
     }
     
     @MainActor
-    public func loadNextPage() async throws {
+    public func loadNextPage() async throws(ECKWebError) {
         guard pagination.isLoading == false else {
             return
         }
@@ -360,7 +360,7 @@ public class ECKContractManager: ObservableObject, ECKPageLoadable, @unchecked S
     }
     
     @MainActor
-    private func loadPage(with resource: ECKWebResource<[ECKContract]>, isFirstPage: Bool) async throws {
+    private func loadPage(with resource: ECKWebResource<[ECKContract]>, isFirstPage: Bool) async throws(ECKWebError) {
         pagination.setIsLoading(true)
         defer {
             pagination.setIsLoading(false)

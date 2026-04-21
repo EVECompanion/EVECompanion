@@ -34,7 +34,7 @@ struct ServerStatusView: View {
                 Image(systemName: "person.3")
                     .foregroundStyle(Color.green)
             }
-        } else if serverStatusManager.loadingState == .error {
+        } else if case .error = serverStatusManager.loadingState {
             Label {
                 Text("Server Status Unknown")
             } icon: {

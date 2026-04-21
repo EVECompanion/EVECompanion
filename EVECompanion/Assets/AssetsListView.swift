@@ -37,8 +37,8 @@ struct AssetsListView: View {
             case .loading:
                 ProgressView()
                 
-            case .error:
-                RetryButton {
+            case .error(let error):
+                ErrorView(error: error) {
                     await assetManager.loadAssets()
                 }
                 

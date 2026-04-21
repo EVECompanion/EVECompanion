@@ -208,7 +208,7 @@
 		C996A5E82BF2B8340038277C /* ContractListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C996A5E72BF2B8340038277C /* ContractListCell.swift */; };
 		C996A5EA2BF2B9340038277C /* NestedObservableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C996A5E92BF2B9340038277C /* NestedObservableObject.swift */; };
 		C996A5EC2BF2BBCA0038277C /* ECKStructureResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C996A5EB2BF2BBCA0038277C /* ECKStructureResource.swift */; };
-		C99750A52C14606800DE5B96 /* RetryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99750A42C14606800DE5B96 /* RetryButton.swift */; };
+		C99750A52C14606800DE5B96 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99750A42C14606800DE5B96 /* ErrorView.swift */; };
 		C99750A82C14884600DE5B96 /* MarketOrdersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99750A72C14884600DE5B96 /* MarketOrdersView.swift */; };
 		C99750AA2C14897E00DE5B96 /* ECKMarketOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99750A92C14897E00DE5B96 /* ECKMarketOrder.swift */; };
 		C99750AC2C148D1000DE5B96 /* ECKRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99750AB2C148D1000DE5B96 /* ECKRegion.swift */; };
@@ -642,7 +642,7 @@
 		C996A5E72BF2B8340038277C /* ContractListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractListCell.swift; sourceTree = "<group>"; };
 		C996A5E92BF2B9340038277C /* NestedObservableObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NestedObservableObject.swift; sourceTree = "<group>"; };
 		C996A5EB2BF2BBCA0038277C /* ECKStructureResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKStructureResource.swift; sourceTree = "<group>"; };
-		C99750A42C14606800DE5B96 /* RetryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryButton.swift; sourceTree = "<group>"; };
+		C99750A42C14606800DE5B96 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		C99750A72C14884600DE5B96 /* MarketOrdersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketOrdersView.swift; sourceTree = "<group>"; };
 		C99750A92C14897E00DE5B96 /* ECKMarketOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMarketOrder.swift; sourceTree = "<group>"; };
 		C99750AB2C148D1000DE5B96 /* ECKRegion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKRegion.swift; sourceTree = "<group>"; };
@@ -1369,7 +1369,7 @@
 				C900AE4D2DC7E42600D4EDE5 /* PushPermission */,
 				C952624C2BFA72ED0014B5F5 /* AttributedTextView.swift */,
 				C9DEF4A82C0386D5000238DF /* ECImage.swift */,
-				C99750A42C14606800DE5B96 /* RetryButton.swift */,
+				C99750A42C14606800DE5B96 /* ErrorView.swift */,
 				C9F1A0002F8F100100A1B2C3 /* PageLoaderView.swift */,
 				C9BBEC542C6E9C0B008CB3F2 /* ContentEmptyView.swift */,
 				C9B8853A2D8228C6005A32CA /* SolarSystemCell.swift */,
@@ -2268,7 +2268,7 @@
 				C9ACC07C2DC9DD0C0000D0FC /* AppDelegate.swift in Sources */,
 				C9B258532E264FA9009A14DB /* FittingDamageProfileView.swift in Sources */,
 				C9F055C42DE34D5B00340A05 /* FittingDetailView.swift in Sources */,
-				C99750A52C14606800DE5B96 /* RetryButton.swift in Sources */,
+				C99750A52C14606800DE5B96 /* ErrorView.swift in Sources */,
 				C989C39F2E1E3D2D005DEFDF /* ChargeSelectionView.swift in Sources */,
 				C900AE4F2DC7E43500D4EDE5 /* PushPermissionCTA.swift in Sources */,
 				C98484032D7F7E760076016B /* CapitalNavigationInputView.swift in Sources */,

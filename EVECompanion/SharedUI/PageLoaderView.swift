@@ -17,7 +17,7 @@ struct PageLoaderView<PageLoader: ECKPageLoadable, Content: View>: View {
     @ViewBuilder let content: (PageLoader.Element) -> Content
     
     @State private var isLoadingNextPage = false
-    @State private var loadingError = false
+    @State private var loadingError: ECKWebError?
     
     var body: some View {
         Group {
@@ -26,10 +26,10 @@ struct PageLoaderView<PageLoader: ECKPageLoadable, Content: View>: View {
             }
             
             if pageLoader.hasNextPage {
-                if loadingError {
+                if let loadingError {
                     HStack {
                         Spacer()
-                        RetryButton {
+                        ErrorView(error: loadingError) {
                             await loadNextPage()
                         }
                         .buttonStyle(.borderless)
@@ -58,12 +58,12 @@ struct PageLoaderView<PageLoader: ECKPageLoadable, Content: View>: View {
         }
         
         isLoadingNextPage = true
-        loadingError = false
+        loadingError = nil
         
         do {
             try await pageLoader.loadNextPage()
         } catch {
-            loadingError = true
+            loadingError = error
         }
         
         isLoadingNextPage = false
@@ -130,14 +130,13 @@ private final class PreviewPageLoader: ECKPageLoadable {
         hasNextPage = true
     }
     
-    func loadNextPage() async throws {
+    func loadNextPage() async throws(ECKWebError) {
         switch mode {
         case .loading:
-            try await Task.sleep(for: .seconds(30))
+            try? await Task.sleep(for: .seconds(30))
             
         case .error:
-            struct PreviewError: Error {}
-            throw PreviewError()
+            throw ECKWebError.invalidResponse
             
         case .finished:
             hasNextPage = false

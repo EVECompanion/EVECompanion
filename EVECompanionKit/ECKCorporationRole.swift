@@ -64,4 +64,9 @@ public enum ECKCorporationRole: String, Decodable, Sendable {
     case Station_Manager
     case Trader
     
+    public var title: String {
+        // TODO
+        return rawValue
+    }
+    
 }

@@ -64,7 +64,7 @@ public class ECKESIFittingManager: ObservableObject, @unchecked Sendable {
             esiLoadingState = .ready
         } catch {
             logger.error("Error while fetching character fittings \(error)")
-            esiLoadingState = .error
+            esiLoadingState = .error(error)
         }
     }
     

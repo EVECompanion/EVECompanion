@@ -51,7 +51,7 @@ public class ECKJumpClonesManager: ObservableObject, @unchecked Sendable {
             loadingState = .ready
         } catch {
             logger.error("Error while fetching jump clones \(error)")
-            loadingState = .error
+            loadingState = .error(error)
         }
     }
     

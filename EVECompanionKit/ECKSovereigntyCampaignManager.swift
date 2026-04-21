@@ -109,7 +109,7 @@ public class ECKSovereigntyCampaignManager: ObservableObject, @unchecked Sendabl
         } catch {
             logger.error("Error while fetching sovereignty campaigns \(error)")
             if campaigns.isEmpty {
-                self.loadingState = .error
+                self.loadingState = .error(error)
             }
         }
     }

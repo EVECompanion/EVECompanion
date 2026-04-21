@@ -20,5 +20,5 @@ public protocol ECKPageLoadable: ObservableObject {
     func reload() async
     
     @MainActor
-    func loadNextPage() async throws
+    func loadNextPage() async throws(ECKWebError)
 }

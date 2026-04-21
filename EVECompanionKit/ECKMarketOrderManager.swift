@@ -232,7 +232,7 @@ public class ECKMarketOrderManager: ObservableObject, ECKPageLoadable, @unchecke
             self.marketOrdersLoadingState = .ready
         } catch {
             logger.error("Error loading market orders: \(String(describing: error))")
-            self.marketOrdersLoadingState = .error
+            self.marketOrdersLoadingState = .error(error)
         }
     }
     
@@ -243,7 +243,7 @@ public class ECKMarketOrderManager: ObservableObject, ECKPageLoadable, @unchecke
     }
     
     @MainActor
-    public func loadNextPage() async throws {
+    public func loadNextPage() async throws(ECKWebError) {
         guard pagination.isLoading == false else {
             return
         }
@@ -262,7 +262,7 @@ public class ECKMarketOrderManager: ObservableObject, ECKPageLoadable, @unchecke
     }
     
     @MainActor
-    private func loadPage(with resource: ECKWebResource<[ECKMarketOrder]>, isFirstPage: Bool) async throws {
+    private func loadPage(with resource: ECKWebResource<[ECKMarketOrder]>, isFirstPage: Bool) async throws(ECKWebError) {
         pagination.setIsLoading(true)
         defer {
             pagination.setIsLoading(false)

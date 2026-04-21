@@ -43,8 +43,8 @@ struct FittingESIImportView: View {
                 case .loading:
                     ProgressView()
                     
-                case .error:
-                    RetryButton {
+                case .error(let error):
+                    ErrorView(error: error) {
                         await fittingManager.loadFittings()
                     }
                     

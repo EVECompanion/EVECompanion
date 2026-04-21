@@ -7,7 +7,8 @@
 
 import Foundation
 
-enum ECKWebError: Error {
+public enum ECKWebError: Error, Equatable {
+    case decoding
     case connectionError
     case emptyResponse
     case invalidResponse

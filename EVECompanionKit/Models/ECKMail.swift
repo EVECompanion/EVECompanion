@@ -126,7 +126,7 @@ public final class ECKMail: ObservableObject, Identifiable, Decodable, Equatable
             self.body = (response.body ?? "")?.convertToAttributed()
             self.loadingState = .ready
         } catch {
-            self.loadingState = .error
+            self.loadingState = .error(error)
         }
     }
     

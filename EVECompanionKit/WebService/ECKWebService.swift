@@ -34,7 +34,7 @@ final class ECKWebService: Sendable {
     
     init() { }
     
-    func loadResource(resource: ECKWebResource<ECKEmptyResponse>) async throws -> (response: ECKEmptyResponse, headers: [String: String]) {
+    func loadResource(resource: ECKWebResource<ECKEmptyResponse>) async throws(ECKWebError) -> (response: ECKEmptyResponse, headers: [String: String]) {
         do {
             return try await self.handleResource(resource: resource)
         } catch ECKWebError.emptyResponse {
@@ -44,7 +44,7 @@ final class ECKWebService: Sendable {
         }
     }
     
-    func loadResource<DecodeTo>(resource: ECKWebResource<ECKOptionalResponse<DecodeTo>>) async throws -> (response: DecodeTo?, headers: [String: String]) where DecodeTo: Decodable {
+    func loadResource<DecodeTo>(resource: ECKWebResource<ECKOptionalResponse<DecodeTo>>) async throws(ECKWebError) -> (response: DecodeTo?, headers: [String: String]) where DecodeTo: Decodable {
         do {
             let response = try await self.handleResource(resource: resource)
             return (response: response.response.response,
@@ -60,11 +60,11 @@ final class ECKWebService: Sendable {
         }
     }
     
-    func loadResource<DecodeTo>(resource: ECKWebResource<DecodeTo>) async throws -> (response: DecodeTo, headers: [String: String]) where DecodeTo: Decodable & Sendable {
+    func loadResource<DecodeTo>(resource: ECKWebResource<DecodeTo>) async throws(ECKWebError) -> (response: DecodeTo, headers: [String: String]) where DecodeTo: Decodable & Sendable {
         return try await handleResource(resource: resource)
     }
     
-    private func handleResource<DecodeTo>(resource: ECKWebResource<DecodeTo>) async throws -> (response: DecodeTo, headers: [String: String]) where DecodeTo: Decodable & SendableMetatype {
+    private func handleResource<DecodeTo>(resource: ECKWebResource<DecodeTo>) async throws(ECKWebError) -> (response: DecodeTo, headers: [String: String]) where DecodeTo: Decodable & SendableMetatype {
         guard let url = resource.url else {
             logger.error("Resource \(resource) does not have a valid URL")
             throw ECKWebError.unknownError
@@ -102,8 +102,8 @@ final class ECKWebService: Sendable {
             
         } catch ECKWebError.statusCode(let statusCode, let data) {
             if statusCode == 403 {
-                let tokenExpiredResponse = try decoder.decode(ECKTokenExpired.self, from: data)
-                if tokenExpiredResponse.error == "token is expired" {
+                let tokenExpiredResponse = try? decoder.decode(ECKTokenExpired.self, from: data)
+                if tokenExpiredResponse?.error == "token is expired" {
                     await resource.token?.markAccessTokenExpired()
                 }
             }
@@ -113,99 +113,111 @@ final class ECKWebService: Sendable {
             if DecodeTo.self != ECKEmptyResponse.self {
                 logger.error("Error while decoding data to \(DecodeTo.self): \(error.localizedDescription) data: \(String(data: fetchedData.response, encoding: .utf8) ?? "")")
             }
-            throw error
+            throw .decoding
         }
     }
     
-    private func loadData<DecodeTo>(url: URL, resource: ECKWebResource<DecodeTo>) async throws -> (response: Data, headers: [String: String]) where DecodeTo: Decodable & SendableMetatype {
-        return try await withCheckedThrowingContinuation { continuation in
-            Task { @MainActor in
-                var request = URLRequest(url: url, timeoutInterval: timeout)
-                
-                request.httpMethod = resource.method.rawValue
-                
-                for header in resource.headers {
-                    request.addValue(header.value, forHTTPHeaderField: header.key)
-                }
-                
-                let userAgent = "\(ECKAppInfo.bundleId)/\(ECKAppInfo.version) (contact@evecompanion.app; +https://github.com/EVECompanion/EVECompanion; eve:EVECompanion DotApp)"
-                request.addValue(userAgent,
-                                 forHTTPHeaderField: "User-Agent")
-                
-                if let token = resource.token {
-                    guard token.isValid else {
-                        continuation.resume(throwing: ECKAPIError.tokenInvalid)
-                        return
+    private func loadData<DecodeTo>(url: URL, resource: ECKWebResource<DecodeTo>) async throws(ECKWebError) -> (response: Data, headers: [String: String]) where DecodeTo: Decodable & SendableMetatype {
+        do {
+            return try await withCheckedThrowingContinuation { continuation in
+                Task { @MainActor in
+                    var request = URLRequest(url: url, timeoutInterval: timeout)
+                    
+                    request.httpMethod = resource.method.rawValue
+                    
+                    for header in resource.headers {
+                        request.addValue(header.value, forHTTPHeaderField: header.key)
                     }
                     
-                    if token.isExpired {
-                        do {
-                            try await refreshToken(oldToken: token)
-                        } catch {
-                            logger.error("Error while refreshing token for \(token.characterName): \(error)")
-                            continuation.resume(throwing: ECKAPIError.tokenRefresh)
+                    let userAgent = "\(ECKAppInfo.bundleId)/\(ECKAppInfo.version) (contact@evecompanion.app; +https://github.com/EVECompanion/EVECompanion; eve:EVECompanion DotApp)"
+                    request.addValue(userAgent,
+                                     forHTTPHeaderField: "User-Agent")
+                    
+                    if let token = resource.token {
+                        guard token.isValid else {
+                            continuation.resume(throwing: ECKAPIError.tokenInvalid)
                             return
+                        }
+                        
+                        if token.isExpired {
+                            do {
+                                try await refreshToken(oldToken: token)
+                            } catch {
+                                logger.error("Error while refreshing token for \(token.characterName): \(error)")
+                                continuation.resume(throwing: ECKAPIError.tokenRefresh)
+                                return
+                            }
+                        }
+                        
+                        decoder.userInfo[Self.tokenCodingUserInfoKey] = token
+                        request.addValue("Bearer \(token.accessToken)", forHTTPHeaderField: "Authorization")
+                    }
+                    
+                    if let body = resource.body {
+                        if let data = body as? Data {
+                            request.httpBody = data
+                        } else {
+                            let data = try? encoder.encode(body)
+                            request.httpBody = data
+                            request.addValue("application/json",
+                                             forHTTPHeaderField: "Content-Type")
                         }
                     }
                     
-                    decoder.userInfo[Self.tokenCodingUserInfoKey] = token
-                    request.addValue("Bearer \(token.accessToken)", forHTTPHeaderField: "Authorization")
+                    let body = request.httpBody
+                    let resourceDescription = String(describing: resource)
+                    let characterId = resource.token?.characterId
+                    logger.info("Loading data from URL \(url)")
+                    let dataTask = Self.urlSession.dataTask(with: request) { data, response, error in
+                        if let error = error {
+                            logger.error("Error while loading resource \(resourceDescription): \(error.localizedDescription)")
+                            continuation.resume(throwing: ECKWebError.connectionError)
+                            return
+                        }
+                        
+                        guard let response = response as? HTTPURLResponse else {
+                            logger.error("Cannot cast \(String(describing: response)) to HTTPURLResponse")
+                            continuation.resume(throwing: ECKWebError.unknownError)
+                            return
+                        }
+                        
+                        guard let data = data else {
+                            logger.warning("Received empty data, statuscode: \(String(describing: response.statusCode))")
+                            continuation.resume(throwing: ECKWebError.emptyResponse)
+                            return
+                        }
+                        
+                        guard response.statusCode <= 299 else {
+                            logger.error("Received status code \(response.statusCode) for \(url). Character: \(String(describing: characterId)). Request: \(String(describing: String(data: body ?? Data(), encoding: .utf8))) Response: \(String(data: data, encoding: .utf8) ?? "EMPTY")")
+                            continuation.resume(throwing: ECKWebError.statusCode(response.statusCode, data))
+                            return
+                        }
+                        
+                        continuation.resume(returning: (response: data, headers: response.allHeaderFields as? [String: String] ?? [:]))
+                    }
+                    
+                    dataTask.resume()
                 }
-                
-                if let body = resource.body {
-                    if let data = body as? Data {
-                         request.httpBody = data
-                    } else {
-                        let data = try? encoder.encode(body)
-                        request.httpBody = data
-                        request.addValue("application/json",
-                                         forHTTPHeaderField: "Content-Type")
-                    }
-                }
-                
-                let body = request.httpBody
-                let resourceDescription = String(describing: resource)
-                let characterId = resource.token?.characterId
-                logger.info("Loading data from URL \(url)")
-                let dataTask = Self.urlSession.dataTask(with: request) { data, response, error in
-                    if let error = error {
-                        logger.error("Error while loading resource \(resourceDescription): \(error.localizedDescription)")
-                        continuation.resume(throwing: ECKWebError.connectionError)
-                        return
-                    }
-                    
-                    guard let response = response as? HTTPURLResponse else {
-                        logger.error("Cannot cast \(String(describing: response)) to HTTPURLResponse")
-                        continuation.resume(throwing: ECKWebError.unknownError)
-                        return
-                    }
-                    
-                    guard let data = data else {
-                        logger.warning("Received empty data, statuscode: \(String(describing: response.statusCode))")
-                        continuation.resume(throwing: ECKWebError.emptyResponse)
-                        return
-                    }
-                    
-                    guard response.statusCode <= 299 else {
-                        logger.error("Received status code \(response.statusCode) for \(url). Character: \(String(describing: characterId)). Request: \(String(describing: String(data: body ?? Data(), encoding: .utf8))) Response: \(String(data: data, encoding: .utf8) ?? "EMPTY")")
-                        continuation.resume(throwing: ECKWebError.statusCode(response.statusCode, data))
-                        return
-                    }
-                    
-                    continuation.resume(returning: (response: data, headers: response.allHeaderFields as? [String: String] ?? [:]))
-                }
-                
-                dataTask.resume()
             }
+        } catch let error as ECKWebError {
+            throw error
+        } catch {
+            logger.error("Error loading data: \(error)")
+            throw .unknownError
         }
-        
     }
     
     @ECKTokenActor
-    private func refreshToken(oldToken: ECKToken) async throws {
+    private func refreshToken(oldToken: ECKToken) async throws(ECKWebError) {
         if let task = oldToken.refreshTask {
-            try await task.value
-            return
+            do {
+                try await task.value
+            } catch let error as ECKWebError {
+                throw error
+            } catch {
+                logger.error("Error refreshing token: \(error)")
+                throw .unknownError
+            }
         }
 
         let task: Task<Void, any Error> = Task { @ECKTokenActor in
@@ -216,8 +228,10 @@ final class ECKWebService: Sendable {
 
         do {
             try await task.value
-        } catch {
+        } catch let error as ECKWebError {
             throw error
+        } catch {
+            throw .unknownError
         }
     }
     

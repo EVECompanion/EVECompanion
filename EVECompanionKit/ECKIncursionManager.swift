@@ -28,7 +28,7 @@ public class ECKIncursionManager: ObservableObject {
             self.loadingState = .ready
         } catch {
             logger.error("Error loading incursions \(error)")
-            self.loadingState = .error
+            self.loadingState = .error(error)
         }
     }
     

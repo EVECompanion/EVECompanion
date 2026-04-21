@@ -74,7 +74,7 @@ public class ECKPlanetaryColonyManager: ObservableObject, @unchecked Sendable {
             self.loadingState = .ready
         } catch {
             logger.error("Error loading planetary colonies \(error)")
-            self.loadingState = .error
+            self.loadingState = .error((error as? ECKWebError) ?? .unknownError)
         }
     }
     

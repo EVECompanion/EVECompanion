@@ -162,40 +162,46 @@ public class ECKAssetManager: ObservableObject, @unchecked Sendable {
         } catch {
             logger.error("Error while fetching assets \(error)")
             await MainActor.run {
-                loadingState = .error
+                loadingState = .error(error)
             }
         }
     }
     
-    func fetchAssets() async throws -> [ECKAsset] {
+    func fetchAssets() async throws(ECKWebError) -> [ECKAsset] {
         let firstAssetPageResource = ECKCharacterAssetsResource(token: character.token, page: 1)
         let firstPageResponse = try await ECKWebService().loadResource(resource: firstAssetPageResource)
         let firstPageAssets: [ECKAsset] = firstPageResponse.response
         
         let totalPages: Int = Int(firstPageResponse.headers["x-pages"] ?? "") ?? 1
         
-        let otherPageAssets: [ECKAsset] = try await withThrowingTaskGroup(of: [ECKAsset].self) { group -> [ECKAsset] in
-            guard totalPages >= 2 else {
-                return []
-            }
-            
-            for page in 2...totalPages {
-                group.addTask {
-                    let resource = ECKCharacterAssetsResource(token: self.character.token, page: page)
-                    return try await ECKWebService().loadResource(resource: resource).response
+        do {
+            let otherPageAssets: [ECKAsset] = try await withThrowingTaskGroup(of: [ECKAsset].self) { group -> [ECKAsset] in
+                guard totalPages >= 2 else {
+                    return []
                 }
+                
+                for page in 2...totalPages {
+                    group.addTask {
+                        let resource = ECKCharacterAssetsResource(token: self.character.token, page: page)
+                        return try await ECKWebService().loadResource(resource: resource).response
+                    }
+                }
+                
+                var fetchedAssets = [ECKAsset]()
+                
+                for try await assets in group {
+                    fetchedAssets.append(contentsOf: assets)
+                }
+                
+                return fetchedAssets
             }
             
-            var fetchedAssets = [ECKAsset]()
-
-            for try await assets in group {
-                fetchedAssets.append(contentsOf: assets)
-            }
-            
-            return fetchedAssets
+            return firstPageAssets + otherPageAssets
+        } catch let error as ECKWebError {
+            throw error
+        } catch {
+            throw .unknownError
         }
-        
-        return firstPageAssets + otherPageAssets
     }
     
     func fetchAssetNames(itemIds: [Int]) async -> [ECKAssetName] {

@@ -104,7 +104,7 @@ public class ECKIndustryJobManager: ObservableObject, ECKPageLoadable, @unchecke
             loadingState = .ready
         } catch {
             logger.error("Error while fetching industry jobs \(error)")
-            loadingState = .error
+            loadingState = .error(error)
         }
     }
     
@@ -115,7 +115,7 @@ public class ECKIndustryJobManager: ObservableObject, ECKPageLoadable, @unchecke
     }
     
     @MainActor
-    public func loadNextPage() async throws {
+    public func loadNextPage() async throws(ECKWebError) {
         guard pagination.isLoading == false else {
             return
         }
@@ -134,7 +134,7 @@ public class ECKIndustryJobManager: ObservableObject, ECKPageLoadable, @unchecke
     }
     
     @MainActor
-    private func loadPage(with resource: ECKWebResource<[ECKIndustryJob]>, isFirstPage: Bool) async throws {
+    private func loadPage(with resource: ECKWebResource<[ECKIndustryJob]>, isFirstPage: Bool) async throws(ECKWebError) {
         pagination.setIsLoading(true)
         defer {
             pagination.setIsLoading(false)

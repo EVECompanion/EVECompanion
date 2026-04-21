@@ -38,7 +38,7 @@ public class ECKServerStatusManager: ObservableObject, @unchecked Sendable {
             self.loadingState = .ready
         } catch {
             logger.error("Error while fetching server status: \(error)")
-            loadingState = .error
+            loadingState = .error(error)
         }
     }
     

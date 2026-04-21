@@ -85,7 +85,7 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
     }
     
     @MainActor
-    private func loadPublicInfo() async throws {
+    private func loadPublicInfo() async throws(ECKWebError) {
         let publicInfoResource = ECKPublicCharacterInfoResource(token: token)
         self.publicInfo = try await ECKWebService().loadResource(resource: publicInfoResource).response
     }
@@ -97,8 +97,10 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
             do {
                 try await self.loadAllianceAndCorpData()
                 self.initialDataLoadingState = .ready
+            } catch let error as ECKWebError {
+                self.initialDataLoadingState = .error(error)
             } catch {
-                self.initialDataLoadingState = .error
+                self.initialDataLoadingState = .error(.unknownError)
             }
         }
     }
@@ -137,9 +139,12 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
                     await ECKWidgetDataStorage.shared.storeSkillQueue(skillqueue, for: self)
                 }
                 self.initialDataLoadingState = .ready
+            } catch let error as ECKWebError {
+                logger.error("Error loading data: \(error)")
+                self.initialDataLoadingState = .error(error)
             } catch {
                 logger.error("Error loading data: \(error)")
-                self.initialDataLoadingState = .error
+                self.initialDataLoadingState = .error(.unknownError)
             }
         }
     }
@@ -199,7 +204,7 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
     }
     
     @MainActor
-    private func loadAllianceAndCorpData() async throws {
+    private func loadAllianceAndCorpData() async throws(ECKWebError) {
         if publicInfo == nil {
             try? await loadPublicInfo()
         }
@@ -272,7 +277,7 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
             walletJournalLoadingState = .ready
         } catch {
             logger.error("Error loading wallet journal data: \(String(describing: error))")
-            walletJournalLoadingState = .error
+            walletJournalLoadingState = .error(error)
         }
     }
     
@@ -289,7 +294,7 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
             self.walletTransactionsLoadingState = .ready
         } catch {
             logger.error("Error loading wallet transaction data: \(String(describing: error))")
-            self.walletTransactionsLoadingState = .error
+            self.walletTransactionsLoadingState = .error(error)
         }
     }
     

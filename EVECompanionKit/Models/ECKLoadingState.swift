@@ -12,6 +12,6 @@ public enum ECKLoadingState: Equatable {
     case ready
     case loading
     case reloading
-    case error
+    case error(ECKWebError)
     
 }
