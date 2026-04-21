@@ -23,6 +23,7 @@ public final class ECKIndustryJob: Decodable, Identifiable, ObservableObject, @u
         case runs
         case startDate = "start_date"
         case station = "station_id"
+        case locationId = "location_id"
         case status
     }
     
@@ -109,7 +110,7 @@ public final class ECKIndustryJob: Decodable, Identifiable, ObservableObject, @u
         self.product = try container.decodeIfPresent(ECKItem.self, forKey: .product)
         self.runs = try container.decode(Int.self, forKey: .runs)
         self.startDate = try container.decode(Date.self, forKey: .startDate)
-        self.station = try container.decode(ECKStation.self, forKey: .station)
+        self.station = try container.decodeIfPresent(ECKStation.self, forKey: .station) ?? container.decode(ECKStation.self, forKey: .locationId)
         self.status = try container.decode(ECKIndustryJob.Status.self, forKey: .status)
     }
     
