@@ -91,6 +91,7 @@ public final class ECKAuthenticatedCorporation: ObservableObject, Identifiable, 
     
     @MainActor
     public func loadInitialData() async {
+        authenticatingCharacter.loadInitialCorpData()
         await authenticatingCharacter.initialDataLoadingTask?.value
         await loadDivisions()
         await loadWalletDivisions()

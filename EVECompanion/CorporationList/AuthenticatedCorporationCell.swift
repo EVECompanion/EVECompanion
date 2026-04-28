@@ -19,41 +19,21 @@ struct AuthenticatedCorporationCell: View {
     }
     
     var body: some View {
-        switch corporation.authenticatingCharacter.initialDataLoadingState {
-        case .ready,
-             .reloading:
-            if corporation.authenticatingCharacter.hasValidToken && allowsNavigation {
-                NavigationLink(value: AppScreen.corporationDetail(corporation)) {
-                    normalView
-                }
-            } else {
-                normalView
+        if corporation.authenticatingCharacter.hasValidToken
+            && allowsNavigation
+            && isShowingError == false {
+            NavigationLink(value: AppScreen.corporationDetail(corporation)) {
+                contentView
             }
-            
-        case .loading:
-            ProgressView()
-        case .error:
-            // TODO
-            Text("Error")
+        } else {
+            contentView
         }
     }
     
     @MainActor
-    private var normalView: some View {
+    private var contentView: some View {
         VStack(alignment: .leading) {
-            if let corpId = corporation.corpId,
-               let corpData = corporation.publicCorpInfo {
-                HStack {
-                    ECImage(id: corpId,
-                            category: .corporation)
-                    .frame(width: 80, height: 80)
-                    .clipShape(Circle())
-                    
-                    Text(corpData.name)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .font(.title2)
-                }
-            }
+            corporationHeaderView
             
             if let allianceId = corporation.allianceId,
                let allianceData = corporation.publicAllianceInfo {
@@ -72,17 +52,85 @@ struct AuthenticatedCorporationCell: View {
             Spacer()
                 .frame(height: 20)
             
-            Text("Via Character")
+            characterView
             
-            HStack {
-                ECImage(id: corporation.authenticatingCharacter.id,
-                        category: .character)
-                .frame(width: 30, height: 30)
+            statusView
+        }
+    }
+    
+    @ViewBuilder
+    private var corporationHeaderView: some View {
+        HStack {
+            if let corpId = corporation.corpId {
+                ECImage(id: corpId,
+                        category: .corporation)
+                .frame(width: 80, height: 80)
                 .clipShape(Circle())
-                
-                Text(corporation.authenticatingCharacter.name)
-                    .fixedSize(horizontal: false, vertical: true)
             }
+            
+            Text(corporation.publicCorpInfo?.name ?? "Unknown Corporation")
+                .fixedSize(horizontal: false, vertical: true)
+                .font(.title2)
+        }
+    }
+    
+    @ViewBuilder
+    private var characterView: some View {
+        Text("Via Character")
+        
+        HStack {
+            ECImage(id: corporation.authenticatingCharacter.id,
+                    category: .character)
+            .frame(width: 30, height: 30)
+            .clipShape(Circle())
+            
+            Text(corporation.authenticatingCharacter.name)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+    
+    @ViewBuilder
+    private var statusView: some View {
+        switch corporation.authenticatingCharacter.initialDataLoadingState {
+        case .ready,
+             .reloading:
+            EmptyView()
+            
+        case .loading:
+            ProgressView()
+            
+        case .error(let error):
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .foregroundStyle(.red)
+                    .font(.title3)
+                
+                ErrorView(error: error) {
+                    await corporation.loadInitialData()
+                }
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color.red.opacity(0.12))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay {
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color.red.opacity(0.35), lineWidth: 1)
+            }
+            .onTapGesture {
+                Task {
+                    await corporation.loadInitialData()
+                }
+            }
+        }
+    }
+    
+    private var isShowingError: Bool {
+        switch corporation.authenticatingCharacter.initialDataLoadingState {
+        case .error:
+            return true
+        default:
+            return false
         }
     }
     
