@@ -65,8 +65,9 @@ public enum ECKCorporationRole: String, Decodable, Sendable {
     case Trader
     
     public var title: String {
-        // TODO
-        return rawValue
+        rawValue
+            .split(separator: "_")
+            .joined(separator: " ")
     }
     
 }
