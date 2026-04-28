@@ -111,7 +111,7 @@ final class ECKWebService: Sendable {
             throw ECKWebError.statusCode(statusCode, data)
         } catch {
             if DecodeTo.self != ECKEmptyResponse.self {
-                logger.error("Error while decoding data to \(DecodeTo.self): \(error.localizedDescription) data: \(String(data: fetchedData.response, encoding: .utf8) ?? "")")
+                logger.error("Error while decoding data to \(DecodeTo.self): \(error) data: \(String(data: fetchedData.response, encoding: .utf8) ?? "")")
             }
             throw .decoding
         }
