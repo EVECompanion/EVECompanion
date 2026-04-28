@@ -31,6 +31,10 @@ struct CorporationDetailView: View {
                 )
             }
             
+            Section("Wallet Divisions") {
+                walletDivisionSection
+            }
+            
             Section("Finance") {
                 row(for: .marketOrders)
                 row(for: .contracts)
@@ -41,6 +45,9 @@ struct CorporationDetailView: View {
             }
         }
         .navigationTitle(corporation.publicCorpInfo?.name ?? "")
+        .refreshable {
+            await corporation.loadWalletDivisions()
+        }
     }
     
     @ViewBuilder
@@ -71,6 +78,42 @@ struct CorporationDetailView: View {
             return .marketOrders(manager: marketOrderManager)
         case .industryJobs:
             return .industryJobs(manager: industryJobsManager)
+        }
+    }
+    
+    @ViewBuilder
+    private var walletDivisionSection: some View {
+        switch corporation.walletDivisionsLoadingState {
+        case .ready,
+             .reloading:
+            if let walletDivisions = corporation.walletDivisions,
+               walletDivisions.isEmpty == false {
+                ForEach(walletDivisions) { division in
+                    HStack {
+                        Text(division.name)
+                        
+                        Spacer()
+                        
+                        Text("\(ECFormatters.iskLong(division.balance)) ISK")
+                            .multilineTextAlignment(.trailing)
+                    }
+                }
+            } else {
+                Text("No wallet division balances available.")
+                    .foregroundStyle(.secondary)
+            }
+            
+        case .loading:
+            HStack {
+                ProgressView()
+                Text("Loading wallet divisions...")
+                    .foregroundStyle(.secondary)
+            }
+            
+        case .error(let error):
+            ErrorView(error: error) {
+                await corporation.loadWalletDivisions()
+            }
         }
     }
 }

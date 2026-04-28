@@ -28,7 +28,7 @@ struct ErrorView: View {
                 await action()
             }
         } label: {
-            VStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: 10) {
                 Group {
                     switch error {
                     case .insufficientCorpRole(requiredRoles: let requiredRoles):
