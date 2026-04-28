@@ -45,6 +45,79 @@ public class ECKIndustryJobManager: ObservableObject, ECKPageLoadable, @unchecke
         }
     }
     
+    public enum ActivityFilter: String, CaseIterable, Identifiable, Sendable {
+        case all
+        case manufacturing
+        case researchTE
+        case researchME
+        case copy
+        case invention
+        case reaction
+        
+        public var id: String { rawValue }
+        
+        public var title: String {
+            switch self {
+            case .all:
+                return "All"
+            case .manufacturing:
+                return "Manufacturing"
+            case .researchTE:
+                return "Researching Time Efficiency"
+            case .researchME:
+                return "Researching Material Efficiency"
+            case .copy:
+                return "Copying"
+            case .invention:
+                return "Invention"
+            case .reaction:
+                return "Reaction"
+            }
+        }
+        
+        func matches(_ job: ECKIndustryJob) -> Bool {
+            switch self {
+            case .all:
+                return true
+            case .manufacturing:
+                return job.activity.activityId == 1
+            case .researchTE:
+                return job.activity.activityId == 3
+            case .researchME:
+                return job.activity.activityId == 4
+            case .copy:
+                return job.activity.activityId == 5
+            case .invention:
+                return job.activity.activityId == 8
+            case .reaction:
+                return job.activity.activityId == 9
+            }
+        }
+        
+    }
+    
+    public enum SortOption: String, CaseIterable, Identifiable, Sendable {
+        case startedNewest
+        case startedOldest
+        case finishSoonest
+        case finishLatest
+        
+        public var id: String { rawValue }
+        
+        public var title: String {
+            switch self {
+            case .startedNewest:
+                return "Started: Newest"
+            case .startedOldest:
+                return "Started: Oldest"
+            case .finishSoonest:
+                return "Finish: Soonest"
+            case .finishLatest:
+                return "Finish: Latest"
+            }
+        }
+    }
+    
     public let source: Source
     let isPreview: Bool
     
@@ -55,8 +128,25 @@ public class ECKIndustryJobManager: ObservableObject, ECKPageLoadable, @unchecke
     private var pagination = ECKPagination()
     @Published public var loadingState: ECKLoadingState = .loading
     @Published private var jobs: [ECKIndustryJob] = []
+    @Published public var activityFilter: ActivityFilter = .all
+    @Published public var sortOption: SortOption = .startedNewest
     
-    public var elements: [ECKIndustryJob] { jobs }
+    public var elements: [ECKIndustryJob] {
+        jobs
+            .filter({ activityFilter.matches($0) })
+            .sorted { lhs, rhs in
+                switch sortOption {
+                case .startedNewest:
+                    return lhs.startDate > rhs.startDate
+                case .startedOldest:
+                    return lhs.startDate < rhs.startDate
+                case .finishSoonest:
+                    return lhs.endDate < rhs.endDate
+                case .finishLatest:
+                    return lhs.endDate > rhs.endDate
+                }
+            }
+    }
     
     public convenience init(corporation: ECKAuthenticatedCorporation, isPreview: Bool = false) {
         self.init(source: .corporation(corporation), isPreview: isPreview)
