@@ -44,6 +44,8 @@ class Coordinator: ObservableObject {
             WalletJournalView(character: character)
         case .walletTransactions(let character):
             WalletTransactionsView(character: character)
+        case .corporationWalletTransactions(let corporation):
+            CorporationWalletTransactionsView(corporation: corporation)
         case .loyaltyPoints(let character):
             LoyaltyPointsView(character: character)
         case .planetaryColonies(let manager):

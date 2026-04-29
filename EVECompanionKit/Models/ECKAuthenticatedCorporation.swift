@@ -15,6 +15,8 @@ public final class ECKAuthenticatedCorporation: ObservableObject, Identifiable, 
     @Published public var divisionsLoadingState: ECKLoadingState = .loading
     @Published public var walletDivisions: [ECKCorporationWalletDivision]?
     @Published public var walletDivisionsLoadingState: ECKLoadingState = .loading
+    @Published public var walletTransactions: [Int: [ECKWalletTransactionEntry]] = [:]
+    @Published public var walletTransactionsLoadingStates: [Int: ECKLoadingState] = [:]
     
     public var corpId: Int? {
         authenticatingCharacter.publicInfo?.corporationId
@@ -79,6 +81,14 @@ public final class ECKAuthenticatedCorporation: ObservableObject, Identifiable, 
             .init(division: 7, balance: 1300000, name: "Reserve")
         ]
         self.walletDivisionsLoadingState = .ready
+        self.walletTransactions = [
+            1: [.dummy1, .dummy2],
+            2: [.dummy2]
+        ]
+        self.walletTransactionsLoadingStates = [
+            1: .ready,
+            2: .ready
+        ]
     }
     
     public static func == (lhs: ECKAuthenticatedCorporation, rhs: ECKAuthenticatedCorporation) -> Bool {
@@ -185,6 +195,52 @@ public final class ECKAuthenticatedCorporation: ObservableObject, Identifiable, 
         } catch let error {
             logger.error("Error loading corporation wallet data: \(String(describing: error))")
             self.walletDivisionsLoadingState = .error(error)
+        }
+    }
+    
+    public func walletTransactions(for division: ECKCorporationWalletDivision) -> [ECKWalletTransactionEntry]? {
+        walletTransactions[division.division]
+    }
+    
+    public func walletTransactionsLoadingState(for division: ECKCorporationWalletDivision) -> ECKLoadingState {
+        walletTransactionsLoadingStates[division.division] ?? .loading
+    }
+    
+    @MainActor
+    public func loadWalletTransactions(for division: ECKCorporationWalletDivision) async {
+        guard UserDefaults.standard.isDemoModeEnabled == false else {
+            walletTransactionsLoadingStates[division.division] = .ready
+            return
+        }
+        
+        guard let corporationId = corpId else {
+            walletTransactionsLoadingStates[division.division] = .error(.unknownError)
+            return
+        }
+        
+        guard let roles else {
+            walletTransactionsLoadingStates[division.division] = .error(.unknownError)
+            return
+        }
+        
+        await authenticatingCharacter.initialDataLoadingTask?.value
+        
+        walletTransactionsLoadingStates[division.division] = .loading
+        let resource = ECKCorporationWalletTransactionsResource(
+            corporationId: corporationId,
+            division: division.division,
+            token: authenticatingCharacter.token,
+            currentRoles: roles
+        )
+        
+        do {
+            self.walletTransactions[division.division] = try await ECKWebService()
+                .loadResource(resource: resource)
+                .response
+            self.walletTransactionsLoadingStates[division.division] = .ready
+        } catch let error {
+            logger.error("Error loading corporation wallet transaction data: \(String(describing: error))")
+            self.walletTransactionsLoadingStates[division.division] = .error(error)
         }
     }
     

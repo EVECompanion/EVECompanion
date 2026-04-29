@@ -77,7 +77,7 @@ public final class ECKWalletTransactionEntry: Decodable, Identifiable, Sendable 
         self.clientId = try container.decode(Int.self, forKey: .clientId)
         self.date = try container.decode(Date.self, forKey: .date)
         self.isBuy = try container.decode(Bool.self, forKey: .isBuy)
-        self.isPersonal = try container.decode(Bool.self, forKey: .isPersonal)
+        self.isPersonal = try container.decodeIfPresent(Bool.self, forKey: .isPersonal) ?? false
         self.journalRefId = try container.decode(Int.self, forKey: .journalRefId)
         self.location = try container.decode(ECKStation.self, forKey: .location)
         self.quantity = try container.decode(Int.self, forKey: .quantity)

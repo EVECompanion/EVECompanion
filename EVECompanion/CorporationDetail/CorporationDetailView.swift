@@ -36,6 +36,7 @@ struct CorporationDetailView: View {
             }
             
             Section("Finance") {
+                row(for: .walletTransactions)
                 row(for: .marketOrders)
                 row(for: .contracts)
             }
@@ -72,6 +73,8 @@ struct CorporationDetailView: View {
     
     func destination(for row: CorporationDetailRowType) -> AppScreen {
         switch row {
+        case .walletTransactions:
+            return .corporationWalletTransactions(corporation)
         case .contracts:
             return .contracts(manager: contractManager)
         case .marketOrders:

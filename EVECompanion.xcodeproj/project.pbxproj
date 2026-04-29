@@ -229,6 +229,7 @@
 		C9A7C55F2BF0C545003478AD /* ECKSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A7C55E2BF0C545003478AD /* ECKSettingsManager.swift */; };
 		C9A8067F2FA150B3008D32BC /* ECKCorporationDivisionsResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A8067E2FA150B3008D32BC /* ECKCorporationDivisionsResource.swift */; };
 		C9A806812FA15133008D32BC /* ECKCorporationDivision.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A806802FA15133008D32BC /* ECKCorporationDivision.swift */; };
+		C9A806852FA2ADFF008D32BC /* ECKCorporationWalletTransactionsResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A806842FA2ADFF008D32BC /* ECKCorporationWalletTransactionsResource.swift */; };
 		C9ACC0782DC9612D0000D0FC /* ECKSkillCompletedNotificationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ACC0772DC9612D0000D0FC /* ECKSkillCompletedNotificationRequest.swift */; };
 		C9ACC0792DC962270000D0FC /* ECFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93FE8372BED29F200729DD8 /* ECFormatters.swift */; };
 		C9ACC07C2DC9DD0C0000D0FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ACC07B2DC9DD0C0000D0FC /* AppDelegate.swift */; };
@@ -667,6 +668,7 @@
 		C9A7C55E2BF0C545003478AD /* ECKSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSettingsManager.swift; sourceTree = "<group>"; };
 		C9A8067E2FA150B3008D32BC /* ECKCorporationDivisionsResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCorporationDivisionsResource.swift; sourceTree = "<group>"; };
 		C9A806802FA15133008D32BC /* ECKCorporationDivision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCorporationDivision.swift; sourceTree = "<group>"; };
+		C9A806842FA2ADFF008D32BC /* ECKCorporationWalletTransactionsResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCorporationWalletTransactionsResource.swift; sourceTree = "<group>"; };
 		C9ACC0772DC9612D0000D0FC /* ECKSkillCompletedNotificationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSkillCompletedNotificationRequest.swift; sourceTree = "<group>"; };
 		C9ACC07B2DC9DD0C0000D0FC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C9AD0E302DF782C700E762AC /* ECKESITypeResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKESITypeResource.swift; sourceTree = "<group>"; };
@@ -1274,6 +1276,7 @@
 				C99CC7242F955F5F000BF4BC /* ECKCorporationIndustryJobsResource.swift */,
 				C99822B22F76858A0031B439 /* ECKCorporationMarketOrdersResource.swift */,
 				C91064932FA148BA0083574E /* ECKCorporationWalletsResource.swift */,
+				C9A806842FA2ADFF008D32BC /* ECKCorporationWalletTransactionsResource.swift */,
 				C9A8067E2FA150B3008D32BC /* ECKCorporationDivisionsResource.swift */,
 			);
 			path = Corporation;
@@ -2319,6 +2322,7 @@
 				C983AAB72BF64915002EDECB /* ECKSendMailResource.swift in Sources */,
 				C9FD52E92C01D9750084E5E1 /* ECKWalletJournalEntryRefType.swift in Sources */,
 				C952BCA02BEC1E380070C504 /* ECKCharacterWalletResource.swift in Sources */,
+				C9A806852FA2ADFF008D32BC /* ECKCorporationWalletTransactionsResource.swift in Sources */,
 				C96430842CC1AC3700E8D6A6 /* ECKPlanetType.swift in Sources */,
 				C9511D1C2EDC2B9A001CEED5 /* ECKSkillPlan.swift in Sources */,
 				C96F98A52BF017DA00DEC34F /* ECKPublicCharacterInfo.swift in Sources */,
