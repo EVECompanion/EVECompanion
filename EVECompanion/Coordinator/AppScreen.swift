@@ -22,8 +22,7 @@ enum AppScreen: Hashable {
     case contracts(manager: ECKContractManager)
     case marketOrders(manager: ECKMarketOrderManager)
     case walletJournal(ECKCharacter)
-    case walletTransactions(ECKCharacter)
-    case corporationWalletTransactions(ECKAuthenticatedCorporation)
+    case walletTransactions(manager: ECKWalletTransactionManager)
     case loyaltyPoints(ECKCharacter)
     case mail(ECKCharacter)
     case skills(ECKCharacter)
@@ -66,8 +65,6 @@ enum AppScreen: Hashable {
             return "walletJournal"
         case .walletTransactions:
             return "walletTransactions"
-        case .corporationWalletTransactions:
-            return "corporationWalletTransactions"
         case .loyaltyPoints:
             return "loyaltyPoints"
         case .mail:
@@ -125,15 +122,14 @@ enum AppScreen: Hashable {
         case (.characterDetail(let lhsCharacter, _), .characterDetail(let rhsCharacter, _)),
              (.characterSheet(let lhsCharacter), .characterSheet(let rhsCharacter)),
              (.walletJournal(let lhsCharacter), .walletJournal(let rhsCharacter)),
-             (.walletTransactions(let lhsCharacter), .walletTransactions(let rhsCharacter)),
              (.loyaltyPoints(let lhsCharacter), .loyaltyPoints(let rhsCharacter)),
              (.mail(let lhsCharacter), .mail(let rhsCharacter)),
              (.skills(let lhsCharacter), .skills(let rhsCharacter)),
              (.skillQueue(let lhsCharacter), .skillQueue(let rhsCharacter)):
             return lhsCharacter == rhsCharacter
-            
-        case (.corporationWalletTransactions(let lhsCorp), .corporationWalletTransactions(let rhsCorp)):
-            return lhsCorp.corpId == rhsCorp.corpId
+        
+        case (.walletTransactions(manager: let lhsManager), .walletTransactions(manager: let rhsManager)):
+            return lhsManager.source == rhsManager.source
         
         case (.marketOrders(manager: let lhsManager), .marketOrders(manager: let rhsManager)):
             return lhsManager.source == rhsManager.source
@@ -205,10 +201,8 @@ enum AppScreen: Hashable {
             hasher.combine(manager.source)
         case .walletJournal(let character):
             hasher.combine(character)
-        case .walletTransactions(let character):
-            hasher.combine(character)
-        case .corporationWalletTransactions(let corporation):
-            hasher.combine(corporation)
+        case .walletTransactions(let manager):
+            hasher.combine(manager.source)
         case .loyaltyPoints(let character):
             hasher.combine(character)
         case .mail(let character):

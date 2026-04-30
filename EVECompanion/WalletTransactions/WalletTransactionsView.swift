@@ -10,15 +10,17 @@ import EVECompanionKit
 
 struct WalletTransactionsView: View {
     
-    @ObservedObject var character: ECKCharacter
+    @StateObject var walletTransactionManager: ECKWalletTransactionManager
     
     var body: some View {
         WalletTransactionsListView(
-            entries: character.walletTransactions ?? [],
-            loadingState: character.walletTransactionsLoadingState,
-            title: "Wallet Transactions",
+            entries: walletTransactionManager.walletTransactions,
+            loadingState: walletTransactionManager.loadingState,
             load: {
-                await character.loadWalletTransactions()
+                await walletTransactionManager.loadWalletTransactions()
+            },
+            reload: {
+                await walletTransactionManager.loadWalletTransactions()
             },
             header: { }
         )
@@ -28,58 +30,37 @@ struct WalletTransactionsView: View {
 
 struct CorporationWalletTransactionsView: View {
     
-    @ObservedObject var corporation: ECKAuthenticatedCorporation
-    @State private var selectedDivisionId: Int?
-    
-    private var selectedDivision: ECKCorporationWalletDivision? {
-        guard let walletDivisions = corporation.walletDivisions,
-              walletDivisions.isEmpty == false else {
-            return nil
-        }
-        
-        return walletDivisions.first(where: { $0.division == selectedDivisionId }) ?? walletDivisions.first
-    }
+    @StateObject var walletTransactionManager: ECKWalletTransactionManager
     
     var body: some View {
         WalletTransactionsListView(
-            entries: selectedDivision.flatMap { corporation.walletTransactions(for: $0) } ?? [],
-            loadingState: selectedDivision.map { corporation.walletTransactionsLoadingState(for: $0) } ?? .loading,
-            title: "Wallet Transactions",
+            entries: walletTransactionManager.walletTransactions,
+            loadingState: walletTransactionManager.loadingState,
             load: {
-                guard let selectedDivision else {
-                    await corporation.loadWalletDivisions()
-                    return
-                }
-                
-                await corporation.loadWalletTransactions(for: selectedDivision)
+                await walletTransactionManager.loadWalletTransactions()
+            },
+            reload: {
+                await walletTransactionManager.loadWalletTransactions(forceReload: true)
             },
             header: {
                 walletDivisionPicker
             }
         )
         .onAppear {
-            selectDefaultDivisionIfNeeded()
+            walletTransactionManager.selectDefaultDivisionIfNeeded()
         }
-        .onChange(of: corporation.walletDivisions?.map(\.division) ?? []) { _ in
-            selectDefaultDivisionIfNeeded()
-        }
-        .onChange(of: selectedDivisionId) { _ in
+        .onChange(of: walletTransactionManager.selectedDivisionId) { _ in
             Task<Void, Never> {
-                guard let selectedDivision else {
-                    return
-                }
-                
-                await corporation.loadWalletTransactions(for: selectedDivision)
+                await walletTransactionManager.loadWalletTransactions()
             }
         }
     }
     
     @ViewBuilder
     private var walletDivisionPicker: some View {
-        if let walletDivisions = corporation.walletDivisions,
-           walletDivisions.isEmpty == false {
+        if walletTransactionManager.walletDivisions.isEmpty == false {
             Picker("Wallet Division", selection: selectedDivisionIdBinding) {
-                ForEach(walletDivisions) { division in
+                ForEach(walletTransactionManager.walletDivisions) { division in
                     Text(division.name)
                         .tag(division.division)
                 }
@@ -91,20 +72,12 @@ struct CorporationWalletTransactionsView: View {
     private var selectedDivisionIdBinding: Binding<Int?> {
         Binding(
             get: {
-                selectedDivision?.division
+                walletTransactionManager.selectedDivision?.division
             },
             set: { newValue in
-                selectedDivisionId = newValue
+                walletTransactionManager.selectDivision(id: newValue)
             }
         )
-    }
-    
-    private func selectDefaultDivisionIfNeeded() {
-        guard selectedDivisionId == nil else {
-            return
-        }
-        
-        selectedDivisionId = corporation.walletDivisions?.first?.division
     }
     
 }
@@ -113,53 +86,62 @@ private struct WalletTransactionsListView<Header: View>: View {
     
     let entries: [ECKWalletTransactionEntry]
     let loadingState: ECKLoadingState
-    let title: String
     let load: () async -> Void
+    let reload: () async -> Void
     let header: Header
     
     init(entries: [ECKWalletTransactionEntry],
          loadingState: ECKLoadingState,
-         title: String,
          load: @escaping () async -> Void,
+         reload: @escaping () async -> Void,
          @ViewBuilder header: () -> Header) {
         self.entries = entries
         self.loadingState = loadingState
-        self.title = title
         self.load = load
+        self.reload = reload
         self.header = header()
     }
     
     var body: some View {
-        List {
-            header
-            
-            if entries.isEmpty && loadingState == .ready {
-                ContentEmptyView(image: Image("Neocom/Journal"),
-                                 title: "No Wallet Transactions",
-                                 subtitle: "New wallet transactions will appear here")
-                    .frame(maxWidth: .infinity)
-                    .listRowSeparator(.hidden)
-            } else {
-                ForEach(entries) { entry in
-                    WalletTransactionCell(entry: entry)
+        switch loadingState {
+        case .ready,
+                .reloading,
+                .error:
+            List {
+                header
+                
+                if entries.isEmpty && loadingState == .ready {
+                    Section {
+                        ContentEmptyView(image: Image("Neocom/Journal"),
+                                         title: "No Wallet Transactions",
+                                         subtitle: "New wallet transactions will appear here")
+                        .frame(maxWidth: .infinity)
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                    }
+                } else if entries.isEmpty, case .error(let error) = loadingState {
+                    ErrorView(error: error) {
+                        await reload()
+                    }
+                } else {
+                    ForEach(entries) { entry in
+                        WalletTransactionCell(entry: entry)
+                    }
                 }
             }
-        }
-        .refreshable {
-            await load()
-        }
-        .onAppear {
-            Task<Void, Never> {
-                await load()
+            .refreshable {
+                await reload()
             }
+            .navigationTitle("Wallet Transactions")
+        case .loading:
+            ProgressView()
         }
-        .navigationTitle(title)
     }
     
 }
 
 #Preview {
     NavigationStack {
-        WalletTransactionsView(character: .dummy)
+        WalletTransactionsView(walletTransactionManager: .init(character: .dummy, isPreview: true))
     }
 }

@@ -14,6 +14,7 @@ struct CharacterDetailView: View {
     @StateObject var character: ECKCharacter
     @StateObject var assetManager: ECKAssetManager
     @StateObject var contractManager: ECKContractManager
+    @StateObject var walletTransactionManager: ECKWalletTransactionManager
     @StateObject var marketOrderManager: ECKMarketOrderManager
     @StateObject var industryJobsManager: ECKIndustryJobManager
     @StateObject var jumpClonesManager: ECKJumpClonesManager
@@ -26,6 +27,7 @@ struct CharacterDetailView: View {
         self._character = StateObject(wrappedValue: character)
         self._assetManager = StateObject(wrappedValue: .init(character: character))
         self._contractManager = StateObject(wrappedValue: .init(character: character))
+        self._walletTransactionManager = StateObject(wrappedValue: .init(character: character))
         self._marketOrderManager = StateObject(wrappedValue: .init(character: character))
         self._industryJobsManager = StateObject(wrappedValue: .init(character: character))
         self._jumpClonesManager = StateObject(wrappedValue: .init(character: character))
@@ -131,7 +133,7 @@ struct CharacterDetailView: View {
         case .walletJournal:
             return .walletJournal(character)
         case .walletTransactions:
-            return .walletTransactions(character)
+            return .walletTransactions(manager: walletTransactionManager)
         case .loyaltyPoints:
             return .loyaltyPoints(character)
         case .mail:

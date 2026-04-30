@@ -42,10 +42,13 @@ class Coordinator: ObservableObject {
             MarketOrdersView(manager: manager)
         case .walletJournal(let character):
             WalletJournalView(character: character)
-        case .walletTransactions(let character):
-            WalletTransactionsView(character: character)
-        case .corporationWalletTransactions(let corporation):
-            CorporationWalletTransactionsView(corporation: corporation)
+        case .walletTransactions(let manager):
+            switch manager.source {
+            case .character:
+                WalletTransactionsView(walletTransactionManager: manager)
+            case .corporation:
+                CorporationWalletTransactionsView(walletTransactionManager: manager)
+            }
         case .loyaltyPoints(let character):
             LoyaltyPointsView(character: character)
         case .planetaryColonies(let manager):
