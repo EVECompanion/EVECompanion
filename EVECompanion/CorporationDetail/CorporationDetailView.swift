@@ -16,6 +16,14 @@ struct CorporationDetailView: View {
     @StateObject var marketOrderManager: ECKMarketOrderManager
     @StateObject var industryJobsManager: ECKIndustryJobManager
     
+    var logoutButtonTarget: LogoutButton.TargetValue {
+        guard let publicInfo = corporation.publicCorpInfo else {
+            return .character(name: corporation.authenticatingCharacter.name)
+        }
+        
+        return .corp(name: publicInfo.name)
+    }
+    
     init(corporation: ECKAuthenticatedCorporation) {
         self.corporation = corporation
         self._contractManager = StateObject(wrappedValue: .init(corporation: corporation))
@@ -51,6 +59,12 @@ struct CorporationDetailView: View {
         .refreshable {
             await corporation.loadWalletDivisions()
         }
+        .toolbar(content: {
+            ToolbarItem {
+                LogoutButton(character: corporation.authenticatingCharacter,
+                             targetValue: logoutButtonTarget)
+             }
+        })
     }
     
     @ViewBuilder

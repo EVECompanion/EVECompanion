@@ -93,7 +93,8 @@ struct CharacterDetailView: View {
         .navigationTitle(character.name)
         .toolbar(content: {
             ToolbarItem {
-                CharacterLogoutButton(character: character)
+                LogoutButton(character: character,
+                             targetValue: .character(name: character.name))
             }
         })
         .onAppear {

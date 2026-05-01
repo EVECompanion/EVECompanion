@@ -73,7 +73,8 @@ struct CharacterCell: View {
             Text("This character's login has expired. Please login again or remove this character.")
                 .foregroundStyle(Color.secondary)
             
-            CharacterLogoutButton(character: character)
+            LogoutButton(character: character,
+                         targetValue: .character(name: character.name))
         }
     }
     
