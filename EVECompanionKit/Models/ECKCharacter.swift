@@ -29,7 +29,6 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
     @Published public var mailbox: [ECKMail]?
     @Published public var corporation: ECKCorporation?
     @Published public var alliance: ECKAlliance?
-    @Published public var walletJournal: [ECKWalletJournalEntry]?
     @Published public var loyaltyPoints: [ECKLoyaltyPointsEntry]?
     @Published public var jumpFatigue: ECKJumpFatigue?
     @Published public var location: ECKCharacterLocation?
@@ -37,7 +36,6 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
     @Published public var corpRoles: ECKCorporationRoles?
     
     @Published public var initialDataLoadingState: ECKLoadingState = .loading
-    @Published public var walletJournalLoadingState: ECKLoadingState = .loading
     
     public var hasValidToken: Bool {
         return token.isValid
@@ -70,7 +68,6 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
         self.skillqueue = .dummy
         self.publicInfo = .dummy
         self.mailbox = [.dummyRead, .dummyUnread]
-        self.walletJournal = [.dummy1, .dummy2, .dummy3]
         self.loyaltyPoints = [.dummy1, .dummy2]
         self.corporation = .dummy
         self.alliance = .dummy
@@ -258,23 +255,6 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
         
         Task { @MainActor in
             await self.loadJumpFatigue()
-        }
-    }
-    
-    @MainActor
-    public func loadWalletJournal() async {
-        guard UserDefaults.standard.isDemoModeEnabled == false else {
-            return
-        }
-        
-        walletJournalLoadingState = .loading
-        let resource = ECKCharacterWalletJournalResource(token: token)
-        do {
-            self.walletJournal = try await ECKWebService().loadResource(resource: resource).response
-            walletJournalLoadingState = .ready
-        } catch {
-            logger.error("Error loading wallet journal data: \(String(describing: error))")
-            walletJournalLoadingState = .error(error)
         }
     }
     

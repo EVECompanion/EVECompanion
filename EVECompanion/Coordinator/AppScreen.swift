@@ -21,7 +21,7 @@ enum AppScreen: Hashable {
     case assetList(manager: ECKAssetManager)
     case contracts(manager: ECKContractManager)
     case marketOrders(manager: ECKMarketOrderManager)
-    case walletJournal(ECKCharacter)
+    case walletJournal(manager: ECKWalletJournalManager)
     case walletTransactions(manager: ECKWalletTransactionManager)
     case loyaltyPoints(ECKCharacter)
     case mail(ECKCharacter)
@@ -121,12 +121,14 @@ enum AppScreen: Hashable {
             return true
         case (.characterDetail(let lhsCharacter, _), .characterDetail(let rhsCharacter, _)),
              (.characterSheet(let lhsCharacter), .characterSheet(let rhsCharacter)),
-             (.walletJournal(let lhsCharacter), .walletJournal(let rhsCharacter)),
              (.loyaltyPoints(let lhsCharacter), .loyaltyPoints(let rhsCharacter)),
              (.mail(let lhsCharacter), .mail(let rhsCharacter)),
              (.skills(let lhsCharacter), .skills(let rhsCharacter)),
              (.skillQueue(let lhsCharacter), .skillQueue(let rhsCharacter)):
             return lhsCharacter == rhsCharacter
+        
+        case (.walletJournal(manager: let lhsManager), .walletJournal(manager: let rhsManager)):
+            return lhsManager.character == rhsManager.character
         
         case (.walletTransactions(manager: let lhsManager), .walletTransactions(manager: let rhsManager)):
             return lhsManager.source == rhsManager.source
@@ -199,8 +201,8 @@ enum AppScreen: Hashable {
             hasher.combine(manager.source)
         case .marketOrders(manager: let manager):
             hasher.combine(manager.source)
-        case .walletJournal(let character):
-            hasher.combine(character)
+        case .walletJournal(manager: let manager):
+            hasher.combine(manager.character)
         case .walletTransactions(let manager):
             hasher.combine(manager.source)
         case .loyaltyPoints(let character):
@@ -254,3 +256,4 @@ enum AppScreen: Hashable {
     }
     
 }
+

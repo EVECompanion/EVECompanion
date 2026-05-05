@@ -40,8 +40,8 @@ class Coordinator: ObservableObject {
             ContractsListView(contractManager: manager)
         case .marketOrders(manager: let manager):
             MarketOrdersView(manager: manager)
-        case .walletJournal(let character):
-            WalletJournalView(character: character)
+        case .walletJournal(manager: let manager):
+            WalletJournalView(walletJournalManager: manager)
         case .walletTransactions(let manager):
             switch manager.source {
             case .character:

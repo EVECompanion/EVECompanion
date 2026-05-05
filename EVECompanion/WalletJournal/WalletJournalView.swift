@@ -10,59 +10,91 @@ import EVECompanionKit
 
 struct WalletJournalView: View {
     
-    @ObservedObject var character: ECKCharacter
+    @StateObject var walletJournalManager: ECKWalletJournalManager
     
     var body: some View {
-        List(character.walletJournal ?? []) { entry in
-            VStack(alignment: .leading, spacing: 10) {
-                Text(entry.description)
-                    .font(.headline)
-                
-                HStack {
-                    VStack(alignment: .leading) {
-                        if let balance = entry.balance {
-                            Text("Balance: \(ECFormatters.iskShort(balance)) ISK")
+        switch walletJournalManager.loadingState {
+        case .ready, .reloading, .error:
+            List {
+                if walletJournalManager.entries.isEmpty && walletJournalManager.loadingState == .ready {
+                    Section {
+                        ContentEmptyView(image: Image("Neocom/Wallet"),
+                                         title: "No Wallet Journal Entries",
+                                         subtitle: "New wallet journal entries will appear here")
+                        .frame(maxWidth: .infinity)
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                    }
+                } else if walletJournalManager.filteredEntries.isEmpty, case .error(let error) = walletJournalManager.loadingState {
+                    ErrorView(error: error) {
+                        await walletJournalManager.reload()
+                    }
+                } else if walletJournalManager.filteredEntries.isEmpty {
+                    Section {
+                        ContentEmptyView(image: Image("Neocom/Wallet"),
+                                         title: "No Results",
+                                         subtitle: "Try adjusting your filters or search")
+                        .frame(maxWidth: .infinity)
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                    }
+                } else {
+                    ForEach(walletJournalManager.filteredEntries) { entry in
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text(entry.description)
+                                .font(.headline)
+                            
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    if let balance = entry.balance {
+                                        Text("Balance: \(ECFormatters.iskShort(balance)) ISK")
+                                    }
+                                    
+                                    Text(ECFormatters.dateFormatter(date: entry.date))
+                                }
+                                
+                                Spacer()
+                                
+                                if let amount = entry.amount {
+                                    Text(ECFormatters.iskLong(amount) + " ISK")
+                                        .foregroundStyle(amount < 0 ? Color.red : Color.green)
+                                }
+                            }
+                            
+                            if let reason = entry.reason,
+                               reason.isEmpty == false {
+                                Text(reason)
+                                    .foregroundStyle(.secondary)
+                            }
                         }
-                        
-                        Text(ECFormatters.dateFormatter(date: entry.date))
-                    }
-                    
-                    Spacer()
-                    
-                    if let amount = entry.amount {
-                        Text(ECFormatters.iskLong(amount) + " ISK")
-                            .foregroundStyle(amount < 0 ? Color.red : Color.green)
                     }
                 }
-                
-                if let reason = entry.reason,
-                   reason.isEmpty == false {
-                    Text(reason)
-                        .foregroundStyle(.secondary)
+            }
+            .refreshable {
+                await walletJournalManager.reload()
+            }
+            .navigationTitle("Wallet Journal")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu {
+                        Picker("Filter", selection: $walletJournalManager.amountFilter) {
+                            ForEach(ECKWalletJournalAmountFilter.allCases) { filter in
+                                Text(filter.title).tag(filter)
+                            }
+                        }
+                    } label: {
+                        Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
+                    }
                 }
             }
-        }
-        .refreshable {
-            await character.loadWalletJournal()
-        }
-        .onAppear(perform: {
-            Task {
-                await character.loadWalletJournal()
-            }
-        })
-        .navigationTitle("Wallet Journal")
-        .overlay {
-            if (character.walletJournal ?? []).isEmpty && character.walletJournalLoadingState == .ready {
-                ContentEmptyView(image: Image("Neocom/Wallet"),
-                                 title: "No Wallet Journal Entries",
-                                 subtitle: "New wallet journal entries will appear here")
-            }
+        case .loading:
+            ProgressView()
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        WalletJournalView(character: .dummy)
+        WalletJournalView(walletJournalManager: .init(character: .dummy, isPreview: true))
     }
 }
