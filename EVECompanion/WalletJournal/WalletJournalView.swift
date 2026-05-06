@@ -16,6 +16,8 @@ struct WalletJournalView: View {
         switch walletJournalManager.loadingState {
         case .ready, .reloading, .error:
             List {
+                walletDivisionPicker
+                
                 if walletJournalManager.entries.isEmpty && walletJournalManager.loadingState == .ready {
                     Section {
                         ContentEmptyView(image: Image("Neocom/Wallet"),
@@ -27,7 +29,7 @@ struct WalletJournalView: View {
                     }
                 } else if walletJournalManager.filteredEntries.isEmpty, case .error(let error) = walletJournalManager.loadingState {
                     ErrorView(error: error) {
-                        await walletJournalManager.reload()
+                        await walletJournalManager.loadWalletJournal(forceReload: true)
                     }
                 } else if walletJournalManager.filteredEntries.isEmpty {
                     Section {
@@ -71,7 +73,7 @@ struct WalletJournalView: View {
                 }
             }
             .refreshable {
-                await walletJournalManager.reload()
+                await walletJournalManager.loadWalletJournal(forceReload: true)
             }
             .navigationTitle("Wallet Journal")
             .toolbar {
@@ -87,9 +89,41 @@ struct WalletJournalView: View {
                     }
                 }
             }
+            .onAppear {
+                walletJournalManager.selectDefaultDivisionIfNeeded()
+            }
+            .onChange(of: walletJournalManager.selectedDivisionId) { _ in
+                Task<Void, Never> {
+                    await walletJournalManager.loadWalletJournal()
+                }
+            }
         case .loading:
             ProgressView()
         }
+    }
+    
+    @ViewBuilder
+    private var walletDivisionPicker: some View {
+        if walletJournalManager.walletDivisions.isEmpty == false {
+            Picker("Wallet Division", selection: selectedDivisionIdBinding) {
+                ForEach(walletJournalManager.walletDivisions) { division in
+                    Text(division.name)
+                        .tag(division.division)
+                }
+            }
+            .pickerStyle(.menu)
+        }
+    }
+    
+    private var selectedDivisionIdBinding: Binding<Int?> {
+        Binding(
+            get: {
+                walletJournalManager.selectedDivision?.division
+            },
+            set: { newValue in
+                walletJournalManager.selectDivision(id: newValue)
+            }
+        )
     }
 }
 

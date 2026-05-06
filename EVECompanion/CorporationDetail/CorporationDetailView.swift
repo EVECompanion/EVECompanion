@@ -12,6 +12,7 @@ struct CorporationDetailView: View {
     
     @ObservedObject private var corporation: ECKAuthenticatedCorporation
     @StateObject var contractManager: ECKContractManager
+    @StateObject var walletJournalManager: ECKWalletJournalManager
     @StateObject var walletTransactionManager: ECKWalletTransactionManager
     @StateObject var marketOrderManager: ECKMarketOrderManager
     @StateObject var industryJobsManager: ECKIndustryJobManager
@@ -30,6 +31,7 @@ struct CorporationDetailView: View {
         self._walletTransactionManager = StateObject(wrappedValue: .init(corporation: corporation))
         self._marketOrderManager = StateObject(wrappedValue: .init(corporation: corporation))
         self._industryJobsManager = StateObject(wrappedValue: .init(corporation: corporation))
+        self._walletJournalManager = StateObject(wrappedValue: .init(corporation: corporation))
     }
     
     var body: some View {
@@ -46,6 +48,7 @@ struct CorporationDetailView: View {
             }
             
             Section("Finance") {
+                row(for: .walletJournal)
                 row(for: .walletTransactions)
                 row(for: .marketOrders)
                 row(for: .contracts)
@@ -89,6 +92,8 @@ struct CorporationDetailView: View {
     
     func destination(for row: CorporationDetailRowType) -> AppScreen {
         switch row {
+        case .walletJournal:
+            return .walletJournal(manager: walletJournalManager)
         case .walletTransactions:
             return .walletTransactions(manager: walletTransactionManager)
         case .contracts:

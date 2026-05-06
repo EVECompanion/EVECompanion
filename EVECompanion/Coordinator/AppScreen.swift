@@ -128,7 +128,7 @@ enum AppScreen: Hashable {
             return lhsCharacter == rhsCharacter
         
         case (.walletJournal(manager: let lhsManager), .walletJournal(manager: let rhsManager)):
-            return lhsManager.character == rhsManager.character
+            return lhsManager.source == rhsManager.source
         
         case (.walletTransactions(manager: let lhsManager), .walletTransactions(manager: let rhsManager)):
             return lhsManager.source == rhsManager.source
@@ -202,7 +202,7 @@ enum AppScreen: Hashable {
         case .marketOrders(manager: let manager):
             hasher.combine(manager.source)
         case .walletJournal(manager: let manager):
-            hasher.combine(manager.character)
+            hasher.combine(manager.source)
         case .walletTransactions(let manager):
             hasher.combine(manager.source)
         case .loyaltyPoints(let character):
@@ -256,4 +256,3 @@ enum AppScreen: Hashable {
     }
     
 }
-

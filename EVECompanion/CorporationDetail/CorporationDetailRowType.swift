@@ -10,12 +10,15 @@ import Foundation
 enum CorporationDetailRowType {
     
     case walletTransactions
+    case walletJournal
     case contracts
     case marketOrders
     case industryJobs
     
     var title: String {
         switch self {
+        case .walletJournal:
+            return "Wallet Journal"
         case .walletTransactions:
             return "Wallet Transactions"
         case .contracts:
@@ -29,6 +32,8 @@ enum CorporationDetailRowType {
     
     var secondaryText: String? {
         switch self {
+        case .walletJournal:
+            return nil
         case .walletTransactions:
             return nil
         case .contracts:
@@ -42,6 +47,8 @@ enum CorporationDetailRowType {
     
     var image: String {
         switch self {
+        case .walletJournal:
+            return "Neocom/Wallet"
         case .walletTransactions:
             return "Neocom/Journal"
         case .contracts:
