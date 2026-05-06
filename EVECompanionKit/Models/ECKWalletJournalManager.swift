@@ -24,16 +24,16 @@ public enum ECKWalletJournalAmountFilter: String, CaseIterable, Identifiable, Se
     }
 }
 
-public class ECKWalletJournalManager: ObservableObject, @unchecked Sendable {
+public class ECKWalletJournalManager: ObservableObject, ECKPageLoadable, @unchecked Sendable {
     
     public enum Source: Equatable, Hashable, Sendable {
         case character(ECKCharacter)
         case corporation(ECKAuthenticatedCorporation)
         
-        fileprivate func resource(division: ECKCorporationWalletDivision?) -> ECKWebResource<[ECKWalletJournalEntry]>? {
+        fileprivate func resource(page: Int, division: ECKCorporationWalletDivision?) -> ECKWebResource<[ECKWalletJournalEntry]>? {
             switch self {
             case .character(let character):
-                return ECKCharacterWalletJournalResource(token: character.token)
+                return ECKCharacterWalletJournalResource(token: character.token, page: page)
             case .corporation(let corporation):
                 guard let corpId = corporation.corpId else {
                     return nil
@@ -50,6 +50,7 @@ public class ECKWalletJournalManager: ObservableObject, @unchecked Sendable {
                 return ECKCorporationWalletJournalResource(
                     corporationId: corpId,
                     division: division.division,
+                    page: page,
                     token: corporation.authenticatingCharacter.token,
                     currentRoles: roles
                 )
@@ -91,6 +92,8 @@ public class ECKWalletJournalManager: ObservableObject, @unchecked Sendable {
     
     @Published public var amountFilter: ECKWalletJournalAmountFilter = .all
     
+    private var paginations: [Int: ECKPagination] = [:]
+    
     public var filteredEntries: [ECKWalletJournalEntry] {
         entries.filter { entry in
             switch amountFilter {
@@ -108,6 +111,14 @@ public class ECKWalletJournalManager: ObservableObject, @unchecked Sendable {
                 return amount < 0
             }
         }
+    }
+    
+    public var elements: [ECKWalletJournalEntry] {
+        filteredEntries
+    }
+    
+    public var hasNextPage: Bool {
+        pagination.hasNextPage
     }
     
     // MARK: - Initializers
@@ -130,6 +141,22 @@ public class ECKWalletJournalManager: ObservableObject, @unchecked Sendable {
     
     // MARK: - Loading
     
+    private var currentDivisionKey: Int {
+        selectedDivision?.division ?? selectedDivisionId ?? 0
+    }
+    
+    private var pagination: ECKPagination {
+        let key = currentDivisionKey
+        
+        if let pagination = paginations[key] {
+            return pagination
+        }
+        
+        let pagination = ECKPagination()
+        paginations[key] = pagination
+        return pagination
+    }
+    
     @MainActor
     public func loadWalletDivisions() async {
         guard case .corporation(let corporation) = source else {
@@ -150,20 +177,26 @@ public class ECKWalletJournalManager: ObservableObject, @unchecked Sendable {
     
     @MainActor
     public func loadWalletJournal(forceReload: Bool = false) async {
-        guard UserDefaults.standard.isDemoModeEnabled == false && isPreview == false else {
-            walletDivisions = demoWalletDivisions
-            selectDefaultDivisionIfNeeded()
-            _entries[selectedDivision?.division ?? 0] = [.dummy1, .dummy2, .dummy3]
-            loadingState = .ready
+        guard pagination.isLoading == false else {
             return
         }
         
-        guard _entries[selectedDivisionId ?? 0] == nil || forceReload else {
+        guard UserDefaults.standard.isDemoModeEnabled == false && isPreview == false else {
+            walletDivisions = demoWalletDivisions
+            selectDefaultDivisionIfNeeded()
+            _entries[currentDivisionKey] = [.dummy1, .dummy2, .dummy3]
+            paginations[currentDivisionKey] = ECKPagination(totalPages: 1, lastLoadedPage: 1)
+            loadingState = .ready
             return
         }
         
         if case .corporation = source {
             await loadWalletDivisions()
+        }
+        
+        if forceReload == false,
+           _entries[currentDivisionKey] != nil {
+            return
         }
         
         if entries.isEmpty {
@@ -172,17 +205,15 @@ public class ECKWalletJournalManager: ObservableObject, @unchecked Sendable {
             loadingState = .reloading
         }
         
-        guard let resource = source.resource(division: selectedDivision) else {
+        guard let resource = source.resource(page: 1, division: selectedDivision) else {
+            paginations[currentDivisionKey] = ECKPagination(totalPages: 1, lastLoadedPage: 1)
             loadingState = .ready
             return
         }
         
         do {
-            let response = try await ECKWebService()
-                .loadResource(resource: resource)
-                .response
-            
-            _entries[selectedDivision?.division ?? 0] = response
+            pagination.reset()
+            try await loadPage(with: resource, isFirstPage: true)
             loadingState = .ready
         } catch {
             logger.error("Error loading wallet journal data: \(String(describing: error))")
@@ -202,12 +233,64 @@ public class ECKWalletJournalManager: ObservableObject, @unchecked Sendable {
     }
     
     @MainActor
+    public func reload() async {
+        pagination.reset()
+        await loadWalletJournal(forceReload: true)
+    }
+    
+    @MainActor
+    public func loadNextPage() async throws(ECKWebError) {
+        guard pagination.isLoading == false else {
+            return
+        }
+        
+        guard hasNextPage else {
+            return
+        }
+        
+        let nextPage = pagination.lastLoadedPage + 1
+        
+        guard let resource = source.resource(page: nextPage, division: selectedDivision) else {
+            return
+        }
+        
+        try await loadPage(with: resource, isFirstPage: false)
+    }
+    
+    @MainActor
     public func selectDefaultDivisionIfNeeded() {
         guard selectedDivisionId == nil else {
             return
         }
         
         selectedDivisionId = walletDivisions.first?.division
+    }
+    
+    @MainActor
+    private func loadPage(with resource: ECKWebResource<[ECKWalletJournalEntry]>, isFirstPage: Bool) async throws(ECKWebError) {
+        let key = currentDivisionKey
+        
+        pagination.setIsLoading(true)
+        defer {
+            pagination.setIsLoading(false)
+        }
+        
+        let response = try await ECKWebService().loadResource(resource: resource)
+        let loadedEntries = response.response.reversed()
+        
+        if isFirstPage {
+            _entries[key] = Array(loadedEntries)
+        } else {
+            _entries[key, default: []].append(contentsOf: loadedEntries)
+        }
+        
+        pagination.next()
+        pagination.setTotalPages(headers: response.headers)
+        
+        if loadedEntries.isEmpty,
+           pagination.totalPages == nil {
+            pagination.setTotalPages(pagination.lastLoadedPage)
+        }
     }
     
     private var demoWalletDivisions: [ECKCorporationWalletDivision] {

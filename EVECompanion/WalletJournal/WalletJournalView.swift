@@ -41,7 +41,7 @@ struct WalletJournalView: View {
                         .listRowBackground(Color.clear)
                     }
                 } else {
-                    ForEach(walletJournalManager.filteredEntries) { entry in
+                    PageLoaderView(pageLoader: walletJournalManager) { entry in
                         VStack(alignment: .leading, spacing: 10) {
                             Text(entry.description)
                                 .font(.headline)
@@ -73,7 +73,7 @@ struct WalletJournalView: View {
                 }
             }
             .refreshable {
-                await walletJournalManager.loadWalletJournal(forceReload: true)
+                await walletJournalManager.reload()
             }
             .navigationTitle("Wallet Journal")
             .toolbar {

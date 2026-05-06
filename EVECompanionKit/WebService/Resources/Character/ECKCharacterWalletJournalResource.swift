@@ -9,12 +9,13 @@ import Foundation
 
 class ECKCharacterWalletJournalResource: ECKWebResource<[ECKWalletJournalEntry]>, @unchecked Sendable {
     
-    init(token: ECKToken) {
+    init(token: ECKToken, page: Int) {
         super.init(host: .esi,
                    endpoint: "/v6/characters/\(token.characterId)/wallet/journal/",
                    token: token,
                    requiredScope: .readCharacterWallet,
-                   requiredCorpRoles: [])
+                   requiredCorpRoles: [],
+                   queryItems: [.init(name: "page", value: "\(page)")])
     }
     
 }
