@@ -14,13 +14,13 @@ struct WalletTransactionsView: View {
     
     var body: some View {
         WalletTransactionsListView(
-            entries: walletTransactionManager.walletTransactions,
+            manager: walletTransactionManager,
             loadingState: walletTransactionManager.loadingState,
             load: {
                 await walletTransactionManager.loadWalletTransactions()
             },
             reload: {
-                await walletTransactionManager.loadWalletTransactions()
+                await walletTransactionManager.reload()
             },
             header: { }
         )
@@ -34,13 +34,13 @@ struct CorporationWalletTransactionsView: View {
     
     var body: some View {
         WalletTransactionsListView(
-            entries: walletTransactionManager.walletTransactions,
+            manager: walletTransactionManager,
             loadingState: walletTransactionManager.loadingState,
             load: {
                 await walletTransactionManager.loadWalletTransactions()
             },
             reload: {
-                await walletTransactionManager.loadWalletTransactions(forceReload: true)
+                await walletTransactionManager.reload()
             },
             header: {
                 walletDivisionPicker
@@ -84,18 +84,18 @@ struct CorporationWalletTransactionsView: View {
 
 private struct WalletTransactionsListView<Header: View>: View {
     
-    let entries: [ECKWalletTransactionEntry]
+    @ObservedObject var manager: ECKWalletTransactionManager
     let loadingState: ECKLoadingState
     let load: () async -> Void
     let reload: () async -> Void
     let header: Header
     
-    init(entries: [ECKWalletTransactionEntry],
+    init(manager: ECKWalletTransactionManager,
          loadingState: ECKLoadingState,
          load: @escaping () async -> Void,
          reload: @escaping () async -> Void,
          @ViewBuilder header: () -> Header) {
-        self.entries = entries
+        self.manager = manager
         self.loadingState = loadingState
         self.load = load
         self.reload = reload
@@ -110,7 +110,7 @@ private struct WalletTransactionsListView<Header: View>: View {
             List {
                 header
                 
-                if entries.isEmpty && loadingState == .ready {
+                if manager.walletTransactions.isEmpty && loadingState == .ready {
                     Section {
                         ContentEmptyView(image: Image("Neocom/Journal"),
                                          title: "No Wallet Transactions",
@@ -119,12 +119,12 @@ private struct WalletTransactionsListView<Header: View>: View {
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
                     }
-                } else if entries.isEmpty, case .error(let error) = loadingState {
+                } else if manager.walletTransactions.isEmpty, case .error(let error) = loadingState {
                     ErrorView(error: error) {
                         await reload()
                     }
                 } else {
-                    ForEach(entries) { entry in
+                    PageLoaderView(pageLoader: manager) { entry in
                         WalletTransactionCell(entry: entry)
                     }
                 }
