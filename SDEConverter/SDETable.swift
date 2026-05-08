@@ -23,7 +23,9 @@ extension SDETable {
         try connection.run(table.create(block: { table in
             self.addColumns(to: table)
         }))
-        
+    }
+
+    func buildIndexes(in connection: Connection) throws {
         try createIndexes(connection: connection)
     }
     

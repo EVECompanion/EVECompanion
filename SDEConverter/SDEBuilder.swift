@@ -24,11 +24,23 @@ class SDEBuilder {
     }
     
     func run() throws {
+        try configureDatabaseForImport()
         try createTables()
-        try fillTables()
-        try applyDataPatches()
-        try fillJumpDistancesTables()
+        try db.transaction {
+            try fillTables()
+            try applyDataPatches()
+            try fillJumpDistancesTables()
+        }
+        try createIndexes()
         try db.execute("VACUUM")
+    }
+    
+    private func configureDatabaseForImport() throws {
+        try db.execute("PRAGMA journal_mode = MEMORY")
+        try db.execute("PRAGMA synchronous = OFF")
+        try db.execute("PRAGMA temp_store = MEMORY")
+        try db.execute("PRAGMA locking_mode = EXCLUSIVE")
+        try db.execute("PRAGMA cache_size = -200000")
     }
     
     private func createTables() throws {
@@ -54,6 +66,31 @@ class SDEBuilder {
         try DogmaEffectsTable().createTable(in: db)
         try CapitalJumpDistancesTable().createTable(in: db)
         try CapitalHSJumpDistancesTable().createTable(in: db)
+    }
+
+    private func createIndexes() throws {
+        try TypesTable().buildIndexes(in: db)
+        try AttributeTypesTable().buildIndexes(in: db)
+        try TypeAttributesTable().buildIndexes(in: db)
+        try AttributeCategoriesTable().buildIndexes(in: db)
+        try GroupsTable().buildIndexes(in: db)
+        try CategoriesTable().buildIndexes(in: db)
+        try TraitsTable().buildIndexes(in: db)
+        try MapDenormalizeTable().buildIndexes(in: db)
+        try TypeEffectsTable().buildIndexes(in: db)
+        try UnitsTable().buildIndexes(in: db)
+        try StationsTable().buildIndexes(in: db)
+        try SolarSystemsTable().buildIndexes(in: db)
+        try RegionsTable().buildIndexes(in: db)
+        try ConstellationsTable().buildIndexes(in: db)
+        try FactionsTable().buildIndexes(in: db)
+        try MarketGroupsTable().buildIndexes(in: db)
+        try IndustryActivitiesTable().buildIndexes(in: db)
+        try PlanetSchematicsTable().buildIndexes(in: db)
+        try PlanetSchematicsTypeMapTable().buildIndexes(in: db)
+        try DogmaEffectsTable().buildIndexes(in: db)
+        try CapitalJumpDistancesTable().buildIndexes(in: db)
+        try CapitalHSJumpDistancesTable().buildIndexes(in: db)
     }
     
     private func fillTables() throws {
@@ -205,12 +242,15 @@ class SDEBuilder {
         let mapTable = MapDenormalizeTable()
         
         let solarSystemsFileContent = try SDEFile.solarSystems.loadFile(sdeDir: sdeDir)
+        var solarSystemNamesById = [Int: String]()
         
         for solarSystem in solarSystemsFileContent {
             var data = solarSystem.value
             
-            data["name"] = (data["name"] as! [String: Any])["en"] as! String
+            let solarSystemName = (data["name"] as! [String: Any])["en"] as! String
+            data["name"] = solarSystemName
             data["typeID"] = 5
+            solarSystemNamesById[Int(solarSystem.key)!] = solarSystemName
             
             try mapTable.add(id: Int(solarSystem.key)!, data: data, to: db)
         }
@@ -219,13 +259,8 @@ class SDEBuilder {
         
         for planet in planetsFileContent {
             var data: [String: Any] = planet.value
-            
-            let statement = try db.prepare("""
-                SELECT itemName from mapDenormalize WHERE itemID = ?
-            """, planet.value["solarSystemID"] as! Int)
-            
-            let result = try statement.run().makeIterator().failableNext()
-            let systemName = result!.first as! String
+            let solarSystemId = planet.value["solarSystemID"] as! Int
+            let systemName = solarSystemNamesById[solarSystemId]!
             let planetIndex = data["celestialIndex"] as! Int
             data["name"] = "\(systemName) \(romanNumeral(for: planetIndex))"
             
