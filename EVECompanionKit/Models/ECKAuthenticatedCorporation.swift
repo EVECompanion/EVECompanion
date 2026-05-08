@@ -35,6 +35,31 @@ public final class ECKAuthenticatedCorporation: ObservableObject, Identifiable, 
     public var roles: [ECKCorporationRole]? {
         return authenticatingCharacter.corpRoles?.roles
     }
+
+    public func hasRequiredRoles(for feature: ECKCorporationFeature) -> Bool {
+        let requiredRoles = feature.requiredCorpRoles
+        
+        guard requiredRoles.isEmpty == false else {
+            return true
+        }
+        
+        guard let roles else {
+            return false
+        }
+        
+        return requiredRoles.contains { roles.contains($0) }
+    }
+    
+    public func roleRequirementDescription(for feature: ECKCorporationFeature) -> String? {
+        let requiredRoles = feature.requiredCorpRoles
+        
+        guard requiredRoles.isEmpty == false,
+              hasRequiredRoles(for: feature) == false else {
+            return nil
+        }
+        
+        return "Requires one of these roles: \(requiredRoles.map(\.title).joined(separator: ", "))"
+    }
     
     @MainActor
     public private(set) var walletDivisionsLoadingTask: Task<Void, Never>?

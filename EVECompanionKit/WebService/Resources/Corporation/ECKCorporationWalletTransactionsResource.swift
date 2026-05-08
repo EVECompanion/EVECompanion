@@ -9,6 +9,8 @@ import Foundation
 
 class ECKCorporationWalletTransactionsResource: ECKWebResource<[ECKWalletTransactionEntry]>, @unchecked Sendable {
     
+    static let requiredCorpRoles: [ECKCorporationRole] = [.Accountant, .Junior_Accountant]
+    
     init(corporationId: Int, division: Int, fromId: Int? = nil, token: ECKToken, currentRoles: [ECKCorporationRole]) {
         var queryItems = [URLQueryItem]()
         
@@ -21,7 +23,7 @@ class ECKCorporationWalletTransactionsResource: ECKWebResource<[ECKWalletTransac
             endpoint: "/corporations/\(corporationId)/wallets/\(division)/transactions/",
             token: token,
             requiredScope: .corpReadWallets,
-            requiredCorpRoles: [.Accountant, .Junior_Accountant],
+            requiredCorpRoles: Self.requiredCorpRoles,
             currentCorpRoles: currentRoles,
             queryItems: queryItems,
             headers: ["X-Compatibility-Date": "2026-04-29"]

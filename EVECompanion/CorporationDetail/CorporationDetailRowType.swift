@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import EVECompanionKit
 
 enum CorporationDetailRowType {
     
@@ -14,6 +15,21 @@ enum CorporationDetailRowType {
     case contracts
     case marketOrders
     case industryJobs
+    
+    var feature: ECKCorporationFeature {
+        switch self {
+        case .walletTransactions:
+            return .walletTransactions
+        case .walletJournal:
+            return .walletJournal
+        case .contracts:
+            return .contracts
+        case .marketOrders:
+            return .marketOrders
+        case .industryJobs:
+            return .industryJobs
+        }
+    }
     
     var title: String {
         switch self {
@@ -31,18 +47,7 @@ enum CorporationDetailRowType {
     }
     
     var secondaryText: String? {
-        switch self {
-        case .walletJournal:
-            return nil
-        case .walletTransactions:
-            return nil
-        case .contracts:
-            return nil
-        case .marketOrders:
-            return nil
-        case .industryJobs:
-            return nil
-        }
+        nil
     }
     
     var image: String {
@@ -58,6 +63,14 @@ enum CorporationDetailRowType {
         case .industryJobs:
             return "Neocom/Industry"
         }
+    }
+    
+    func secondaryText(for corporation: ECKAuthenticatedCorporation) -> String? {
+        corporation.roleRequirementDescription(for: feature) ?? secondaryText
+    }
+    
+    func isEnabled(for corporation: ECKAuthenticatedCorporation) -> Bool {
+        corporation.hasRequiredRoles(for: feature)
     }
     
 }

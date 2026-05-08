@@ -72,6 +72,9 @@ struct CorporationDetailView: View {
     
     @ViewBuilder
     func row(for row: CorporationDetailRowType) -> some View {
+        let isEnabled = row.isEnabled(for: corporation)
+        let secondaryText = row.secondaryText(for: corporation)
+        
         NavigationLink(value: destination(for: row)) {
             HStack(content: {
                 Image(row.image)
@@ -80,14 +83,16 @@ struct CorporationDetailView: View {
                 VStack(alignment: .leading) {
                     Text(row.title)
                     
-                    if let secondaryText = row.secondaryText {
+                    if let secondaryText {
                         Text(secondaryText)
                             .foregroundStyle(Color.secondary)
+                            .font(.footnote)
                     }
                 }
                 
             })
         }
+        .disabled(isEnabled == false)
     }
     
     func destination(for row: CorporationDetailRowType) -> AppScreen {

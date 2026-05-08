@@ -9,12 +9,14 @@ import Foundation
 
 class ECKCorporationContractResource: ECKWebResource<[ECKContract]>, @unchecked Sendable {
     
+    static let requiredCorpRoles: [ECKCorporationRole] = []
+    
     init(corporationId: Int, page: Int, token: ECKToken, currentRoles: [ECKCorporationRole]) {
         super.init(host: .esi,
                    endpoint: "/corporations/\(corporationId)/contracts",
                    token: token,
                    requiredScope: .corpReadContracts,
-                   requiredCorpRoles: [],
+                   requiredCorpRoles: Self.requiredCorpRoles,
                    currentCorpRoles: currentRoles,
                    queryItems: [.init(name: "page", value: "\(page)")],
                    headers: ["X-Compatibility-Date": "2026-03-25"])
