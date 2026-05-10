@@ -38,7 +38,7 @@ extension ECKCharacterFitting {
             self.kinetic = kinetic
             self.thermal = thermal
             let averageResist = (em + explosive + kinetic + thermal) / 4.0
-            self.ehp = hp / (1.0 - averageResist)
+            self.ehp = hp / averageResist
         }
     }
     
