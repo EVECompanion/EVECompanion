@@ -98,6 +98,8 @@ public enum ECKContractTypeFilter: String, CaseIterable, Identifiable, Sendable 
 public enum ECKContractSortOption: String, CaseIterable, Identifiable, Sendable {
     case issuedNewest
     case issuedOldest
+    case completedNewest
+    case completedOldest
     case expiresSoonest
     case titleAZ
     
@@ -109,6 +111,10 @@ public enum ECKContractSortOption: String, CaseIterable, Identifiable, Sendable 
             return "Issued: Newest"
         case .issuedOldest:
             return "Issued: Oldest"
+        case .completedNewest:
+            return "Completed: Newest"
+        case .completedOldest:
+            return "Completed: Oldest"
         case .expiresSoonest:
             return "Expiry: Soonest"
         case .titleAZ:
@@ -265,6 +271,10 @@ public class ECKContractManager: ObservableObject, ECKPageLoadable, @unchecked S
                 return lhs.dateIssued > rhs.dateIssued
             case .issuedOldest:
                 return lhs.dateIssued < rhs.dateIssued
+            case .completedNewest:
+                return (lhs.dateCompleted ?? .distantPast) > (rhs.dateCompleted ?? .distantPast)
+            case .completedOldest:
+                return (lhs.dateCompleted ?? .distantFuture) < (rhs.dateCompleted ?? .distantFuture)
             case .expiresSoonest:
                 return lhs.dateExpired < rhs.dateExpired
             case .titleAZ:
