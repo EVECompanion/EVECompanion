@@ -37,6 +37,10 @@ public final class ECKAuthenticatedCorporation: ObservableObject, Identifiable, 
     }
 
     public func hasRequiredRoles(for feature: ECKCorporationFeature) -> Bool {
+        guard UserDefaults.standard.isDemoModeEnabled == false else {
+            return true
+        }
+        
         let requiredRoles = feature.requiredCorpRoles
         
         guard requiredRoles.isEmpty == false else {
