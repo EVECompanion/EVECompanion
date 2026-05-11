@@ -33,7 +33,7 @@ struct FittingStatsView: View {
                       unit: "tf",
                       tint: .gray)
             }
-            
+
             if fitting.canUseDrones {
                 GridRow {
                     entry(title: "Drone Capacity",
@@ -50,6 +50,18 @@ struct FittingStatsView: View {
                           unit: "mbit/s",
                           tint: .blue)
                 }
+            }
+            
+            if let maxRigCalibration = fitting.maxRigCalibration, maxRigCalibration > 0 {
+                GridRow {
+                    entry(title: "Rig Calibration",
+                          icon: "Fitting/rigslot",
+                          value: fitting.usedRigCalibration,
+                          maxValue: maxRigCalibration,
+                          unit: "",
+                          tint: .orange)
+                }
+                .gridCellColumns(2)
             }
         }
         .padding(.horizontal, 16)
@@ -69,7 +81,8 @@ struct FittingStatsView: View {
                     
                     Spacer()
                     
-                    Text("\(ECFormatters.shortenedValue(value, maximumFractionDigits: 1))/\(ECFormatters.shortenedValue(maxValue, maximumFractionDigits: 1)) \(unit)")
+                    let formattedValue = "\(ECFormatters.shortenedValue(value, maximumFractionDigits: 1))/\(ECFormatters.shortenedValue(maxValue, maximumFractionDigits: 1))"
+                    Text(unit.isEmpty ? formattedValue : "\(formattedValue) \(unit)")
                         .foregroundStyle(.secondary)
                 }
                 .background {
@@ -89,6 +102,9 @@ struct FittingStatsView: View {
     
 }
 
-#Preview {
+#Preview("Avatar") {
     FittingDetailView(manager: .init(character: .dummy, isPreview: true), fitting: .dummyAvatar)
+}
+#Preview("VNI") {
+    FittingDetailView(manager: .init(character: .dummy, isPreview: true), fitting: .dummyVNI)
 }

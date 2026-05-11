@@ -83,6 +83,8 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     static let attributeSignatureRadiusId: Int = 552
     static let attributeScanResolutionId: Int = 564
     static let attributeWarpSpeedMultiplierId: Int = 600
+    static let attributeUpgradeCapacityId: Int = 1132
+    static let attributeUpgradeCostId: Int = 1153
     static let attributeRigSlotsId: Int = 1137
     static let attributeRigSlotsId2: Int = 1154
     static let attributeDroneBandwidthId: Int = 1271
@@ -172,6 +174,17 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     
     public var rigSlots: Int {
         return Int(ship.attributes[Self.attributeRigSlotsId]?.value ?? ship.attributes[Self.attributeRigSlotsId2]?.value ?? 0)
+    }
+
+    public var maxRigCalibration: Float? {
+        return ship.attributes[Self.attributeUpgradeCapacityId]?.value
+    }
+
+    public var usedRigCalibration: Float {
+        return rigs.reduce(0) { partialResult, item in
+            let calibration = item.attributes[Self.attributeUpgradeCostId]
+            return partialResult + (calibration?.value ?? calibration?.baseValue ?? 0)
+        }
     }
     
     public var subsystemSlots: Int {
