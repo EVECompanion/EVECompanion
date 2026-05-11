@@ -89,7 +89,7 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
         initialDataLoadingTask = Task { @MainActor in
             self.initialDataLoadingState = .loading
             do {
-                try await self.loadAllianceAndCorpData()
+                try await self.loadAllianceAndCorpData(loadRoles: true)
                 self.initialDataLoadingState = .ready
             } catch let error as ECKWebError {
                 self.initialDataLoadingState = .error(error)
@@ -120,6 +120,7 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
                 async let mailboxResponse = try ECKWebService().loadResource(resource: mailboxResource).response
                 
                 try? await loadPublicInfo()
+                try? await loadAllianceAndCorpData(loadRoles: false)
                 
                 (self.wallet,
                  self.skills,
@@ -198,7 +199,7 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
     }
     
     @MainActor
-    private func loadAllianceAndCorpData() async throws(ECKWebError) {
+    private func loadAllianceAndCorpData(loadRoles: Bool) async throws(ECKWebError) {
         if publicInfo == nil {
             try? await loadPublicInfo()
         }
@@ -213,7 +214,9 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
             self.corporation = corporationResponse
         }
         
-        self.corpRoles = try await ECKWebService().loadResource(resource: ECKCharacterCorpRolesResource(token: token)).response
+        if loadRoles {
+            self.corpRoles = try await ECKWebService().loadResource(resource: ECKCharacterCorpRolesResource(token: token)).response
+        }
     }
     
     @MainActor
