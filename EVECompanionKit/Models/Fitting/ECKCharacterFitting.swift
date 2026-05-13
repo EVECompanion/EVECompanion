@@ -420,22 +420,22 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         }
         
         let structure: ResistanceStats = .init(hp: attributes[Self.attributeStructureHPId]?.value ?? 0,
-                                               em: attributes[Self.attributeStructureEMResistId]?.value ?? 0,
-                                               explosive: attributes[Self.attributeStructureExplosiveResistId]?.value ?? 0,
-                                               kinetic: attributes[Self.attributeStructureKineticResistId]?.value ?? 0,
-                                               thermal: attributes[Self.attributeStructureThermalResistId]?.value ?? 0)
-        
+                                               em: attributes[Self.attributeStructureEMResistId]?.value ?? 1,
+                                               explosive: attributes[Self.attributeStructureExplosiveResistId]?.value ?? 1,
+                                               kinetic: attributes[Self.attributeStructureKineticResistId]?.value ?? 1,
+                                               thermal: attributes[Self.attributeStructureThermalResistId]?.value ?? 1)
+
         let armor: ResistanceStats = .init(hp: attributes[Self.attributeArmorHPId]?.value ?? 0,
-                                           em: attributes[Self.attributeArmorEMResistId]?.value ?? 0,
-                                           explosive: attributes[Self.attributeArmorExplosiveResistId]?.value ?? 0,
-                                           kinetic: attributes[Self.attributeArmorKineticResistId]?.value ?? 0,
-                                           thermal: attributes[Self.attributeArmorThermalResistId]?.value ?? 0)
-        
+                                           em: attributes[Self.attributeArmorEMResistId]?.value ?? 1,
+                                           explosive: attributes[Self.attributeArmorExplosiveResistId]?.value ?? 1,
+                                           kinetic: attributes[Self.attributeArmorKineticResistId]?.value ?? 1,
+                                           thermal: attributes[Self.attributeArmorThermalResistId]?.value ?? 1)
+
         let shield: ResistanceStats = .init(hp: attributes[Self.attributeShieldHPId]?.value ?? 0,
-                                            em: attributes[Self.attributeShieldEMResistId]?.value ?? 0,
-                                            explosive: attributes[Self.attributeShieldExplosiveResistId]?.value ?? 0,
-                                            kinetic: attributes[Self.attributeShieldKineticResistId]?.value ?? 0,
-                                            thermal: attributes[Self.attributeShieldThermalResistId]?.value ?? 0)
+                                            em: attributes[Self.attributeShieldEMResistId]?.value ?? 1,
+                                            explosive: attributes[Self.attributeShieldExplosiveResistId]?.value ?? 1,
+                                            kinetic: attributes[Self.attributeShieldKineticResistId]?.value ?? 1,
+                                            thermal: attributes[Self.attributeShieldThermalResistId]?.value ?? 1)
         
         return .init(structure: structure, armor: armor, shield: shield)
     }
