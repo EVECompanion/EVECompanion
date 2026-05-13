@@ -15,7 +15,13 @@ public class ECKSDEManager: @unchecked Sendable {
     internal var connection: Connection?
     
     private init() {
-        try? setupConnection()
+        do {
+            try setupConnection()
+        } catch {
+            // SDE may legitimately be missing on first launch; setupConnection()
+            // already logs the failure and `connection` stays nil until
+            // updateSDEFile() succeeds.
+        }
     }
     
     private func getSDEURL() throws -> URL {
