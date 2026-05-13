@@ -347,33 +347,41 @@ public class ECKSDEManager: @unchecked Sendable {
     
     public func getImplants(for implantSlot: Int, text: String?) -> [ECKItem] {
         do {
+            let trimmedText = text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            let hasText = trimmedText.isEmpty == false
+
+            var bindings: [Binding?] = [implantSlot]
+            if hasText {
+                bindings.append("%\(trimmedText)%")
+            }
+
             let statement = try connection?.prepare("""
             SELECT
-                invTypes.typeID, 
-                typeName, 
-                description, 
-                mass, 
-                volume, 
-                capacity, 
-                radius, 
+                invTypes.typeID,
+                typeName,
+                description,
+                mass,
+                volume,
+                capacity,
+                radius,
                 iconID
             FROM
                 invTypes
                 LEFT OUTER JOIN dgmTypeAttributes ON invTypes.typeID = dgmTypeAttributes.typeID
             WHERE
                 dgmTypeAttributes.attributeID = 331
-                AND dgmTypeAttributes.valueFloat = \(implantSlot)
-                \(text != nil && text?.isEmpty == false ? "AND typeName LIKE '%\(text!)%'" : "")
-            ORDER BY 
+                AND dgmTypeAttributes.valueFloat = ?
+                \(hasText ? "AND typeName LIKE ?" : "")
+            ORDER BY
                 invTypes.typeName
-            """)
-            
+            """, bindings)
+
             guard let result = try statement?.run() else {
                 return []
             }
-            
+
             let fetchedItems = result.map({ parseItem(row: $0) })
-            
+
             return fetchedItems.map({ ECKItem(itemData: $0) })
         } catch {
             logger.error("Cannot get implants for slot \(implantSlot) with search string \(String(describing: text)): \(error)")
@@ -411,30 +419,38 @@ public class ECKSDEManager: @unchecked Sendable {
                 marketGroupSelector = ""
             }
             
+            let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+            let hasText = trimmedText.isEmpty == false
+
+            var bindings: [Binding?] = []
+            if hasText {
+                bindings.append("%\(trimmedText)%")
+            }
+
             let statement = try connection?.prepare("""
                 \(marketGroupSelector)
                 SELECT
                     invTypes.typeID,
-                    typeName, 
-                    description, 
-                    mass, 
-                    volume, 
-                    capacity, 
-                    radius, 
+                    typeName,
+                    description,
+                    mass,
+                    volume,
+                    capacity,
+                    radius,
                     iconID
                 FROM
                     invTypes
                     \(effectIdFilter != nil ? "INNER JOIN dgmTypeEffects ON invTypes.typeID = dgmTypeEffects.typeID" : "")
-                where 
-                    \(text.isEmpty ? "" : "typeName LIKE \"%\" || \"\(text)\" || \"%\" AND") published = 1
+                where
+                    \(hasText ? "typeName LIKE ? AND" : "") published = 1
                     \(groupIdFilter != nil ? "AND groupID = \(groupIdFilter!)" : "")
                     \(marketGroupIdFilter != nil ? "AND marketGroupID IN (SELECT id FROM marketGroups)" : "")
                     \(effectIdFilter != nil ? "AND effectID = \(effectIdFilter!)" : "")
-                ORDER BY 
+                ORDER BY
                     typeName
-                LIMIT 
+                LIMIT
                     50
-            """)
+            """, bindings)
             
             guard let result = try statement?.run() else {
                 return []
