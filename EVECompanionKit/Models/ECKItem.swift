@@ -115,6 +115,27 @@ public final class ECKItem: Codable, Identifiable, @unchecked Sendable, Hashable
     public var isSkill: Bool {
         return itemCategory.categoryId == 16
     }
+
+    public var isDrone: Bool {
+        return itemCategory.categoryId == 18
+    }
+
+    public var isFighter: Bool {
+        return itemCategory.categoryId == 87
+    }
+
+    public var fighterType: ECKCharacterFitting.FighterType? {
+        switch itemCategory.groupId {
+        case 1537, 4778:
+            return .support
+        case 1652, 4777:
+            return .light
+        case 1653, 4779:
+            return .heavy
+        default:
+            return nil
+        }
+    }
     
     public lazy var bonusTexts: [(header: AttributedString, text: AttributedString)] = {
         var result: [(header: AttributedString, text: AttributedString)] = []

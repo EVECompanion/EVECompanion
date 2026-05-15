@@ -150,5 +150,43 @@ extension ECKCharacterFitting {
             }
         }
     }
+
+    // MARK: - Fighter Types
+    
+    public enum FighterType: String, CaseIterable, Identifiable, Sendable {
+        case light
+        case support
+        case heavy
+
+        public var id: String {
+            return rawValue
+        }
+
+        public var title: String {
+            switch self {
+            case .light:
+                return "Light"
+            case .support:
+                return "Support"
+            case .heavy:
+                return "Heavy"
+            }
+        }
+
+        public var pluralTitle: String {
+            return "\(title) Fighters"
+        }
+
+        public var carrierGroupId: Int {
+            switch self {
+            case .light:
+                return 1652
+            case .support:
+                return 1537
+            case .heavy:
+                return 1653
+            }
+        }
+    }
     
 }

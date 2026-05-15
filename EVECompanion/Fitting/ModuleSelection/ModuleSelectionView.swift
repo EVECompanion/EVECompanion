@@ -15,6 +15,7 @@ struct ModuleSelectionView: View {
         case subsystem
         case module(ECKCharacterFitting.ModuleSlotType)
         case drone
+        case fighter(ECKCharacterFitting.FighterType)
         
         var id: String {
             switch self {
@@ -26,10 +27,21 @@ struct ModuleSelectionView: View {
                 "module-\(moduleSlotType.rawValue)"
             case .drone:
                 "drone"
+            case .fighter(let fighterType):
+                "fighter-\(fighterType.rawValue)"
             }
         }
         
-        var marketGroupIdFilter: Int {
+        var groupIdFilter: Int? {
+            switch self {
+            case .fighter(let fighterType):
+                return fighterType.carrierGroupId
+            default:
+                return nil
+            }
+        }
+
+        var marketGroupIdFilter: Int? {
             switch self {
             case .rig:
                 return 1111
@@ -39,6 +51,8 @@ struct ModuleSelectionView: View {
                 return 9
             case .drone:
                 return 157
+            case .fighter:
+                return nil
             }
         }
         
@@ -63,6 +77,8 @@ struct ModuleSelectionView: View {
                 }
             case .drone:
                 return "Drone Selection"
+            case .fighter(let fighterType):
+                return "\(fighterType.title) Fighter Selection"
             }
         }
         
@@ -73,6 +89,8 @@ struct ModuleSelectionView: View {
             case .subsystem:
                 return nil
             case .drone:
+                return nil
+            case .fighter:
                 return nil
             case .module(let moduleSlotType):
                 switch moduleSlotType {
@@ -121,7 +139,7 @@ struct ModuleSelectionView: View {
     
     var body: some View {
         NavigationStack {
-            MarketGroupsView(groupIdFilter: nil,
+            MarketGroupsView(groupIdFilter: moduleType.groupIdFilter,
                              marketGroupIdFilter: moduleType.marketGroupIdFilter,
                              effectIdFilter: moduleType.effectIdFilter,
                              customTitle: moduleType.title) {

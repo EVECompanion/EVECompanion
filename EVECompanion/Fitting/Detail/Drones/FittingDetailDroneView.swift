@@ -14,90 +14,97 @@ struct FittingDetailDroneView: View {
     let fittingManager: ECKFittingManager
     @ObservedObject private var fitting: ECKCharacterFitting
     @ObservedObject private var drone: ECKCharacterFittingItem
-    var selectedStateBinding: Binding<ECKDogmaEffect.Category> {
-        return .init {
-            return drone.state
+    private let openSelection: (ECKCharacterFittingItem) -> Void
+    private var selectedStateBinding: Binding<ECKDogmaEffect.Category> {
+        .init {
+            drone.state
         } set: { newState in
+            drone.state = newState
             Task {
                 await fitting.calculateAttributes(skills: nil)
             }
-            drone.state = newState
         }
     }
     
     init(fitting: ECKCharacterFitting,
          fittingManager: ECKFittingManager,
-         drone: ECKCharacterFittingItem) {
-        self.fitting = fitting
+         drone: ECKCharacterFittingItem,
+         openSelection: @escaping (ECKCharacterFittingItem) -> Void) {
         self.fittingManager = fittingManager
+        self.fitting = fitting
         self.drone = drone
+        self.openSelection = openSelection
     }
     
     var body: some View {
         HStack {
-            ECImage(id: drone.item.typeId, category: .types)
-                .frame(width: 40, height: 40)
-            
             VStack(alignment: .leading) {
-                Text("\(drone.quantity)x \(drone.item.name)")
-                    .font(.headline)
-                    .fontWeight(.bold)
-                
-                if drone.userSettableStates.count > 1 {
-                    Picker(selection: selectedStateBinding) {
+                Button {
+                    openSelection(drone)
+                } label: {
+                    HStack {
+                        ECImage(id: drone.item.typeId, category: .types)
+                            .frame(width: 40, height: 40)
+                        
+                        Text("\(drone.quantity)x \(drone.item.name)")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                    }
+                }
+                .buttonStyle(.plain)
+
+                if drone.userSettableStates.count > 1 && drone.item.isDrone {
+                    Picker("State", selection: selectedStateBinding) {
                         ForEach(drone.userSettableStates) { state in
                             Text(state.title)
                                 .tag(state)
                         }
-                    } label: {
-                        Text("State")
-                            .fontWeight(.bold)
                     }
                     .pickerStyle(.segmented)
                     .foregroundStyle(.primary)
                 }
             }
             
-            amountButtons
+            actionButtons
         }
     }
     
     @ViewBuilder
-    var amountButtons: some View {
-        HStack {
-            Button {
-                if drone.quantity == 1 {
-                    fitting.removeDrone(drone, manager: fittingManager)
-                } else {
-                    drone.quantity -= 1
+    var actionButtons: some View {
+        if drone.flag == .DroneBay {
+            HStack {
+                Button {
+                    if drone.quantity > 1 {
+                        drone.quantity -= 1
+                        fitting.objectWillChange.send()
+                        fittingManager.saveFitting(fitting)
+                    }
+                } label: {
+                    Image(systemName: "minus")
+                        .padding()
+                }
+                .buttonStyle(.plain)
+                .contentShape(Rectangle())
+                .disabled(drone.quantity <= 1)
+
+                Divider()
+                
+                Button {
+                    drone.quantity += 1
                     fitting.objectWillChange.send()
                     fittingManager.saveFitting(fitting)
+                } label: {
+                    Image(systemName: "plus")
+                        .padding()
                 }
-            } label: {
-                Image(systemName: "minus")
-                    .padding()
+                .buttonStyle(.plain)
+                .contentShape(Rectangle())
+                .disabled(drone.quantity >= 5)
             }
-            .buttonStyle(.plain)
-            .contentShape(Rectangle())
-            .disabled(drone.quantity <= 0)
-
-            Divider()
-            
-            Button {
-                drone.quantity += 1
-                fitting.objectWillChange.send()
-                fittingManager.saveFitting(fitting)
-            } label: {
-                Image(systemName: "plus")
-                    .padding()
+            .background {
+                RoundedRectangle(cornerRadius: 5)
+                    .fill(Color(UIColor.secondarySystemBackground))
             }
-            .buttonStyle(.plain)
-            .contentShape(Rectangle())
-            .disabled(drone.quantity >= 5)
-        }
-        .background {
-            RoundedRectangle(cornerRadius: 5)
-                .fill(Color(UIColor.secondarySystemBackground))
         }
     }
     

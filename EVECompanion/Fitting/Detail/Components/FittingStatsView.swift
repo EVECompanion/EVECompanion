@@ -51,6 +51,24 @@ struct FittingStatsView: View {
                           tint: .blue)
                 }
             }
+
+            if fitting.canUseFighters {
+                GridRow {
+                    entry(title: "Fighter Hangar",
+                          icon: "Fitting/drones",
+                          value: fitting.usedFighterHangarCapacity ?? 0,
+                          maxValue: fitting.maxFighterHangarCapacity ?? 0,
+                          unit: "m³",
+                          tint: .yellow)
+
+                    entry(title: "Fighter Tubes",
+                          icon: "Fitting/drones",
+                          value: Float(fitting.usedFighterTubes),
+                          maxValue: Float(fitting.fighterLaunchTubes),
+                          unit: "",
+                          tint: .blue)
+                }
+            }
             
             if let maxRigCalibration = fitting.maxRigCalibration, maxRigCalibration > 0 {
                 GridRow {

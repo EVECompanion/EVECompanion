@@ -24,6 +24,8 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         case rigs
         case subsystems
         case drones
+        case fighterBay
+        case fighters
         case skills
         case implants
     }
@@ -76,6 +78,10 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     static let attributeShieldKineticResistId: Int = 273
     static let attributeShieldThermalResistId: Int = 274
     static let attributeDroneCapacityId: Int = 283
+    static let attributeFighterCapacityId: Int = 2055
+    static let attributeLightFighterSquadronLimitId: Int = 2217
+    static let attributeSupportFighterSquadronLimitId: Int = 2218
+    static let attributeHeavyFighterSquadronLimitId: Int = 2219
     static let attributeVolumeId: Int = 161
     static let attributeRadiusId: Int = 162
     static let attributeSkillLevelId: Int = 280
@@ -91,10 +97,14 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     static let attributeDroneBandwidthNeededId: Int = 1272
     static let attributeWarpSpeedId: Int = 1281
     static let attributeSubsystemSlotsId: Int = 1367
+    static let attributeFighterLaunchTubesId: Int = 2216
     static let attributeTurretModificatorId: Int = 1368
     static let attributeLauncherModificatorId: Int = 1369
     static let attributeReloadTimeId: Int = 1795
     static let attributeActivationTimeHighIsGoodId: Int = 3115
+    static let attributeStructureLightFighterSquadronLimitId: Int = 2737
+    static let attributeStructureSupportFighterSquadronLimitId: Int = 2738
+    static let attributeStructureHeavyFighterSquadronLimitId: Int = 2739
     
     public var id: UUID {
         return fittingId
@@ -110,7 +120,12 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         + rigs
         + subsystems
         + drones
+        + fighters
         + implants
+    }
+
+    private var serializedItems: [ECKCharacterFittingItem] {
+        return items + fighterBay
     }
     @Published public var name: String
     public let ship: ECKCharacterFittingItem
@@ -130,6 +145,8 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     public var rigs: [ECKCharacterFittingItem]
     public var subsystems: [ECKCharacterFittingItem]
     public var drones: [ECKCharacterFittingItem]
+    public var fighterBay: [ECKCharacterFittingItem]
+    public var fighters: [ECKCharacterFittingItem]
     public var implants: [ECKCharacterFittingItem]
     
     public var launcherHardPoints: Int {
@@ -226,6 +243,10 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     public var maxVelocity: Float? {
         return ship.attributes[Self.attributeMaxVelocityyId]?.value
     }
+
+    public var maxFighterHangarCapacity: Float? {
+        return ship.attributes[Self.attributeFighterCapacityId]?.value
+    }
     
     public var capacitorCapacity: Float? {
         return ship.attributes[Self.attributeCapacitorCapacityId]?.value
@@ -240,6 +261,18 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
             result += volume * Float(drone.quantity)
         }
         
+        return result
+    }
+
+    public var usedFighterHangarCapacity: Float? {
+        var result: Float = 0
+
+        for fighter in fighterBay {
+            let volume = fighter.attributes[Self.attributeVolumeId]?.value ??
+                         fighter.attributes[Self.attributeVolumeId]?.baseValue ?? 0
+            result += volume * Float(fighter.quantity)
+        }
+
         return result
     }
     
@@ -261,6 +294,42 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         }
         
         return result
+    }
+
+    public var fighterLaunchTubes: Int {
+        return Int(ship.attributes[Self.attributeFighterLaunchTubesId]?.value ?? 0)
+    }
+
+    public var usedFighterTubes: Int {
+        return fighters.count
+    }
+
+    public var availableFighterTypes: [FighterType] {
+        return FighterType.allCases.filter { maxFighterSquadrons(for: $0) > 0 }
+    }
+
+    public func maxFighterSquadrons(for type: FighterType) -> Int {
+        let attributeId: Int
+
+        switch type {
+        case .light:
+            attributeId = Self.attributeLightFighterSquadronLimitId
+        case .support:
+            attributeId = Self.attributeSupportFighterSquadronLimitId
+        case .heavy:
+            attributeId = Self.attributeHeavyFighterSquadronLimitId
+        }
+
+        return Int(ship.attributes[attributeId]?.value ?? 0)
+    }
+
+    public func usedFighterTubes(for type: FighterType) -> Int {
+        return fighters.filter { $0.item.fighterType == type }.count
+    }
+
+    public func canAddFighter(ofType type: FighterType) -> Bool {
+        return usedFighterTubes < fighterLaunchTubes
+        && usedFighterTubes(for: type) < maxFighterSquadrons(for: type)
     }
     
     public var alignTime: Float? {
@@ -312,6 +381,10 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     
     public var canUseDrones: Bool {
         return maxDroneCapacity ?? 0 > 0
+    }
+
+    public var canUseFighters: Bool {
+        return fighterLaunchTubes > 0 || (maxFighterHangarCapacity ?? 0) > 0
     }
     
     public static let dummyAvatar: ECKCharacterFitting = {
@@ -487,6 +560,8 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         self.rigs = try container.decode([ECKCharacterFittingItem].self, forKey: .rigs)
         self.subsystems = try container.decode([ECKCharacterFittingItem].self, forKey: .subsystems)
         self.drones = try container.decode([ECKCharacterFittingItem].self, forKey: .drones)
+        self.fighterBay = try container.decodeIfPresent([ECKCharacterFittingItem].self, forKey: .fighterBay) ?? []
+        self.fighters = try container.decodeIfPresent([ECKCharacterFittingItem].self, forKey: .fighters) ?? []
         self.skills = try container.decode([ECKCharacterFittingItem].self, forKey: .skills)
         self.implants = try container.decodeIfPresent([ECKCharacterFittingItem].self, forKey: .implants) ?? []
     }
@@ -525,6 +600,8 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         var rigs: [ECKCharacterFittingItem] = []
         var subsystems: [ECKCharacterFittingItem] = []
         var drones: [ECKCharacterFittingItem] = []
+        var fighterBay: [ECKCharacterFittingItem] = []
+        var fighters: [ECKCharacterFittingItem] = []
         var implants: [ECKCharacterFittingItem] = []
         for item in items.sorted(by: { $0.flag.rawValue < $1.flag.rawValue }) {
             switch item.flag {
@@ -547,23 +624,17 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
             case .DroneBay:
                 drones.append(item)
             case .FighterBay:
-                // TODO
-                continue
+                fighterBay.append(item)
             case .FighterTube0:
-                // TODO
-                continue
+                fighters.append(item)
             case .FighterTube1:
-                // TODO
-                continue
+                fighters.append(item)
             case .FighterTube2:
-                // TODO
-                continue
+                fighters.append(item)
             case .FighterTube3:
-                // TODO
-                continue
+                fighters.append(item)
             case .FighterTube4:
-                // TODO
-                continue
+                fighters.append(item)
             case .FleetHangar:
                 continue
             case .FrigateEscapeBay:
@@ -714,6 +785,8 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         self.rigs = rigs
         self.subsystems = subsystems
         self.drones = drones
+        self.fighterBay = fighterBay
+        self.fighters = fighters
         self.name = name
         self.implants = implants
         self.ship = .init(flag: .ShipHangar,
@@ -724,7 +797,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     public static func == (lhs: ECKCharacterFitting, rhs: ECKCharacterFitting) -> Bool {
         return lhs.description == rhs.description
         && lhs.fittingId == rhs.fittingId
-        && lhs.items == rhs.items
+        && lhs.serializedItems == rhs.serializedItems
         && lhs.name == rhs.name
         && lhs.ship == rhs.ship
     }
@@ -732,7 +805,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     public func hash(into hasher: inout Hasher) {
         hasher.combine(description)
         hasher.combine(fittingId)
-        hasher.combine(items)
+        hasher.combine(serializedItems)
         hasher.combine(name)
         hasher.combine(ship)
     }
@@ -752,6 +825,8 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         try container.encode(self.rigs, forKey: .rigs)
         try container.encode(self.subsystems, forKey: .subsystems)
         try container.encode(self.drones, forKey: .drones)
+        try container.encode(self.fighterBay, forKey: .fighterBay)
+        try container.encode(self.fighters, forKey: .fighters)
         try container.encode(self.skills, forKey: .skills)
         try container.encode(self.implants, forKey: .implants)
     }
@@ -760,7 +835,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         return .init(fittingId: self.fittingId,
                      description: self.description,
                      esiFittingId: self.esiFittingId,
-                     items: self.items.map({ $0.copy() }),
+                     items: self.serializedItems.map({ $0.copy() }),
                      name: self.name,
                      ship: self.ship.item)
     }
@@ -865,12 +940,13 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         return newArray
     }
     
-    private func fixModuleFlags() {
+    func fixModuleFlags() {
         fixModuleFlags(in: rigs, prefix: "RigSlot")
         fixModuleFlags(in: subsystems, prefix: "SubSystemSlot")
         fixModuleFlags(in: highSlotModules, prefix: "HiSlot")
         fixModuleFlags(in: midSlotModules, prefix: "MedSlot")
         fixModuleFlags(in: lowSlotModules, prefix: "LoSlot")
+        fixModuleFlags(in: fighters, prefix: "FighterTube")
     }
     
     private func fixModuleFlags(in modules: [ECKCharacterFittingItem], prefix: String) {

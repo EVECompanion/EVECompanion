@@ -41,8 +41,8 @@ struct FittingDetailView: View {
             Picker("", selection: $selectedTab) {
                 Text("Info").tag(FittingDetailTab.info)
                 Text("Modules").tag(FittingDetailTab.modules)
-                if fitting.canUseDrones {
-                    Text("Drones").tag(FittingDetailTab.drones)
+                if fitting.canUseDrones || fitting.canUseFighters {
+                    Text(fitting.canUseDrones && fitting.canUseFighters ? "Launchables" : (fitting.canUseFighters ? "Fighters" : "Drones")).tag(FittingDetailTab.drones)
                 }
                 Text("Implants").tag(FittingDetailTab.implants)
 //                Text("Cargo").tag(FittingDetailTab.cargo)
@@ -60,7 +60,7 @@ struct FittingDetailView: View {
                                          manager: manager)
                     .tag(FittingDetailTab.modules)
                 
-                if fitting.canUseDrones {
+                if fitting.canUseDrones || fitting.canUseFighters {
                     FittingDetailDronesView(fittingManager: manager,
                                             fitting: fitting)
                         .tag(FittingDetailTab.drones)
@@ -73,6 +73,7 @@ struct FittingDetailView: View {
             .background(Color(uiColor: UIColor.secondarySystemBackground))
             .animation(.spring, value: selectedTab)
             .animation(.spring, value: fitting.canUseDrones)
+            .animation(.spring, value: fitting.canUseFighters)
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .task {

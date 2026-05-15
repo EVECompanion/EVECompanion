@@ -250,7 +250,6 @@ enum AppScreen: Hashable {
         case .settings:
             return
         case .corporationList:
-            // TODO
             return
         }
     }
