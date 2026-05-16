@@ -9,6 +9,11 @@ import Foundation
 import Combine
 
 extension ECKCharacterFitting {
+    private func fighterSquadronSize(for fighter: ECKItem) -> Int {
+        let squadronSize = ECKSDEManager.shared.getAttributeValue(attributeId: Self.attributeFighterSquadronSizeId,
+                                                                 typeId: fighter.typeId) ?? 1
+        return max(Int(squadronSize), 1)
+    }
     
     public func addDrone(newDrone: ECKItem, manager: ECKFittingManager) {
         let item = ECKCharacterFittingItem(flag: .DroneBay, quantity: 5, item: newDrone)
@@ -44,7 +49,7 @@ extension ECKCharacterFitting {
         }
 
         let item = ECKCharacterFittingItem(flag: .init(rawValue: "FighterTube\(fighters.count)")!,
-                                           quantity: 1,
+                                           quantity: fighterSquadronSize(for: newFighter),
                                            item: newFighter)
         fighters.append(item)
         Task {
@@ -60,7 +65,7 @@ extension ECKCharacterFitting {
         }
 
         let replacement = ECKCharacterFittingItem(flag: fighter.flag,
-                                                  quantity: 1,
+                                                  quantity: fighterSquadronSize(for: newFighter),
                                                   item: newFighter)
         replacement.state = fighter.state
         fighters = fighters.map { $0.id == fighter.id ? replacement : $0 }
