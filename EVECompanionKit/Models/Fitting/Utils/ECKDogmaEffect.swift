@@ -10,7 +10,7 @@ import Yams
 
 public class ECKDogmaEffect {
     
-    public enum Category: Int, Identifiable {
+    public enum Category: Int, Identifiable, Codable {
         
         case offline = -1
         case passive = 0

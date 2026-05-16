@@ -20,6 +20,7 @@ struct FittingDetailDroneView: View {
             drone.state
         } set: { newState in
             drone.state = newState
+            fittingManager.saveFitting(fitting)
             Task {
                 await fitting.calculateAttributes(skills: nil)
             }

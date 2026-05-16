@@ -15,6 +15,7 @@ public final class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Obs
         case quantity
         case item = "type_id"
         case charge
+        case state
     }
     
     public var id: UUID
@@ -28,6 +29,14 @@ public final class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Obs
     public internal(set) var attributes: [ECKCharacterFitting.AttributeID: ECKCharacterFitting.FittingAttribute] = [:]
     @Published public var state: ECKDogmaEffect.Category = .online
     internal var maxState: ECKDogmaEffect.Category = .offline
+
+    private static func defaultState(for item: ECKItem) -> ECKDogmaEffect.Category {
+        if item.isDrone || item.isFighter {
+            return .active
+        }
+
+        return .online
+    }
     
     public var userSettableStates: [ECKDogmaEffect.Category] {
         if maxState == .online {
@@ -252,6 +261,7 @@ public final class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Obs
         self.quantity = try container.decode(Int.self, forKey: .quantity)
         self.item = try container.decode(ECKItem.self, forKey: .item)
         self.charge = try container.decodeIfPresent(ECKCharacterFittingItem.self, forKey: .charge)
+        self.state = try container.decodeIfPresent(ECKDogmaEffect.Category.self, forKey: .state) ?? Self.defaultState(for: item)
     }
     
     public init(id: UUID = .init(), flag: ECKItemLocationFlag, quantity: Int, item: ECKItem) {
@@ -259,6 +269,7 @@ public final class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Obs
         self.flag = flag
         self.quantity = quantity
         self.item = item
+        self.state = Self.defaultState(for: item)
     }
     
     public static func == (lhs: ECKCharacterFittingItem, rhs: ECKCharacterFittingItem) -> Bool {
@@ -279,13 +290,16 @@ public final class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Obs
         try container.encode(quantity, forKey: .quantity)
         try container.encode(item, forKey: .item)
         try container.encodeIfPresent(charge, forKey: .charge)
+        try container.encode(state, forKey: .state)
     }
     
     func copy() -> ECKCharacterFittingItem {
-        return .init(id: id,
-                     flag: flag,
-                     quantity: quantity,
-                     item: item)
+        let copy = Self.init(id: id,
+                             flag: flag,
+                             quantity: quantity,
+                             item: item)
+        copy.state = state
+        return copy
     }
     
 }
