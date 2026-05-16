@@ -60,16 +60,17 @@ struct FittingDetailDronesView: View {
             if fitting.canUseFighters {
                 ForEach(fitting.availableFighterTypes) { fighterType in
                     Section {
-                        Button {
-                            sheetItem = .add(.fighter(fighterType))
-                        } label: {
-                            Label {
-                                Text("Add \(fighterType.title) Fighter")
-                            } icon: {
-                                Image(systemName: "plus")
+                        if fitting.canAddFighter(ofType: fighterType) {
+                            Button {
+                                sheetItem = .add(.fighter(fighterType))
+                            } label: {
+                                Label {
+                                    Text("Add \(fighterType.title) Fighter")
+                                } icon: {
+                                    Image(systemName: "plus")
+                                }
                             }
                         }
-                        .disabled(fitting.canAddFighter(ofType: fighterType) == false)
 
                         ForEach(fitting.fighters.filter({ $0.item.fighterType == fighterType })) { fighter in
                             FittingDetailDroneView(fitting: fitting,
