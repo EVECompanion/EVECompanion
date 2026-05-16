@@ -53,7 +53,7 @@ struct FittingDetailDroneView: View {
                 }
                 .buttonStyle(.plain)
 
-                if drone.userSettableStates.count > 1 && drone.item.isDrone {
+                if drone.userSettableStates.count > 1 {
                     Picker("State", selection: selectedStateBinding) {
                         ForEach(drone.userSettableStates) { state in
                             Text(state.title)

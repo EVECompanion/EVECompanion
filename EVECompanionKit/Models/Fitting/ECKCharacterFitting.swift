@@ -102,6 +102,14 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     static let attributeLauncherModificatorId: Int = 1369
     static let attributeReloadTimeId: Int = 1795
     static let attributeActivationTimeHighIsGoodId: Int = 3115
+    static let attributeFighterDamageMultiplierId: Int = 2226
+    static let attributeFighterSquadronSizeId: Int = 2215
+    static let attributeFighterEMDamageId: Int = 2227
+    static let attributeFighterThermalDamageId: Int = 2228
+    static let attributeFighterKineticDamageId: Int = 2229
+    static let attributeFighterExplosiveDamageId: Int = 2230
+    static let attributeFighterAbilityRoFId: Int = 2233
+    static let attributeFighterRoFId: Int = 2182
     static let attributeStructureLightFighterSquadronLimitId: Int = 2737
     static let attributeStructureSupportFighterSquadronLimitId: Int = 2738
     static let attributeStructureHeavyFighterSquadronLimitId: Int = 2739

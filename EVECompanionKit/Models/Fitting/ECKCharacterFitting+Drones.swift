@@ -60,7 +60,7 @@ extension ECKCharacterFitting {
         }
 
         let replacement = ECKCharacterFittingItem(flag: fighter.flag,
-                                                  quantity: fighter.quantity,
+                                                  quantity: 1,
                                                   item: newFighter)
         replacement.state = fighter.state
         fighters = fighters.map { $0.id == fighter.id ? replacement : $0 }
