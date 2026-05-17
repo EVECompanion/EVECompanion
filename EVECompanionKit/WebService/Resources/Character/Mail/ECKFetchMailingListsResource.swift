@@ -7,14 +7,15 @@
 
 import Foundation
 
-class FetchMailingListsResource: ECKWebResource<[ECKMailingList]>, @unchecked Sendable {
+class ECKFetchMailingListsResource: ECKWebResource<[ECKMailingList]>, @unchecked Sendable {
     
     init(token: ECKToken) {
         super.init(host: .esi,
-                   endpoint: "/v1/characters/\(token.characterId)/mail/lists/",
+                   endpoint: "/characters/\(token.characterId)/mail/lists/",
                    token: token,
                    requiredScope: .readMail,
-                   requiredCorpRoles: [])
+                   requiredCorpRoles: [],
+                   headers: ["X-Compatibility-Date": "2026-05-17"])
     }
     
 }

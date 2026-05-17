@@ -19,6 +19,19 @@ public final class ECKMailRecipient: ObservableObject, Codable, Equatable, Senda
         case character
         case corporation
         case mailingList = "mailing_list"
+
+        public var title: String {
+            switch self {
+            case .alliance:
+                return "Alliance"
+            case .character:
+                return "Character"
+            case .corporation:
+                return "Corporation"
+            case .mailingList:
+                return "Mailing List"
+            }
+        }
     }
     
     public let recipientId: Int

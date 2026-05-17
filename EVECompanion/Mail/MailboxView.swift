@@ -59,16 +59,16 @@ struct MailboxView: View {
                            })
                            .tint(Color.blue)
                            
-//                           Button(action: {
-//                               mailToReply = mail
-//                               showMailCreateView = true
-//                           }, label: {
-//                               Label(
-//                                 title: { Text("Reply") },
-//                                 icon: { Image(systemName: "arrowshape.turn.up.left") }
-//                               )
-//                           })
-//                           .tint(Color.blue)
+                           Button(action: {
+                               mailToReply = mail
+                               showMailCreateView = true
+                           }, label: {
+                               Label(
+                                 title: { Text("Reply") },
+                                 icon: { Image(systemName: "arrowshape.turn.up.left") }
+                               )
+                           })
+                           .tint(Color.indigo)
                        }
                     }
                 }
@@ -130,18 +130,20 @@ struct MailboxView: View {
         })
         .animation(.spring, value: character.inbox)
         .animation(.spring, value: character.outbox)
-//        .toolbar(content: {
-//            ToolbarItem(placement: .topBarTrailing) {
-//                Button(action: {
-//                    showMailCreateView = true
-//                }, label: {
-//                    Image(systemName: "square.and.pencil")
-//                })
-//            }
-//        })
+        .toolbar(content: {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: {
+                    mailToReply = nil
+                    showMailCreateView = true
+                }, label: {
+                    Image(systemName: "square.and.pencil")
+                })
+            }
+        })
         .sheet(isPresented: $showMailCreateView, content: {
             MailCreateView(character: character,
-                           recipients: mailToReply?.replyRecipient ?? [])
+                           recipients: mailToReply?.replyRecipient ?? [],
+                           subject: mailToReply?.replySubject ?? "")
                 .onDisappear(perform: {
                     self.mailToReply = nil
                 })

@@ -51,20 +51,21 @@ struct MailDetailView: View {
         .onAppear(perform: {
             fetchMailAndMarkAsRead()
         })
-//        .toolbar(content: {
-//            if mail.from != character.id {
-//                ToolbarItem(placement: .topBarTrailing) {
-//                    Button(action: {
-//                        showReplyView = true
-//                    }, label: {
-//                        Image(systemName: "arrowshape.turn.up.left")
-//                    })
-//                }
-//            }
-//        })
+        .toolbar(content: {
+            if mail.from != character.id {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        showReplyView = true
+                    }, label: {
+                        Image(systemName: "arrowshape.turn.up.left")
+                    })
+                }
+            }
+        })
         .sheet(isPresented: $showReplyView, content: {
             MailCreateView(character: character,
-                           recipients: mail.replyRecipient)
+                           recipients: mail.replyRecipient,
+                           subject: mail.replySubject)
         })
     }
     

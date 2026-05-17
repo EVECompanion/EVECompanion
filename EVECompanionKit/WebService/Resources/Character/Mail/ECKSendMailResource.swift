@@ -17,10 +17,11 @@ class ECKSendMailResource: ECKWebResource<Int>, @unchecked Sendable {
     
     init(token: ECKToken, subject: String, body: String, recipients: [ECKMailRecipient]) {
         super.init(host: .esi,
-                   endpoint: "/v1/characters/\(token.characterId)mail/",
+                   endpoint: "/characters/\(token.characterId)/mail/",
                    token: token,
                    requiredScope: .sendMail,
                    requiredCorpRoles: [],
+                   headers: ["X-Compatibility-Date": "2026-05-17"],
                    method: .post,
                    body: SendMailRequest(subject: subject,
                                          body: body,

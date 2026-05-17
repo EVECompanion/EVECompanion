@@ -16,6 +16,7 @@ class ECKCharacterCorpRolesResource: ECKWebResource<ECKCorporationRoles>, @unche
             token: token,
             requiredScope: .characterReadCorpRoles,
             requiredCorpRoles: [],
+            headers: ["X-Compatibility-Date": "2026-05-17"],
             method: .get)
     }
     

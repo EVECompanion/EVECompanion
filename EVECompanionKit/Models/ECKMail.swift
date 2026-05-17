@@ -35,14 +35,33 @@ public final class ECKMail: ObservableObject, Identifiable, Decodable, Equatable
     @Published public var body: AttributedString?
     
     public var replyRecipient: [ECKMailRecipient] {
-        var recipients = [ECKMailRecipient]()
-        
-        if let from = from {
-            recipients = [.init(recipientId: from,
-                                recipientType: .character)]
+        let replyRecipients = recipients.filter { recipient in
+            recipient.recipientType != .character || recipient.recipientId != token.characterId
         }
         
-        return recipients
+        if replyRecipients.isEmpty == false {
+            return replyRecipients
+        }
+        
+        guard let from else {
+            return []
+        }
+        
+        return [.init(recipientId: from,
+                      recipientType: .character)]
+    }
+    
+    public var replySubject: String {
+        let trimmedSubject = subject?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        guard trimmedSubject.isEmpty == false else {
+            return ""
+        }
+        
+        if trimmedSubject.lowercased().hasPrefix("re:") {
+            return trimmedSubject
+        }
+        
+        return "Re: \(trimmedSubject)"
     }
     
     public static let dummyRead: ECKMail = .init(from: 2123087197,
@@ -72,6 +91,24 @@ public final class ECKMail: ObservableObject, Identifiable, Decodable, Equatable
                                                        timestamp: .now - .fromHours(hours: 2),
                                                        body: "This is another content of a mail you have not read.")
     
+    static func sentMail(from characterId: Int,
+                         mailId: Int?,
+                         recipients: [ECKMailRecipient],
+                         subject: String,
+                         body: String,
+                         token: ECKToken,
+                         timestamp: Date = .now) -> ECKMail {
+        .init(from: characterId,
+              isRead: true,
+              labels: nil,
+              mailId: mailId,
+              recipients: recipients,
+              subject: subject,
+              timestamp: timestamp,
+              body: body,
+              token: token)
+    }
+    
     public required init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.from = try container.decodeIfPresent(Int.self, forKey: .from)
@@ -92,7 +129,8 @@ public final class ECKMail: ObservableObject, Identifiable, Decodable, Equatable
                  recipients: [ECKMailRecipient],
                  subject: String?,
                  timestamp: Date?,
-                 body: String?) {
+                 body: String?,
+                 token: ECKToken = .dummy) {
         self.from = from
         self.isRead = isRead
         self.labels = labels
@@ -101,7 +139,7 @@ public final class ECKMail: ObservableObject, Identifiable, Decodable, Equatable
         self.subject = subject
         self.timestamp = timestamp
         self.body = "This is a nice mail."
-        self.token = .dummy
+        self.token = token
         self.body = body?.convertToAttributed()
         self.loadingState = .ready
     }

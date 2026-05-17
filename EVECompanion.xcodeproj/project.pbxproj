@@ -105,6 +105,14 @@
 		C9318D7E2E9984B400B1AD5D /* FittingDetailImplantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9318D7D2E9984B400B1AD5D /* FittingDetailImplantsView.swift */; };
 		C9318D802E9ADC2800B1AD5D /* FittingImplantSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9318D7F2E9ADC2800B1AD5D /* FittingImplantSearchView.swift */; };
 		C9318D822E9AE78600B1AD5D /* ECKCharacterFitting+Implants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9318D812E9AE78600B1AD5D /* ECKCharacterFitting+Implants.swift */; };
+		C93337BE2FBA3F0F00DAF4B9 /* ECKSearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93337BD2FBA3F0F00DAF4B9 /* ECKSearchResponse.swift */; };
+		C93337C12FBA3F3800DAF4B9 /* ECKSearchCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93337C02FBA3F3800DAF4B9 /* ECKSearchCategory.swift */; };
+		C93337C32FBA3F7C00DAF4B9 /* ECKMailRecipientSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93337C22FBA3F7C00DAF4B9 /* ECKMailRecipientSearchResult.swift */; };
+		C93337C52FBA3F9A00DAF4B9 /* ECKSearchResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93337C42FBA3F9A00DAF4B9 /* ECKSearchResource.swift */; };
+		C93337C72FBA416500DAF4B9 /* ECKUniverseNamesResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93337C62FBA416500DAF4B9 /* ECKUniverseNamesResource.swift */; };
+		C93337C92FBA580B00DAF4B9 /* ECKMailingListsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93337C82FBA580B00DAF4B9 /* ECKMailingListsManager.swift */; };
+		C93337CB2FBA5EFC00DAF4B9 /* MailRecipientIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93337CA2FBA5EFC00DAF4B9 /* MailRecipientIconView.swift */; };
+		C93337CD2FBA5F2300DAF4B9 /* MailRecipientSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93337CC2FBA5F2300DAF4B9 /* MailRecipientSearchView.swift */; };
 		C9381AAB2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9381AAA2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift */; };
 		C938723B2DBC2FD9000FB35D /* PlanetaryColonyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C938723A2DBC2FD9000FB35D /* PlanetaryColonyCell.swift */; };
 		C93E8FDD2E5CD26900187846 /* EVECompanionIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = C93E8FDC2E5CD26900187846 /* EVECompanionIcon.icon */; };
@@ -549,6 +557,14 @@
 		C9318D7D2E9984B400B1AD5D /* FittingDetailImplantsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDetailImplantsView.swift; sourceTree = "<group>"; };
 		C9318D7F2E9ADC2800B1AD5D /* FittingImplantSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingImplantSearchView.swift; sourceTree = "<group>"; };
 		C9318D812E9AE78600B1AD5D /* ECKCharacterFitting+Implants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacterFitting+Implants.swift"; sourceTree = "<group>"; };
+		C93337BD2FBA3F0F00DAF4B9 /* ECKSearchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSearchResponse.swift; sourceTree = "<group>"; };
+		C93337C02FBA3F3800DAF4B9 /* ECKSearchCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSearchCategory.swift; sourceTree = "<group>"; };
+		C93337C22FBA3F7C00DAF4B9 /* ECKMailRecipientSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMailRecipientSearchResult.swift; sourceTree = "<group>"; };
+		C93337C42FBA3F9A00DAF4B9 /* ECKSearchResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSearchResource.swift; sourceTree = "<group>"; };
+		C93337C62FBA416500DAF4B9 /* ECKUniverseNamesResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKUniverseNamesResource.swift; sourceTree = "<group>"; };
+		C93337C82FBA580B00DAF4B9 /* ECKMailingListsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMailingListsManager.swift; sourceTree = "<group>"; };
+		C93337CA2FBA5EFC00DAF4B9 /* MailRecipientIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailRecipientIconView.swift; sourceTree = "<group>"; };
+		C93337CC2FBA5F2300DAF4B9 /* MailRecipientSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailRecipientSearchView.swift; sourceTree = "<group>"; };
 		C9381AAA2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacterFitting+IsFittable.swift"; sourceTree = "<group>"; };
 		C938723A2DBC2FD9000FB35D /* PlanetaryColonyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryColonyCell.swift; sourceTree = "<group>"; };
 		C93E8FDC2E5CD26900187846 /* EVECompanionIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = EVECompanionIcon.icon; sourceTree = "<group>"; };
@@ -958,6 +974,8 @@
 				C90D509B2BF92B0800DEC0F3 /* MailCell.swift */,
 				C95262472BF9439F0014B5F5 /* MailDetailView.swift */,
 				C952624E2BFA7B680014B5F5 /* MailCreateView.swift */,
+				C93337CC2FBA5F2300DAF4B9 /* MailRecipientSearchView.swift */,
+				C93337CA2FBA5EFC00DAF4B9 /* MailRecipientIconView.swift */,
 			);
 			path = Mail;
 			sourceTree = "<group>";
@@ -1011,6 +1029,7 @@
 				C9FD52F82C02369B0084E5E1 /* ECKCorporationResource.swift */,
 				C9AD0E302DF782C700E762AC /* ECKESITypeResource.swift */,
 				C90EFAD42CF9014D00691A38 /* ECKImageInfoResource.swift */,
+				C93337C62FBA416500DAF4B9 /* ECKUniverseNamesResource.swift */,
 				C9CA6B9A2C14E1360057F290 /* ECKIncursionsResource.swift */,
 				C98F253A2EC510F600D0269A /* ECKMarketHistoryResource.swift */,
 				C9D570A52C5B836E00985587 /* ECKSDEVersionResource.swift */,
@@ -1028,22 +1047,22 @@
 				C9E2FFEC2BFD128B00754C2D /* ECKAlliance.swift */,
 				C942571B2C29A97800FAEE5C /* ECKAsset.swift */,
 				C942571F2C29AC7D00FAEE5C /* ECKAssetLocation.swift */,
-				C92B4EB82ED1D1F800E3D9B4 /* ECKAuthenticatedCorporation.swift */,
-				C9A5FAC82FAE837900F1F3BB /* ECKCorporationFeature.swift */,
 				C942571D2C29A9C500FAEE5C /* ECKAssetLocationFlag.swift */,
 				C94257232C29B50600FAEE5C /* ECKAssetName.swift */,
+				C92B4EB82ED1D1F800E3D9B4 /* ECKAuthenticatedCorporation.swift */,
 				C952BC822BEB85C50070C504 /* ECKCharacter.swift */,
 				C90D508F2BF8B22400DEC0F3 /* ECKCharacter+Mail.swift */,
+				C93337C82FBA580B00DAF4B9 /* ECKMailingListsManager.swift */,
 				C98169C32C11C34D0033B932 /* ECKCharacterAttributes.swift */,
-				C99750A92C14897E00DE5B96 /* ECKMarketOrder.swift */,
 				C99528D72BEE18D100CA6E06 /* ECKCharacterSkill.swift */,
 				C952BCA32BED270E0070C504 /* ECKCharacterSkills.swift */,
 				C9CA6B962C14DD7F0057F290 /* ECKConstellation.swift */,
 				C96F98A02BEFA72D00DEC34F /* ECKContract.swift */,
 				C9FD52FA2C0236A30084E5E1 /* ECKCorporation.swift */,
-				C983AAB82BF64B42002EDECB /* ECKEmptyResponse.swift */,
-				C91064952FA14A280083574E /* ECKCorporationWalletDivision.swift */,
 				C9A806802FA15133008D32BC /* ECKCorporationDivision.swift */,
+				C9A5FAC82FAE837900F1F3BB /* ECKCorporationFeature.swift */,
+				C91064952FA14A280083574E /* ECKCorporationWalletDivision.swift */,
+				C983AAB82BF64B42002EDECB /* ECKEmptyResponse.swift */,
 				C9CA6B982C14DE500057F290 /* ECKFaction.swift */,
 				C92D17CA2C2760FE00D6FF5A /* ECKHomeLocation.swift */,
 				C9CA6B902C14DBBE0057F290 /* ECKIncursion.swift */,
@@ -1055,15 +1074,17 @@
 				C92D17C62C27603700D6FF5A /* ECKJumpClones.swift */,
 				C9A645AE2C32A18E00E2E68D /* ECKJumpFatigue.swift */,
 				C90D50972BF91EB500DEC0F3 /* ECKLoadingState.swift */,
-				C9F1A0022F8F100100A1B2C3 /* ECKPageLoadable.swift */,
-				C9F1A0042F8F180100A1B2C3 /* ECKPagination.swift */,
 				C9FD52F62C0235E20084E5E1 /* ECKLoyaltyPointsEntry.swift */,
 				C983AAB22BF6466B002EDECB /* ECKMail.swift */,
 				C983AAC22BF650BB002EDECB /* ECKMailingList.swift */,
 				C983AAB42BF64786002EDECB /* ECKMailRecipient.swift */,
+				C93337C22FBA3F7C00DAF4B9 /* ECKMailRecipientSearchResult.swift */,
 				C9DEDD362DADAB9600781E8A /* ECKMarketGroup.swift */,
 				C98F253C2EC5148000D0269A /* ECKMarketHistoryEntry.swift */,
+				C99750A92C14897E00DE5B96 /* ECKMarketOrder.swift */,
 				C9E2FFEE2BFD131900754C2D /* ECKOptionalResponse.swift */,
+				C9F1A0022F8F100100A1B2C3 /* ECKPageLoadable.swift */,
+				C9F1A0042F8F180100A1B2C3 /* ECKPagination.swift */,
 				C96430912CC46A0200E8D6A6 /* ECKPlanet.swift */,
 				C96430812CC1AB7500E8D6A6 /* ECKPlanetaryColony.swift */,
 				C964308B2CC449E700E8D6A6 /* ECKPlanetaryColonyDetails.swift */,
@@ -1082,11 +1103,12 @@
 				C9B079052C32C0080059785D /* ECKTokenRefreshError.swift */,
 				C9FD52E62C01D7260084E5E1 /* ECKWalletJournalEntry.swift */,
 				C9FD52E82C01D9750084E5E1 /* ECKWalletJournalEntryRefType.swift */,
+				C9A806D52FAA7D30008D32BC /* ECKWalletJournalManager.swift */,
 				C9FD52E42C01D3B30084E5E1 /* ECKWalletTransactionEntry.swift */,
 				C9C7C41F2DA11BF60079DF82 /* EVEUnit.swift */,
 				C9F055B72DE2F74700340A05 /* Fitting */,
+				C93337BF2FBA3F2F00DAF4B9 /* Search */,
 				C9511D1F2EDC2E7F001CEED5 /* SkillPlans */,
-				C9A806D52FAA7D30008D32BC /* ECKWalletJournalManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1242,6 +1264,7 @@
 				C9DCC40A2EA62A6A00D2F643 /* ECKCharacterCurrentShipResource.swift */,
 				C9F055BA2DE2F85B00340A05 /* ECKCharacterFittingsResource.swift */,
 				C98169C52C1219F90033B932 /* ECKCharacterImplantResource.swift */,
+				C93337C42FBA3F9A00DAF4B9 /* ECKSearchResource.swift */,
 				C92D17BB2C23344C00D6FF5A /* ECKCharacterIndustryJobsResource.swift */,
 				C9A645B02C32A29700E2E68D /* ECKCharacterJumpFatigueResource.swift */,
 				C9DCC4082EA629DD00D2F643 /* ECKCharacterLocationResource.swift */,
@@ -1332,6 +1355,15 @@
 				C9318D7F2E9ADC2800B1AD5D /* FittingImplantSearchView.swift */,
 			);
 			path = Implants;
+			sourceTree = "<group>";
+		};
+		C93337BF2FBA3F2F00DAF4B9 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				C93337BD2FBA3F0F00DAF4B9 /* ECKSearchResponse.swift */,
+				C93337C02FBA3F3800DAF4B9 /* ECKSearchCategory.swift */,
+			);
+			path = Search;
 			sourceTree = "<group>";
 		};
 		C93FE8362BED29E900729DD8 /* Formatters */ = {
@@ -2243,6 +2275,7 @@
 				C9F055C72DE3AAE100340A05 /* FittingDetailInfoView.swift in Sources */,
 				C9001DB82DA7942400ADAC52 /* LogoutButton.swift in Sources */,
 				C9511D152EDB1669001CEED5 /* CorporationDetailView.swift in Sources */,
+				C93337CD2FBA5F2300DAF4B9 /* MailRecipientSearchView.swift in Sources */,
 				C9E93B192DB19CED005458BC /* CharacterSelection.swift in Sources */,
 				C9EC4BA92BF558B700D46CC4 /* EVECompanionTabView.swift in Sources */,
 				C92D17C22C23407200D6FF5A /* IndustryJobCell.swift in Sources */,
@@ -2302,6 +2335,7 @@
 				C9CA6BA22C14EB090057F290 /* UniverseRowType.swift in Sources */,
 				C9012AF52C0334F400407A81 /* WalletTransactionCell.swift in Sources */,
 				C9955A2C2C35297D0045D925 /* SovereigntyCampaignCell.swift in Sources */,
+				C93337CB2FBA5EFC00DAF4B9 /* MailRecipientIconView.swift in Sources */,
 				C9318D7E2E9984B400B1AD5D /* FittingDetailImplantsView.swift in Sources */,
 				C959777E2C28B3680008F719 /* AssetsListView.swift in Sources */,
 				C952624F2BFA7B680014B5F5 /* MailCreateView.swift in Sources */,
@@ -2321,6 +2355,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9D570A42C5B819500985587 /* ECKSDEUpdater.swift in Sources */,
+				C93337C72FBA416500DAF4B9 /* ECKUniverseNamesResource.swift in Sources */,
 				C99528DA2BEE18DF00CA6E06 /* ECKSDEManager.swift in Sources */,
 				C984D06F2D8AEBBA00D60567 /* ECKCapitalRouteManager.swift in Sources */,
 				C92D17BE2C23348B00D6FF5A /* ECKIndustryJobManager.swift in Sources */,
@@ -2396,6 +2431,7 @@
 				C952BC812BEB858D0070C504 /* ECKCharacterStorage.swift in Sources */,
 				C9CA6B972C14DD7F0057F290 /* ECKConstellation.swift in Sources */,
 				C92D17CB2C2760FE00D6FF5A /* ECKHomeLocation.swift in Sources */,
+				C93337C92FBA580B00DAF4B9 /* ECKMailingListsManager.swift in Sources */,
 				C9F055BB2DE2F85B00340A05 /* ECKCharacterFittingsResource.swift in Sources */,
 				C91672A62BEA00AD009EC580 /* ECKWebResource.swift in Sources */,
 				C9D094FC2DE7972500715479 /* ECKCharacterFitting+Calculate+Pass1.swift in Sources */,
@@ -2429,6 +2465,7 @@
 				C9955A252C3449460045D925 /* ECKSovereigntyCampaignsResource.swift in Sources */,
 				C996A5EA2BF2B9340038277C /* NestedObservableObject.swift in Sources */,
 				C952BC8F2BEC10310070C504 /* Notification+Name.swift in Sources */,
+				C93337C52FBA3F9A00DAF4B9 /* ECKSearchResource.swift in Sources */,
 				C952BC872BEB9F220070C504 /* ECKTokenRefreshResource.swift in Sources */,
 				C9D570A82C5B839600985587 /* ECKSDEVersion.swift in Sources */,
 				C91FE0A22D8DF2BF00BA7303 /* ECKAllianceManager.swift in Sources */,
@@ -2478,9 +2515,11 @@
 				C91672A42BEA007F009EC580 /* ECKHTTPMethod.swift in Sources */,
 				C952BC832BEB85C50070C504 /* ECKCharacter.swift in Sources */,
 				C9D095022DE7975F00715479 /* ECKCharacterFitting+Calculate+Pass3.swift in Sources */,
+				C93337C32FBA3F7C00DAF4B9 /* ECKMailRecipientSearchResult.swift in Sources */,
 				C90EFAD22CF9011000691A38 /* ECKImageManager.swift in Sources */,
 				C9FBF7582DACF285007FF7E7 /* ECKAppVariant.swift in Sources */,
 				C9F055AD2DE2502B00340A05 /* ECKServerStatusResource.swift in Sources */,
+				C93337C12FBA3F3800DAF4B9 /* ECKSearchCategory.swift in Sources */,
 				C9B638BC2E03FA2F00E9F6F4 /* ECKAttributeDefaultValueCache.swift in Sources */,
 				C9A806D92FAB1C53008D32BC /* ECKCorporationWalletJournalResource.swift in Sources */,
 				C95977802C28B56E0008F719 /* ECKAssetManager.swift in Sources */,
@@ -2488,6 +2527,7 @@
 				C95F604E2D860F820007A74A /* ECKCapitalJumpPathFinderError.swift in Sources */,
 				C92B4EB72ED1C53500E3D9B4 /* ECKCorporationStorage.swift in Sources */,
 				C91672A02BE97A5B009EC580 /* ECKAuthenticationSession.swift in Sources */,
+				C93337BE2FBA3F0F00DAF4B9 /* ECKSearchResponse.swift in Sources */,
 				C9FD52E52C01D3B30084E5E1 /* ECKWalletTransactionEntry.swift in Sources */,
 				C92D17BA2C23323100D6FF5A /* ECKIndustryJob.swift in Sources */,
 				C9F055C92DE3B89F00340A05 /* ECKCharacterFitting+Stats.swift in Sources */,
