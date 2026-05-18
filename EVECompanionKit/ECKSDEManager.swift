@@ -128,6 +128,17 @@ public class ECKSDEManager: @unchecked Sendable {
                                     "",
                                     0.0)
     
+    public func allSkills() -> [ECKCharacterSkill] {
+        getAllSkills().map { skillData in
+            ECKCharacterSkill(skillId: skillData.skillId,
+                              name: skillData.skillName,
+                              category: skillData.category,
+                              primaryAttribute: skillData.primaryAttribute,
+                              secondaryAttribute: skillData.secondaryAttribute,
+                              multiplier: skillData.multiplier)
+        }
+    }
+    
     internal func getAllSkills() -> [FetchedSkill] {
         let statement = try? connection?.prepare("""
                                            SELECT t.typeID,
