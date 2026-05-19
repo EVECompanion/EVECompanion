@@ -21,8 +21,8 @@ class SolarSystemsTable: SDETable {
     var xColumn = Expression<Float64>("x")
     var yColumn = Expression<Float64>("y")
     var zColumn = Expression<Float64>("z")
-    var position2dxColumn = Expression<Float64?>("2dx")
-    var position2dyColumn = Expression<Float64?>("2dy")
+    var position2dxColumn = Expression<Float64?>("position2Dx")
+    var position2dyColumn = Expression<Float64?>("position2Dy")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(solarSystemIdColumn)

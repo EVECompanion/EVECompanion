@@ -274,6 +274,8 @@ public class ECKSDEManager: @unchecked Sendable {
                                     x: Float,
                                     y: Float,
                                     z: Float,
+                                    position2Dx: Float?,
+                                    position2Dy: Float?,
                                     sunTypeId: Int?)
     
     static let dummyFetchedSolarSystem: FetchedSolarSystem = (0,
@@ -284,10 +286,12 @@ public class ECKSDEManager: @unchecked Sendable {
                                                               0,
                                                               0,
                                                               0,
+                                                              0,
+                                                              0,
                                                               sunTypeId: 45032)
     
     internal func getSolarSystem(solarSystemId: Int) -> FetchedSolarSystem {
-        let statement = try? connection?.prepare("SELECT regionID, constellationID, solarSystemID, solarSystemName, security, x, y, z, sunTypeID FROM mapSolarSystems WHERE solarSystemID = ?", solarSystemId)
+        let statement = try? connection?.prepare("SELECT regionID, constellationID, solarSystemID, solarSystemName, security, x, y, z, position2Dx, position2Dy, sunTypeID FROM mapSolarSystems WHERE solarSystemID = ?", solarSystemId)
         
         let result = try? statement?.run().makeIterator().failableNext()
         
@@ -314,10 +318,24 @@ public class ECKSDEManager: @unchecked Sendable {
         
         let sunTypeId: Int?
         
-        if let sunId = row[8] as? Int64 {
+        if let sunId = row[10] as? Int64 {
             sunTypeId = Int(sunId)
         } else {
             sunTypeId = nil
+        }
+        
+        let position2dx: Float?
+        if let position2dxDouble = row[8] as? Double {
+            position2dx = Float(position2dxDouble)
+        } else {
+            position2dx = nil
+        }
+        
+        let position2dy: Float?
+        if let position2dyDouble = row[9] as? Double {
+            position2dy = Float(position2dyDouble)
+        } else {
+            position2dy = nil
         }
         
         return (Int(regionId),
@@ -328,6 +346,8 @@ public class ECKSDEManager: @unchecked Sendable {
                 Float(x),
                 Float(y),
                 Float(z),
+                position2dx,
+                position2dy,
                 sunTypeId)
     }
     
@@ -944,6 +964,8 @@ public class ECKSDEManager: @unchecked Sendable {
             x,
             y,
             z,
+            position2Dx,
+            position2Dy,
             sunTypeID
         FROM
             mapSolarSystems
