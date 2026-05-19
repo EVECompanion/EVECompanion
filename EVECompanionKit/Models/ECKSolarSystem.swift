@@ -22,6 +22,7 @@ public final class ECKSolarSystem: Codable, Identifiable, Hashable, ObservableOb
     public let security: Double
     
     public let position: SIMD3<Float>
+    public let position2D: SIMD2<Float>?
     public let sunTypeId: Int?
     
     @Published public var sovereignty: ECKSolarSystemSovereignty?
@@ -50,6 +51,11 @@ public final class ECKSolarSystem: Codable, Identifiable, Hashable, ObservableOb
         self.position = SIMD3(x: fetchedSolarSystem.x,
                               y: fetchedSolarSystem.y,
                               z: fetchedSolarSystem.z)
+        if let position2Dx = fetchedSolarSystem.position2Dx, let position2Dy = fetchedSolarSystem.position2Dy {
+            self.position2D = SIMD2(position2Dx, position2Dy)
+        } else {
+            self.position2D = nil
+        }
         self.sunTypeId = fetchedSolarSystem.sunTypeId
         
         Task { @MainActor in

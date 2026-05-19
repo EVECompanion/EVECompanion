@@ -43,6 +43,7 @@ enum AppScreen: Hashable {
     case itemDatabase(groupIdFilter: Int?, marketGroupIdFilter: Int?, effectIdFilter: Int?)
     case incursions
     case sovereigntyCampaigns
+    case map
     
     case settings
     
@@ -107,6 +108,8 @@ enum AppScreen: Hashable {
             return "corporationList"
         case .corporationDetail:
             return "corporationDetail"
+        case .map:
+            return "map"
         }
     }
     
@@ -250,6 +253,8 @@ enum AppScreen: Hashable {
         case .settings:
             return
         case .corporationList:
+            return
+        case .map:
             return
         }
     }

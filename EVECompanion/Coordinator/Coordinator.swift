@@ -93,6 +93,8 @@ class Coordinator: ObservableObject {
             CorporationListView()
         case .corporationDetail(let corp):
             CorporationDetailView(corporation: corp)
+        case .map:
+            MapView()
         }
     }
     

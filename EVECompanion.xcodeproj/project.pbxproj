@@ -113,6 +113,7 @@
 		C93337C92FBA580B00DAF4B9 /* ECKMailingListsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93337C82FBA580B00DAF4B9 /* ECKMailingListsManager.swift */; };
 		C93337CB2FBA5EFC00DAF4B9 /* MailRecipientIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93337CA2FBA5EFC00DAF4B9 /* MailRecipientIconView.swift */; };
 		C93337CD2FBA5F2300DAF4B9 /* MailRecipientSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93337CC2FBA5F2300DAF4B9 /* MailRecipientSearchView.swift */; };
+		C93337D02FBD008200DAF4B9 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93337CF2FBD008200DAF4B9 /* MapView.swift */; };
 		C9381AAB2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9381AAA2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift */; };
 		C938723B2DBC2FD9000FB35D /* PlanetaryColonyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C938723A2DBC2FD9000FB35D /* PlanetaryColonyCell.swift */; };
 		C93E8FDD2E5CD26900187846 /* EVECompanionIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = C93E8FDC2E5CD26900187846 /* EVECompanionIcon.icon */; };
@@ -565,6 +566,7 @@
 		C93337C82FBA580B00DAF4B9 /* ECKMailingListsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMailingListsManager.swift; sourceTree = "<group>"; };
 		C93337CA2FBA5EFC00DAF4B9 /* MailRecipientIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailRecipientIconView.swift; sourceTree = "<group>"; };
 		C93337CC2FBA5F2300DAF4B9 /* MailRecipientSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailRecipientSearchView.swift; sourceTree = "<group>"; };
+		C93337CF2FBD008200DAF4B9 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		C9381AAA2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacterFitting+IsFittable.swift"; sourceTree = "<group>"; };
 		C938723A2DBC2FD9000FB35D /* PlanetaryColonyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryColonyCell.swift; sourceTree = "<group>"; };
 		C93E8FDC2E5CD26900187846 /* EVECompanionIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = EVECompanionIcon.icon; sourceTree = "<group>"; };
@@ -1170,6 +1172,7 @@
 				C9FD52F12C0234690084E5E1 /* LoyaltyPoints */,
 				C90D508C2BF8B18C00DEC0F3 /* Mail */,
 				C9DEF2F72C14B37C00815AF0 /* MailFeedbackView.swift */,
+				C93337CE2FBD007700DAF4B9 /* Map */,
 				C9E6F7DF2DA45E6F00573E80 /* MarketGroups */,
 				C99750A62C14883A00DE5B96 /* MarketOrders */,
 				C9CB97AF2C12516500366D1A /* package-list.json */,
@@ -1364,6 +1367,14 @@
 				C93337C02FBA3F3800DAF4B9 /* ECKSearchCategory.swift */,
 			);
 			path = Search;
+			sourceTree = "<group>";
+		};
+		C93337CE2FBD007700DAF4B9 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				C93337CF2FBD008200DAF4B9 /* MapView.swift */,
+			);
+			path = Map;
 			sourceTree = "<group>";
 		};
 		C93FE8362BED29E900729DD8 /* Formatters */ = {
@@ -2261,6 +2272,7 @@
 				C9C7C4272DA1AFC40079DF82 /* UIFont+Weight.swift in Sources */,
 				C9D570AB2C5B961F00985587 /* SDEUpdateView.swift in Sources */,
 				C96735202D8CBA1F004E059F /* CapitalJumpRouteCell.swift in Sources */,
+				C93337D02FBD008200DAF4B9 /* MapView.swift in Sources */,
 				C903BF7E2E8694C6001C224E /* ModuleSelectionView.swift in Sources */,
 				C9B39FAE2E8C71C50049C83D /* FittingESIImportView.swift in Sources */,
 				C9DEF2F82C14B37C00815AF0 /* MailFeedbackView.swift in Sources */,

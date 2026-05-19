@@ -12,6 +12,7 @@ enum UniverseRowType {
     case incursions
     case sovereigntyCampaigns
     case itemDatabase
+    case map
     
     var title: String {
         switch self {
@@ -21,6 +22,8 @@ enum UniverseRowType {
             return "Sovereignty Campaigns"
         case .itemDatabase:
             return "Item Database"
+        case .map:
+            return "Map"
         }
     }
     
@@ -32,6 +35,8 @@ enum UniverseRowType {
             return "Universe/Sovereignty"
         case .itemDatabase:
             return "Neocom/Inventory"
+        case .map:
+            return "Neocom/Map"
         }
     }
     
@@ -43,6 +48,8 @@ enum UniverseRowType {
             return .sovereigntyCampaigns
         case .itemDatabase:
             return .itemDatabase(groupIdFilter: nil, marketGroupIdFilter: nil, effectIdFilter: nil)
+        case .map:
+            return .map
         }
     }
     

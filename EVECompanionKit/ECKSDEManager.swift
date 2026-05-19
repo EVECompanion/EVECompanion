@@ -303,6 +303,19 @@ public class ECKSDEManager: @unchecked Sendable {
         return rowToSolarSystem(row: result)
     }
     
+    public func getAllSolarSystems() -> [ECKSolarSystem] {
+        let statement = try? connection?.prepare("SELECT regionID, constellationID, solarSystemID, solarSystemName, security, x, y, z, position2Dx, position2Dy, sunTypeID FROM mapSolarSystems WHERE position2Dx IS NOT NULL AND position2Dy IS NOT NULL")
+        
+        let result = try? statement?.run()
+        
+        guard let result else {
+            logger.warning("No solar system fetch result when fetching all systems.")
+            return []
+        }
+        
+        return result.map({ rowToSolarSystem(row: $0) }).map({ ECKSolarSystem(fetchedSolarSystem: $0) })
+    }
+    
     private func rowToSolarSystem(row: [(any Binding)?]) -> FetchedSolarSystem {
         guard let regionId: Int64 = row[0] as? Int64,
               let constellationId: Int64 = row[1] as? Int64,

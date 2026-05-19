@@ -18,6 +18,7 @@ struct UniverseView: View {
             Section {
                 row(for: .itemDatabase)
                 row(for: .incursions)
+                row(for: .map)
                 row(for: .sovereigntyCampaigns)
             }
         }
