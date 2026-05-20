@@ -11,7 +11,9 @@ import EVECompanionKit
 struct SkillQueueView: View {
     
     @ObservedObject var character: ECKCharacter
-    
+    @State private var showsBottomSheet = false
+    @State private var bottomSheetContentHeight: CGFloat = 300
+
     var body: some View {
         List(character.skillqueue?.currentEntries ?? []) { entry in
             NavigationLink(value: AppScreen.itemByTypeId(entry.skill.skillId)) {
@@ -50,6 +52,33 @@ struct SkillQueueView: View {
             await character.reloadSkillQueue()
         }
         .navigationTitle("Skillqueue")
+        .toolbar {
+            if character.skillqueue?.currentEntries.isEmpty == false {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showsBottomSheet = true
+                    } label: {
+                        Image("Neocom/Augmentations")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 30, height: 30)
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $showsBottomSheet) {
+            SkillPlanRemapPointCell(remap: character.skillqueue?.calculateOptimalRemap(),
+                                    title: "Optimal Remap")
+                .padding(.horizontal, 16)
+                .padding(.vertical, 20)
+                .presentationDetents([.height(bottomSheetContentHeight)])
+                .background {
+                    GeometryReader { geo in
+                        Color.clear
+                            .onAppear { bottomSheetContentHeight = geo.size.height }
+                    }
+                }
+        }
         .overlay {
             if (character.skillqueue?.currentEntries ?? []).isEmpty && character.initialDataLoadingState == .ready {
                 ContentEmptyView(image: Image("Neocom/Skillqueue"),

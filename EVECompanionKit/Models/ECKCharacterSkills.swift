@@ -204,6 +204,19 @@ public final class ECKCharacterSkillQueue: Codable, Equatable, Hashable, Sendabl
         try container.encode(self.loadedEntries)
     }
     
+    public func calculateOptimalRemap() -> ECKSkillPlanRemap? {
+        let entries = currentEntries
+        guard entries.isEmpty == false else {
+            return nil
+        }
+
+        let skillEntries = entries.map { entry in
+            ECKSkillPlanSkillEntry(skill: ECKItem(typeId: entry.skill.skillId),
+                                   level: entry.finishLevel)
+        }
+
+        return ECKSkillPlan().calculateOptimalRemap(for: skillEntries)
+    }
 }
 
 public final class ECKCharacterSkillQueueEntry: Codable, Equatable, Identifiable, Hashable, Sendable {
