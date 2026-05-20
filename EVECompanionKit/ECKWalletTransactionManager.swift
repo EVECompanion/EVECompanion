@@ -248,7 +248,7 @@ public class ECKWalletTransactionManager: ObservableObject, ECKPageLoadable, @un
         }
         
         let response = try await ECKWebService().loadResource(resource: resource)
-        let loadedEntries = response.response
+        let loadedEntries = response.response.filter({ $0.transactionId != pagination.nextFromId })
         
         if isFirstPage {
             _walletTransactions[key] = loadedEntries

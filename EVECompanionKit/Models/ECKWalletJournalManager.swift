@@ -276,7 +276,7 @@ public class ECKWalletJournalManager: ObservableObject, ECKPageLoadable, @unchec
         }
         
         let response = try await ECKWebService().loadResource(resource: resource)
-        let loadedEntries = response.response.reversed()
+        let loadedEntries = response.response
         
         if isFirstPage {
             _entries[key] = Array(loadedEntries)
