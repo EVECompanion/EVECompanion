@@ -396,6 +396,18 @@ public final class ECKSkillPlan: Identifiable, Codable, ObservableObject, Hashab
         self.entries = newEntries
     }
     
+    public func calculateOptimalRemap(for entries: [ECKSkillPlanSkillEntry]) -> ECKSkillPlanRemap? {
+        guard entries.isEmpty == false else {
+            return nil
+        }
+        return optimizeChunk(entries).compactMap {
+            if case .remap(let remap) = $0 {
+                return remap
+            }
+            return nil
+        }.first
+    }
+    
     private func optimizeChunk(_ chunk: [ECKSkillPlanSkillEntry]) -> [ECKSkillPlanEntry] {
         var bestRemap = ECKSkillPlanRemap(charisma: 0, intelligence: 0, memory: 0, perception: 0, willpower: 0)
         var bestTime: TimeInterval = .greatestFiniteMagnitude

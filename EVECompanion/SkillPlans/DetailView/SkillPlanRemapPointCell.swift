@@ -11,9 +11,11 @@ import EVECompanionKit
 struct SkillPlanRemapPointCell: View {
     
     private let remap: ECKSkillPlanRemap?
+    private let title: String
     
-    init(remap: ECKSkillPlanRemap?) {
+    init(remap: ECKSkillPlanRemap?, title: String = "Remap Point") {
         self.remap = remap
+        self.title = title
     }
     
     var body: some View {
@@ -24,8 +26,8 @@ struct SkillPlanRemapPointCell: View {
                     .frame(width: 40, height: 40)
                 
                 VStack(alignment: .leading) {
-                    Text("Remap Point")
-                    
+                    Text(title)
+
                     if let totalTrainingTime = remap?.totalTrainingTime,
                        totalTrainingTime > 0 {
                         Text("\(ECFormatters.remainingTime(remainingTime: totalTrainingTime))")
