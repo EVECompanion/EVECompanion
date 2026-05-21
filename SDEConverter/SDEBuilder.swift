@@ -64,6 +64,7 @@ class SDEBuilder {
         try PlanetSchematicsTable().createTable(in: db)
         try PlanetSchematicsTypeMapTable().createTable(in: db)
         try DogmaEffectsTable().createTable(in: db)
+        try MapStargatesTable().createTable(in: db)
         try CapitalJumpDistancesTable().createTable(in: db)
         try CapitalHSJumpDistancesTable().createTable(in: db)
     }
@@ -89,11 +90,13 @@ class SDEBuilder {
         try PlanetSchematicsTable().buildIndexes(in: db)
         try PlanetSchematicsTypeMapTable().buildIndexes(in: db)
         try DogmaEffectsTable().buildIndexes(in: db)
+        try MapStargatesTable().buildIndexes(in: db)
         try CapitalJumpDistancesTable().buildIndexes(in: db)
         try CapitalHSJumpDistancesTable().buildIndexes(in: db)
     }
     
     private func fillTables() throws {
+        try fillStargatesTable()
         try fillDogmaEffectsTable()
         try fillMapDenormalizeTable()
         try fillPlanetSchematicsTables()
@@ -403,6 +406,19 @@ class SDEBuilder {
         }
         
         print("Done filling Constellations Table.")
+    }
+    
+    private func fillStargatesTable() throws {
+        print("Filling Stargates Table.")
+        
+        let stargatesTable = MapStargatesTable()
+        let fileContent = try SDEFile.stargates.loadFile(sdeDir: sdeDir)
+        
+        for stargate in fileContent {
+            try stargatesTable.add(id: Int(stargate.key)!, data: stargate.value, to: db)
+        }
+        
+        print("Done Filling Stargates Table.")
     }
     
     private func fillFactionsTable() throws {

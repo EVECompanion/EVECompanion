@@ -28,6 +28,7 @@ enum SDEFile {
     case regions
     case stations
     case stationOperations
+    case stargates
     case suns
     case traits
     case units
@@ -76,6 +77,8 @@ enum SDEFile {
             return "planetSchematics.yaml"
         case .dogmaEffects:
             return "dogmaEffects.yaml"
+        case .stargates:
+            return "mapStargates.yaml"
         }
     }
     

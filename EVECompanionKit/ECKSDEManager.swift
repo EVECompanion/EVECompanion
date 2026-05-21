@@ -364,6 +364,27 @@ public class ECKSDEManager: @unchecked Sendable {
                 sunTypeId)
     }
     
+    public func getAllGateConnections() -> [(solarSystemId: Int, destinationSolarSystemId: Int)] {
+        let statement = try? connection?.prepare("SELECT solarSystemID, destinationSolarSystemID FROM mapStargates")
+        
+        let result = try? statement?.run()
+        
+        guard let result else {
+            logger.warning("No solar system fetch result when fetching all systems.")
+            return []
+        }
+        
+        return result.compactMap({ row -> (solarSystemId: Int, destinationSolarSystemId: Int)? in
+            guard let solarSystemId: Int64 = row[0] as? Int64,
+                  let destinationSolarSystemId: Int64 = row[1] as? Int64 else {
+                logger.error("Unexpected gate connection data \(row)")
+                return nil
+            }
+            
+            return (solarSystemId: Int(solarSystemId), destinationSolarSystemId: Int(destinationSolarSystemId))
+        })
+    }
+    
     typealias FetchedItem = (typeId: Int,
                              name: String,
                              description: String?,
