@@ -11,6 +11,12 @@ import SpriteKit
 
 final class MapScene: SKScene {
 
+    private enum CameraLimits {
+        static let minimumScale: CGFloat = 0.15
+        static let maximumScale: CGFloat = 5
+    }
+
+    private let focusAnimationDuration: TimeInterval = 0.4
     private let gatesLayer = SKNode()
     private let systemsLayer = SKNode()
     private let systemLabelsLayer = SKNode()
@@ -87,6 +93,7 @@ final class MapScene: SKScene {
         view.addGestureRecognizer(panRecognizer)
         let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(handlePinchGesture))
         view.addGestureRecognizer(pinchRecognizer)
+        updateLabelVisibility()
     }
     
     func renderSystems() {
@@ -232,8 +239,9 @@ final class MapScene: SKScene {
         let dScale = lastPinchGestureScale - scale
         
         let locationInSceneBeforeScaling = view.convert(locationInView, to: self)
-        cameraNode.xScale = max(min(cameraNode.xScale + dScale * cameraNode.xScale, 5), 0.6)
-        cameraNode.yScale = max(min(cameraNode.yScale + dScale * cameraNode.yScale, 5), 0.6)
+        let nextScale = max(min(cameraNode.xScale + dScale * cameraNode.xScale, CameraLimits.maximumScale), CameraLimits.minimumScale)
+        cameraNode.xScale = nextScale
+        cameraNode.yScale = nextScale
         let locationInSceneAfterScaling = view.convert(locationInView, to: self)
         
         let offsetInScene = CGPoint(
@@ -243,8 +251,47 @@ final class MapScene: SKScene {
         
         cameraNode.position = cameraNode.position
             .applying(CGAffineTransform(translationX: -offsetInScene.x, y: -offsetInScene.y))
+
+        updateLabelVisibility()
+    }
+
+    func focus(on coordinate: CGPoint, targetScale: CGFloat, animated: Bool = true) {
+        let normalizedCoordinate = normalize(coordinate: coordinate)
+        let clampedScale = max(min(targetScale, CameraLimits.maximumScale), CameraLimits.minimumScale)
         
-        print(cameraNode.xScale)
+        if animated {
+            let moveAction = SKAction.move(to: normalizedCoordinate, duration: focusAnimationDuration)
+            moveAction.timingMode = .easeInEaseOut
+            let scaleAction = SKAction.scale(to: clampedScale, duration: focusAnimationDuration)
+            scaleAction.timingMode = .easeInEaseOut
+            cameraNode.run(.group([moveAction, scaleAction])) { [weak self] in
+                self?.updateLabelVisibility()
+            }
+        } else {
+            cameraNode.position = normalizedCoordinate
+            cameraNode.setScale(clampedScale)
+            updateLabelVisibility()
+        }
+    }
+
+    func targetScaleToFit(rect: CGRect, padding: CGFloat = 1.4) -> CGFloat {
+        let normalizedRect = CGRect(
+            x: (rect.minX - minX) * scale,
+            y: (rect.minY - minY) * scale,
+            width: rect.width * scale,
+            height: rect.height * scale
+        )
+        
+        guard size.width > 0, size.height > 0 else {
+            return 1
+        }
+        
+        let widthScale = max(normalizedRect.width * padding / size.width, CameraLimits.minimumScale)
+        let heightScale = max(normalizedRect.height * padding / size.height, CameraLimits.minimumScale)
+        return max(widthScale, heightScale)
+    }
+
+    private func updateLabelVisibility() {
         guard cameraNode.xScale < 1.0 else {
             regionLabelsLayer.isHidden = false
             systemLabelsLayer.isHidden = true
@@ -253,6 +300,7 @@ final class MapScene: SKScene {
             }
             return
         }
+        
         regionLabelsLayer.isHidden = true
         systemLabelsLayer.isHidden = false
         for case let label as SKLabelNode in systemLabelsLayer.children {
