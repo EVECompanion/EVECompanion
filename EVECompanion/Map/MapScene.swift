@@ -15,12 +15,21 @@ final class MapScene: SKScene {
         static let minimumScale: CGFloat = 0.15
         static let maximumScale: CGFloat = 5
     }
+    
+    private enum HighlightStyle {
+        static let systemRadius: CGFloat = 34
+        static let regionInset: CGFloat = 40
+        static let cornerRadius: CGFloat = 28
+        static let lineWidth: CGFloat = 8
+        static let strokeColor = UIColor.systemTeal
+    }
 
     private let focusAnimationDuration: TimeInterval = 0.4
     private let gatesLayer = SKNode()
     private let systemsLayer = SKNode()
     private let systemLabelsLayer = SKNode()
     private let regionLabelsLayer = SKNode()
+    private let selectionHighlightLayer = SKNode()
     
     private let systems: [Int: ECKSolarSystem]
     private let regions: [String: CGPoint]
@@ -30,10 +39,12 @@ final class MapScene: SKScene {
     private var minY: CGFloat = 0
     private var maxX: CGFloat = 0
     private var maxY: CGFloat = 0
-    private var scale: CGFloat = 0.000000000000009
+    private var scale: CGFloat = 0.000000000000015
     var lastPanGestureTranslation: CGPoint = .zero
     let cameraNode = SKCameraNode()
     var lastPinchGestureScale: CGFloat = 1
+    private var systemNodes: [Int: SKSpriteNode] = [:]
+    private var selectionHighlightNode: SKNode?
     
     private lazy var hsSystemTexture: SKTexture = {
         systemTexture(color: .lightGray)
@@ -65,11 +76,13 @@ final class MapScene: SKScene {
     override func didMove(to view: SKView) {
         systemLabelsLayer.zPosition += 1
         regionLabelsLayer.zPosition += 1
+        selectionHighlightLayer.zPosition = 10
         regionLabelsLayer.isHidden = true
         addChild(gatesLayer)
         addChild(systemsLayer)
         addChild(systemLabelsLayer)
         addChild(regionLabelsLayer)
+        addChild(selectionHighlightLayer)
         view.ignoresSiblingOrder = true
         view.shouldCullNonVisibleNodes = true
         view.preferredFramesPerSecond = 60
@@ -123,8 +136,8 @@ final class MapScene: SKScene {
             )
 
             sprite.size = CGSize(width: 40, height: 40)
-
-            addChild(sprite)
+            systemsLayer.addChild(sprite)
+            systemNodes[system.id] = sprite
             
             let label = SKLabelNode(fontNamed: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize).fontName)
             
@@ -197,6 +210,15 @@ final class MapScene: SKScene {
         )
     }
     
+    private func normalize(rect: CGRect) -> CGRect {
+        CGRect(
+            x: (rect.minX - minX) * scale,
+            y: (rect.minY - minY) * scale,
+            width: rect.width * scale,
+            height: rect.height * scale
+        )
+    }
+    
     @objc func handlePanGesture(_ sender: UIPanGestureRecognizer) {
         guard let view else { return }
         
@@ -255,7 +277,7 @@ final class MapScene: SKScene {
         updateLabelVisibility()
     }
 
-    func focus(on coordinate: CGPoint, targetScale: CGFloat, animated: Bool = true) {
+    func focus(on coordinate: CGPoint, targetScale: CGFloat, animated: Bool = true, completion: (() -> Void)? = nil) {
         let normalizedCoordinate = normalize(coordinate: coordinate)
         let clampedScale = max(min(targetScale, CameraLimits.maximumScale), CameraLimits.minimumScale)
         
@@ -266,21 +288,55 @@ final class MapScene: SKScene {
             scaleAction.timingMode = .easeInEaseOut
             cameraNode.run(.group([moveAction, scaleAction])) { [weak self] in
                 self?.updateLabelVisibility()
+                completion?()
             }
         } else {
             cameraNode.position = normalizedCoordinate
             cameraNode.setScale(clampedScale)
             updateLabelVisibility()
+            completion?()
         }
     }
 
-    func targetScaleToFit(rect: CGRect, padding: CGFloat = 1.4) -> CGFloat {
-        let normalizedRect = CGRect(
-            x: (rect.minX - minX) * scale,
-            y: (rect.minY - minY) * scale,
-            width: rect.width * scale,
-            height: rect.height * scale
+    func highlightSystem(id: Int) {
+        guard let systemNode = systemNodes[id] else {
+            clearSelectionHighlight()
+            return
+        }
+        
+        clearSelectionHighlight()
+        
+        let highlightNode = SKShapeNode(circleOfRadius: HighlightStyle.systemRadius)
+        highlightNode.position = systemNode.position
+        highlightNode.strokeColor = HighlightStyle.strokeColor
+        highlightNode.lineWidth = HighlightStyle.lineWidth
+        highlightNode.fillColor = .clear
+        highlightNode.isAntialiased = true
+        
+        selectionHighlightLayer.addChild(highlightNode)
+        selectionHighlightNode = highlightNode
+    }
+    
+    func highlightRegion(bounds: CGRect) {
+        clearSelectionHighlight()
+        
+        let normalizedBounds = normalize(rect: bounds)
+        let highlightRect = normalizedBounds.insetBy(dx: -HighlightStyle.regionInset, dy: -HighlightStyle.regionInset)
+        let highlightNode = SKShapeNode(
+            rect: highlightRect,
+            cornerRadius: HighlightStyle.cornerRadius
         )
+        highlightNode.strokeColor = HighlightStyle.strokeColor
+        highlightNode.lineWidth = HighlightStyle.lineWidth
+        highlightNode.fillColor = .clear
+        highlightNode.isAntialiased = true
+        
+        selectionHighlightLayer.addChild(highlightNode)
+        selectionHighlightNode = highlightNode
+    }
+
+    func targetScaleToFit(rect: CGRect, padding: CGFloat = 1.4) -> CGFloat {
+        let normalizedRect = normalize(rect: rect)
         
         guard size.width > 0, size.height > 0 else {
             return 1
@@ -306,6 +362,12 @@ final class MapScene: SKScene {
         for case let label as SKLabelNode in systemLabelsLayer.children {
             label.setScale(cameraNode.xScale)
         }
+    }
+    
+    private func clearSelectionHighlight() {
+        selectionHighlightNode?.removeAllActions()
+        selectionHighlightNode?.removeFromParent()
+        selectionHighlightNode = nil
     }
     
     private func systemTexture(color: UIColor) -> SKTexture {

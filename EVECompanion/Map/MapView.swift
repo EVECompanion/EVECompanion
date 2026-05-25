@@ -229,11 +229,15 @@ struct MapView: View {
         
         switch result {
         case .solarSystem(let system):
-            scene.focus(on: system.cgPoint, targetScale: 0.4)
+            scene.focus(on: system.cgPoint, targetScale: 0.4) {
+                scene.highlightSystem(id: system.id)
+            }
             
         case .region(let region):
             let targetScale = scene.targetScaleToFit(rect: region.bounds)
-            scene.focus(on: region.center, targetScale: targetScale)
+            scene.focus(on: region.center, targetScale: targetScale) {
+                scene.highlightRegion(bounds: region.bounds)
+            }
         }
         
         searchText = ""
