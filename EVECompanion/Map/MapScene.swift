@@ -8,6 +8,7 @@
 import Foundation
 import EVECompanionKit
 import SpriteKit
+import UIKit
 
 final class MapScene: SKScene {
 
@@ -36,11 +37,18 @@ final class MapScene: SKScene {
         static let strokeColor = UIColor.systemBackground.withAlphaComponent(0.5)
         static let labelFontSize: CGFloat = 10
         static let labelVisibilityPadding: CGFloat = 60
+        static let labelVisibilityScale: CGFloat = 1.5
     }
     
     private enum LabelUserDataKey {
         static let systemId = "systemId"
         static let fontSize = "fontSize"
+    }
+
+    private enum SecurityBand: Hashable {
+        case highSecurity
+        case lowSecurity
+        case nullSecurity
     }
 
     private let focusAnimationDuration: TimeInterval = 0.4
@@ -64,7 +72,9 @@ final class MapScene: SKScene {
     var lastPinchGestureScale: CGFloat = 1
     private var panDecelerationVelocity: CGPoint?
     private var lastUpdateTime: TimeInterval?
-    private var systemNodes: [Int: SKShapeNode] = [:]
+    private var systemNodes: [Int: SKNode] = [:]
+    private var systemLabelNodes: [SKLabelNode] = []
+    private var systemTextures: [SecurityBand: SKTexture] = [:]
     private var selectionHighlightNode: SKNode?
     
     init(systems: [Int: ECKSolarSystem], regions: [String: CGPoint], gateConnections: [(solarSystemId: Int, destinationSolarSystemId: Int)]) {
@@ -127,17 +137,13 @@ final class MapScene: SKScene {
 
             let normalizedX = (CGFloat(position.x) - minX) * scale
             let normalizedY = (CGFloat(position.y) - minY) * scale
-            
-            let node = SKShapeNode(circleOfRadius: SystemStyle.radius)
+
+            let node = SKSpriteNode(texture: systemTexture(for: system.security))
 
             node.position = CGPoint(
                 x: normalizedX,
                 y: normalizedY
             )
-            node.fillColor = systemColor(for: system.security)
-            node.strokeColor = SystemStyle.strokeColor
-            node.lineWidth = SystemStyle.strokeWidth
-            node.isAntialiased = true
             systemsLayer.addChild(node)
             systemNodes[system.id] = node
             
@@ -159,6 +165,7 @@ final class MapScene: SKScene {
             )
             
             systemLabelsLayer.addChild(label)
+            systemLabelNodes.append(label)
         }
     }
     
@@ -212,7 +219,9 @@ final class MapScene: SKScene {
     }
     
     private func updateSystemLabel(_ label: SKLabelNode, fontSize: CGFloat?, isHidden: Bool) {
-        label.isHidden = isHidden
+        if label.isHidden != isHidden {
+            label.isHidden = isHidden
+        }
         
         guard let fontSize else {
             return
@@ -235,7 +244,7 @@ final class MapScene: SKScene {
         let cameraScale = max(cameraNode.xScale, CameraLimits.minimumScale)
         let visibleFontSize = ceil(SystemStyle.labelFontSize / cameraScale)
         
-        for case let label as SKLabelNode in systemLabelsLayer.children {
+        for label in systemLabelNodes {
             let isVisible = rect?.contains(label.position) ?? true
             updateSystemLabel(
                 label,
@@ -246,7 +255,7 @@ final class MapScene: SKScene {
     }
     
     private func resetSystemLabels() {
-        for case let label as SKLabelNode in systemLabelsLayer.children {
+        for label in systemLabelNodes {
             updateSystemLabel(
                 label,
                 fontSize: SystemStyle.labelFontSize,
@@ -385,7 +394,9 @@ final class MapScene: SKScene {
     }
     
     @objc func handlePinchGesture(_ sender: UIPinchGestureRecognizer) {
-        guard let view else { return }
+        guard let view else {
+            return
+        }
         
         let locationInView = sender.location(in: view)
         let scale = sender.scale
@@ -495,7 +506,7 @@ final class MapScene: SKScene {
     }
 
     private func updateLabelVisibility(refreshTextures: Bool = true) {
-        guard cameraNode.xScale < 1.0 else {
+        guard cameraNode.xScale < SystemStyle.labelVisibilityScale else {
             regionLabelsLayer.isHidden = false
             systemLabelsLayer.isHidden = true
             if refreshTextures {
@@ -520,7 +531,7 @@ final class MapScene: SKScene {
         cameraNode.position = cameraNode.position
             .applying(CGAffineTransform(translationX: -offsetInScene.x, y: -offsetInScene.y))
         
-        if cameraNode.xScale < 1.0 {
+        if cameraNode.xScale < SystemStyle.labelVisibilityScale {
             updateLabelVisibility(refreshTextures: refreshLabelTextures)
         }
     }
@@ -557,5 +568,45 @@ final class MapScene: SKScene {
             return .red
         }
     }
-    
+
+    private func securityBand(for security: Double) -> SecurityBand {
+        if security >= 0.5 {
+            return .highSecurity
+        } else if security >= 0.1 {
+            return .lowSecurity
+        } else {
+            return .nullSecurity
+        }
+    }
+
+    private func systemTexture(for security: Double) -> SKTexture {
+        let band = securityBand(for: security)
+        if let texture = systemTextures[band] {
+            return texture
+        }
+
+        let diameter = SystemStyle.radius * 2
+        let size = CGSize(width: diameter, height: diameter)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        let image = renderer.image { context in
+            context.cgContext.setAllowsAntialiasing(true)
+
+            let rect = CGRect(origin: .zero, size: size)
+                .insetBy(dx: SystemStyle.strokeWidth / 2, dy: SystemStyle.strokeWidth / 2)
+            let path = UIBezierPath(ovalIn: rect)
+
+            systemColor(for: security).setFill()
+            path.fill()
+
+            SystemStyle.strokeColor.setStroke()
+            path.lineWidth = SystemStyle.strokeWidth
+            path.stroke()
+        }
+
+        let texture = SKTexture(image: image)
+        texture.usesMipmaps = true
+        systemTextures[band] = texture
+        return texture
+    }
+
 }
