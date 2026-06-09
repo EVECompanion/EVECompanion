@@ -14,7 +14,7 @@ final class MapScene: SKScene {
 
     private enum CameraLimits {
         static let minimumScale: CGFloat = 0.15
-        static let maximumScale: CGFloat = 5
+        static let maximumScale: CGFloat = 10
     }
     
     private enum PanDeceleration {
