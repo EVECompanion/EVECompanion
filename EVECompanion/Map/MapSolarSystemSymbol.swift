@@ -13,20 +13,26 @@ struct MapSolarSystemSymbol: View {
     let system: ECKSolarSystem
     
     var body: some View {
-        Text(system.solarSystemName)
-            .padding()
-            .frame(minWidth: 80)
-            .background {
-                Capsule()
-                    .stroke()
-                    .background {
-                        ZStack {
-                            Capsule().fill(Color(uiColor: .systemBackground))
-                            Capsule().fill(fillColor.opacity(0.4))
-                        }
-                        
+        VStack(spacing: 4) {
+            Text(system.solarSystemName)
+                .font(.body)
+            
+            Text(ECFormatters.securityStatus(Float(system.security)))
+                .font(.caption.bold())
+                .foregroundStyle(.secondary)
+        }
+        .padding()
+        .frame(minWidth: 80)
+        .background {
+            Capsule()
+                .stroke()
+                .background {
+                    ZStack {
+                        Capsule().fill(Color(uiColor: .systemBackground))
+                        Capsule().fill(fillColor.opacity(0.4))
                     }
-            }
+                }
+        }
     }
     
     private var fillColor: Color {

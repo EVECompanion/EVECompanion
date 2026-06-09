@@ -28,6 +28,13 @@ final class MapScene: SKScene {
         static let radius: CGFloat = 20
         static let strokeWidth: CGFloat = 1
         static let strokeColor = UIColor.systemBackground.withAlphaComponent(0.5)
+        static let labelFontSize: CGFloat = 10
+        static let labelVisibilityPadding: CGFloat = 60
+    }
+    
+    private enum LabelUserDataKey {
+        static let systemId = "systemId"
+        static let fontSize = "fontSize"
     }
 
     private let focusAnimationDuration: TimeInterval = 0.4
@@ -127,9 +134,12 @@ final class MapScene: SKScene {
             
             let label = SKLabelNode(fontNamed: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize).fontName)
             
-            label.text = system.solarSystemName
-            label.fontColor = .label
-            label.fontSize = 12
+            label.attributedText = systemLabelText(for: system)
+            label.numberOfLines = 2
+            label.userData = NSMutableDictionary(dictionary: [
+                LabelUserDataKey.systemId: NSNumber(value: system.id),
+                LabelUserDataKey.fontSize: NSNumber(value: Double(SystemStyle.labelFontSize))
+            ])
             
             label.horizontalAlignmentMode = .center
             label.verticalAlignmentMode = .center
@@ -140,6 +150,99 @@ final class MapScene: SKScene {
             )
             
             systemLabelsLayer.addChild(label)
+        }
+    }
+    
+    private func systemLabelText(for system: ECKSolarSystem) -> NSAttributedString {
+        systemLabelText(for: system, fontSize: SystemStyle.labelFontSize)
+    }
+    
+    private func systemLabelText(for system: ECKSolarSystem, fontSize: CGFloat) -> NSAttributedString {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .center
+        
+        let nameAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: fontSize),
+            .foregroundColor: UIColor.label,
+            .paragraphStyle: paragraphStyle
+        ]
+        let securityAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.boldSystemFont(ofSize: fontSize),
+            .foregroundColor: UIColor.label,
+            .paragraphStyle: paragraphStyle
+        ]
+        
+        let labelText = NSMutableAttributedString(
+            string: system.solarSystemName,
+            attributes: nameAttributes
+        )
+        labelText.append(
+            NSAttributedString(
+                string: "\n\(ECFormatters.securityStatus(Float(system.security)))",
+                attributes: securityAttributes
+            )
+        )
+        
+        return labelText
+    }
+    
+    private func visibleRect() -> CGRect? {
+        guard let view else {
+            return nil
+        }
+        
+        let topLeft = view.convert(CGPoint(x: view.bounds.minX, y: view.bounds.minY), to: self)
+        let bottomRight = view.convert(CGPoint(x: view.bounds.maxX, y: view.bounds.maxY), to: self)
+        return CGRect(
+            x: min(topLeft.x, bottomRight.x),
+            y: min(topLeft.y, bottomRight.y),
+            width: abs(bottomRight.x - topLeft.x),
+            height: abs(bottomRight.y - topLeft.y)
+        )
+        .insetBy(dx: -SystemStyle.labelVisibilityPadding, dy: -SystemStyle.labelVisibilityPadding)
+    }
+    
+    private func updateSystemLabel(_ label: SKLabelNode, fontSize: CGFloat?, isHidden: Bool) {
+        label.isHidden = isHidden
+        
+        guard let fontSize else {
+            return
+        }
+        
+        let currentFontSize = (label.userData?[LabelUserDataKey.fontSize] as? NSNumber)?.doubleValue
+        guard currentFontSize != Double(fontSize),
+              let systemId = (label.userData?[LabelUserDataKey.systemId] as? NSNumber)?.intValue,
+              let system = systems[systemId] else {
+            return
+        }
+        
+        label.attributedText = systemLabelText(for: system, fontSize: fontSize)
+        label.setScale(SystemStyle.labelFontSize / fontSize)
+        label.userData?[LabelUserDataKey.fontSize] = NSNumber(value: Double(fontSize))
+    }
+    
+    private func updateSystemLabels(refreshTextures: Bool) {
+        let rect = visibleRect()
+        let cameraScale = max(cameraNode.xScale, CameraLimits.minimumScale)
+        let visibleFontSize = ceil(SystemStyle.labelFontSize / cameraScale)
+        
+        for case let label as SKLabelNode in systemLabelsLayer.children {
+            let isVisible = rect?.contains(label.position) ?? true
+            updateSystemLabel(
+                label,
+                fontSize: refreshTextures ? (isVisible ? visibleFontSize : SystemStyle.labelFontSize) : nil,
+                isHidden: !isVisible
+            )
+        }
+    }
+    
+    private func resetSystemLabels() {
+        for case let label as SKLabelNode in systemLabelsLayer.children {
+            updateSystemLabel(
+                label,
+                fontSize: SystemStyle.labelFontSize,
+                isHidden: false
+            )
         }
     }
     
@@ -229,6 +332,10 @@ final class MapScene: SKScene {
         
         cameraNode.position = cameraNode.position
             .applying(CGAffineTransform(translationX: -offsetInScene.x, y: -offsetInScene.y))
+        
+        if cameraNode.xScale < 1.0 {
+            updateLabelVisibility()
+        }
     }
     
     @objc func handlePinchGesture(_ sender: UIPinchGestureRecognizer) {
@@ -241,6 +348,9 @@ final class MapScene: SKScene {
         defer { lastPinchGestureScale = scale }
         
         guard case .changed = sender.state else {
+            if sender.state == .ended || sender.state == .cancelled || sender.state == .failed {
+                updateLabelVisibility(refreshTextures: true)
+            }
             return
         }
         
@@ -260,7 +370,7 @@ final class MapScene: SKScene {
         cameraNode.position = cameraNode.position
             .applying(CGAffineTransform(translationX: -offsetInScene.x, y: -offsetInScene.y))
 
-        updateLabelVisibility()
+        updateLabelVisibility(refreshTextures: false)
     }
 
     func focus(on coordinate: CGPoint, targetScale: CGFloat, animated: Bool = true, completion: (() -> Void)? = nil) {
@@ -273,13 +383,13 @@ final class MapScene: SKScene {
             let scaleAction = SKAction.scale(to: clampedScale, duration: focusAnimationDuration)
             scaleAction.timingMode = .easeInEaseOut
             cameraNode.run(.group([moveAction, scaleAction])) { [weak self] in
-                self?.updateLabelVisibility()
+                self?.updateLabelVisibility(refreshTextures: true)
                 completion?()
             }
         } else {
             cameraNode.position = normalizedCoordinate
             cameraNode.setScale(clampedScale)
-            updateLabelVisibility()
+            updateLabelVisibility(refreshTextures: true)
             completion?()
         }
     }
@@ -333,10 +443,13 @@ final class MapScene: SKScene {
         return max(widthScale, heightScale)
     }
 
-    private func updateLabelVisibility() {
+    private func updateLabelVisibility(refreshTextures: Bool = true) {
         guard cameraNode.xScale < 1.0 else {
             regionLabelsLayer.isHidden = false
             systemLabelsLayer.isHidden = true
+            if refreshTextures {
+                resetSystemLabels()
+            }
             for case let label as SKLabelNode in regionLabelsLayer.children {
                 label.setScale(cameraNode.xScale)
             }
@@ -345,9 +458,7 @@ final class MapScene: SKScene {
         
         regionLabelsLayer.isHidden = true
         systemLabelsLayer.isHidden = false
-        for case let label as SKLabelNode in systemLabelsLayer.children {
-            label.setScale(cameraNode.xScale)
-        }
+        updateSystemLabels(refreshTextures: refreshTextures)
     }
     
     private func clearSelectionHighlight() {
