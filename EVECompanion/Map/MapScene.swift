@@ -24,6 +24,12 @@ final class MapScene: SKScene {
         static let strokeColor = UIColor.systemTeal
     }
 
+    private enum SystemStyle {
+        static let radius: CGFloat = 20
+        static let strokeWidth: CGFloat = 1
+        static let strokeColor = UIColor.systemBackground.withAlphaComponent(0.5)
+    }
+
     private let focusAnimationDuration: TimeInterval = 0.4
     private let gatesLayer = SKNode()
     private let systemsLayer = SKNode()
@@ -43,20 +49,8 @@ final class MapScene: SKScene {
     var lastPanGestureTranslation: CGPoint = .zero
     let cameraNode = SKCameraNode()
     var lastPinchGestureScale: CGFloat = 1
-    private var systemNodes: [Int: SKSpriteNode] = [:]
+    private var systemNodes: [Int: SKShapeNode] = [:]
     private var selectionHighlightNode: SKNode?
-    
-    private lazy var hsSystemTexture: SKTexture = {
-        systemTexture(color: .lightGray)
-    }()
-    
-    private lazy var lsSystemTexture: SKTexture = {
-        systemTexture(color: .orange)
-    }()
-    
-    private lazy var nsSystemTexture: SKTexture = {
-        systemTexture(color: .red)
-    }()
     
     init(systems: [Int: ECKSolarSystem], regions: [String: CGPoint], gateConnections: [(solarSystemId: Int, destinationSolarSystemId: Int)]) {
         self.systems = systems
@@ -118,26 +112,18 @@ final class MapScene: SKScene {
             let normalizedX = (CGFloat(position.x) - minX) * scale
             let normalizedY = (CGFloat(position.y) - minY) * scale
             
-            let texture: SKTexture
-            
-            if system.security >= 0.5 {
-                texture = hsSystemTexture
-            } else if system.security >= 0.1 {
-                texture = lsSystemTexture
-            } else {
-                texture = nsSystemTexture
-            }
-            
-            let sprite = SKSpriteNode(texture: texture)
+            let node = SKShapeNode(circleOfRadius: SystemStyle.radius)
 
-            sprite.position = CGPoint(
+            node.position = CGPoint(
                 x: normalizedX,
                 y: normalizedY
             )
-
-            sprite.size = CGSize(width: 40, height: 40)
-            systemsLayer.addChild(sprite)
-            systemNodes[system.id] = sprite
+            node.fillColor = systemColor(for: system.security)
+            node.strokeColor = SystemStyle.strokeColor
+            node.lineWidth = SystemStyle.strokeWidth
+            node.isAntialiased = true
+            systemsLayer.addChild(node)
+            systemNodes[system.id] = node
             
             let label = SKLabelNode(fontNamed: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize).fontName)
             
@@ -370,15 +356,14 @@ final class MapScene: SKScene {
         selectionHighlightNode = nil
     }
     
-    private func systemTexture(color: UIColor) -> SKTexture {
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 16, height: 16))
-
-        let image = renderer.image { ctx in
-            color.setFill()
-            ctx.cgContext.fillEllipse(in: CGRect(x: 0, y: 0, width: 16, height: 16))
+    private func systemColor(for security: Double) -> UIColor {
+        if security >= 0.5 {
+            return .lightGray
+        } else if security >= 0.1 {
+            return .orange
+        } else {
+            return .red
         }
-
-        return SKTexture(image: image)
     }
     
 }
