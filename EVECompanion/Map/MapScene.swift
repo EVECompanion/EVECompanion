@@ -16,6 +16,12 @@ final class MapScene: SKScene {
         static let maximumScale: CGFloat = 5
     }
     
+    private enum PanDeceleration {
+        static let rate = CGFloat(UIScrollView.DecelerationRate.fast.rawValue)
+        static let minimumVelocity: CGFloat = 40
+        static let maximumFrameDuration: CGFloat = 1 / 30
+    }
+    
     private enum HighlightStyle {
         static let systemRadius: CGFloat = 34
         static let regionInset: CGFloat = 40
@@ -56,6 +62,8 @@ final class MapScene: SKScene {
     var lastPanGestureTranslation: CGPoint = .zero
     let cameraNode = SKCameraNode()
     var lastPinchGestureScale: CGFloat = 1
+    private var panDecelerationVelocity: CGPoint?
+    private var lastUpdateTime: TimeInterval?
     private var systemNodes: [Int: SKShapeNode] = [:]
     private var selectionHighlightNode: SKNode?
     
@@ -308,33 +316,70 @@ final class MapScene: SKScene {
         )
     }
     
-    @objc func handlePanGesture(_ sender: UIPanGestureRecognizer) {
-        guard let view else { return }
+    override func update(_ currentTime: TimeInterval) {
+        defer { lastUpdateTime = currentTime }
         
-        let locationInView = sender.location(in: view)
+        guard var panDecelerationVelocity,
+              let lastUpdateTime else {
+            return
+        }
+        
+        let elapsedTime = CGFloat(currentTime - lastUpdateTime)
+        guard elapsedTime > 0 else {
+            return
+        }
+        
+        let frameDuration = min(elapsedTime, PanDeceleration.maximumFrameDuration)
+        let dTranslation = CGPoint(
+            x: panDecelerationVelocity.x * frameDuration,
+            y: -panDecelerationVelocity.y * frameDuration
+        )
+        applyPanTranslation(dTranslation, refreshLabelTextures: false)
+        
+        let deceleration = pow(PanDeceleration.rate, elapsedTime * 1000)
+        panDecelerationVelocity = CGPoint(
+            x: panDecelerationVelocity.x * deceleration,
+            y: panDecelerationVelocity.y * deceleration
+        )
+        
+        if hypot(panDecelerationVelocity.x, panDecelerationVelocity.y) < PanDeceleration.minimumVelocity {
+            stopPanDeceleration(refreshLabels: true)
+        } else {
+            self.panDecelerationVelocity = panDecelerationVelocity
+        }
+    }
+    
+    @objc func handlePanGesture(_ sender: UIPanGestureRecognizer) {
+        guard let view else {
+            return
+        }
+        
         let translationInView = sender.translation(in: view)
         let velocityInView = sender.velocity(in: view)
         
         defer { lastPanGestureTranslation = translationInView }
         
-        guard case .changed = sender.state else {
-            return
-        }
-        
-        let dTranslation = CGPoint(
-            x: translationInView.x - lastPanGestureTranslation.x,
-            y: lastPanGestureTranslation.y - translationInView.y
-        )
-        
-        let offsetInScene = dTranslation
-            .applying(CGAffineTransform(scaleX: cameraNode.xScale, y: cameraNode.yScale))
-            .applying(CGAffineTransform(rotationAngle: cameraNode.zRotation))
-        
-        cameraNode.position = cameraNode.position
-            .applying(CGAffineTransform(translationX: -offsetInScene.x, y: -offsetInScene.y))
-        
-        if cameraNode.xScale < 1.0 {
-            updateLabelVisibility()
+        switch sender.state {
+        case .began:
+            stopPanDeceleration(refreshLabels: false)
+            
+        case .changed:
+            stopPanDeceleration(refreshLabels: false)
+            
+            let dTranslation = CGPoint(
+                x: translationInView.x - lastPanGestureTranslation.x,
+                y: lastPanGestureTranslation.y - translationInView.y
+            )
+            applyPanTranslation(dTranslation, refreshLabelTextures: false)
+            
+        case .ended:
+            startPanDeceleration(with: velocityInView)
+            
+        case .cancelled, .failed:
+            stopPanDeceleration(refreshLabels: true)
+            
+        default:
+            break
         }
     }
     
@@ -343,9 +388,12 @@ final class MapScene: SKScene {
         
         let locationInView = sender.location(in: view)
         let scale = sender.scale
-        let velocityInView = sender.velocity
         
         defer { lastPinchGestureScale = scale }
+        
+        if sender.state == .began || sender.state == .changed {
+            stopPanDeceleration(refreshLabels: false)
+        }
         
         guard case .changed = sender.state else {
             if sender.state == .ended || sender.state == .cancelled || sender.state == .failed {
@@ -374,6 +422,8 @@ final class MapScene: SKScene {
     }
 
     func focus(on coordinate: CGPoint, targetScale: CGFloat, animated: Bool = true, completion: (() -> Void)? = nil) {
+        stopPanDeceleration(refreshLabels: false)
+        
         let normalizedCoordinate = normalize(coordinate: coordinate)
         let clampedScale = max(min(targetScale, CameraLimits.maximumScale), CameraLimits.minimumScale)
         
@@ -446,7 +496,6 @@ final class MapScene: SKScene {
     private func updateLabelVisibility(refreshTextures: Bool = true) {
         guard cameraNode.xScale < 1.0 else {
             regionLabelsLayer.isHidden = false
-            systemLabelsLayer.isHidden = true
             if refreshTextures {
                 resetSystemLabels()
             }
@@ -457,8 +506,37 @@ final class MapScene: SKScene {
         }
         
         regionLabelsLayer.isHidden = true
-        systemLabelsLayer.isHidden = false
         updateSystemLabels(refreshTextures: refreshTextures)
+    }
+    
+    private func applyPanTranslation(_ dTranslation: CGPoint, refreshLabelTextures: Bool) {
+        let offsetInScene = dTranslation
+            .applying(CGAffineTransform(scaleX: cameraNode.xScale, y: cameraNode.yScale))
+            .applying(CGAffineTransform(rotationAngle: cameraNode.zRotation))
+        
+        cameraNode.position = cameraNode.position
+            .applying(CGAffineTransform(translationX: -offsetInScene.x, y: -offsetInScene.y))
+        
+        if cameraNode.xScale < 1.0 {
+            updateLabelVisibility(refreshTextures: refreshLabelTextures)
+        }
+    }
+    
+    private func startPanDeceleration(with velocityInView: CGPoint) {
+        guard hypot(velocityInView.x, velocityInView.y) >= PanDeceleration.minimumVelocity else {
+            stopPanDeceleration(refreshLabels: true)
+            return
+        }
+        
+        panDecelerationVelocity = velocityInView
+    }
+    
+    private func stopPanDeceleration(refreshLabels: Bool) {
+        panDecelerationVelocity = nil
+        
+        if refreshLabels {
+            updateLabelVisibility(refreshTextures: true)
+        }
     }
     
     private func clearSelectionHighlight() {
