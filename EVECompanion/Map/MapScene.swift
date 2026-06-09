@@ -106,9 +106,10 @@ final class MapScene: SKScene {
         renderRegions()
         let startPosition = CGPoint(
             x: (maxX + minX) / 2,
-            y: (maxY - minY) / 2
+            y: (maxY + minY) / 2
         )
         cameraNode.position = normalize(coordinate: startPosition)
+        cameraNode.setScale(CameraLimits.maximumScale)
         camera = cameraNode
         addChild(cameraNode)
         let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
@@ -496,6 +497,7 @@ final class MapScene: SKScene {
     private func updateLabelVisibility(refreshTextures: Bool = true) {
         guard cameraNode.xScale < 1.0 else {
             regionLabelsLayer.isHidden = false
+            systemLabelsLayer.isHidden = true
             if refreshTextures {
                 resetSystemLabels()
             }
@@ -506,6 +508,7 @@ final class MapScene: SKScene {
         }
         
         regionLabelsLayer.isHidden = true
+        systemLabelsLayer.isHidden = false
         updateSystemLabels(refreshTextures: refreshTextures)
     }
     
