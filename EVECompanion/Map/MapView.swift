@@ -70,12 +70,13 @@ private enum MapSearchResult: Identifiable, Hashable {
 
 private enum MapSearchLayout {
     static let horizontalPadding: CGFloat = 16
-    static let topPadding: CGFloat = 16
+    static let topSafeAreaInsetAllowance: CGFloat = 16
+    static let bottomPadding: CGFloat = 8
     static let stackSpacing: CGFloat = 8
     static let searchFieldHeight: CGFloat = 48
+    static let searchControlSize: CGFloat = 32
     static let resultRowHeight: CGFloat = 56
-    static let emptyStateHeight: CGFloat = 44
-    static let bottomSafeAreaInsetAllowance: CGFloat = 16
+    static let cornerRadius: CGFloat = 22
 }
 
 struct MapView: View {
@@ -116,7 +117,7 @@ struct MapView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            ZStack(alignment: .top) {
+            ZStack(alignment: .bottom) {
                 Group {
                     if let scene {
                         SpriteView(scene: scene)
@@ -171,53 +172,7 @@ struct MapView: View {
                     self.scene = MapScene(systems: systems, regions: regions, gateConnections: gateConnections)
                 }
                 
-                VStack(spacing: MapSearchLayout.stackSpacing) {
-                    HStack(spacing: 10) {
-                        Image(systemName: "magnifyingglass")
-                            .foregroundStyle(.secondary)
-                        
-                        TextField("Search solar systems or regions", text: $searchText)
-                            .textInputAutocapitalization(.never)
-                            .autocorrectionDisabled()
-                            .focused($isSearchFocused)
-                        
-                        if searchText.isEmpty == false {
-                            Button {
-                                searchText = ""
-                                isSearchFocused = false
-                            } label: {
-                                Image(systemName: "xmark.circle.fill")
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 12)
-                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    
-                    if filteredSearchResults.isEmpty == false {
-                        if searchResultsContentHeight <= searchResultsMaxHeight(in: geometry) {
-                            resultsList
-                                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                        } else {
-                            ScrollView {
-                                resultsList
-                            }
-                            .frame(maxHeight: searchResultsMaxHeight(in: geometry), alignment: .top)
-                            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                        }
-                    } else if searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false {
-                        Text("No matching solar systems or regions.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 12)
-                            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    }
-                }
-                .padding(.horizontal, MapSearchLayout.horizontalPadding)
-                .padding(.top, MapSearchLayout.topPadding)
+                searchOverlay(in: geometry)
             }
         }
     }
@@ -252,6 +207,82 @@ struct MapView: View {
         }
     }
     
+    private func searchOverlay(in geometry: GeometryProxy) -> some View {
+        VStack(spacing: MapSearchLayout.stackSpacing) {
+            searchResults(in: geometry)
+            searchField
+        }
+        .padding(.horizontal, MapSearchLayout.horizontalPadding)
+        .padding(.bottom, MapSearchLayout.bottomPadding)
+    }
+    
+    @ViewBuilder
+    private func searchResults(in geometry: GeometryProxy) -> some View {
+        if filteredSearchResults.isEmpty == false {
+            if searchResultsContentHeight <= searchResultsMaxHeight(in: geometry) {
+                resultsList
+                    .mapGlassPanel()
+            } else {
+                ScrollView {
+                    resultsList
+                }
+                .frame(maxHeight: searchResultsMaxHeight(in: geometry), alignment: .bottom)
+                .mapGlassPanel()
+            }
+        } else if searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false {
+            Text("No matching solar systems or regions.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 12)
+                .mapGlassPanel()
+        }
+    }
+    
+    private var searchField: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "magnifyingglass")
+                .foregroundStyle(.secondary)
+            
+            TextField("Search solar systems or regions", text: $searchText)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .focused($isSearchFocused)
+            
+            if searchText.isEmpty == false {
+                Button {
+                    searchText = ""
+                    isSearchFocused = false
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                }
+                .tint(.primary)
+                .accessibilityLabel("Clear search")
+            }
+            
+            keyboardDismissButton
+                .opacity(isSearchFocused ? 1 : 0)
+                .allowsHitTesting(isSearchFocused)
+                .accessibilityHidden(isSearchFocused == false)
+        }
+        .padding(.horizontal, 14)
+        .frame(height: MapSearchLayout.searchFieldHeight)
+        .mapGlassPanel()
+    }
+    
+    private var keyboardDismissButton: some View {
+        Button {
+            isSearchFocused = false
+        } label: {
+            Image(systemName: "keyboard.chevron.compact.down")
+                .imageScale(.medium)
+                .frame(width: MapSearchLayout.searchControlSize, height: MapSearchLayout.searchControlSize)
+        }
+        .mapGlassButtonStyle()
+        .accessibilityLabel("Dismiss keyboard")
+    }
+    
     private func resultButton(for result: MapSearchResult) -> some View {
         Button {
             focus(on: result)
@@ -281,16 +312,40 @@ struct MapView: View {
     private func searchResultsMaxHeight(in geometry: GeometryProxy) -> CGFloat {
         let availableHeight =
             geometry.size.height
-            - MapSearchLayout.topPadding
+            - MapSearchLayout.topSafeAreaInsetAllowance
             - MapSearchLayout.searchFieldHeight
             - MapSearchLayout.stackSpacing
-            - MapSearchLayout.bottomSafeAreaInsetAllowance
+            - MapSearchLayout.bottomPadding
         
         guard availableHeight.isFinite else {
             return MapSearchLayout.resultRowHeight
         }
         
         return max(MapSearchLayout.resultRowHeight, availableHeight)
+    }
+    
+}
+
+private extension View {
+    
+    @ViewBuilder
+    func mapGlassPanel() -> some View {
+        if #available(iOS 26.0, *) {
+            glassEffect(.regular, in: RoundedRectangle(cornerRadius: MapSearchLayout.cornerRadius, style: .continuous))
+        } else {
+            background(.regularMaterial, in: RoundedRectangle(cornerRadius: MapSearchLayout.cornerRadius, style: .continuous))
+        }
+    }
+    
+    @ViewBuilder
+    func mapGlassButtonStyle() -> some View {
+        if #available(iOS 26.0, *) {
+            buttonStyle(.glass)
+                .buttonBorderShape(.capsule)
+        } else {
+            buttonStyle(.bordered)
+                .buttonBorderShape(.capsule)
+        }
     }
     
 }

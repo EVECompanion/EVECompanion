@@ -38,6 +38,7 @@ final class MapScene: SKScene {
         static let labelFontSize: CGFloat = 10
         static let labelVisibilityPadding: CGFloat = 60
         static let labelVisibilityScale: CGFloat = 1.5
+        static let labelFadeScaleRange: CGFloat = 0.5
     }
     
     private enum LabelUserDataKey {
@@ -76,6 +77,8 @@ final class MapScene: SKScene {
     private var systemLabelNodes: [SKLabelNode] = []
     private var systemTextures: [SecurityBand: SKTexture] = [:]
     private var selectionHighlightNode: SKNode?
+    private var lastLabelCameraScale: CGFloat?
+    private var lastLabelCameraPosition: CGPoint?
     
     init(systems: [Int: ECKSolarSystem], regions: [String: CGPoint], gateConnections: [(solarSystemId: Int, destinationSolarSystemId: Int)]) {
         self.systems = systems
@@ -96,7 +99,7 @@ final class MapScene: SKScene {
         systemLabelsLayer.zPosition += 1
         regionLabelsLayer.zPosition += 1
         selectionHighlightLayer.zPosition = 10
-        regionLabelsLayer.isHidden = true
+        regionLabelsLayer.alpha = 0
         addChild(gatesLayer)
         addChild(systemsLayer)
         addChild(systemLabelsLayer)
@@ -254,12 +257,12 @@ final class MapScene: SKScene {
         }
     }
     
-    private func resetSystemLabels() {
+    private func resetSystemLabels(isHidden: Bool = false) {
         for label in systemLabelNodes {
             updateSystemLabel(
                 label,
                 fontSize: SystemStyle.labelFontSize,
-                isHidden: false
+                isHidden: isHidden
             )
         }
     }
@@ -328,6 +331,10 @@ final class MapScene: SKScene {
     
     override func update(_ currentTime: TimeInterval) {
         defer { lastUpdateTime = currentTime }
+
+        if lastLabelCameraScale != cameraNode.xScale || lastLabelCameraPosition != cameraNode.position {
+            updateLabelVisibility(refreshTextures: false)
+        }
         
         guard var panDecelerationVelocity,
               let lastUpdateTime else {
@@ -506,21 +513,40 @@ final class MapScene: SKScene {
     }
 
     private func updateLabelVisibility(refreshTextures: Bool = true) {
-        guard cameraNode.xScale < SystemStyle.labelVisibilityScale else {
-            regionLabelsLayer.isHidden = false
-            systemLabelsLayer.isHidden = true
-            if refreshTextures {
-                resetSystemLabels()
-            }
-            for case let label as SKLabelNode in regionLabelsLayer.children {
-                label.setScale(cameraNode.xScale)
-            }
-            return
+        let cameraScale = max(cameraNode.xScale, CameraLimits.minimumScale)
+        let regionAlpha = regionLabelAlpha(for: cameraScale)
+        let systemAlpha = 1 - regionAlpha
+
+        systemLabelsLayer.alpha = systemAlpha
+        regionLabelsLayer.alpha = regionAlpha
+
+        for case let label as SKLabelNode in regionLabelsLayer.children {
+            label.setScale(cameraScale)
+        }
+
+        if systemAlpha > 0 {
+            updateSystemLabels(refreshTextures: refreshTextures)
+        } else if refreshTextures {
+            resetSystemLabels(isHidden: true)
+        }
+
+        lastLabelCameraScale = cameraNode.xScale
+        lastLabelCameraPosition = cameraNode.position
+    }
+
+    private func regionLabelAlpha(for cameraScale: CGFloat) -> CGFloat {
+        let halfFadeRange = SystemStyle.labelFadeScaleRange / 2
+        let fadeStartScale = SystemStyle.labelVisibilityScale - halfFadeRange
+        let fadeEndScale = SystemStyle.labelVisibilityScale + halfFadeRange
+
+        guard cameraScale > fadeStartScale else {
+            return 0
+        }
+        guard cameraScale < fadeEndScale else {
+            return 1
         }
         
-        regionLabelsLayer.isHidden = true
-        systemLabelsLayer.isHidden = false
-        updateSystemLabels(refreshTextures: refreshTextures)
+        return (cameraScale - fadeStartScale) / (fadeEndScale - fadeStartScale)
     }
     
     private func applyPanTranslation(_ dTranslation: CGPoint, refreshLabelTextures: Bool) {
@@ -531,7 +557,7 @@ final class MapScene: SKScene {
         cameraNode.position = cameraNode.position
             .applying(CGAffineTransform(translationX: -offsetInScene.x, y: -offsetInScene.y))
         
-        if cameraNode.xScale < SystemStyle.labelVisibilityScale {
+        if systemLabelsLayer.alpha > 0 {
             updateLabelVisibility(refreshTextures: refreshLabelTextures)
         }
     }
