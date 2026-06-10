@@ -13,10 +13,10 @@ class DogmaEffectsTable: SDETable {
     
     var table: SQLite.Table = .init("dgmEffects")
     
-    private let effectIdColumn = Expression<Int64>("effectID")
-    private let effectNameColumn = Expression<String>("effectName")
-    private let effectCategoryColumn = Expression<Int64?>("effectCategory")
-    private let modifierInfoColumn = Expression<String>("modifierInfo")
+    private let effectIdColumn = SQLite.Expression<Int64>("effectID")
+    private let effectNameColumn = SQLite.Expression<String>("effectName")
+    private let effectCategoryColumn = SQLite.Expression<Int64?>("effectCategory")
+    private let modifierInfoColumn = SQLite.Expression<String>("modifierInfo")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(effectIdColumn)

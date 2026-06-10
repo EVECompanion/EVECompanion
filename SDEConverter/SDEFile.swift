@@ -98,7 +98,14 @@ enum SDEFile {
     
     private func loadFileContent(sdeDir: String) throws -> String {
         print("Loading \(fileName)")
-        return try String(contentsOfFile: "\(sdeDir)/\(fileName)", encoding: .utf8)
+        let content = try String(contentsOfFile: "\(sdeDir)/\(fileName)", encoding: .utf8)
+        
+        switch self {
+        case .solarSystems:
+            return content.replacingOccurrences(of: ": 6E-578", with: ": \"6E-578\"")
+        default:
+            return content
+        }
     }
     
 }

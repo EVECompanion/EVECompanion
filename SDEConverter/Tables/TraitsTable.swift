@@ -12,12 +12,12 @@ class TraitsTable: SDETable {
     
     var table: SQLite.Table = .init("invTraits")
     
-    private let traitIdColumn = Expression<Int64>("traitID")
-    private let typeIdColumn = Expression<Int64>("typeID")
-    private let bonusColumn = Expression<Float64?>("bonus")
-    private let bonusTextColumn = Expression<String>("bonusText")
-    private let skillIdColumn = Expression<Int64>("skillID")
-    private let unitIdColumn = Expression<Int64?>("unitID")
+    private let traitIdColumn = SQLite.Expression<Int64>("traitID")
+    private let typeIdColumn = SQLite.Expression<Int64>("typeID")
+    private let bonusColumn = SQLite.Expression<Float64?>("bonus")
+    private let bonusTextColumn = SQLite.Expression<String>("bonusText")
+    private let skillIdColumn = SQLite.Expression<Int64>("skillID")
+    private let unitIdColumn = SQLite.Expression<Int64?>("unitID")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(traitIdColumn, primaryKey: .autoincrement)

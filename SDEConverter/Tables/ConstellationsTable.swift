@@ -12,8 +12,8 @@ class ConstellationsTable: SDETable {
     
     var table: SQLite.Table = .init("mapConstellations")
     
-    var constellationIdColumn = Expression<Int64>("constellationID")
-    var constellationNameColumn = Expression<String>("constellationName")
+    var constellationIdColumn = SQLite.Expression<Int64>("constellationID")
+    var constellationNameColumn = SQLite.Expression<String>("constellationName")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(constellationIdColumn)

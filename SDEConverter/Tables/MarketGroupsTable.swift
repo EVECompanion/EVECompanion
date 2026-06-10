@@ -12,11 +12,11 @@ class MarketGroupsTable: SDETable {
     
     var table: SQLite.Table = .init("invMarketGroups")
     
-    var marketGroupIdColumn = Expression<Int64>("marketGroupID")
-    var parentGroupIdColumn = Expression<Int64?>("parentGroupID")
-    var marketGroupNameColumn = Expression<String>("marketGroupName")
-    var marketGroupDescriptionColumn = Expression<String>("description")
-    var hasTypesColumn = Expression<Bool>("hasTypes")
+    var marketGroupIdColumn = SQLite.Expression<Int64>("marketGroupID")
+    var parentGroupIdColumn = SQLite.Expression<Int64?>("parentGroupID")
+    var marketGroupNameColumn = SQLite.Expression<String>("marketGroupName")
+    var marketGroupDescriptionColumn = SQLite.Expression<String>("description")
+    var hasTypesColumn = SQLite.Expression<Bool>("hasTypes")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(marketGroupIdColumn)

@@ -12,9 +12,9 @@ class MapDenormalizeTable: SDETable {
     
     var table: SQLite.Table = .init("mapDenormalize")
     
-    var itemIdColumn = Expression<Int64>("itemID")
-    var typeIdColumn = Expression<Int64>("typeID")
-    var itemNameColumn = Expression<String>("itemName")
+    var itemIdColumn = SQLite.Expression<Int64>("itemID")
+    var typeIdColumn = SQLite.Expression<Int64>("typeID")
+    var itemNameColumn = SQLite.Expression<String>("itemName")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(itemIdColumn)

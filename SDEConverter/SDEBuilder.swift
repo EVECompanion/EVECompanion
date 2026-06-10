@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import simd
 import SQLite
 
 class SDEBuilder {

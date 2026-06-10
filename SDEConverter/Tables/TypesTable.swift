@@ -12,17 +12,17 @@ class TypesTable: SDETable {
     
     var table: SQLite.Table = .init("invTypes")
     
-    private let typeIdColumn = Expression<Int64>("typeID")
-    private let groupIdColumn = Expression<Int64>("groupID")
-    private let typeNameColumn = Expression<String>("typeName")
-    private let descriptionColumn = Expression<String?>("description")
-    private let massColumn = Expression<Float64>("mass")
-    private let volumeColumn = Expression<Float64>("volume")
-    private let capacityColumn = Expression<Float64>("capacity")
-    private let radiusColumn = Expression<Float64>("radius")
-    private let iconIdColumn = Expression<Int64?>("iconID")
-    private let publishedColumn = Expression<Bool>("published")
-    private let marketGroupIdColumn = Expression<Int64?>("marketGroupID")
+    private let typeIdColumn = SQLite.Expression<Int64>("typeID")
+    private let groupIdColumn = SQLite.Expression<Int64>("groupID")
+    private let typeNameColumn = SQLite.Expression<String>("typeName")
+    private let descriptionColumn = SQLite.Expression<String?>("description")
+    private let massColumn = SQLite.Expression<Float64>("mass")
+    private let volumeColumn = SQLite.Expression<Float64>("volume")
+    private let capacityColumn = SQLite.Expression<Float64>("capacity")
+    private let radiusColumn = SQLite.Expression<Float64>("radius")
+    private let iconIdColumn = SQLite.Expression<Int64?>("iconID")
+    private let publishedColumn = SQLite.Expression<Bool>("published")
+    private let marketGroupIdColumn = SQLite.Expression<Int64?>("marketGroupID")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(typeIdColumn)

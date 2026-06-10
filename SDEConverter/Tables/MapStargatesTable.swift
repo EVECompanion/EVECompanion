@@ -12,10 +12,10 @@ class MapStargatesTable: SDETable {
     
     var table: SQLite.Table = .init("mapStargates")
     
-    var stargateIDColumn = Expression<Int64>("stargateID")
-    var solarSystemIDColumn = Expression<Int64>("solarSystemID")
-    var destinationSolarSystemIDColumn = Expression<Int64>("destinationSolarSystemID")
-    var destinationStargateIDColumn = Expression<Int64>("destinationStargateID")
+    var stargateIDColumn = SQLite.Expression<Int64>("stargateID")
+    var solarSystemIDColumn = SQLite.Expression<Int64>("solarSystemID")
+    var destinationSolarSystemIDColumn = SQLite.Expression<Int64>("destinationSolarSystemID")
+    var destinationStargateIDColumn = SQLite.Expression<Int64>("destinationStargateID")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(stargateIDColumn)

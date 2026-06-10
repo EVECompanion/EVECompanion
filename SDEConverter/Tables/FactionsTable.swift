@@ -12,10 +12,10 @@ class FactionsTable: SDETable {
     
     var table: SQLite.Table = .init("chrFactions")
     
-    var factionIdColumn = Expression<Int64>("factionID")
-    var factionNameColumn = Expression<String>("factionName")
-    var factionDescriptionColumn = Expression<String>("description")
-    var iconIdColumn = Expression<Int64>("iconID")
+    var factionIdColumn = SQLite.Expression<Int64>("factionID")
+    var factionNameColumn = SQLite.Expression<String>("factionName")
+    var factionDescriptionColumn = SQLite.Expression<String>("description")
+    var iconIdColumn = SQLite.Expression<Int64>("iconID")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(factionIdColumn)

@@ -12,16 +12,16 @@ class AttributeTypesTable: SDETable {
     
     let table: SQLite.Table = .init("dgmAttributeTypes")
     
-    private let attributeIdColumn = Expression<Int64>("attributeID")
-    private let categoryIdColumn = Expression<Int64?>("categoryID")
-    private let attributeNameColumnn = Expression<String?>("attributeName")
-    private let attributeRawNameColumn = Expression<String>("attributeRawName")
-    private let attributeDisplayNameColumn = Expression<String?>("displayName")
-    private let highIsGoodColumn = Expression<Bool>("highIsGood")
-    private let stackableColumn = Expression<Bool>("stackable")
-    private let publishedColumn = Expression<Bool>("published")
-    private let defaultValueColumn = Expression<Float64>("defaultValue")
-    private let unitIdColumn = Expression<Int64?>("unitID")
+    private let attributeIdColumn = SQLite.Expression<Int64>("attributeID")
+    private let categoryIdColumn = SQLite.Expression<Int64?>("categoryID")
+    private let attributeNameColumnn = SQLite.Expression<String?>("attributeName")
+    private let attributeRawNameColumn = SQLite.Expression<String>("attributeRawName")
+    private let attributeDisplayNameColumn = SQLite.Expression<String?>("displayName")
+    private let highIsGoodColumn = SQLite.Expression<Bool>("highIsGood")
+    private let stackableColumn = SQLite.Expression<Bool>("stackable")
+    private let publishedColumn = SQLite.Expression<Bool>("published")
+    private let defaultValueColumn = SQLite.Expression<Float64>("defaultValue")
+    private let unitIdColumn = SQLite.Expression<Int64?>("unitID")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(attributeIdColumn)

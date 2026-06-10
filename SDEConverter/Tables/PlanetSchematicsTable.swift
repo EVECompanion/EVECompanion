@@ -12,9 +12,9 @@ class PlanetSchematicsTable: SDETable {
     
     var table: SQLite.Table = .init("planetSchematics")
     
-    var schematicIdColumn = Expression<Int64>("schematicID")
-    var schematicNameColumn = Expression<String>("schematicName")
-    var cycleTimeColumn = Expression<Int64>("cycleTime")
+    var schematicIdColumn = SQLite.Expression<Int64>("schematicID")
+    var schematicNameColumn = SQLite.Expression<String>("schematicName")
+    var cycleTimeColumn = SQLite.Expression<Int64>("cycleTime")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(schematicIdColumn)

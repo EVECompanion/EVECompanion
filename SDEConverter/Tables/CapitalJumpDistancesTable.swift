@@ -13,9 +13,9 @@ class CapitalJumpDistancesTable {
     
     var table: SQLite.Table
     
-    var startSystemIdColumn = Expression<Int64>("startSystemID")
-    var destinationSystemIdColumn = Expression<Int64>("destinationSystemID")
-    var distanceColumn = Expression<Float64>("distance")
+    var startSystemIdColumn = SQLite.Expression<Int64>("startSystemID")
+    var destinationSystemIdColumn = SQLite.Expression<Int64>("destinationSystemID")
+    var distanceColumn = SQLite.Expression<Float64>("distance")
     
     init(tableName: String = "mapCapitalJumpDistances") {
         self.table = .init(tableName)

@@ -12,10 +12,10 @@ class PlanetSchematicsTypeMapTable: SDETable {
     
     var table: SQLite.Table = .init("planetSchematicsTypeMap")
     
-    var schematicIdColumn = Expression<Int64>("schematicID")
-    var typeIdColumn = Expression<Int64>("typeID")
-    var quantityColumn = Expression<Int64>("quantity")
-    var isInputColumn = Expression<Bool>("isInput")
+    var schematicIdColumn = SQLite.Expression<Int64>("schematicID")
+    var typeIdColumn = SQLite.Expression<Int64>("typeID")
+    var quantityColumn = SQLite.Expression<Int64>("quantity")
+    var isInputColumn = SQLite.Expression<Bool>("isInput")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(schematicIdColumn)

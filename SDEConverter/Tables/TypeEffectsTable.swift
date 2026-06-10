@@ -12,8 +12,8 @@ class TypeEffectsTable: SDETable {
     
     var table: SQLite.Table = .init("dgmTypeEffects")
     
-    var typeIdColumn = Expression<Int64>("typeID")
-    var effectIDColumn = Expression<Int64>("effectID")
+    var typeIdColumn = SQLite.Expression<Int64>("typeID")
+    var effectIDColumn = SQLite.Expression<Int64>("effectID")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(typeIdColumn)

@@ -12,9 +12,9 @@ class StationsTable: SDETable {
     
     var table: SQLite.Table = .init("staStations")
     
-    var stationIdColumn = Expression<Int64>("stationID")
-    var solarSystemIdColumn = Expression<Int64>("solarSystemID")
-    var stationNameColumn = Expression<String>("stationName")
+    var stationIdColumn = SQLite.Expression<Int64>("stationID")
+    var solarSystemIdColumn = SQLite.Expression<Int64>("solarSystemID")
+    var stationNameColumn = SQLite.Expression<String>("stationName")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(stationIdColumn)

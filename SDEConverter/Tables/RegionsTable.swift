@@ -12,8 +12,8 @@ class RegionsTable: SDETable {
     
     var table: SQLite.Table = .init("mapRegions")
     
-    var regionIdColumn = Expression<Int64>("regionID")
-    var regionNameColumn = Expression<String>("regionName")
+    var regionIdColumn = SQLite.Expression<Int64>("regionID")
+    var regionNameColumn = SQLite.Expression<String>("regionName")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(regionIdColumn)

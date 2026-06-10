@@ -26,6 +26,27 @@ This project is a companion app for the online Game [EVE Online](https://www.eve
 
 This project uses a custom SQLite conversion of the [EVE Online SDE](https://developers.eveonline.com/static-data). The script to generate the SDE SQLite file for the app is available as a CLI tool in the `SDEConverter` target of this Xcode project.
 
+The converter can also be run on Linux via Swift Package Manager:
+
+```sh
+swift run -c release SDEConverter \
+  --sde-dir ./sde \
+  --effect-patches ./SDEConverter/effect_patches.json \
+  --output-file ./EVE.sqlite
+```
+
+Or build and run it with Docker:
+
+```sh
+docker build -f SDEConverter/Dockerfile -t evecompanion-sdeconverter .
+docker run --rm \
+  -v "$PWD/sde:/sde:ro" \
+  -v "$PWD:/output" \
+  evecompanion-sdeconverter
+```
+
+The Docker image includes `SDEConverter/effect_patches.json` and writes the converted SQLite database to `/output/EVE.sqlite` by default.
+
 ### Using the SDE in SwiftUI Previews
 
 To use the SDE SQLite file in SwiftUI previews, copy the file into the `EVECompanion/Preview Content` directory in Xcode with the filename `EVE.sqlite`.

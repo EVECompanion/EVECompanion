@@ -12,10 +12,10 @@ class TypeAttributesTable: SDETable {
     
     var table: SQLite.Table = .init("dgmTypeAttributes")
     
-    private let typeIdColumn = Expression<Int64>("typeID")
-    private let attributeIdColumn = Expression<Int64>("attributeID")
-    private let valueIntColumn = Expression<Int64?>("valueInt")
-    private let valueFloatColumn = Expression<Float64>("valueFloat")
+    private let typeIdColumn = SQLite.Expression<Int64>("typeID")
+    private let attributeIdColumn = SQLite.Expression<Int64>("attributeID")
+    private let valueIntColumn = SQLite.Expression<Int64?>("valueInt")
+    private let valueFloatColumn = SQLite.Expression<Float64>("valueFloat")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(typeIdColumn)

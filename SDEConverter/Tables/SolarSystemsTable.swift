@@ -12,17 +12,17 @@ class SolarSystemsTable: SDETable {
     
     var table: SQLite.Table = .init("mapSolarSystems")
     
-    var solarSystemIdColumn = Expression<Int64>("solarSystemID")
-    var constellationIdColumn = Expression<Int64>("constellationID")
-    var regionIdColumn = Expression<Int64>("regionID")
-    var solarSystemNameColumn = Expression<String>("solarSystemName")
-    var securityColumn = Expression<Float64>("security")
-    var sunTypeIdColumn = Expression<Int64?>("sunTypeID")
-    var xColumn = Expression<Float64>("x")
-    var yColumn = Expression<Float64>("y")
-    var zColumn = Expression<Float64>("z")
-    var position2dxColumn = Expression<Float64?>("position2Dx")
-    var position2dyColumn = Expression<Float64?>("position2Dy")
+    var solarSystemIdColumn = SQLite.Expression<Int64>("solarSystemID")
+    var constellationIdColumn = SQLite.Expression<Int64>("constellationID")
+    var regionIdColumn = SQLite.Expression<Int64>("regionID")
+    var solarSystemNameColumn = SQLite.Expression<String>("solarSystemName")
+    var securityColumn = SQLite.Expression<Float64>("security")
+    var sunTypeIdColumn = SQLite.Expression<Int64?>("sunTypeID")
+    var xColumn = SQLite.Expression<Float64>("x")
+    var yColumn = SQLite.Expression<Float64>("y")
+    var zColumn = SQLite.Expression<Float64>("z")
+    var position2dxColumn = SQLite.Expression<Float64?>("position2Dx")
+    var position2dyColumn = SQLite.Expression<Float64?>("position2Dy")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(solarSystemIdColumn)

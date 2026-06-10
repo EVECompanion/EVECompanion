@@ -12,8 +12,8 @@ class UnitsTable: SDETable {
     
     var table: SQLite.Table = .init("eveUnits")
     
-    var unitIdColumn = Expression<Int64>("unitID")
-    var unitNameColumn = Expression<String>("unitName")
+    var unitIdColumn = SQLite.Expression<Int64>("unitID")
+    var unitNameColumn = SQLite.Expression<String>("unitName")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(unitIdColumn)

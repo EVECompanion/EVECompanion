@@ -12,8 +12,8 @@ class AttributeCategoriesTable: SDETable {
     
     var table: SQLite.Table = .init("dgmAttributeCategories")
     
-    var categoryIdColumn = Expression<Int64>("categoryID")
-    var categoryNameColumn = Expression<String>("categoryName")
+    var categoryIdColumn = SQLite.Expression<Int64>("categoryID")
+    var categoryNameColumn = SQLite.Expression<String>("categoryName")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(categoryIdColumn)

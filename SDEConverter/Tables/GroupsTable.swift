@@ -12,9 +12,9 @@ class GroupsTable: SDETable {
     
     var table: SQLite.Table = .init("invGroups")
     
-    var groupIdColumn = Expression<Int64>("groupID")
-    var categoryIdColumn = Expression<Int64>("categoryID")
-    var groupNameColumn = Expression<String>("groupName")
+    var groupIdColumn = SQLite.Expression<Int64>("groupID")
+    var categoryIdColumn = SQLite.Expression<Int64>("categoryID")
+    var groupNameColumn = SQLite.Expression<String>("groupName")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(groupIdColumn)

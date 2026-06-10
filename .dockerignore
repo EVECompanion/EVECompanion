@@ -1,0 +1,17 @@
+.git
+.build
+DerivedData
+xcuserdata
+
+sde
+*.sqlite
+*.sqlite-*
+EVE.sqlite
+
+*.zip
+*.ipa
+*.dSYM
+*.dSYM.zip
+
+FirebaseConfig
+EVECompanion/GoogleService-Info.plist

@@ -12,10 +12,10 @@ class IndustryActivitiesTable: SDETable {
     
     var table: SQLite.Table = .init("ramActivities")
     
-    var activityIdColumn = Expression<Int64>("activityID")
-    var activityNameColumn = Expression<String>("activityName")
-    var activityDescriptionColumn = Expression<String>("description")
-    var activityIconNoColumn = Expression<String?>("iconNo")
+    var activityIdColumn = SQLite.Expression<Int64>("activityID")
+    var activityNameColumn = SQLite.Expression<String>("activityName")
+    var activityDescriptionColumn = SQLite.Expression<String>("description")
+    var activityIconNoColumn = SQLite.Expression<String?>("iconNo")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(activityIdColumn)
