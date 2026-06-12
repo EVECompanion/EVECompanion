@@ -25,10 +25,16 @@ final class MapScene: SKScene {
     
     private enum HighlightStyle {
         static let systemRadius: CGFloat = 34
+        static let constellationInset: CGFloat = 40
         static let regionInset: CGFloat = 40
         static let cornerRadius: CGFloat = 28
         static let lineWidth: CGFloat = 8
         static let strokeColor = UIColor.systemTeal
+    }
+    
+    enum MapAreaHighlightInset {
+        static let constellation = HighlightStyle.constellationInset
+        static let region = HighlightStyle.regionInset
     }
 
     private enum SystemStyle {
@@ -37,8 +43,20 @@ final class MapScene: SKScene {
         static let strokeColor = UIColor.systemBackground.withAlphaComponent(0.5)
         static let labelFontSize: CGFloat = 10
         static let labelVisibilityPadding: CGFloat = 60
-        static let labelVisibilityScale: CGFloat = 1.5
+        static let labelFadeScale: CGFloat = 1.5
         static let labelFadeScaleRange: CGFloat = 0.5
+    }
+    
+    private enum ConstellationStyle {
+        static let labelFontSize: CGFloat = 12
+        static let labelColor = UIColor.secondaryLabel
+        static let labelFadeScale: CGFloat = 3.5
+        static let labelFadeScaleRange: CGFloat = 0.75
+    }
+    
+    private enum RegionStyle {
+        static let labelFontSize: CGFloat = 16
+        static let labelColor = UIColor.label
     }
     
     private enum LabelUserDataKey {
@@ -56,10 +74,12 @@ final class MapScene: SKScene {
     private let gatesLayer = SKNode()
     private let systemsLayer = SKNode()
     private let systemLabelsLayer = SKNode()
+    private let constellationLabelsLayer = SKNode()
     private let regionLabelsLayer = SKNode()
     private let selectionHighlightLayer = SKNode()
     
     private let systems: [Int: ECKSolarSystem]
+    private let constellations: [String: CGPoint]
     private let regions: [String: CGPoint]
     private let gateConnections: [(solarSystemId: Int, destinationSolarSystemId: Int)]
     
@@ -80,8 +100,9 @@ final class MapScene: SKScene {
     private var lastLabelCameraScale: CGFloat?
     private var lastLabelCameraPosition: CGPoint?
     
-    init(systems: [Int: ECKSolarSystem], regions: [String: CGPoint], gateConnections: [(solarSystemId: Int, destinationSolarSystemId: Int)]) {
+    init(systems: [Int: ECKSolarSystem], constellations: [String: CGPoint], regions: [String: CGPoint], gateConnections: [(solarSystemId: Int, destinationSolarSystemId: Int)]) {
         self.systems = systems
+        self.constellations = constellations
         self.regions = regions
         self.gateConnections = gateConnections
         self.minX = CGFloat(systems.values.compactMap(\.position2D?.x).min() ?? 0)
@@ -97,12 +118,15 @@ final class MapScene: SKScene {
     
     override func didMove(to view: SKView) {
         systemLabelsLayer.zPosition += 1
+        constellationLabelsLayer.zPosition += 1
         regionLabelsLayer.zPosition += 1
         selectionHighlightLayer.zPosition = 10
+        constellationLabelsLayer.alpha = 0
         regionLabelsLayer.alpha = 0
         addChild(gatesLayer)
         addChild(systemsLayer)
         addChild(systemLabelsLayer)
+        addChild(constellationLabelsLayer)
         addChild(regionLabelsLayer)
         addChild(selectionHighlightLayer)
         view.ignoresSiblingOrder = true
@@ -116,6 +140,7 @@ final class MapScene: SKScene {
         #endif
         renderSystems()
         renderGates()
+        renderConstellations()
         renderRegions()
         let startPosition = CGPoint(
             x: (maxX + minX) / 2,
@@ -291,19 +316,39 @@ final class MapScene: SKScene {
     
     func renderRegions() {
         for region in regions {
-            let label = SKLabelNode(fontNamed: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize).fontName)
-            
-            label.text = region.key
-            label.fontColor = .label
-//            label.fontSize = 12
-            
-            label.horizontalAlignmentMode = .center
-            label.verticalAlignmentMode = .center
-            
-            label.position = normalize(coordinate: region.value)
-            
+            let label = mapAreaLabel(
+                text: region.key,
+                position: region.value,
+                fontSize: RegionStyle.labelFontSize,
+                fontColor: RegionStyle.labelColor
+            )
             regionLabelsLayer.addChild(label)
         }
+    }
+    
+    func renderConstellations() {
+        for constellation in constellations {
+            let label = mapAreaLabel(
+                text: constellation.key,
+                position: constellation.value,
+                fontSize: ConstellationStyle.labelFontSize,
+                fontColor: ConstellationStyle.labelColor
+            )
+            constellationLabelsLayer.addChild(label)
+        }
+    }
+    
+    private func mapAreaLabel(text: String, position: CGPoint, fontSize: CGFloat, fontColor: UIColor) -> SKLabelNode {
+        let label = SKLabelNode(fontNamed: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize).fontName)
+        
+        label.text = text
+        label.fontSize = fontSize
+        label.fontColor = fontColor
+        label.horizontalAlignmentMode = .center
+        label.verticalAlignmentMode = .center
+        label.position = normalize(coordinate: position)
+        
+        return label
     }
     
     private func normalize(coordinate: CGPoint) -> CGPoint {
@@ -482,11 +527,19 @@ final class MapScene: SKScene {
         selectionHighlightNode = highlightNode
     }
     
+    func highlightConstellation(bounds: CGRect) {
+        highlightMapArea(bounds: bounds, inset: HighlightStyle.constellationInset)
+    }
+    
     func highlightRegion(bounds: CGRect) {
+        highlightMapArea(bounds: bounds, inset: HighlightStyle.regionInset)
+    }
+    
+    private func highlightMapArea(bounds: CGRect, inset: CGFloat) {
         clearSelectionHighlight()
         
         let normalizedBounds = normalize(rect: bounds)
-        let highlightRect = normalizedBounds.insetBy(dx: -HighlightStyle.regionInset, dy: -HighlightStyle.regionInset)
+        let highlightRect = normalizedBounds.insetBy(dx: -inset, dy: -inset)
         let highlightNode = SKShapeNode(
             rect: highlightRect,
             cornerRadius: HighlightStyle.cornerRadius
@@ -500,8 +553,9 @@ final class MapScene: SKScene {
         selectionHighlightNode = highlightNode
     }
 
-    func targetScaleToFit(rect: CGRect, padding: CGFloat = 1.4) -> CGFloat {
+    func targetScaleToFit(rect: CGRect, padding: CGFloat = 1.4, inset: CGFloat = 0) -> CGFloat {
         let normalizedRect = normalize(rect: rect)
+            .insetBy(dx: -inset, dy: -inset)
         
         guard size.width > 0, size.height > 0 else {
             return 1
@@ -514,12 +568,26 @@ final class MapScene: SKScene {
 
     private func updateLabelVisibility(refreshTextures: Bool = true) {
         let cameraScale = max(cameraNode.xScale, CameraLimits.minimumScale)
-        let regionAlpha = regionLabelAlpha(for: cameraScale)
-        let systemAlpha = 1 - regionAlpha
+        let regionAlpha = labelFadeAlpha(
+            for: cameraScale,
+            fadeScale: ConstellationStyle.labelFadeScale,
+            fadeScaleRange: ConstellationStyle.labelFadeScaleRange
+        )
+        let systemAlpha = 1 - labelFadeAlpha(
+            for: cameraScale,
+            fadeScale: SystemStyle.labelFadeScale,
+            fadeScaleRange: SystemStyle.labelFadeScaleRange
+        )
+        let constellationAlpha = 1 - regionAlpha
 
         systemLabelsLayer.alpha = systemAlpha
+        constellationLabelsLayer.alpha = constellationAlpha
         regionLabelsLayer.alpha = regionAlpha
 
+        for case let label as SKLabelNode in constellationLabelsLayer.children {
+            label.setScale(cameraScale)
+        }
+        
         for case let label as SKLabelNode in regionLabelsLayer.children {
             label.setScale(cameraScale)
         }
@@ -534,10 +602,10 @@ final class MapScene: SKScene {
         lastLabelCameraPosition = cameraNode.position
     }
 
-    private func regionLabelAlpha(for cameraScale: CGFloat) -> CGFloat {
-        let halfFadeRange = SystemStyle.labelFadeScaleRange / 2
-        let fadeStartScale = SystemStyle.labelVisibilityScale - halfFadeRange
-        let fadeEndScale = SystemStyle.labelVisibilityScale + halfFadeRange
+    private func labelFadeAlpha(for cameraScale: CGFloat, fadeScale: CGFloat, fadeScaleRange: CGFloat) -> CGFloat {
+        let halfFadeRange = fadeScaleRange / 2
+        let fadeStartScale = fadeScale - halfFadeRange
+        let fadeEndScale = fadeScale + halfFadeRange
 
         guard cameraScale > fadeStartScale else {
             return 0

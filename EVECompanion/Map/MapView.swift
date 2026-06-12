@@ -19,22 +19,25 @@ extension ECKSolarSystem {
     }
 }
 
-private struct MapRegionSearchTarget: Identifiable, Hashable {
+private struct MapAreaSearchTarget: Identifiable, Hashable {
+    let id: String
     let name: String
+    let subtitle: String
     let center: CGPoint
     let bounds: CGRect
-    
-    var id: String { name }
 }
 
 private enum MapSearchResult: Identifiable, Hashable {
     case solarSystem(ECKSolarSystem)
-    case region(MapRegionSearchTarget)
+    case constellation(MapAreaSearchTarget)
+    case region(MapAreaSearchTarget)
     
     var id: String {
         switch self {
         case .solarSystem(let system):
             return "system-\(system.id)"
+        case .constellation(let constellation):
+            return "constellation-\(constellation.id)"
         case .region(let region):
             return "region-\(region.id)"
         }
@@ -44,6 +47,8 @@ private enum MapSearchResult: Identifiable, Hashable {
         switch self {
         case .solarSystem(let system):
             return system.solarSystemName
+        case .constellation(let constellation):
+            return constellation.name
         case .region(let region):
             return region.name
         }
@@ -53,8 +58,10 @@ private enum MapSearchResult: Identifiable, Hashable {
         switch self {
         case .solarSystem(let system):
             return system.region.name
-        case .region:
-            return "Region"
+        case .constellation(let constellation):
+            return constellation.subtitle
+        case .region(let region):
+            return region.subtitle
         }
     }
     
@@ -62,6 +69,8 @@ private enum MapSearchResult: Identifiable, Hashable {
         switch self {
         case .solarSystem:
             return "sparkles"
+        case .constellation:
+            return "circle.hexagongrid"
         case .region:
             return "square.3.layers.3d"
         }
@@ -83,8 +92,10 @@ struct MapView: View {
     
     @State private var systems: [Int: ECKSolarSystem] = [:]
     @State private var gateConnections: [(solarSystemId: Int, destinationSolarSystemId: Int)] = []
+    @State private var constellations: [String: CGPoint] = [:]
     @State private var regions: [String: CGPoint] = [:]
-    @State private var regionTargets: [MapRegionSearchTarget] = []
+    @State private var constellationTargets: [MapAreaSearchTarget] = []
+    @State private var regionTargets: [MapAreaSearchTarget] = []
     @State private var searchText: String = ""
     @FocusState private var isSearchFocused: Bool
     
@@ -108,11 +119,59 @@ struct MapView: View {
             .prefix(12)
             .map(MapSearchResult.region)
         
-        return Array(solarSystemMatches + regionMatches).prefix(20).map(\.self)
+        let constellationMatches = constellationTargets
+            .filter { $0.name.localizedCaseInsensitiveContains(trimmedSearchText) }
+            .sorted(using: KeyPathComparator(\.name))
+            .prefix(12)
+            .map(MapSearchResult.constellation)
+        
+        return Array(solarSystemMatches + constellationMatches + regionMatches).prefix(20).map(\.self)
     }
     
     private var searchResultsContentHeight: CGFloat {
         CGFloat(filteredSearchResults.count) * MapSearchLayout.resultRowHeight
+    }
+    
+    private func averagePoint(for solarSystems: [ECKSolarSystem]) -> CGPoint? {
+        let coordinates = solarSystems
+            .compactMap(\.position2D)
+            .map { CGPoint(x: CGFloat($0.x), y: CGFloat($0.y)) }
+        
+        guard coordinates.isEmpty == false else {
+            return nil
+        }
+        
+        let totalPoint = coordinates.reduce(CGPoint.zero) { partialResult, coordinate in
+            CGPoint(
+                x: partialResult.x + coordinate.x,
+                y: partialResult.y + coordinate.y
+            )
+        }
+        
+        return CGPoint(
+            x: totalPoint.x / CGFloat(coordinates.count),
+            y: totalPoint.y / CGFloat(coordinates.count)
+        )
+    }
+    
+    private func bounds(for solarSystems: [ECKSolarSystem]) -> CGRect? {
+        let coordinates = solarSystems
+            .compactMap(\.position2D)
+            .map { CGPoint(x: CGFloat($0.x), y: CGFloat($0.y)) }
+        
+        guard let firstCoordinate = coordinates.first else {
+            return nil
+        }
+        
+        return coordinates.dropFirst().reduce(
+            CGRect(origin: firstCoordinate, size: .zero)
+        ) { partialResult, coordinate in
+            partialResult.union(CGRect(origin: coordinate, size: .zero))
+        }
+    }
+    
+    private func center(of bounds: CGRect) -> CGPoint {
+        CGPoint(x: bounds.midX, y: bounds.midY)
     }
     
     var body: some View {
@@ -133,43 +192,62 @@ struct MapView: View {
                     
                     gateConnections = ECKSDEManager.shared.getAllGateConnections()
                     let dbSystems = ECKSDEManager.shared.getAllSolarSystems()
+                    let dbConstellations = Dictionary(
+                        uniqueKeysWithValues: ECKSDEManager.shared
+                            .getAllConstellations()
+                            .map { ($0.constellationId, $0) }
+                    )
                     systems = Dictionary(uniqueKeysWithValues: dbSystems.map { ($0.id, $0) })
                     
-                    let groupedRegions = Dictionary(grouping: dbSystems, by: \.region.name)
-                    regions = groupedRegions.mapValues { solarSystems in
-                        let totalPoint = solarSystems.reduce(CGPoint.zero) { partialResult, solarSystem in
-                            CGPoint(
-                                x: partialResult.x + solarSystem.cgPoint.x,
-                                y: partialResult.y + solarSystem.cgPoint.y
-                            )
+                    let groupedConstellations = Dictionary(grouping: dbSystems, by: \.constellationId)
+                    let constellationCenters = groupedConstellations.compactMapValues { solarSystems in
+                        averagePoint(for: solarSystems)
+                    }
+                    constellations = constellationCenters.reduce(into: [:]) { partialResult, constellationCenter in
+                        let (constellationId, center) = constellationCenter
+                        guard let constellation = dbConstellations[constellationId] else {
+                            return
                         }
                         
-                        return CGPoint(
-                            x: totalPoint.x / CGFloat(solarSystems.count),
-                            y: totalPoint.y / CGFloat(solarSystems.count)
-                        )
+                        partialResult[constellation.name] = center
                     }
-                    regionTargets = groupedRegions.compactMap { regionName, solarSystems in
-                        let coordinates = solarSystems
-                            .compactMap(\.position2D)
-                            .map { CGPoint(x: CGFloat($0.x), y: CGFloat($0.y)) }
-                        
-                        guard let firstCoordinate = coordinates.first,
-                              let center = regions[regionName] else {
+                    constellationTargets = groupedConstellations.compactMap { constellationId, solarSystems in
+                        guard let constellation = dbConstellations[constellationId],
+                              let bounds = bounds(for: solarSystems) else {
                             return nil
                         }
                         
-                        let bounds = coordinates.dropFirst().reduce(
-                            CGRect(origin: firstCoordinate, size: .zero)
-                        ) { partialResult, coordinate in
-                            partialResult.union(CGRect(origin: coordinate, size: .zero))
-                        }
-                        
-                        return MapRegionSearchTarget(name: regionName, center: center, bounds: bounds)
+                        return MapAreaSearchTarget(
+                            id: "\(constellation.constellationId)",
+                            name: constellation.name,
+                            subtitle: "\(constellation.region.name) Constellation",
+                            center: center(of: bounds),
+                            bounds: bounds
+                        )
                     }
                     .sorted(using: KeyPathComparator(\.name))
                     
-                    self.scene = MapScene(systems: systems, regions: regions, gateConnections: gateConnections)
+                    let groupedRegions = Dictionary(grouping: dbSystems, by: \.region.name)
+                    regions = groupedRegions.compactMapValues { solarSystems in
+                        averagePoint(for: solarSystems)
+                    }
+                    regionTargets = groupedRegions.compactMap { regionName, solarSystems in
+                        guard let center = regions[regionName],
+                              let bounds = bounds(for: solarSystems) else {
+                            return nil
+                        }
+                        
+                        return MapAreaSearchTarget(
+                            id: regionName,
+                            name: regionName,
+                            subtitle: "Region",
+                            center: center,
+                            bounds: bounds
+                        )
+                    }
+                    .sorted(using: KeyPathComparator(\.name))
+                    
+                    self.scene = MapScene(systems: systems, constellations: constellations, regions: regions, gateConnections: gateConnections)
                 }
                 
                 searchOverlay(in: geometry)
@@ -188,8 +266,20 @@ struct MapView: View {
                 scene.highlightSystem(id: system.id)
             }
             
+        case .constellation(let constellation):
+            let targetScale = scene.targetScaleToFit(
+                rect: constellation.bounds,
+                inset: MapScene.MapAreaHighlightInset.constellation
+            )
+            scene.focus(on: constellation.center, targetScale: targetScale) {
+                scene.highlightConstellation(bounds: constellation.bounds)
+            }
+            
         case .region(let region):
-            let targetScale = scene.targetScaleToFit(rect: region.bounds)
+            let targetScale = scene.targetScaleToFit(
+                rect: region.bounds,
+                inset: MapScene.MapAreaHighlightInset.region
+            )
             scene.focus(on: region.center, targetScale: targetScale) {
                 scene.highlightRegion(bounds: region.bounds)
             }
@@ -230,7 +320,7 @@ struct MapView: View {
                 .mapGlassPanel()
             }
         } else if searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false {
-            Text("No matching solar systems or regions.")
+            Text("No matching solar systems, constellations, or regions.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -245,7 +335,7 @@ struct MapView: View {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(.secondary)
             
-            TextField("Search solar systems or regions", text: $searchText)
+            TextField("Search solar systems, constellations, or regions", text: $searchText)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
                 .focused($isSearchFocused)

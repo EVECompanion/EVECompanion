@@ -16,7 +16,7 @@ public final class ECKSolarSystem: Codable, Identifiable, Hashable, ObservableOb
     }
     
     let solarSystemId: Int
-    let constellationId: Int
+    public let constellationId: Int
     public let region: ECKRegion
     public let solarSystemName: String
     public let security: Double

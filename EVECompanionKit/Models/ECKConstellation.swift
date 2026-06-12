@@ -10,6 +10,7 @@ import Foundation
 public final class ECKConstellation: Decodable, Sendable {
     
     public let constellationId: Int
+    public let region: ECKRegion
     public let name: String
     
     @MainActor
@@ -22,13 +23,26 @@ public final class ECKConstellation: Decodable, Sendable {
     }
     
     convenience init(constellationId: Int) {
-        let constellationName = ECKSDEManager.shared.getConstellationName(constellationId: constellationId)
-        self.init(constellationId: constellationId, constellationName: constellationName)
+        let constellationData = ECKSDEManager.shared.getConstellation(constellationId: constellationId)
+        self.init(
+            constellationId: constellationData.constellationId,
+            constellationName: constellationData.constellationName,
+            regionId: constellationData.regionId
+        )
     }
     
-    init(constellationId: Int, constellationName: String) {
+    init(constellationId: Int, constellationName: String, regionId: Int) {
         self.constellationId = constellationId
+        self.region = .init(regionId: regionId)
         self.name = constellationName
+    }
+    
+    convenience init(fetchedConstellation: ECKSDEManager.FetchedConstellation) {
+        self.init(
+            constellationId: fetchedConstellation.constellationId,
+            constellationName: fetchedConstellation.constellationName,
+            regionId: fetchedConstellation.regionId
+        )
     }
     
 }

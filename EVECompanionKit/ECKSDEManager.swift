@@ -736,6 +736,14 @@ public class ECKSDEManager: @unchecked Sendable {
     
     static let dummyConstellationName: String = "Unknown Constellation"
     
+    typealias FetchedConstellation = (regionId: Int,
+                                      constellationId: Int,
+                                      constellationName: String)
+    
+    static let dummyFetchedConstellation: FetchedConstellation = (0,
+                                                                  0,
+                                                                  ECKSDEManager.dummyConstellationName)
+    
     internal func getConstellationName(constellationId: Int) -> String {
         let statement = try? connection?.prepare("SELECT constellationName FROM mapConstellations WHERE constellationID = ?", constellationId)
         
@@ -752,6 +760,45 @@ public class ECKSDEManager: @unchecked Sendable {
         }
         
         return name
+    }
+    
+    internal func getConstellation(constellationId: Int) -> FetchedConstellation {
+        let statement = try? connection?.prepare("SELECT regionID, constellationID, constellationName FROM mapConstellations WHERE constellationID = ?", constellationId)
+        
+        let result = try? statement?.run().makeIterator().failableNext()
+        
+        guard let result else {
+            logger.warning("No constellation fetch result set for id \(constellationId)")
+            return Self.dummyFetchedConstellation
+        }
+        
+        return rowToConstellation(row: result)
+    }
+    
+    public func getAllConstellations() -> [ECKConstellation] {
+        let statement = try? connection?.prepare("SELECT regionID, constellationID, constellationName FROM mapConstellations")
+        
+        let result = try? statement?.run()
+        
+        guard let result else {
+            logger.warning("No constellation fetch result when fetching all constellations.")
+            return []
+        }
+        
+        return result.map({ rowToConstellation(row: $0) }).map({ ECKConstellation(fetchedConstellation: $0) })
+    }
+    
+    private func rowToConstellation(row: [(any Binding)?]) -> FetchedConstellation {
+        guard let regionId: Int64 = row[0] as? Int64,
+              let constellationId: Int64 = row[1] as? Int64,
+              let constellationName: String = row[2] as? String else {
+            logger.error("Unexpected constellation data \(row)")
+            return Self.dummyFetchedConstellation
+        }
+        
+        return (Int(regionId),
+                Int(constellationId),
+                constellationName)
     }
     
     typealias FetchedFaction = (factionId: Int,
