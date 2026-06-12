@@ -64,10 +64,14 @@ final class MapScene: SKScene {
         static let fontSize = "fontSize"
     }
 
-    private enum SecurityBand: Hashable {
-        case highSecurity
-        case lowSecurity
-        case nullSecurity
+    private struct GateConnection: Hashable {
+        let lowerSystemId: Int
+        let upperSystemId: Int
+        
+        init(solarSystemId: Int, destinationSolarSystemId: Int) {
+            self.lowerSystemId = min(solarSystemId, destinationSolarSystemId)
+            self.upperSystemId = max(solarSystemId, destinationSolarSystemId)
+        }
     }
 
     private let focusAnimationDuration: TimeInterval = 0.4
@@ -88,14 +92,16 @@ final class MapScene: SKScene {
     private var maxX: CGFloat = 0
     private var maxY: CGFloat = 0
     private var scale: CGFloat = 0.000000000000015
-    var lastPanGestureTranslation: CGPoint = .zero
-    let cameraNode = SKCameraNode()
-    var lastPinchGestureScale: CGFloat = 1
+    private var lastPanGestureTranslation: CGPoint = .zero
+    private let cameraNode = SKCameraNode()
+    private var lastPinchGestureScale: CGFloat = 1
     private var panDecelerationVelocity: CGPoint?
     private var lastUpdateTime: TimeInterval?
     private var systemNodes: [Int: SKNode] = [:]
     private var systemLabelNodes: [SKLabelNode] = []
-    private var systemTextures: [SecurityBand: SKTexture] = [:]
+    private var highSecuritySystemTexture: SKTexture?
+    private var lowSecuritySystemTexture: SKTexture?
+    private var nullSecuritySystemTexture: SKTexture?
     private var selectionHighlightNode: SKNode?
     private var lastLabelCameraScale: CGFloat?
     private var lastLabelCameraPosition: CGPoint?
@@ -157,7 +163,7 @@ final class MapScene: SKScene {
         updateLabelVisibility()
     }
     
-    func renderSystems() {
+    private func renderSystems() {
         for system in systems.values {
             guard let position = system.position2D else {
                 continue
@@ -294,7 +300,17 @@ final class MapScene: SKScene {
     
     private func renderGates() {
         let path = CGMutablePath()
+        var renderedConnections = Set<GateConnection>()
+        
         for gateConnection in gateConnections {
+            let connectionKey = GateConnection(
+                solarSystemId: gateConnection.solarSystemId,
+                destinationSolarSystemId: gateConnection.destinationSolarSystemId
+            )
+            guard renderedConnections.insert(connectionKey).inserted else {
+                continue
+            }
+            
             guard let startSystem = systems[gateConnection.solarSystemId],
                   let startPosition = startSystem.position2D,
                   let destinationSystem = systems[gateConnection.destinationSolarSystemId],
@@ -314,7 +330,7 @@ final class MapScene: SKScene {
         gatesLayer.addChild(lines)
     }
     
-    func renderRegions() {
+    private func renderRegions() {
         for region in regions {
             let label = mapAreaLabel(
                 text: region.key,
@@ -326,7 +342,7 @@ final class MapScene: SKScene {
         }
     }
     
-    func renderConstellations() {
+    private func renderConstellations() {
         for constellation in constellations {
             let label = mapAreaLabel(
                 text: constellation.key,
@@ -419,10 +435,9 @@ final class MapScene: SKScene {
         let translationInView = sender.translation(in: view)
         let velocityInView = sender.velocity(in: view)
         
-        defer { lastPanGestureTranslation = translationInView }
-        
         switch sender.state {
         case .began:
+            lastPanGestureTranslation = translationInView
             stopPanDeceleration(refreshLabels: false)
             
         case .changed:
@@ -433,12 +448,15 @@ final class MapScene: SKScene {
                 y: lastPanGestureTranslation.y - translationInView.y
             )
             applyPanTranslation(dTranslation, refreshLabelTextures: false)
+            lastPanGestureTranslation = translationInView
             
         case .ended:
             startPanDeceleration(with: velocityInView)
+            lastPanGestureTranslation = .zero
             
         case .cancelled, .failed:
             stopPanDeceleration(refreshLabels: true)
+            lastPanGestureTranslation = .zero
             
         default:
             break
@@ -653,32 +671,35 @@ final class MapScene: SKScene {
         selectionHighlightNode = nil
     }
     
-    private func systemColor(for security: Double) -> UIColor {
-        if security >= 0.5 {
-            return .lightGray
-        } else if security >= 0.1 {
-            return .orange
-        } else {
-            return .red
-        }
-    }
-
-    private func securityBand(for security: Double) -> SecurityBand {
-        if security >= 0.5 {
-            return .highSecurity
-        } else if security >= 0.1 {
-            return .lowSecurity
-        } else {
-            return .nullSecurity
-        }
-    }
-
     private func systemTexture(for security: Double) -> SKTexture {
-        let band = securityBand(for: security)
-        if let texture = systemTextures[band] {
+        if security >= 0.5 {
+            if let texture = highSecuritySystemTexture {
+                return texture
+            }
+            
+            let texture = makeSystemTexture(fillColor: .lightGray)
+            highSecuritySystemTexture = texture
+            return texture
+        } else if security >= 0.1 {
+            if let texture = lowSecuritySystemTexture {
+                return texture
+            }
+            
+            let texture = makeSystemTexture(fillColor: .orange)
+            lowSecuritySystemTexture = texture
+            return texture
+        } else {
+            if let texture = nullSecuritySystemTexture {
+                return texture
+            }
+            
+            let texture = makeSystemTexture(fillColor: .red)
+            nullSecuritySystemTexture = texture
             return texture
         }
-
+    }
+    
+    private func makeSystemTexture(fillColor: UIColor) -> SKTexture {
         let diameter = SystemStyle.radius * 2
         let size = CGSize(width: diameter, height: diameter)
         let renderer = UIGraphicsImageRenderer(size: size)
@@ -689,7 +710,7 @@ final class MapScene: SKScene {
                 .insetBy(dx: SystemStyle.strokeWidth / 2, dy: SystemStyle.strokeWidth / 2)
             let path = UIBezierPath(ovalIn: rect)
 
-            systemColor(for: security).setFill()
+            fillColor.setFill()
             path.fill()
 
             SystemStyle.strokeColor.setStroke()
@@ -699,7 +720,6 @@ final class MapScene: SKScene {
 
         let texture = SKTexture(image: image)
         texture.usesMipmaps = true
-        systemTextures[band] = texture
         return texture
     }
 

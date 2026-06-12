@@ -114,7 +114,6 @@
 		C93337CB2FBA5EFC00DAF4B9 /* MailRecipientIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93337CA2FBA5EFC00DAF4B9 /* MailRecipientIconView.swift */; };
 		C93337CD2FBA5F2300DAF4B9 /* MailRecipientSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93337CC2FBA5F2300DAF4B9 /* MailRecipientSearchView.swift */; };
 		C93337D02FBD008200DAF4B9 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93337CF2FBD008200DAF4B9 /* MapView.swift */; };
-		C93340EA2FBD9A6C00DAF4B9 /* MapSolarSystemSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93340E92FBD9A6C00DAF4B9 /* MapSolarSystemSymbol.swift */; };
 		C93340EC2FBDD4CA00DAF4B9 /* MapScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93340EB2FBDD4CA00DAF4B9 /* MapScene.swift */; };
 		C93340EE2FBE516F00DAF4B9 /* MapStargatesTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93340ED2FBE516F00DAF4B9 /* MapStargatesTable.swift */; };
 		C9381AAB2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9381AAA2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift */; };
@@ -570,7 +569,6 @@
 		C93337CA2FBA5EFC00DAF4B9 /* MailRecipientIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailRecipientIconView.swift; sourceTree = "<group>"; };
 		C93337CC2FBA5F2300DAF4B9 /* MailRecipientSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailRecipientSearchView.swift; sourceTree = "<group>"; };
 		C93337CF2FBD008200DAF4B9 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
-		C93340E92FBD9A6C00DAF4B9 /* MapSolarSystemSymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSolarSystemSymbol.swift; sourceTree = "<group>"; };
 		C93340EB2FBDD4CA00DAF4B9 /* MapScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapScene.swift; sourceTree = "<group>"; };
 		C93340ED2FBE516F00DAF4B9 /* MapStargatesTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStargatesTable.swift; sourceTree = "<group>"; };
 		C9381AAA2E939D2C002F56DD /* ECKCharacterFitting+IsFittable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacterFitting+IsFittable.swift"; sourceTree = "<group>"; };
@@ -1380,7 +1378,6 @@
 			children = (
 				C93337CF2FBD008200DAF4B9 /* MapView.swift */,
 				C93340EB2FBDD4CA00DAF4B9 /* MapScene.swift */,
-				C93340E92FBD9A6C00DAF4B9 /* MapSolarSystemSymbol.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -2356,7 +2353,6 @@
 				C900AE4F2DC7E43500D4EDE5 /* PushPermissionCTA.swift in Sources */,
 				C98484032D7F7E760076016B /* CapitalNavigationInputView.swift in Sources */,
 				C9CA6BA22C14EB090057F290 /* UniverseRowType.swift in Sources */,
-				C93340EA2FBD9A6C00DAF4B9 /* MapSolarSystemSymbol.swift in Sources */,
 				C9012AF52C0334F400407A81 /* WalletTransactionCell.swift in Sources */,
 				C9955A2C2C35297D0045D925 /* SovereigntyCampaignCell.swift in Sources */,
 				C93337CB2FBA5EFC00DAF4B9 /* MailRecipientIconView.swift in Sources */,

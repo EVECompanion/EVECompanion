@@ -7,15 +7,11 @@
 
 import SwiftUI
 import EVECompanionKit
-import simd
 import SpriteKit
 
-extension ECKSolarSystem {
-    var cgPoint: CGPoint {
-        guard let position2D else {
-            return .zero
-        }
-        return CGPoint(x: Double(position2D.x), y: Double(position2D.y))
+private extension ECKSolarSystem {
+    var mapPoint: CGPoint? {
+        position2D.map { CGPoint(x: CGFloat($0.x), y: CGFloat($0.y)) }
     }
 }
 
@@ -125,11 +121,7 @@ struct MapView: View {
             .prefix(12)
             .map(MapSearchResult.constellation)
         
-        return Array(solarSystemMatches + constellationMatches + regionMatches).prefix(20).map(\.self)
-    }
-    
-    private var searchResultsContentHeight: CGFloat {
-        CGFloat(filteredSearchResults.count) * MapSearchLayout.resultRowHeight
+        return Array((solarSystemMatches + constellationMatches + regionMatches).prefix(20))
     }
     
     private func averagePoint(for solarSystems: [ECKSolarSystem]) -> CGPoint? {
@@ -262,7 +254,10 @@ struct MapView: View {
         
         switch result {
         case .solarSystem(let system):
-            scene.focus(on: system.cgPoint, targetScale: 0.4) {
+            guard let mapPoint = system.mapPoint else {
+                return
+            }
+            scene.focus(on: mapPoint, targetScale: 0.4) {
                 scene.highlightSystem(id: system.id)
             }
             
@@ -289,9 +284,9 @@ struct MapView: View {
         isSearchFocused = false
     }
     
-    private var resultsList: some View {
+    private func resultsList(_ results: [MapSearchResult]) -> some View {
         VStack(spacing: 0) {
-            ForEach(filteredSearchResults) { result in
+            ForEach(results) { result in
                 resultButton(for: result)
             }
         }
@@ -299,7 +294,7 @@ struct MapView: View {
     
     private func searchOverlay(in geometry: GeometryProxy) -> some View {
         VStack(spacing: MapSearchLayout.stackSpacing) {
-            searchResults(in: geometry)
+            searchResults(filteredSearchResults, in: geometry)
             searchField
         }
         .padding(.horizontal, MapSearchLayout.horizontalPadding)
@@ -307,16 +302,17 @@ struct MapView: View {
     }
     
     @ViewBuilder
-    private func searchResults(in geometry: GeometryProxy) -> some View {
-        if filteredSearchResults.isEmpty == false {
-            if searchResultsContentHeight <= searchResultsMaxHeight(in: geometry) {
-                resultsList
+    private func searchResults(_ results: [MapSearchResult], in geometry: GeometryProxy) -> some View {
+        if results.isEmpty == false {
+            let maxHeight = searchResultsMaxHeight(in: geometry)
+            if CGFloat(results.count) * MapSearchLayout.resultRowHeight <= maxHeight {
+                resultsList(results)
                     .mapGlassPanel()
             } else {
                 ScrollView {
-                    resultsList
+                    resultsList(results)
                 }
-                .frame(maxHeight: searchResultsMaxHeight(in: geometry), alignment: .bottom)
+                .frame(maxHeight: maxHeight, alignment: .bottom)
                 .mapGlassPanel()
             }
         } else if searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false {
