@@ -79,7 +79,13 @@ final class MapScene: SKScene {
 
     private enum CharacterNodeName {
         static let ring = "ring"
+        static let border = "border"
+        static let portrait = "portrait"
         static let label = "label"
+    }
+
+    private enum NodeName {
+        static let gates = "gates"
     }
 
     private enum LabelUserDataKey {
@@ -141,6 +147,10 @@ final class MapScene: SKScene {
     private var selectionHighlightNode: SKNode?
     private var lastLabelCameraScale: CGFloat?
     private var lastLabelCameraPosition: CGPoint?
+    private var userInterfaceStyleOverride: UIUserInterfaceStyle?
+    var isCharacterLayerHidden: Bool {
+        charactersLayer.isHidden
+    }
     
     init(systems: [Int: ECKSolarSystem], constellations: [String: CGPoint], regions: [String: CGPoint], gateConnections: [(solarSystemId: Int, destinationSolarSystemId: Int)]) {
         self.systems = systems
@@ -176,7 +186,7 @@ final class MapScene: SKScene {
         view.ignoresSiblingOrder = true
         view.shouldCullNonVisibleNodes = true
         view.preferredFramesPerSecond = 60
-        backgroundColor = .systemBackground
+        backgroundColor = appearanceColor(.systemBackground)
         scaleMode = .resizeFill
         #if DEBUG
         view.showsFPS = true
@@ -253,9 +263,10 @@ final class MapScene: SKScene {
         let node = SKNode()
         let markerDiameter = CharacterStyle.markerRadius * 2
         let portraitNode = SKSpriteNode(
-            color: CharacterStyle.placeholderColor,
+            color: appearanceColor(CharacterStyle.placeholderColor),
             size: CGSize(width: markerDiameter, height: markerDiameter)
         )
+        portraitNode.name = CharacterNodeName.portrait
 
         let cropNode = SKCropNode()
         let maskNode = SKShapeNode(circleOfRadius: CharacterStyle.markerRadius)
@@ -273,14 +284,15 @@ final class MapScene: SKScene {
 
         let border = SKShapeNode(circleOfRadius: CharacterStyle.markerRadius + CharacterStyle.markerStrokeWidth)
         border.fillColor = .clear
-        border.strokeColor = CharacterStyle.strokeColor
+        border.strokeColor = appearanceColor(CharacterStyle.strokeColor)
         border.lineWidth = 1
         border.isAntialiased = true
+        border.name = CharacterNodeName.border
 
         let label = SKLabelNode(fontNamed: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize).fontName)
         label.text = marker.name
         label.fontSize = CharacterStyle.labelFontSize
-        label.fontColor = .label
+        label.fontColor = appearanceColor(.label)
         label.horizontalAlignmentMode = .center
         label.verticalAlignmentMode = .bottom
         label.position = CGPoint(x: 0, y: CharacterStyle.labelOffset)
@@ -342,11 +354,11 @@ final class MapScene: SKScene {
     private func characterMarkerColor(for isOnline: Bool?) -> UIColor {
         switch isOnline {
         case .some(true):
-            return CharacterStyle.onlineColor
+            return appearanceColor(CharacterStyle.onlineColor)
         case .some(false):
-            return CharacterStyle.offlineColor
+            return appearanceColor(CharacterStyle.offlineColor)
         case .none:
-            return CharacterStyle.unknownColor
+            return appearanceColor(CharacterStyle.unknownColor)
         }
     }
 
@@ -412,12 +424,12 @@ final class MapScene: SKScene {
         
         let nameAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: fontSize),
-            .foregroundColor: UIColor.label,
+            .foregroundColor: appearanceColor(.label),
             .paragraphStyle: paragraphStyle
         ]
         let securityAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.boldSystemFont(ofSize: fontSize),
-            .foregroundColor: UIColor.label,
+            .foregroundColor: appearanceColor(.label),
             .paragraphStyle: paragraphStyle
         ]
         
@@ -522,7 +534,8 @@ final class MapScene: SKScene {
         }
         
         let lines = SKShapeNode(path: path)
-        lines.strokeColor = UIColor.tertiaryLabel
+        lines.name = NodeName.gates
+        lines.strokeColor = appearanceColor(.tertiaryLabel)
         lines.lineWidth = 1
         lines.alpha = 1
         lines.isAntialiased = false
@@ -558,7 +571,7 @@ final class MapScene: SKScene {
         
         label.text = text
         label.fontSize = fontSize
-        label.fontColor = fontColor
+        label.fontColor = appearanceColor(fontColor)
         label.horizontalAlignmentMode = .center
         label.verticalAlignmentMode = .center
         label.position = normalize(coordinate: position)
@@ -735,7 +748,7 @@ final class MapScene: SKScene {
         
         let highlightNode = SKShapeNode(circleOfRadius: HighlightStyle.systemRadius)
         highlightNode.position = systemNode.position
-        highlightNode.strokeColor = HighlightStyle.strokeColor
+        highlightNode.strokeColor = appearanceColor(HighlightStyle.strokeColor)
         highlightNode.lineWidth = HighlightStyle.lineWidth
         highlightNode.fillColor = .clear
         highlightNode.isAntialiased = true
@@ -761,7 +774,7 @@ final class MapScene: SKScene {
             rect: highlightRect,
             cornerRadius: HighlightStyle.cornerRadius
         )
-        highlightNode.strokeColor = HighlightStyle.strokeColor
+        highlightNode.strokeColor = appearanceColor(HighlightStyle.strokeColor)
         highlightNode.lineWidth = HighlightStyle.lineWidth
         highlightNode.fillColor = .clear
         highlightNode.isAntialiased = true
@@ -822,6 +835,21 @@ final class MapScene: SKScene {
 
         lastLabelCameraScale = cameraNode.xScale
         lastLabelCameraPosition = cameraNode.position
+    }
+
+    func refreshAppearance(userInterfaceStyle: UIUserInterfaceStyle? = nil) {
+        userInterfaceStyleOverride = userInterfaceStyle
+
+        backgroundColor = appearanceColor(.systemBackground)
+        invalidateSystemTextures()
+        refreshSystems()
+        refreshSystemLabels()
+        refreshMapAreaLabels()
+        refreshGates()
+        refreshCharacterMarkers()
+        refreshSelectionHighlight()
+        updateLabelVisibility(refreshTextures: true)
+        view?.setNeedsDisplay()
     }
 
     private func updateCharacterLabelVisibility() {
@@ -889,6 +917,78 @@ final class MapScene: SKScene {
         selectionHighlightNode?.removeFromParent()
         selectionHighlightNode = nil
     }
+
+    private func invalidateSystemTextures() {
+        highSecuritySystemTexture = nil
+        lowSecuritySystemTexture = nil
+        nullSecuritySystemTexture = nil
+    }
+
+    private func refreshSystems() {
+        for (systemId, node) in systemNodes {
+            guard let system = systems[systemId],
+                  let spriteNode = node as? SKSpriteNode else {
+                continue
+            }
+
+            spriteNode.texture = systemTexture(for: system.security)
+        }
+    }
+
+    private func refreshSystemLabels() {
+        for label in systemLabelNodes {
+            guard let systemId = (label.userData?[LabelUserDataKey.systemId] as? NSNumber)?.intValue,
+                  let system = systems[systemId] else {
+                continue
+            }
+
+            let fontSizeNumber = label.userData?[LabelUserDataKey.fontSize] as? NSNumber
+            let fontSize = fontSizeNumber.map { CGFloat($0.doubleValue) } ?? SystemStyle.labelFontSize
+            label.attributedText = systemLabelText(for: system, fontSize: fontSize)
+        }
+    }
+
+    private func refreshMapAreaLabels() {
+        for case let label as SKLabelNode in constellationLabelsLayer.children {
+            label.fontColor = appearanceColor(ConstellationStyle.labelColor)
+        }
+
+        for case let label as SKLabelNode in regionLabelsLayer.children {
+            label.fontColor = appearanceColor(RegionStyle.labelColor)
+        }
+    }
+
+    private func refreshGates() {
+        for case let gateNode as SKShapeNode in gatesLayer.children where gateNode.name == NodeName.gates {
+            gateNode.strokeColor = appearanceColor(.tertiaryLabel)
+        }
+    }
+
+    private func refreshCharacterMarkers() {
+        for markerNode in characterMarkerNodesById.values {
+            if let border = markerNode.childNode(withName: CharacterNodeName.border) as? SKShapeNode {
+                border.strokeColor = appearanceColor(CharacterStyle.strokeColor)
+            }
+
+            if let label = markerNode.childNode(withName: CharacterNodeName.label) as? SKLabelNode {
+                label.fontColor = appearanceColor(.label)
+            }
+
+            if let cropNode = markerNode.children.compactMap({ $0 as? SKCropNode }).first,
+               let portrait = cropNode.children.compactMap({ $0 as? SKSpriteNode }).first,
+               portrait.texture == nil {
+                portrait.color = appearanceColor(CharacterStyle.placeholderColor)
+            }
+        }
+    }
+
+    private func refreshSelectionHighlight() {
+        guard let highlightNode = selectionHighlightNode as? SKShapeNode else {
+            return
+        }
+
+        highlightNode.strokeColor = appearanceColor(HighlightStyle.strokeColor)
+    }
     
     private func systemTexture(for security: Double) -> SKTexture {
         if security >= 0.5 {
@@ -917,11 +1017,23 @@ final class MapScene: SKScene {
             return texture
         }
     }
+
+    private func appearanceColor(_ color: UIColor) -> UIColor {
+        let traitCollection: UITraitCollection
+        if let userInterfaceStyleOverride {
+            traitCollection = UITraitCollection(userInterfaceStyle: userInterfaceStyleOverride)
+        } else {
+            traitCollection = view?.traitCollection ?? UITraitCollection.current
+        }
+        return color.resolvedColor(with: traitCollection)
+    }
     
     private func makeSystemTexture(fillColor: UIColor) -> SKTexture {
         let diameter = SystemStyle.radius * 2
         let size = CGSize(width: diameter, height: diameter)
-        let renderer = UIGraphicsImageRenderer(size: size)
+        let format = UIGraphicsImageRendererFormat.default()
+        format.scale = UIScreen.main.scale
+        let renderer = UIGraphicsImageRenderer(size: size, format: format)
         let image = renderer.image { context in
             context.cgContext.setAllowsAntialiasing(true)
 
@@ -929,10 +1041,10 @@ final class MapScene: SKScene {
                 .insetBy(dx: SystemStyle.strokeWidth / 2, dy: SystemStyle.strokeWidth / 2)
             let path = UIBezierPath(ovalIn: rect)
 
-            fillColor.setFill()
+            appearanceColor(fillColor).setFill()
             path.fill()
 
-            SystemStyle.strokeColor.setStroke()
+            appearanceColor(SystemStyle.strokeColor).setStroke()
             path.lineWidth = SystemStyle.strokeWidth
             path.stroke()
         }

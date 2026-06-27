@@ -9,6 +9,7 @@ import SwiftUI
 import EVECompanionKit
 import SpriteKit
 import Combine
+import UIKit
 
 private extension ECKSolarSystem {
     var mapPoint: CGPoint? {
@@ -92,6 +93,7 @@ private enum MapCharacterLocations {
 struct MapView: View {
     
     @Environment(\.characterStorage) private var characterStorage
+    @Environment(\.colorScheme) private var colorScheme
 
     @State private var systems: [Int: ECKSolarSystem] = [:]
     @State private var gateConnections: [(solarSystemId: Int, destinationSolarSystemId: Int)] = []
@@ -264,6 +266,9 @@ struct MapView: View {
                 }
                 .onChange(of: showCharacterMarkers) { isVisible in
                     scene?.setCharactersVisible(isVisible)
+                }
+                .onChange(of: colorScheme) { newColorScheme in
+                    scene?.refreshAppearance(userInterfaceStyle: newColorScheme.userInterfaceStyle)
                 }
                 
                 searchOverlay(in: geometry)
@@ -523,6 +528,21 @@ private extension View {
         }
     }
     
+}
+
+private extension ColorScheme {
+
+    var userInterfaceStyle: UIUserInterfaceStyle {
+        switch self {
+        case .dark:
+            return .dark
+        case .light:
+            return .light
+        @unknown default:
+            return .unspecified
+        }
+    }
+
 }
 
 #Preview {
