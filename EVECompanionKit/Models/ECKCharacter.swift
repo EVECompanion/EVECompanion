@@ -32,6 +32,7 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
     @Published public var loyaltyPoints: [ECKLoyaltyPointsEntry]?
     @Published public var jumpFatigue: ECKJumpFatigue?
     @Published public var location: ECKCharacterLocation?
+    @Published public var isOnline: Bool?
     @Published public var currentShip: ECKCharacterCurrentShip?
     @Published public var corpRoles: ECKCorporationRoles?
     
@@ -75,6 +76,7 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
         self.jumpFatigue = .dummy
         self.initialDataLoadingState = .ready
         self.location = .dummyDocked
+        self.isOnline = true
         self.currentShip = .dummy
     }
     
@@ -150,6 +152,50 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
         await reloadSkillQueue()
     }
     
+    @MainActor
+    public func reloadMapLocationData() async {
+        guard UserDefaults.standard.isDemoModeEnabled == false else {
+            return
+        }
+
+        async let locationResponse: ECKCharacterLocation? = loadMapLocation()
+        async let onlineResponse: ECKCharacterOnline? = loadOnlineStatus()
+
+        let (locationResponseValue, onlineResponseValue) = await (locationResponse, onlineResponse)
+
+        if let locationResponseValue {
+            self.location = locationResponseValue
+        }
+
+        if let onlineResponseValue {
+            self.isOnline = onlineResponseValue.online
+        }
+    }
+
+    @MainActor
+    private func loadMapLocation() async -> ECKCharacterLocation? {
+        let locationResource = ECKCharacterLocationResource(token: token)
+        do {
+            return try await ECKWebService().loadResource(resource: locationResource).response
+        } catch {
+            logger.error("Error loading map location for character \(name): \(error)")
+            return nil
+        }
+    }
+
+    @MainActor
+    private func loadOnlineStatus() async -> ECKCharacterOnline? {
+        let onlineResource = ECKCharacterOnlineResource(token: token)
+        do {
+            return try await ECKWebService().loadResource(resource: onlineResource).response
+        } catch ECKWebError.insufficientScopes {
+            return nil
+        } catch {
+            logger.error("Error loading online status for character \(name): \(error)")
+            return nil
+        }
+    }
+
     @MainActor
     public func reloadSkillQueue() async {
         guard UserDefaults.standard.isDemoModeEnabled == false else {

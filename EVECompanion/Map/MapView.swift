@@ -8,6 +8,7 @@
 import SwiftUI
 import EVECompanionKit
 import SpriteKit
+import Combine
 
 private extension ECKSolarSystem {
     var mapPoint: CGPoint? {
@@ -84,8 +85,14 @@ private enum MapSearchLayout {
     static let cornerRadius: CGFloat = 22
 }
 
+private enum MapCharacterLocations {
+    static let refreshIntervalNanoseconds: UInt64 = 30 * 1_000_000_000
+}
+
 struct MapView: View {
     
+    @Environment(\.characterStorage) private var characterStorage
+
     @State private var systems: [Int: ECKSolarSystem] = [:]
     @State private var gateConnections: [(solarSystemId: Int, destinationSolarSystemId: Int)] = []
     @State private var constellations: [String: CGPoint] = [:]
@@ -93,6 +100,8 @@ struct MapView: View {
     @State private var constellationTargets: [MapAreaSearchTarget] = []
     @State private var regionTargets: [MapAreaSearchTarget] = []
     @State private var searchText: String = ""
+    @State private var showCharacterMarkers: Bool = true
+    @State private var characterMarkers: [MapScene.CharacterMarker] = []
     @FocusState private var isSearchFocused: Bool
     
     @State private var scene: MapScene?
@@ -241,12 +250,83 @@ struct MapView: View {
                     
                     self.scene = MapScene(systems: systems, constellations: constellations, regions: regions, gateConnections: gateConnections)
                 }
+                .task(id: scene != nil) {
+                    guard scene != nil else {
+                        return
+                    }
+
+                    await runCharacterLocationUpdates()
+                }
+                .onReceive(characterStorage.$characters) { _ in
+                    Task {
+                        await refreshCharacterMarkers()
+                    }
+                }
+                .onChange(of: showCharacterMarkers) { isVisible in
+                    scene?.setCharactersVisible(isVisible)
+                }
                 
                 searchOverlay(in: geometry)
             }
         }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                characterVisibilityButton
+            }
+        }
     }
     
+    @MainActor
+    private func runCharacterLocationUpdates() async {
+        scene?.setCharactersVisible(showCharacterMarkers)
+        scene?.updateCharacters(characterMarkers)
+        await refreshCharacterMarkers()
+
+        while Task.isCancelled == false {
+            do {
+                try await Task.sleep(nanoseconds: MapCharacterLocations.refreshIntervalNanoseconds)
+            } catch {
+                return
+            }
+
+            await refreshCharacterMarkers()
+        }
+    }
+
+    @MainActor
+    private func refreshCharacterMarkers() async {
+        guard scene != nil else {
+            return
+        }
+
+        let characters = characterStorage.characters.filter(\.hasValidToken)
+
+        await withTaskGroup(of: Void.self) { taskGroup in
+            for character in characters {
+                taskGroup.addTask {
+                    await character.reloadMapLocationData()
+                }
+            }
+        }
+
+        let markers = characters.compactMap { character -> MapScene.CharacterMarker? in
+            guard let solarSystemId = character.location?.solarSystem.id else {
+                return nil
+            }
+
+            return MapScene.CharacterMarker(
+                characterId: character.id,
+                name: character.name,
+                solarSystemId: solarSystemId,
+                isOnline: character.isOnline
+            )
+        }
+
+        characterMarkers = markers
+        scene?.updateCharacters(markers)
+        scene?.setCharactersVisible(showCharacterMarkers)
+    }
+
     private func focus(on result: MapSearchResult) {
         guard let scene else {
             return
@@ -355,6 +435,15 @@ struct MapView: View {
         .padding(.horizontal, 14)
         .frame(height: MapSearchLayout.searchFieldHeight)
         .mapGlassPanel()
+    }
+
+    private var characterVisibilityButton: some View {
+        Button {
+            showCharacterMarkers.toggle()
+        } label: {
+            Image(systemName: showCharacterMarkers ? "person.3.fill" : "person.3")
+        }
+        .accessibilityLabel(showCharacterMarkers ? "Hide characters" : "Show characters")
     }
     
     private var keyboardDismissButton: some View {

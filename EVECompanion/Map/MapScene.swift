@@ -7,6 +7,7 @@
 
 import Foundation
 import EVECompanionKit
+import Kingfisher
 import SpriteKit
 import UIKit
 
@@ -59,6 +60,28 @@ final class MapScene: SKScene {
         static let labelColor = UIColor.label
     }
     
+    private enum CharacterStyle {
+        static let markerRadius: CGFloat = 16
+        static let markerStrokeWidth: CGFloat = 3
+        static let clusterRadius: CGFloat = 34
+        static let moveAnimationDuration: TimeInterval = 0.35
+        static let moveActionKey = "characterMarkerMove"
+        static let labelFontSize: CGFloat = 10
+        static let labelOffset: CGFloat = 22
+        static let labelFadeScale: CGFloat = 2
+        static let labelFadeScaleRange: CGFloat = 0.75
+        static let onlineColor = UIColor.systemGreen
+        static let offlineColor = UIColor.systemGray
+        static let unknownColor = UIColor.systemBlue
+        static let placeholderColor = UIColor.secondarySystemBackground
+        static let strokeColor = UIColor.systemBackground.withAlphaComponent(0.9)
+    }
+
+    private enum CharacterNodeName {
+        static let ring = "ring"
+        static let label = "label"
+    }
+
     private enum LabelUserDataKey {
         static let systemId = "systemId"
         static let fontSize = "fontSize"
@@ -74,6 +97,17 @@ final class MapScene: SKScene {
         }
     }
 
+    struct CharacterMarker: Identifiable, Hashable {
+        let characterId: Int
+        let name: String
+        let solarSystemId: Int
+        let isOnline: Bool?
+
+        var id: Int {
+            characterId
+        }
+    }
+
     private let focusAnimationDuration: TimeInterval = 0.4
     private let gatesLayer = SKNode()
     private let systemsLayer = SKNode()
@@ -81,6 +115,8 @@ final class MapScene: SKScene {
     private let constellationLabelsLayer = SKNode()
     private let regionLabelsLayer = SKNode()
     private let selectionHighlightLayer = SKNode()
+    private let charactersLayer = SKNode()
+    private var characterMarkerNodesById: [Int: SKNode] = [:]
     
     private let systems: [Int: ECKSolarSystem]
     private let constellations: [String: CGPoint]
@@ -126,6 +162,7 @@ final class MapScene: SKScene {
         systemLabelsLayer.zPosition += 1
         constellationLabelsLayer.zPosition += 1
         regionLabelsLayer.zPosition += 1
+        charactersLayer.zPosition = 8
         selectionHighlightLayer.zPosition = 10
         constellationLabelsLayer.alpha = 0
         regionLabelsLayer.alpha = 0
@@ -134,6 +171,7 @@ final class MapScene: SKScene {
         addChild(systemLabelsLayer)
         addChild(constellationLabelsLayer)
         addChild(regionLabelsLayer)
+        addChild(charactersLayer)
         addChild(selectionHighlightLayer)
         view.ignoresSiblingOrder = true
         view.shouldCullNonVisibleNodes = true
@@ -163,6 +201,167 @@ final class MapScene: SKScene {
         updateLabelVisibility()
     }
     
+    func setCharactersVisible(_ isVisible: Bool) {
+        charactersLayer.isHidden = isVisible == false
+    }
+
+    func updateCharacters(_ markers: [CharacterMarker]) {
+        let renderableMarkers = markers.filter { systemNodes[$0.solarSystemId] != nil }
+        let activeCharacterIds = Set(renderableMarkers.map(\.characterId))
+        let removedCharacterIds = characterMarkerNodesById.keys.filter { activeCharacterIds.contains($0) == false }
+        for characterId in removedCharacterIds {
+            guard let markerNode = characterMarkerNodesById[characterId] else {
+                continue
+            }
+
+            markerNode.removeAllActions()
+            markerNode.removeFromParent()
+            characterMarkerNodesById[characterId] = nil
+        }
+
+        let markersBySystem = Dictionary(grouping: renderableMarkers, by: \.solarSystemId)
+        for (solarSystemId, systemMarkers) in markersBySystem {
+            guard let systemNode = systemNodes[solarSystemId] else {
+                continue
+            }
+
+            let sortedMarkers = systemMarkers.sorted(using: KeyPathComparator(\.name))
+            for (index, marker) in sortedMarkers.enumerated() {
+                let targetPosition = characterMarkerPosition(
+                    around: systemNode.position,
+                    index: index,
+                    count: sortedMarkers.count
+                )
+
+                if let markerNode = characterMarkerNodesById[marker.characterId] {
+                    updateCharacterMarkerNode(markerNode, with: marker)
+                    moveCharacterMarkerNode(markerNode, to: targetPosition)
+                } else {
+                    let markerNode = characterMarkerNode(for: marker)
+                    markerNode.position = targetPosition
+                    markerNode.setScale(max(cameraNode.xScale, CameraLimits.minimumScale))
+                    charactersLayer.addChild(markerNode)
+                    characterMarkerNodesById[marker.characterId] = markerNode
+                }
+            }
+        }
+
+        updateCharacterLabelVisibility()
+    }
+
+    private func characterMarkerNode(for marker: CharacterMarker) -> SKNode {
+        let node = SKNode()
+        let markerDiameter = CharacterStyle.markerRadius * 2
+        let portraitNode = SKSpriteNode(
+            color: CharacterStyle.placeholderColor,
+            size: CGSize(width: markerDiameter, height: markerDiameter)
+        )
+
+        let cropNode = SKCropNode()
+        let maskNode = SKShapeNode(circleOfRadius: CharacterStyle.markerRadius)
+        maskNode.fillColor = .white
+        maskNode.strokeColor = .clear
+        cropNode.maskNode = maskNode
+        cropNode.addChild(portraitNode)
+
+        let ring = SKShapeNode(circleOfRadius: CharacterStyle.markerRadius + CharacterStyle.markerStrokeWidth / 2)
+        ring.fillColor = .clear
+        ring.strokeColor = characterMarkerColor(for: marker.isOnline)
+        ring.lineWidth = CharacterStyle.markerStrokeWidth
+        ring.isAntialiased = true
+        ring.name = CharacterNodeName.ring
+
+        let border = SKShapeNode(circleOfRadius: CharacterStyle.markerRadius + CharacterStyle.markerStrokeWidth)
+        border.fillColor = .clear
+        border.strokeColor = CharacterStyle.strokeColor
+        border.lineWidth = 1
+        border.isAntialiased = true
+
+        let label = SKLabelNode(fontNamed: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize).fontName)
+        label.text = marker.name
+        label.fontSize = CharacterStyle.labelFontSize
+        label.fontColor = .label
+        label.horizontalAlignmentMode = .center
+        label.verticalAlignmentMode = .bottom
+        label.position = CGPoint(x: 0, y: CharacterStyle.labelOffset)
+        label.name = CharacterNodeName.label
+
+        node.addChild(cropNode)
+        node.addChild(ring)
+        node.addChild(border)
+        node.addChild(label)
+        loadCharacterPortrait(characterId: marker.characterId, into: portraitNode)
+        return node
+    }
+
+    private func updateCharacterMarkerNode(_ markerNode: SKNode, with marker: CharacterMarker) {
+        if let ring = markerNode.childNode(withName: CharacterNodeName.ring) as? SKShapeNode {
+            ring.strokeColor = characterMarkerColor(for: marker.isOnline)
+        }
+
+        if let label = markerNode.childNode(withName: CharacterNodeName.label) as? SKLabelNode {
+            label.text = marker.name
+        }
+    }
+
+    private func moveCharacterMarkerNode(_ markerNode: SKNode, to targetPosition: CGPoint) {
+        let distance = hypot(markerNode.position.x - targetPosition.x, markerNode.position.y - targetPosition.y)
+        guard distance > 0.5 else {
+            markerNode.position = targetPosition
+            markerNode.removeAction(forKey: CharacterStyle.moveActionKey)
+            return
+        }
+
+        let action = SKAction.move(to: targetPosition, duration: CharacterStyle.moveAnimationDuration)
+        action.timingMode = .easeInEaseOut
+        markerNode.run(action, withKey: CharacterStyle.moveActionKey)
+    }
+
+    private func loadCharacterPortrait(characterId: Int, into portraitNode: SKSpriteNode) {
+        guard let url = URL(string: "https://images.evetech.net/characters/\(characterId)/portrait") else {
+            return
+        }
+
+        KingfisherManager.shared.retrieveImage(
+            with: url,
+            options: [.callbackQueue(.mainAsync)]
+        ) { [weak portraitNode] result in
+            guard let portraitNode,
+                  portraitNode.parent != nil,
+                  case .success(let value) = result else {
+                return
+            }
+
+            let texture = SKTexture(image: value.image)
+            texture.usesMipmaps = true
+            portraitNode.texture = texture
+            portraitNode.color = .clear
+        }
+    }
+
+    private func characterMarkerColor(for isOnline: Bool?) -> UIColor {
+        switch isOnline {
+        case .some(true):
+            return CharacterStyle.onlineColor
+        case .some(false):
+            return CharacterStyle.offlineColor
+        case .none:
+            return CharacterStyle.unknownColor
+        }
+    }
+
+    private func characterMarkerPosition(around point: CGPoint, index: Int, count: Int) -> CGPoint {
+        guard count > 1 else {
+            return CGPoint(x: point.x, y: point.y - CharacterStyle.clusterRadius)
+        }
+
+        let angle = (CGFloat(index) / CGFloat(count)) * .pi * 2 - .pi / 2
+        return CGPoint(
+            x: point.x + cos(angle) * CharacterStyle.clusterRadius,
+            y: point.y + sin(angle) * CharacterStyle.clusterRadius
+        )
+    }
+
     private func renderSystems() {
         for system in systems.values {
             guard let position = system.position2D else {
@@ -610,6 +809,11 @@ final class MapScene: SKScene {
             label.setScale(cameraScale)
         }
 
+        for markerNode in charactersLayer.children {
+            markerNode.setScale(cameraScale)
+        }
+        updateCharacterLabelVisibility()
+
         if systemAlpha > 0 {
             updateSystemLabels(refreshTextures: refreshTextures)
         } else if refreshTextures {
@@ -618,6 +822,21 @@ final class MapScene: SKScene {
 
         lastLabelCameraScale = cameraNode.xScale
         lastLabelCameraPosition = cameraNode.position
+    }
+
+    private func updateCharacterLabelVisibility() {
+        let cameraScale = max(cameraNode.xScale, CameraLimits.minimumScale)
+        let labelAlpha = 1 - labelFadeAlpha(
+            for: cameraScale,
+            fadeScale: CharacterStyle.labelFadeScale,
+            fadeScaleRange: CharacterStyle.labelFadeScaleRange
+        )
+
+        for markerNode in charactersLayer.children {
+            for case let label as SKLabelNode in markerNode.children {
+                label.alpha = labelAlpha
+            }
+        }
     }
 
     private func labelFadeAlpha(for cameraScale: CGFloat, fadeScale: CGFloat, fadeScaleRange: CGFloat) -> CGFloat {
