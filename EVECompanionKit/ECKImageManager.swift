@@ -9,7 +9,7 @@ import Foundation
 
 public struct ECKImageManager: Sendable {
     
-    public enum Category: String {
+    public enum Category: String, Sendable {
         case alliance = "alliances"
         case corporation = "corporations"
         case character = "characters"

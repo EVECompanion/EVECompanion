@@ -26,6 +26,14 @@ public final class ECKSolarSystem: Codable, Identifiable, Hashable, ObservableOb
     public let sunTypeId: Int?
     
     @Published public var sovereignty: ECKSolarSystemSovereignty?
+
+    public var sovereigntyLogoSource: ECKSolarSystemImageSource? {
+        sovereignty?.logoSource
+    }
+
+    public var primaryImageSource: ECKSolarSystemImageSource? {
+        sovereigntyLogoSource ?? sunTypeId.map { ECKSolarSystemImageSource(id: $0, category: .types) }
+    }
     
     private var subscriptions = Set<AnyCancellable>()
     

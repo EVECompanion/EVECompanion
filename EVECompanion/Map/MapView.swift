@@ -97,6 +97,7 @@ struct MapView: View {
 
     @State private var systems: [Int: ECKSolarSystem] = [:]
     @State private var gateConnections: [(solarSystemId: Int, destinationSolarSystemId: Int)] = []
+    @State private var constellationsById: [Int: ECKConstellation] = [:]
     @State private var constellations: [String: CGPoint] = [:]
     @State private var regions: [String: CGPoint] = [:]
     @State private var constellationTargets: [MapAreaSearchTarget] = []
@@ -104,6 +105,7 @@ struct MapView: View {
     @State private var searchText: String = ""
     @State private var showCharacterMarkers: Bool = true
     @State private var characterMarkers: [MapScene.CharacterMarker] = []
+    @State private var selectedSystemDetails: ECKMapSystemDetails?
     @FocusState private var isSearchFocused: Bool
     
     @State private var scene: MapScene?
@@ -201,6 +203,7 @@ struct MapView: View {
                             .map { ($0.constellationId, $0) }
                     )
                     systems = Dictionary(uniqueKeysWithValues: dbSystems.map { ($0.id, $0) })
+                    constellationsById = dbConstellations
                     
                     let groupedConstellations = Dictionary(grouping: dbSystems, by: \.constellationId)
                     let constellationCenters = groupedConstellations.compactMapValues { solarSystems in
@@ -250,7 +253,16 @@ struct MapView: View {
                     }
                     .sorted(using: KeyPathComparator(\.name))
                     
-                    self.scene = MapScene(systems: systems, constellations: constellations, regions: regions, gateConnections: gateConnections)
+                    let mapScene = MapScene(
+                        systems: systems,
+                        constellations: constellations,
+                        regions: regions,
+                        gateConnections: gateConnections
+                    )
+                    mapScene.systemSelected = { systemId in
+                        selectSystem(id: systemId)
+                    }
+                    self.scene = mapScene
                 }
                 .task(id: scene != nil) {
                     guard scene != nil else {
@@ -278,6 +290,15 @@ struct MapView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 characterVisibilityButton
             }
+        }
+        .sheet(item: $selectedSystemDetails) { details in
+            NavigationStack {
+                MapSystemDetailsView(
+                    details: details,
+                    logoSource: sovereigntyLogoSource(for: details)
+                )
+            }
+            .presentationDetents([.medium, .large])
         }
     }
     
@@ -330,6 +351,33 @@ struct MapView: View {
         characterMarkers = markers
         scene?.updateCharacters(markers)
         scene?.setCharactersVisible(showCharacterMarkers)
+
+        if let selectedSystemId = selectedSystemDetails?.id {
+            selectedSystemDetails = details(for: selectedSystemId)
+        }
+    }
+
+    private func selectSystem(id systemId: Int) {
+        selectedSystemDetails = details(for: systemId)
+    }
+
+    private func details(for systemId: Int) -> ECKMapSystemDetails? {
+        guard let system = systems[systemId] else {
+            return nil
+        }
+
+        let charactersInSystem = characterStorage.characters
+            .filter { $0.location?.solarSystem.id == systemId }
+
+        return ECKMapSystemDetails(
+            system: system,
+            constellationName: constellationsById[system.constellationId]?.name ?? "Unknown Constellation",
+            characters: charactersInSystem
+        )
+    }
+
+    private func sovereigntyLogoSource(for details: ECKMapSystemDetails) -> ECKSolarSystemImageSource? {
+        systems[details.id]?.sovereigntyLogoSource
     }
 
     private func focus(on result: MapSearchResult) {
@@ -527,7 +575,90 @@ private extension View {
                 .buttonBorderShape(.capsule)
         }
     }
-    
+
+}
+
+private struct MapSystemDetailsView: View {
+
+    @Environment(\.dismiss) private var dismiss
+
+    let details: ECKMapSystemDetails
+    let logoSource: ECKSolarSystemImageSource?
+
+    var body: some View {
+        Form {
+            Section("System") {
+                detailRow(title: "Name", value: details.name)
+                detailRow(title: "Security", value: details.security)
+                detailRow(title: "Region", value: details.regionName)
+                detailRow(title: "Constellation", value: details.constellationName)
+
+                if let sovereigntyName = details.sovereigntyName {
+                    sovereigntyRow(name: sovereigntyName)
+                }
+            }
+
+            Section("Characters") {
+                if details.characters.isEmpty {
+                    Text("No authenticated characters currently there.")
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(details.characters) { character in
+                        HStack(spacing: 10) {
+                            Circle()
+                                .fill(characterStatusColor(character.isOnline))
+                                .frame(width: 8, height: 8)
+
+                            Text(character.name)
+
+                            Spacer()
+                        }
+                    }
+                }
+            }
+        }
+        .navigationTitle(details.name)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Done") {
+                    dismiss()
+                }
+            }
+        }
+    }
+
+    private func detailRow(title: String, value: String) -> some View {
+        LabeledContent(title, value: value)
+    }
+
+    private func sovereigntyRow(name: String) -> some View {
+        HStack(spacing: 12) {
+            Text("Sovereignty")
+
+            Spacer()
+
+            if let logoSource {
+                ECImage(id: logoSource.id, category: logoSource.category)
+                    .frame(width: 28, height: 28)
+            }
+
+            Text(name)
+                .multilineTextAlignment(.trailing)
+        }
+    }
+
+    private func characterStatusColor(_ isOnline: Bool?) -> Color {
+        switch isOnline {
+        case .some(true):
+            return .green
+        case .some(false):
+            return .secondary
+        case .none:
+            return .blue
+        }
+    }
+
 }
 
 private extension ColorScheme {

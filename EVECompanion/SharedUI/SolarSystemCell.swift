@@ -15,12 +15,8 @@ struct SolarSystemCell: View {
     var body: some View {
         HStack {
             Group {
-                if let faction = system.sovereignty?.faction {
-                    ECImage(id: faction.factionId, category: .corporation)
-                } else if let alliance = system.sovereignty?.allianceId {
-                    ECImage(id: alliance, category: .alliance)
-                } else if let sunTypeId = system.sunTypeId {
-                    ECImage(id: sunTypeId, category: .types)
+                if let imageSource = system.primaryImageSource {
+                    ECImage(id: imageSource.id, category: imageSource.category)
                 }
             }
             .frame(width: 40, height: 40)
@@ -36,13 +32,8 @@ struct SolarSystemCell: View {
                         .foregroundStyle(securityLabelColor)
                 }
                 
-                if let alliance = system.sovereignty?.alliance {
-                    Text(alliance.name)
-                        .font(.title3)
-                }
-                
-                if let faction = system.sovereignty?.faction {
-                    Text(faction.name)
+                if let sovereigntyName = system.sovereignty?.displayName {
+                    Text(sovereigntyName)
                         .font(.title3)
                 }
                 

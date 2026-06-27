@@ -10,6 +10,12 @@ import Kingfisher
 import EVECompanionKit
 
 struct ECImage: View {
+
+    private struct LoadRequest: Hashable {
+        let id: Int
+        let category: ECKImageManager.Category
+        let isBPC: Bool?
+    }
     
     let id: Int
     let category: ECKImageManager.Category
@@ -17,6 +23,10 @@ struct ECImage: View {
     @State var imageSource: Source?
     @State var isLoading: Bool = true
     let size: CGSize?
+
+    private var loadRequest: LoadRequest {
+        .init(id: id, category: category, isBPC: isBPC)
+    }
     
     var body: some View {
         Group {
@@ -35,18 +45,22 @@ struct ECImage: View {
                 Image("Icons/unknownImage")
                     .resizable()
             }
-        }.onAppear(perform: {
-            if imageSource == nil {
-                Task { @MainActor in
-                    if let url = await ECKImageManager().loadURL(id: id,
-                                                                 category: category,
-                                                                 isBPC: isBPC) {
-                        self.imageSource = .network(url)
-                    }
-                    self.isLoading = false
-                }
+        }
+        .task(id: loadRequest) {
+            isLoading = true
+            imageSource = nil
+
+            if let url = await ECKImageManager().loadURL(id: loadRequest.id,
+                                                         category: loadRequest.category,
+                                                         isBPC: loadRequest.isBPC),
+               Task.isCancelled == false {
+                imageSource = .network(url)
             }
-        })
+
+            if Task.isCancelled == false {
+                isLoading = false
+            }
+        }
     }
     
     init(id: Int, category: ECKImageManager.Category, isBPC: Bool? = nil, size: CGSize? = nil) {

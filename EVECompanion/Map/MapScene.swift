@@ -148,6 +148,7 @@ final class MapScene: SKScene {
     private var lastLabelCameraScale: CGFloat?
     private var lastLabelCameraPosition: CGPoint?
     private var userInterfaceStyleOverride: UIUserInterfaceStyle?
+    var systemSelected: ((Int) -> Void)?
     var isCharacterLayerHidden: Bool {
         charactersLayer.isHidden
     }
@@ -169,11 +170,11 @@ final class MapScene: SKScene {
     }
     
     override func didMove(to view: SKView) {
-        systemLabelsLayer.zPosition += 1
-        constellationLabelsLayer.zPosition += 1
-        regionLabelsLayer.zPosition += 1
-        charactersLayer.zPosition = 8
-        selectionHighlightLayer.zPosition = 10
+        systemLabelsLayer.zPosition = ECKMapLayerZPosition.mapLabels
+        constellationLabelsLayer.zPosition = ECKMapLayerZPosition.mapLabels
+        regionLabelsLayer.zPosition = ECKMapLayerZPosition.mapLabels
+        selectionHighlightLayer.zPosition = ECKMapLayerZPosition.selectionHighlight
+        charactersLayer.zPosition = ECKMapLayerZPosition.characterMarkers
         constellationLabelsLayer.alpha = 0
         regionLabelsLayer.alpha = 0
         addChild(gatesLayer)
@@ -208,6 +209,9 @@ final class MapScene: SKScene {
         view.addGestureRecognizer(panRecognizer)
         let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(handlePinchGesture))
         view.addGestureRecognizer(pinchRecognizer)
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture))
+        tapRecognizer.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapRecognizer)
         updateLabelVisibility()
     }
     
@@ -713,6 +717,37 @@ final class MapScene: SKScene {
             .applying(CGAffineTransform(translationX: -offsetInScene.x, y: -offsetInScene.y))
 
         updateLabelVisibility(refreshTextures: false)
+    }
+
+    @objc func handleTapGesture(_ sender: UITapGestureRecognizer) {
+        guard let view, sender.state == .ended else {
+            return
+        }
+
+        let scenePoint = view.convert(sender.location(in: view), to: self)
+        guard let systemId = systemId(at: scenePoint) else {
+            return
+        }
+
+        systemSelected?(systemId)
+    }
+
+    private func systemId(at point: CGPoint) -> Int? {
+        let tapRadius = max(SystemStyle.radius, 24 * max(cameraNode.xScale, CameraLimits.minimumScale))
+
+        return systemNodes
+            .compactMap { systemId, node -> (systemId: Int, distance: CGFloat)? in
+                let distance = hypot(node.position.x - point.x, node.position.y - point.y)
+                guard distance <= tapRadius else {
+                    return nil
+                }
+
+                return (systemId, distance)
+            }
+            .min { lhs, rhs in
+                lhs.distance < rhs.distance
+            }?
+            .systemId
     }
 
     func focus(on coordinate: CGPoint, targetScale: CGFloat, animated: Bool = true, completion: (() -> Void)? = nil) {
