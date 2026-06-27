@@ -17,6 +17,7 @@ public enum ECKDefaultKeys: String {
     case enableEmptySkillQueueNotifications = "enableEmptySkillQueueNotifications"
     case enableSkillCompletedNotifications = "enableSkillCompletedNotifications"
     case showCorpTab = "showCorpTab"
+    case showMapCharacterMarkers = "showMapCharacterMarkers"
 }
 
 public extension UserDefaults {
@@ -81,6 +82,19 @@ public extension UserDefaults {
         }
         set {
             setValue(newValue, forKey: ECKDefaultKeys.showCorpTab.rawValue)
+        }
+    }
+    
+    @objc dynamic var showMapCharacterMarkers: Bool {
+        get {
+            if value(forKey: ECKDefaultKeys.showMapCharacterMarkers.rawValue) == nil {
+                return true
+            }
+            
+            return bool(forKey: ECKDefaultKeys.showMapCharacterMarkers.rawValue)
+        }
+        set {
+            setValue(newValue, forKey: ECKDefaultKeys.showMapCharacterMarkers.rawValue)
         }
     }
 }

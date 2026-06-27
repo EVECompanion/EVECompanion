@@ -135,7 +135,7 @@ struct MapView: View {
     @State private var searchText: String = ""
     @State private var hasSearchSelection: Bool = false
     @State private var selectedSearchResultTitle: String?
-    @State private var showCharacterMarkers: Bool = true
+    @AppStorage(ECKDefaultKeys.showMapCharacterMarkers.rawValue) private var showCharacterMarkers: Bool = true
     @State private var characterMarkers: [MapScene.CharacterMarker] = []
     @State private var selectedSystemDetails: ECKMapSystemDetails?
     @State private var selectedSystemDetailsDetent: PresentationDetent = .medium
