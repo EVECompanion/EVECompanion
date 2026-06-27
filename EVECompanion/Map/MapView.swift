@@ -86,6 +86,36 @@ private enum MapSearchLayout {
     static let cornerRadius: CGFloat = 22
 }
 
+struct MapSearchResetControlState {
+    let searchText: String
+    let hasSearchSelection: Bool
+    let selectedTitle: String?
+
+    var isVisible: Bool {
+        searchText.isEmpty == false || hasSearchSelection
+    }
+    
+    var selectedDisplayText: String? {
+        guard searchText.isEmpty, hasSearchSelection else {
+            return nil
+        }
+        
+        return selectedTitle
+    }
+    
+    func searchTextAfterFocusChange(isFocused: Bool) -> String {
+        guard hasSearchSelection, let selectedTitle else {
+            return searchText
+        }
+        
+        if isFocused {
+            return searchText.isEmpty ? selectedTitle : searchText
+        }
+        
+        return ""
+    }
+}
+
 private enum MapCharacterLocations {
     static let refreshIntervalNanoseconds: UInt64 = 30 * 1_000_000_000
 }
@@ -103,6 +133,8 @@ struct MapView: View {
     @State private var constellationTargets: [MapAreaSearchTarget] = []
     @State private var regionTargets: [MapAreaSearchTarget] = []
     @State private var searchText: String = ""
+    @State private var hasSearchSelection: Bool = false
+    @State private var selectedSearchResultTitle: String?
     @State private var showCharacterMarkers: Bool = true
     @State private var characterMarkers: [MapScene.CharacterMarker] = []
     @State private var selectedSystemDetails: ECKMapSystemDetails?
@@ -147,6 +179,14 @@ struct MapView: View {
                 selectedSystemDetailsDetent = .medium
             }
         })
+    }
+
+    private var searchResetControlState: MapSearchResetControlState {
+        MapSearchResetControlState(
+            searchText: searchText,
+            hasSearchSelection: hasSearchSelection,
+            selectedTitle: selectedSearchResultTitle
+        )
     }
     
     private func averagePoint(for solarSystems: [ECKSolarSystem]) -> CGPoint? {
@@ -408,6 +448,8 @@ struct MapView: View {
             }
             scene.focus(on: mapPoint, targetScale: 0.4) {
                 scene.highlightSystem(id: system.id)
+                hasSearchSelection = scene.hasSelectionHighlight
+                selectedSearchResultTitle = result.title
             }
             
         case .constellation(let constellation):
@@ -417,6 +459,8 @@ struct MapView: View {
             )
             scene.focus(on: constellation.center, targetScale: targetScale) {
                 scene.highlightConstellation(bounds: constellation.bounds)
+                hasSearchSelection = scene.hasSelectionHighlight
+                selectedSearchResultTitle = result.title
             }
             
         case .region(let region):
@@ -426,6 +470,8 @@ struct MapView: View {
             )
             scene.focus(on: region.center, targetScale: targetScale) {
                 scene.highlightRegion(bounds: region.bounds)
+                hasSearchSelection = scene.hasSelectionHighlight
+                selectedSearchResultTitle = result.title
             }
         }
         
@@ -448,6 +494,9 @@ struct MapView: View {
         }
         .padding(.horizontal, MapSearchLayout.horizontalPadding)
         .padding(.bottom, MapSearchLayout.bottomPadding)
+        .onChange(of: isSearchFocused) { isFocused in
+            updateSearchFocus(isFocused)
+        }
     }
     
     @ViewBuilder
@@ -476,30 +525,46 @@ struct MapView: View {
     }
     
     private var searchField: some View {
-        HStack(spacing: 10) {
+        let selectedDisplayText = isSearchFocused ? nil : searchResetControlState.selectedDisplayText
+        
+        return HStack(spacing: 10) {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(.secondary)
             
-            TextField("Search solar systems, constellations, or regions", text: $searchText)
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
-                .focused($isSearchFocused)
+            ZStack(alignment: .leading) {
+                TextField("Search solar systems, constellations, or regions", text: $searchText)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .focused($isSearchFocused)
+                    .opacity(selectedDisplayText == nil ? 1 : 0)
+                
+                if let selectedDisplayText {
+                    Text(selectedDisplayText)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                        .foregroundStyle(.primary)
+                        .allowsHitTesting(false)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                isSearchFocused = true
+            }
             
-            if searchText.isEmpty == false {
+            if searchResetControlState.isVisible {
                 Button {
-                    searchText = ""
-                    isSearchFocused = false
+                    resetSearchSelection()
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                 }
                 .tint(.primary)
-                .accessibilityLabel("Clear search")
+                .accessibilityLabel(hasSearchSelection ? "Reset search selection" : "Clear search")
             }
             
-            keyboardDismissButton
-                .opacity(isSearchFocused ? 1 : 0)
-                .allowsHitTesting(isSearchFocused)
-                .accessibilityHidden(isSearchFocused == false)
+            if isSearchFocused {
+                keyboardDismissButton
+            }
         }
         .padding(.horizontal, 14)
         .frame(height: MapSearchLayout.searchFieldHeight)
@@ -513,6 +578,18 @@ struct MapView: View {
             Image(systemName: showCharacterMarkers ? "person.3.fill" : "person.3")
         }
         .accessibilityLabel(showCharacterMarkers ? "Hide characters" : "Show characters")
+    }
+    
+    private func resetSearchSelection() {
+        searchText = ""
+        isSearchFocused = false
+        scene?.resetSelectionHighlight()
+        hasSearchSelection = false
+        selectedSearchResultTitle = nil
+    }
+    
+    private func updateSearchFocus(_ isFocused: Bool) {
+        searchText = searchResetControlState.searchTextAfterFocusChange(isFocused: isFocused)
     }
     
     private var keyboardDismissButton: some View {

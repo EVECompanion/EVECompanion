@@ -145,6 +145,12 @@ final class MapScene: SKScene {
     private var lowSecuritySystemTexture: SKTexture?
     private var nullSecuritySystemTexture: SKTexture?
     private var selectionHighlightNode: SKNode?
+    var hasSelectionHighlight: Bool {
+        selectionHighlightNode?.parent != nil
+    }
+    var selectionHighlightCount: Int {
+        selectionHighlightLayer.children.count
+    }
     private var lastLabelCameraScale: CGFloat?
     private var lastLabelCameraPosition: CGPoint?
     private var userInterfaceStyleOverride: UIUserInterfaceStyle?
@@ -775,11 +781,11 @@ final class MapScene: SKScene {
 
     func highlightSystem(id: Int) {
         guard let systemNode = systemNodes[id] else {
-            clearSelectionHighlight()
+            resetSelectionHighlight()
             return
         }
         
-        clearSelectionHighlight()
+        resetSelectionHighlight()
         
         let highlightNode = SKShapeNode(circleOfRadius: HighlightStyle.systemRadius)
         highlightNode.position = systemNode.position
@@ -801,7 +807,7 @@ final class MapScene: SKScene {
     }
     
     private func highlightMapArea(bounds: CGRect, inset: CGFloat) {
-        clearSelectionHighlight()
+        resetSelectionHighlight()
         
         let normalizedBounds = normalize(rect: bounds)
         let highlightRect = normalizedBounds.insetBy(dx: -inset, dy: -inset)
@@ -947,7 +953,7 @@ final class MapScene: SKScene {
         }
     }
     
-    private func clearSelectionHighlight() {
+    func resetSelectionHighlight() {
         selectionHighlightNode?.removeAllActions()
         selectionHighlightNode?.removeFromParent()
         selectionHighlightNode = nil
