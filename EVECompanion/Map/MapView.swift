@@ -106,6 +106,7 @@ struct MapView: View {
     @State private var showCharacterMarkers: Bool = true
     @State private var characterMarkers: [MapScene.CharacterMarker] = []
     @State private var selectedSystemDetails: ECKMapSystemDetails?
+    @State private var selectedSystemDetailsDetent: PresentationDetent = .medium
     @FocusState private var isSearchFocused: Bool
     
     @State private var scene: MapScene?
@@ -135,6 +136,17 @@ struct MapView: View {
             .map(MapSearchResult.constellation)
         
         return Array((solarSystemMatches + constellationMatches + regionMatches).prefix(20))
+    }
+
+    private var isSystemDetailsSheetPresented: Binding<Bool> {
+        Binding(get: {
+            selectedSystemDetails != nil
+        }, set: { isPresented in
+            if isPresented == false {
+                selectedSystemDetails = nil
+                selectedSystemDetailsDetent = .medium
+            }
+        })
     }
     
     private func averagePoint(for solarSystems: [ECKSolarSystem]) -> CGPoint? {
@@ -291,14 +303,17 @@ struct MapView: View {
                 characterVisibilityButton
             }
         }
-        .sheet(item: $selectedSystemDetails) { details in
-            NavigationStack {
-                MapSystemDetailsView(
-                    details: details,
-                    logoSource: sovereigntyLogoSource(for: details)
-                )
+        .sheet(isPresented: isSystemDetailsSheetPresented) {
+            if let selectedSystemDetails {
+                NavigationStack {
+                    MapSystemDetailsView(
+                        details: selectedSystemDetails,
+                        logoSource: sovereigntyLogoSource(for: selectedSystemDetails)
+                    )
+                }
+                .presentationDetents([.medium, .large], selection: $selectedSystemDetailsDetent)
+                .presentationBackgroundInteraction(.enabled(upThrough: .medium))
             }
-            .presentationDetents([.medium, .large])
         }
     }
     
@@ -358,6 +373,7 @@ struct MapView: View {
     }
 
     private func selectSystem(id systemId: Int) {
+        selectedSystemDetailsDetent = .medium
         selectedSystemDetails = details(for: systemId)
     }
 
