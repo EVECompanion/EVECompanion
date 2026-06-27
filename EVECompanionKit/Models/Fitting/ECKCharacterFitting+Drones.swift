@@ -11,7 +11,7 @@ import Combine
 extension ECKCharacterFitting {
     private func fighterSquadronSize(for fighter: ECKItem) -> Int {
         let squadronSize = ECKSDEManager.shared.getAttributeValue(attributeId: Self.attributeFighterSquadronSizeId,
-                                                                 typeId: fighter.typeId) ?? 1
+                                                                  typeId: fighter.typeId) ?? 1
         return max(Int(squadronSize), 1)
     }
     

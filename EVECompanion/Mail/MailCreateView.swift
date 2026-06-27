@@ -196,5 +196,3 @@ struct MailCreateView: View {
         }
     }
 }
-
-
