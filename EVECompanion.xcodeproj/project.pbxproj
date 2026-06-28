@@ -250,6 +250,7 @@
 		C9ACC0782DC9612D0000D0FC /* ECKSkillCompletedNotificationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ACC0772DC9612D0000D0FC /* ECKSkillCompletedNotificationRequest.swift */; };
 		C9ACC0792DC962270000D0FC /* ECFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93FE8372BED29F200729DD8 /* ECFormatters.swift */; };
 		C9ACC07C2DC9DD0C0000D0FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ACC07B2DC9DD0C0000D0FC /* AppDelegate.swift */; };
+		C9ACE4612FF1BE7400FAD4D1 /* ToolbarMenuIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ACE4602FF1BE7400FAD4D1 /* ToolbarMenuIcon.swift */; };
 		C9AD0E312DF782C700E762AC /* ECKESITypeResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AD0E302DF782C700E762AC /* ECKESITypeResource.swift */; };
 		C9AF7D802C2B63FA002EB951 /* AssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AF7D7F2C2B63FA002EB951 /* AssetCell.swift */; };
 		C9B079062C32C0080059785D /* ECKTokenRefreshError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B079052C32C0080059785D /* ECKTokenRefreshError.swift */; };
@@ -708,6 +709,7 @@
 		C9A806D72FAB1A49008D32BC /* ECKCorporationWalletJournalResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCorporationWalletJournalResource.swift; sourceTree = "<group>"; };
 		C9ACC0772DC9612D0000D0FC /* ECKSkillCompletedNotificationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSkillCompletedNotificationRequest.swift; sourceTree = "<group>"; };
 		C9ACC07B2DC9DD0C0000D0FC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		C9ACE4602FF1BE7400FAD4D1 /* ToolbarMenuIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarMenuIcon.swift; sourceTree = "<group>"; };
 		C9AD0E302DF782C700E762AC /* ECKESITypeResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKESITypeResource.swift; sourceTree = "<group>"; };
 		C9AF7D7F2C2B63FA002EB951 /* AssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCell.swift; sourceTree = "<group>"; };
 		C9B079052C32C0080059785D /* ECKTokenRefreshError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKTokenRefreshError.swift; sourceTree = "<group>"; };
@@ -1461,6 +1463,7 @@
 				C99750A42C14606800DE5B96 /* ErrorView.swift */,
 				C9F1A0002F8F100100A1B2C3 /* PageLoaderView.swift */,
 				C9BBEC542C6E9C0B008CB3F2 /* ContentEmptyView.swift */,
+				C9ACE4602FF1BE7400FAD4D1 /* ToolbarMenuIcon.swift */,
 				C9B8853A2D8228C6005A32CA /* SolarSystemCell.swift */,
 				C9001DB72DA7942400ADAC52 /* LogoutButton.swift */,
 				C9E93B142DB0DB2B005458BC /* SkillRequirementsView.swift */,
@@ -2358,6 +2361,7 @@
 				C9B449FB2BF40B5700968754 /* SkillQueueView.swift in Sources */,
 				C90931FE2DAB9E9000A88120 /* Deeplink.swift in Sources */,
 				C95262482BF9439F0014B5F5 /* MailDetailView.swift in Sources */,
+				C9ACE4612FF1BE7400FAD4D1 /* ToolbarMenuIcon.swift in Sources */,
 				C96F989A2BEF7DDE00DEC34F /* CharacterDetailRowType.swift in Sources */,
 				C9B8853B2D8228C6005A32CA /* SolarSystemCell.swift in Sources */,
 				C9ACC07C2DC9DD0C0000D0FC /* AppDelegate.swift in Sources */,

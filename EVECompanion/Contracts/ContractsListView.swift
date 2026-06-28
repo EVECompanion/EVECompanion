@@ -59,7 +59,9 @@ struct ContractsListView: View {
                         }
                     }
                 } label: {
-                    Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
+                    ToolbarMenuIcon(systemImage: "line.3.horizontal.decrease.circle",
+                                    activeSystemImage: "line.3.horizontal.decrease.circle.fill",
+                                    isActive: hasActiveFilter)
                 }
                 
                 Menu {
@@ -70,7 +72,9 @@ struct ContractsListView: View {
                         }
                     }
                 } label: {
-                    Label("Sort", systemImage: "arrow.up.arrow.down.circle")
+                    ToolbarMenuIcon(systemImage: "arrow.up.arrow.down.circle",
+                                    activeSystemImage: "arrow.up.arrow.down.circle.fill",
+                                    isActive: contractManager.sortOption.isDefaultSortOption == false)
                 }
             }
         }
@@ -86,6 +90,12 @@ struct ContractsListView: View {
             }
         }
     }
+
+    private var hasActiveFilter: Bool {
+        contractManager.statusFilter.isActiveFilter
+        || contractManager.typeFilter.isActiveFilter
+    }
+
 }
 
 #Preview {

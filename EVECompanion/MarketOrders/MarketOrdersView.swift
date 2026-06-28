@@ -73,7 +73,9 @@ struct MarketOrdersView: View {
                         }
                     }
                 } label: {
-                    Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
+                    ToolbarMenuIcon(systemImage: "line.3.horizontal.decrease.circle",
+                                    activeSystemImage: "line.3.horizontal.decrease.circle.fill",
+                                    isActive: manager.typeFilter.isActiveFilter)
                 }
                 
                 Menu {
@@ -84,7 +86,9 @@ struct MarketOrdersView: View {
                         }
                     }
                 } label: {
-                    Label("Sort", systemImage: "arrow.up.arrow.down.circle")
+                    ToolbarMenuIcon(systemImage: "arrow.up.arrow.down.circle",
+                                    activeSystemImage: "arrow.up.arrow.down.circle.fill",
+                                    isActive: manager.sortOption.isDefaultSortOption == false)
                 }
             }
         }

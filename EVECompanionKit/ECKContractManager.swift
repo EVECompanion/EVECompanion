@@ -32,6 +32,10 @@ public enum ECKContractStatusFilter: String, CaseIterable, Identifiable, Sendabl
         }
     }
     
+    public var isActiveFilter: Bool {
+        self != .all
+    }
+
     func matches(_ status: ECKContract.ECKContractStatus) -> Bool {
         switch self {
         case .all:
@@ -82,6 +86,10 @@ public enum ECKContractTypeFilter: String, CaseIterable, Identifiable, Sendable 
         }
     }
     
+    public var isActiveFilter: Bool {
+        self != .all
+    }
+
     var contractType: ECKContract.ECKContractType? {
         switch self {
         case .all:
@@ -121,6 +129,10 @@ public enum ECKContractSortOption: String, CaseIterable, Identifiable, Sendable 
         case .titleAZ:
             return "Title: A-Z"
         }
+    }
+
+    public var isDefaultSortOption: Bool {
+        self == .issuedNewest
     }
 }
 

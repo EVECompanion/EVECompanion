@@ -54,7 +54,9 @@ struct IndustryJobsView: View {
                         }
                     }
                 } label: {
-                    Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
+                    ToolbarMenuIcon(systemImage: "line.3.horizontal.decrease.circle",
+                                    activeSystemImage: "line.3.horizontal.decrease.circle.fill",
+                                    isActive: industryJobsManager.activityFilter.isActiveFilter)
                 }
                 
                 Menu {
@@ -65,7 +67,9 @@ struct IndustryJobsView: View {
                         }
                     }
                 } label: {
-                    Label("Sort", systemImage: "arrow.up.arrow.down.circle")
+                    ToolbarMenuIcon(systemImage: "arrow.up.arrow.down.circle",
+                                    activeSystemImage: "arrow.up.arrow.down.circle.fill",
+                                    isActive: industryJobsManager.sortOption.isDefaultSortOption == false)
                 }
             }
         }

@@ -25,6 +25,10 @@ public enum ECKMarketOrderTypeFilter: String, CaseIterable, Identifiable, Sendab
             return "Buy"
         }
     }
+
+    public var isActiveFilter: Bool {
+        self != .all
+    }
 }
 
 public enum ECKMarketOrderSortOption: String, CaseIterable, Identifiable, Sendable {
@@ -55,6 +59,10 @@ public enum ECKMarketOrderSortOption: String, CaseIterable, Identifiable, Sendab
         case .nameAZ:
             return "Name: A-Z"
         }
+    }
+
+    public var isDefaultSortOption: Bool {
+        self == .issuedNewest
     }
 }
 

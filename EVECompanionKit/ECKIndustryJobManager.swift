@@ -76,6 +76,10 @@ public class ECKIndustryJobManager: ObservableObject, ECKPageLoadable, @unchecke
             }
         }
         
+        public var isActiveFilter: Bool {
+            self != .all
+        }
+
         func matches(_ job: ECKIndustryJob) -> Bool {
             switch self {
             case .all:
@@ -116,6 +120,10 @@ public class ECKIndustryJobManager: ObservableObject, ECKPageLoadable, @unchecke
             case .finishLatest:
                 return "Finish: Latest"
             }
+        }
+
+        public var isDefaultSortOption: Bool {
+            self == .startedNewest
         }
     }
     

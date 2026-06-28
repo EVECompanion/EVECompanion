@@ -85,7 +85,9 @@ struct WalletJournalView: View {
                             }
                         }
                     } label: {
-                        Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
+                        ToolbarMenuIcon(systemImage: "line.3.horizontal.decrease.circle",
+                                        activeSystemImage: "line.3.horizontal.decrease.circle.fill",
+                                        isActive: walletJournalManager.amountFilter.isActiveFilter)
                     }
                 }
             }
