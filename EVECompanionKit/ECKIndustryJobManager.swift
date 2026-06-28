@@ -5,6 +5,7 @@
 //  Created by Jonas Schlabertz on 19.06.24.
 //
 
+public import Foundation
 public import Combine
 
 public class ECKIndustryJobManager: ObservableObject, ECKPageLoadable, @unchecked Sendable {
@@ -128,8 +129,16 @@ public class ECKIndustryJobManager: ObservableObject, ECKPageLoadable, @unchecke
     private var pagination = ECKPagination()
     @Published public var loadingState: ECKLoadingState = .loading
     @Published private var jobs: [ECKIndustryJob] = []
-    @Published public var activityFilter: ActivityFilter = .all
-    @Published public var sortOption: SortOption = .startedNewest
+    @Published public var activityFilter: ActivityFilter = .all {
+        didSet {
+            UserDefaults.standard.industryJobActivityFilter = activityFilter
+        }
+    }
+    @Published public var sortOption: SortOption = .startedNewest {
+        didSet {
+            UserDefaults.standard.industryJobSortOption = sortOption
+        }
+    }
     
     public var elements: [ECKIndustryJob] {
         jobs
@@ -159,6 +168,9 @@ public class ECKIndustryJobManager: ObservableObject, ECKPageLoadable, @unchecke
     public init(source: Source, isPreview: Bool = false) {
         self.source = source
         self.isPreview = isPreview
+        self.activityFilter = UserDefaults.standard.industryJobActivityFilter
+        self.sortOption = UserDefaults.standard.industryJobSortOption
+        
         Task { @MainActor in
             await loadJobs()
         }

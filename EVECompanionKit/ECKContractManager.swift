@@ -5,6 +5,7 @@
 //  Created by Jonas Schlabertz on 11.05.24.
 //
 
+public import Foundation
 public import Combine
 
 public enum ECKContractStatusFilter: String, CaseIterable, Identifiable, Sendable {
@@ -176,9 +177,21 @@ public class ECKContractManager: ObservableObject, ECKPageLoadable, @unchecked S
     @Published public var loadingState: ECKLoadingState = .loading
     @Published public var contracts: [ECKContract] = []
     @Published public var searchText: String = ""
-    @Published public var statusFilter: ECKContractStatusFilter = .all
-    @Published public var typeFilter: ECKContractTypeFilter = .all
-    @Published public var sortOption: ECKContractSortOption = .issuedNewest
+    @Published public var statusFilter: ECKContractStatusFilter = .all {
+        didSet {
+            UserDefaults.standard.contractStatusFilter = statusFilter
+        }
+    }
+    @Published public var typeFilter: ECKContractTypeFilter = .all {
+        didSet {
+            UserDefaults.standard.contractTypeFilter = typeFilter
+        }
+    }
+    @Published public var sortOption: ECKContractSortOption = .issuedNewest {
+        didSet {
+            UserDefaults.standard.contractSortOption = sortOption
+        }
+    }
     
     private var pagination = ECKPagination()
     
@@ -296,6 +309,10 @@ public class ECKContractManager: ObservableObject, ECKPageLoadable, @unchecked S
     public init(source: Source, isPreview: Bool = false) {
         self.source = source
         self.isPreview = isPreview
+        self.statusFilter = UserDefaults.standard.contractStatusFilter
+        self.typeFilter = UserDefaults.standard.contractTypeFilter
+        self.sortOption = UserDefaults.standard.contractSortOption
+        
         Task { @MainActor in
             await loadContracts()
         }

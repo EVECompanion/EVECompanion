@@ -18,6 +18,12 @@ public enum ECKDefaultKeys: String {
     case enableSkillCompletedNotifications = "enableSkillCompletedNotifications"
     case showCorpTab = "showCorpTab"
     case showMapCharacterMarkers = "showMapCharacterMarkers"
+    
+    case industryJobActivityFilter = "industryJobActivityFilter"
+    case industryJobSortOption = "industryJobSortOption"
+    case contractStatusFilter = "contractStatusFilter"
+    case contractTypeFilter = "contractTypeFilter"
+    case contractSortOption = "contractSortOption"
 }
 
 public extension UserDefaults {
@@ -95,6 +101,76 @@ public extension UserDefaults {
         }
         set {
             setValue(newValue, forKey: ECKDefaultKeys.showMapCharacterMarkers.rawValue)
+        }
+    }
+    
+    var industryJobActivityFilter: ECKIndustryJobManager.ActivityFilter {
+        get {
+            guard let storedValue = string(forKey: ECKDefaultKeys.industryJobActivityFilter.rawValue),
+                  let filter = ECKIndustryJobManager.ActivityFilter(rawValue: storedValue) else {
+                return .all
+            }
+            
+            return filter
+        }
+        set {
+            set(newValue.rawValue, forKey: ECKDefaultKeys.industryJobActivityFilter.rawValue)
+        }
+    }
+    
+    var industryJobSortOption: ECKIndustryJobManager.SortOption {
+        get {
+            guard let storedValue = string(forKey: ECKDefaultKeys.industryJobSortOption.rawValue),
+                  let sortOption = ECKIndustryJobManager.SortOption(rawValue: storedValue) else {
+                return .startedNewest
+            }
+            
+            return sortOption
+        }
+        set {
+            set(newValue.rawValue, forKey: ECKDefaultKeys.industryJobSortOption.rawValue)
+        }
+    }
+    
+    var contractStatusFilter: ECKContractStatusFilter {
+        get {
+            guard let storedValue = string(forKey: ECKDefaultKeys.contractStatusFilter.rawValue),
+                  let filter = ECKContractStatusFilter(rawValue: storedValue) else {
+                return .all
+            }
+            
+            return filter
+        }
+        set {
+            set(newValue.rawValue, forKey: ECKDefaultKeys.contractStatusFilter.rawValue)
+        }
+    }
+    
+    var contractTypeFilter: ECKContractTypeFilter {
+        get {
+            guard let storedValue = string(forKey: ECKDefaultKeys.contractTypeFilter.rawValue),
+                  let filter = ECKContractTypeFilter(rawValue: storedValue) else {
+                return .all
+            }
+            
+            return filter
+        }
+        set {
+            set(newValue.rawValue, forKey: ECKDefaultKeys.contractTypeFilter.rawValue)
+        }
+    }
+    
+    var contractSortOption: ECKContractSortOption {
+        get {
+            guard let storedValue = string(forKey: ECKDefaultKeys.contractSortOption.rawValue),
+                  let sortOption = ECKContractSortOption(rawValue: storedValue) else {
+                return .issuedNewest
+            }
+            
+            return sortOption
+        }
+        set {
+            set(newValue.rawValue, forKey: ECKDefaultKeys.contractSortOption.rawValue)
         }
     }
 }
