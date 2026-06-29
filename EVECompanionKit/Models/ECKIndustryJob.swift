@@ -51,33 +51,68 @@ public final class ECKIndustryJob: Decodable, Identifiable, ObservableObject, @u
         }
     }
     
-    public static let dummyActive: ECKIndustryJob = .init(activity: .init(activityId: 1),
-                                                          blueprintId: 0,
-                                                          blueprintLocation: .init(stationId: 60003760, token: .dummy),
-                                                          blueprint: .init(typeId: 992),
-                                                          duration: Int(TimeInterval.fromDays(days: 7)),
-                                                          endDate: Date() + .fromDays(days: 5),
-                                                          jobId: 0,
-                                                          probability: nil,
-                                                          product: .init(typeId: 657),
-                                                          runs: 5,
-                                                          startDate: Date() - .fromDays(days: 2),
-                                                          station: .init(stationId: 60003760, token: .dummy),
-                                                          status: .active)
+    public static let dummyActive: ECKIndustryJob = dummyJob(activityId: 1,
+                                                             blueprintTypeId: 992,
+                                                             productTypeId: 657,
+                                                             durationDays: 7,
+                                                             remainingDays: 5,
+                                                             jobId: 0,
+                                                             runs: 5,
+                                                             status: .active)
     
-    public static let dummyPaused: ECKIndustryJob = .init(activity: .init(activityId: 5),
-                                                          blueprintId: 1,
-                                                          blueprintLocation: .init(stationId: 60003760, token: .dummy),
-                                                          blueprint: .init(typeId: 990),
-                                                          duration: Int(TimeInterval.fromDays(days: 9)),
-                                                          endDate: Date() + .fromDays(days: 7),
-                                                          jobId: 1,
-                                                          probability: nil,
-                                                          product: .init(typeId: 990),
-                                                          runs: 1,
-                                                          startDate: Date() - .fromDays(days: 2),
-                                                          station: .init(stationId: 60003760, token: .dummy),
-                                                          status: .paused)
+    public static let dummyResearchTE: ECKIndustryJob = dummyJob(activityId: 3,
+                                                                 blueprintTypeId: 2465,
+                                                                 productTypeId: 2465,
+                                                                 durationDays: 4,
+                                                                 remainingDays: 1,
+                                                                 jobId: 1,
+                                                                 runs: 1,
+                                                                 status: .active)
+    
+    public static let dummyResearchME: ECKIndustryJob = dummyJob(activityId: 4,
+                                                                 blueprintTypeId: 25589,
+                                                                 productTypeId: 25589,
+                                                                 durationDays: 5,
+                                                                 remainingDays: 3,
+                                                                 jobId: 2,
+                                                                 runs: 1,
+                                                                 status: .active)
+    
+    public static let dummyPaused: ECKIndustryJob = dummyJob(activityId: 5,
+                                                             blueprintTypeId: 990,
+                                                             productTypeId: 990,
+                                                             durationDays: 9,
+                                                             remainingDays: 7,
+                                                             jobId: 3,
+                                                             runs: 1,
+                                                             status: .paused)
+    
+    public static let dummyInvention: ECKIndustryJob = dummyJob(activityId: 8,
+                                                                blueprintTypeId: 12003,
+                                                                productTypeId: 20185,
+                                                                durationDays: 2,
+                                                                remainingDays: 1,
+                                                                jobId: 4,
+                                                                runs: 2,
+                                                                status: .active)
+    
+    public static let dummyReaction: ECKIndustryJob = dummyJob(activityId: 9,
+                                                               blueprintTypeId: 46155,
+                                                               productTypeId: 46156,
+                                                               durationDays: 3,
+                                                               remainingDays: 2,
+                                                               jobId: 5,
+                                                               runs: 10,
+                                                               status: .active)
+    
+    public static let dummyJobs: [ECKIndustryJob] = [
+        dummyActive,
+        dummyResearchTE,
+        dummyResearchME,
+        dummyPaused,
+        dummyInvention,
+        dummyReaction
+    ]
     
     public let activity: ECKIndustryActivity
     public let blueprintId: Int
@@ -140,6 +175,29 @@ public final class ECKIndustryJob: Decodable, Identifiable, ObservableObject, @u
         self.startDate = startDate
         self.station = station
         self.status = status
+    }
+    
+    private static func dummyJob(activityId: Int,
+                                 blueprintTypeId: Int,
+                                 productTypeId: Int,
+                                 durationDays: Int,
+                                 remainingDays: Int,
+                                 jobId: Int,
+                                 runs: Int,
+                                 status: Status) -> ECKIndustryJob {
+        .init(activity: .init(activityId: activityId),
+              blueprintId: jobId,
+              blueprintLocation: .init(stationId: 60003760, token: .dummy),
+              blueprint: .init(typeId: blueprintTypeId),
+              duration: Int(TimeInterval.fromDays(days: Double(durationDays))),
+              endDate: Date() + .fromDays(days: Double(remainingDays)),
+              jobId: jobId,
+              probability: nil,
+              product: .init(typeId: productTypeId),
+              runs: runs,
+              startDate: Date() - .fromDays(days: Double(durationDays - remainingDays)),
+              station: .init(stationId: 60003760, token: .dummy),
+              status: status)
     }
     
 }

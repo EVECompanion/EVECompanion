@@ -187,10 +187,7 @@ public class ECKIndustryJobManager: ObservableObject, ECKPageLoadable, @unchecke
     @MainActor
     public func loadJobs() async {
         guard UserDefaults.standard.isDemoModeEnabled == false && isPreview == false else {
-            self.jobs = [
-                .dummyActive,
-                .dummyPaused
-            ]
+            self.jobs = ECKIndustryJob.dummyJobs
             self.pagination = ECKPagination(totalPages: 1, lastLoadedPage: 1)
             self.loadingState = .ready
             return
