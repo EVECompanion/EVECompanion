@@ -18,6 +18,7 @@ struct CharacterDetailView: View {
     @StateObject var walletTransactionManager: ECKWalletTransactionManager
     @StateObject var marketOrderManager: ECKMarketOrderManager
     @StateObject var industryJobsManager: ECKIndustryJobManager
+    @StateObject var miningLedgerManager: ECKMiningLedgerManager
     @StateObject var jumpClonesManager: ECKJumpClonesManager
     @StateObject var planetaryColoniesManager: ECKPlanetaryColonyManager
     @StateObject var fittingManager: ECKFittingManager
@@ -32,6 +33,7 @@ struct CharacterDetailView: View {
         self._walletTransactionManager = StateObject(wrappedValue: .init(character: character))
         self._marketOrderManager = StateObject(wrappedValue: .init(character: character))
         self._industryJobsManager = StateObject(wrappedValue: .init(character: character))
+        self._miningLedgerManager = StateObject(wrappedValue: .init(character: character))
         self._jumpClonesManager = StateObject(wrappedValue: .init(character: character))
         self._planetaryColoniesManager = StateObject(wrappedValue: .init(character: character))
         self._fittingManager = StateObject(wrappedValue: .init(character: character))
@@ -77,6 +79,7 @@ struct CharacterDetailView: View {
             
             Section("Industry") {
                 row(for: .industryJobs)
+                row(for: .miningLedger)
                 row(for: .planetaryColonies)
             }
             
@@ -147,6 +150,8 @@ struct CharacterDetailView: View {
             return .skillQueue(character)
         case .industryJobs:
             return .industryJobs(manager: industryJobsManager)
+        case .miningLedger:
+            return .miningLedger(manager: miningLedgerManager)
         case .jumpClones:
             return .jumpClones(manager: jumpClonesManager)
         case .planetaryColonies:

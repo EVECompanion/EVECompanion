@@ -63,6 +63,8 @@ class Coordinator: ObservableObject {
             SkillQueueView(character: character)
         case .industryJobs(manager: let manager):
             IndustryJobsView(industryJobsManager: manager)
+        case .miningLedger(manager: let manager):
+            MiningLedgerView(manager: manager)
         case .jumpClones(manager: let manager):
             JumpClonesView(jumpClonesManager: manager)
         case .fittingsList(let manager):

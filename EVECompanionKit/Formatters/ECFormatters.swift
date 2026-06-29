@@ -112,6 +112,14 @@ public struct ECFormatters {
         return formatter.string(from: date)
     }
     
+    public static func dateOnlyFormatter(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .none
+
+        return formatter.string(from: date)
+    }
+
     public static func jumpRange(_ range: Double) -> String {
         let formatter = NumberFormatter()
         formatter.maximumFractionDigits = 1

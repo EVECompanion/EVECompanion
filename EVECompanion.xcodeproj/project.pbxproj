@@ -247,6 +247,13 @@
 		C9A806872FA3C3E8008D32BC /* ECKWalletTransactionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A806862FA3C3E8008D32BC /* ECKWalletTransactionManager.swift */; };
 		C9A806D62FAA7D30008D32BC /* ECKWalletJournalManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A806D52FAA7D30008D32BC /* ECKWalletJournalManager.swift */; };
 		C9A806D92FAB1C53008D32BC /* ECKCorporationWalletJournalResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A806D72FAB1A49008D32BC /* ECKCorporationWalletJournalResource.swift */; };
+		C9AA00012FF2000000010001 /* ECKMiningLedgerEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA00112FF2000000010011 /* ECKMiningLedgerEntry.swift */; };
+		C9AA00022FF2000000010002 /* ECKCharacterMiningLedgerResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA00122FF2000000010012 /* ECKCharacterMiningLedgerResource.swift */; };
+		C9AA00032FF2000000010003 /* ECKMiningLedgerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA00132FF2000000010013 /* ECKMiningLedgerManager.swift */; };
+		C9AA00042FF2000000010004 /* MiningLedgerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA00152FF2000000010015 /* MiningLedgerView.swift */; };
+		C9AA00052FF2000000010005 /* MiningLedgerDaySummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA00162FF2000000010016 /* MiningLedgerDaySummaryCell.swift */; };
+		C9AA00062FF2000000010006 /* ECKMiningLedgerEntryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA00172FF2000000010017 /* ECKMiningLedgerEntryTests.swift */; };
+		C9AA00072FF2000000010007 /* Date+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA00182FF2000000010018 /* Date+Parsing.swift */; };
 		C9ACC0782DC9612D0000D0FC /* ECKSkillCompletedNotificationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ACC0772DC9612D0000D0FC /* ECKSkillCompletedNotificationRequest.swift */; };
 		C9ACC0792DC962270000D0FC /* ECFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93FE8372BED29F200729DD8 /* ECFormatters.swift */; };
 		C9ACC07C2DC9DD0C0000D0FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ACC07B2DC9DD0C0000D0FC /* AppDelegate.swift */; };
@@ -707,6 +714,13 @@
 		C9A806862FA3C3E8008D32BC /* ECKWalletTransactionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKWalletTransactionManager.swift; sourceTree = "<group>"; };
 		C9A806D52FAA7D30008D32BC /* ECKWalletJournalManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKWalletJournalManager.swift; sourceTree = "<group>"; };
 		C9A806D72FAB1A49008D32BC /* ECKCorporationWalletJournalResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCorporationWalletJournalResource.swift; sourceTree = "<group>"; };
+		C9AA00112FF2000000010011 /* ECKMiningLedgerEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMiningLedgerEntry.swift; sourceTree = "<group>"; };
+		C9AA00122FF2000000010012 /* ECKCharacterMiningLedgerResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterMiningLedgerResource.swift; sourceTree = "<group>"; };
+		C9AA00132FF2000000010013 /* ECKMiningLedgerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMiningLedgerManager.swift; sourceTree = "<group>"; };
+		C9AA00152FF2000000010015 /* MiningLedgerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiningLedgerView.swift; sourceTree = "<group>"; };
+		C9AA00162FF2000000010016 /* MiningLedgerDaySummaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiningLedgerDaySummaryCell.swift; sourceTree = "<group>"; };
+		C9AA00172FF2000000010017 /* ECKMiningLedgerEntryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMiningLedgerEntryTests.swift; sourceTree = "<group>"; };
+		C9AA00182FF2000000010018 /* Date+Parsing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Parsing.swift"; sourceTree = "<group>"; };
 		C9ACC0772DC9612D0000D0FC /* ECKSkillCompletedNotificationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSkillCompletedNotificationRequest.swift; sourceTree = "<group>"; };
 		C9ACC07B2DC9DD0C0000D0FC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C9ACE4602FF1BE7400FAD4D1 /* ToolbarMenuIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarMenuIcon.swift; sourceTree = "<group>"; };
@@ -1024,6 +1038,7 @@
 				C996A5E92BF2B9340038277C /* NestedObservableObject.swift */,
 				C94257272C2A140800FAEE5C /* Array+Chunked.swift */,
 				C99822B52F825E940031B439 /* Headers.swift */,
+				C9AA00182FF2000000010018 /* Date+Parsing.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1100,6 +1115,7 @@
 				C9DEDD362DADAB9600781E8A /* ECKMarketGroup.swift */,
 				C98F253C2EC5148000D0269A /* ECKMarketHistoryEntry.swift */,
 				C99750A92C14897E00DE5B96 /* ECKMarketOrder.swift */,
+				C9AA00112FF2000000010011 /* ECKMiningLedgerEntry.swift */,
 				C9E2FFEE2BFD131900754C2D /* ECKOptionalResponse.swift */,
 				C9F1A0022F8F100100A1B2C3 /* ECKPageLoadable.swift */,
 				C9F1A0042F8F180100A1B2C3 /* ECKPagination.swift */,
@@ -1208,6 +1224,7 @@
 				C9C7C41E2DA11BE80079DF82 /* Utils */,
 				C9FD52DF2C01D2540084E5E1 /* WalletJournal */,
 				C9012AF12C032CC800407A81 /* WalletTransactions */,
+				C9AA00142FF2000000010014 /* MiningLedger */,
 			);
 			path = EVECompanion;
 			sourceTree = "<group>";
@@ -1240,6 +1257,7 @@
 				C91672B82BEA9E68009EC580 /* ECKConstants.swift */,
 				C96F989E2BEFA6DB00DEC34F /* ECKContractManager.swift */,
 				C96F98AF2F00000100DEC34F /* ECKMarketOrderManager.swift */,
+				C9AA00132FF2000000010013 /* ECKMiningLedgerManager.swift */,
 				C9A806862FA3C3E8008D32BC /* ECKWalletTransactionManager.swift */,
 				C920A6A62ED3526F00868D58 /* ECKCorporationRole.swift */,
 				C99CC7262F96BA85000BF4BC /* ECKCorporationRoles.swift */,
@@ -1290,6 +1308,7 @@
 				C92D17BB2C23344C00D6FF5A /* ECKCharacterIndustryJobsResource.swift */,
 				C9A645B02C32A29700E2E68D /* ECKCharacterJumpFatigueResource.swift */,
 				C9DCC4082EA629DD00D2F643 /* ECKCharacterLocationResource.swift */,
+				C9AA00122FF2000000010012 /* ECKCharacterMiningLedgerResource.swift */,
 				C985096F2FEBC753002229B5 /* ECKCharacterOnlineResource.swift */,
 				C99750AD2C1494DC00DE5B96 /* ECKCharacterMarketOrdersResource.swift */,
 				C99528D52BEE152F00CA6E06 /* ECKCharacterSkillqueueResource.swift */,
@@ -1603,6 +1622,7 @@
 			isa = PBXGroup;
 			children = (
 				C99822AD2F7516740031B439 /* ECKSkillPlanReorderingTests.swift */,
+				C9AA00172FF2000000010017 /* ECKMiningLedgerEntryTests.swift */,
 				C99822AE2F7516740031B439 /* EVECompanionKitTests.xctestplan */,
 			);
 			path = EVECompanionKitTests;
@@ -1614,6 +1634,15 @@
 				C9A7C55C2BF0C2E8003478AD /* SettingsView.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		C9AA00142FF2000000010014 /* MiningLedger */ = {
+			isa = PBXGroup;
+			children = (
+				C9AA00152FF2000000010015 /* MiningLedgerView.swift */,
+				C9AA00162FF2000000010016 /* MiningLedgerDaySummaryCell.swift */,
+			);
+			path = MiningLedger;
 			sourceTree = "<group>";
 		};
 		C9B25AE42E2836D2009A14DB /* ShipSelection */ = {
@@ -2332,6 +2361,7 @@
 				C9EC4BA72BF5580D00D46CC4 /* UniverseView.swift in Sources */,
 				C952BC972BEC156B0070C504 /* CharacterCell.swift in Sources */,
 				C9012AF32C032D4E00407A81 /* WalletTransactionsView.swift in Sources */,
+				C9AA00042FF2000000010004 /* MiningLedgerView.swift in Sources */,
 				C996A5E82BF2B8340038277C /* ContractListCell.swift in Sources */,
 				C9E6F7E12DA45E7D00573E80 /* MarketGroupsView.swift in Sources */,
 				C91F70102F7341420078C1DB /* CorporationDetailRowType.swift in Sources */,
@@ -2373,6 +2403,7 @@
 				C98484032D7F7E760076016B /* CapitalNavigationInputView.swift in Sources */,
 				C9CA6BA22C14EB090057F290 /* UniverseRowType.swift in Sources */,
 				C9012AF52C0334F400407A81 /* WalletTransactionCell.swift in Sources */,
+				C9AA00052FF2000000010005 /* MiningLedgerDaySummaryCell.swift in Sources */,
 				C9955A2C2C35297D0045D925 /* SovereigntyCampaignCell.swift in Sources */,
 				C93337CB2FBA5EFC00DAF4B9 /* MailRecipientIconView.swift in Sources */,
 				C9318D7E2E9984B400B1AD5D /* FittingDetailImplantsView.swift in Sources */,
@@ -2398,6 +2429,7 @@
 				C99528DA2BEE18DF00CA6E06 /* ECKSDEManager.swift in Sources */,
 				C984D06F2D8AEBBA00D60567 /* ECKCapitalRouteManager.swift in Sources */,
 				C92D17BE2C23348B00D6FF5A /* ECKIndustryJobManager.swift in Sources */,
+				C9AA00032FF2000000010003 /* ECKMiningLedgerManager.swift in Sources */,
 				C996A5E42BF2AE300038277C /* ECKStation.swift in Sources */,
 				C94257202C29AC7D00FAEE5C /* ECKAssetLocation.swift in Sources */,
 				C9DCC40D2EA6A80100D2F643 /* ECKCharacterLocation.swift in Sources */,
@@ -2443,6 +2475,7 @@
 				C9A806872FA3C3E8008D32BC /* ECKWalletTransactionManager.swift in Sources */,
 				C9C7C4212DA11C2B0079DF82 /* EVEUnit.swift in Sources */,
 				C99750AA2C14897E00DE5B96 /* ECKMarketOrder.swift in Sources */,
+				C9AA00012FF2000000010001 /* ECKMiningLedgerEntry.swift in Sources */,
 				C906BAC72EB4C51E00A9E3F3 /* ECKBackgroundTaskManager.swift in Sources */,
 				C983AABF2BF64FB9002EDECB /* ECKUpdateMailResource.swift in Sources */,
 				C91672B32BEA044B009EC580 /* ECKWebError.swift in Sources */,
@@ -2552,6 +2585,7 @@
 				C91064962FA14A280083574E /* ECKCorporationWalletDivision.swift in Sources */,
 				C9D095002DE7975B00715479 /* ECKCharacterFitting+Calculate+Pass2.swift in Sources */,
 				C92D17BC2C23344C00D6FF5A /* ECKCharacterIndustryJobsResource.swift in Sources */,
+				C9AA00022FF2000000010002 /* ECKCharacterMiningLedgerResource.swift in Sources */,
 				C91672A42BEA007F009EC580 /* ECKHTTPMethod.swift in Sources */,
 				C952BC832BEB85C50070C504 /* ECKCharacter.swift in Sources */,
 				C9D095022DE7975F00715479 /* ECKCharacterFitting+Calculate+Pass3.swift in Sources */,
@@ -2582,6 +2616,7 @@
 				C9D095062DE7BA4F00715479 /* ECKDogmaEffect.swift in Sources */,
 				C98509722FEBC7D3002229B5 /* ECKCharacterOnline.swift in Sources */,
 				C900820C2DC5FA4A007660AE /* ECKNotificationManager.swift in Sources */,
+				C9AA00072FF2000000010007 /* Date+Parsing.swift in Sources */,
 				C983AAB32BF6466B002EDECB /* ECKMail.swift in Sources */,
 				C9CA6B9B2C14E1360057F290 /* ECKIncursionsResource.swift in Sources */,
 				C91EEF072BE975ED00352175 /* ECKAPIScope.swift in Sources */,
@@ -2606,6 +2641,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C99822B02F7516740031B439 /* ECKSkillPlanReorderingTests.swift in Sources */,
+				C9AA00062FF2000000010006 /* ECKMiningLedgerEntryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

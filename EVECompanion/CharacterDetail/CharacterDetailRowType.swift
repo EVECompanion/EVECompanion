@@ -20,6 +20,7 @@ enum CharacterDetailRowType {
     case skills
     case skillQueue
     case industryJobs
+    case miningLedger
     case jumpClones
     case planetaryColonies
     case fittings
@@ -48,6 +49,8 @@ enum CharacterDetailRowType {
             return "Skillqueue"
         case .industryJobs:
             return "Industry Jobs"
+        case .miningLedger:
+            return "Mining Ledger"
         case .jumpClones:
             return "Jump Clones"
         case .planetaryColonies:
@@ -96,6 +99,9 @@ enum CharacterDetailRowType {
         case .industryJobs:
             return nil
             
+        case .miningLedger:
+            return nil
+
         case .jumpClones:
             return nil
             
@@ -134,6 +140,8 @@ enum CharacterDetailRowType {
             return "Neocom/Skillqueue"
         case .industryJobs:
             return "Neocom/Industry"
+        case .miningLedger:
+            return "Neocom/MiningLedger"
         case .jumpClones:
             return "Neocom/JumpClones"
         case .planetaryColonies:

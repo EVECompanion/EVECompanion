@@ -30,15 +30,7 @@ public final class ECKMarketHistoryEntry: Decodable, Equatable, Sendable {
         self.average = try container.decode(Float.self, forKey: .average)
         
         let dateString = try container.decode(String.self, forKey: .date)
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
-        guard let date = formatter.date(from: dateString) else {
-            throw ECKWebError.invalidResponse
-        }
-        
-        self.date = date
+        self.date = try ECKDateParser.esiDateOnly(dateString, codingPath: [CodingKeys.date])
         
         self.highest = try container.decode(Float.self, forKey: .highest)
         self.lowest = try container.decode(Float.self, forKey: .lowest)

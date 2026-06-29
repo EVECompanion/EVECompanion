@@ -28,6 +28,7 @@ enum AppScreen: Hashable {
     case skills(ECKCharacter)
     case skillQueue(ECKCharacter)
     case industryJobs(manager: ECKIndustryJobManager)
+    case miningLedger(manager: ECKMiningLedgerManager)
     case jumpClones(manager: ECKJumpClonesManager)
     case planetaryColonies(ECKPlanetaryColonyManager)
     case planetaryColony(ECKPlanetaryColonyManager.ECKColony)
@@ -76,6 +77,8 @@ enum AppScreen: Hashable {
             return "skillQueue"
         case .industryJobs:
             return "industryJobs"
+        case .miningLedger:
+            return "miningLedger"
         case .jumpClones:
             return "jumpClones"
         case .item:
@@ -148,6 +151,9 @@ enum AppScreen: Hashable {
         case (.industryJobs(manager: let lhsManager), .industryJobs(manager: let rhsManager)):
             return lhsManager.source == rhsManager.source
             
+        case (.miningLedger(manager: let lhsManager), .miningLedger(manager: let rhsManager)):
+            return lhsManager.character == rhsManager.character
+
         case (.jumpClones(manager: let lhsManager), .jumpClones(manager: let rhsManager)):
             return lhsManager.character == rhsManager.character
             
@@ -218,6 +224,8 @@ enum AppScreen: Hashable {
             hasher.combine(character)
         case .industryJobs(let manager):
             hasher.combine(manager.source)
+        case .miningLedger(let manager):
+            hasher.combine(manager.character)
         case .jumpClones(let manager):
             hasher.combine(manager.character)
         case .item(let item):
