@@ -428,6 +428,7 @@ struct MapView: View {
         return ECKMapSystemDetails(
             system: system,
             constellationName: constellationsById[system.constellationId]?.name ?? "Unknown Constellation",
+            stations: ECKSDEManager.shared.getStations(solarSystemId: systemId),
             characters: charactersInSystem
         )
     }
@@ -709,6 +710,17 @@ private struct MapSystemDetailsView: View {
                     }
                 }
             }
+
+            Section("NPC Stations") {
+                if details.stations.isEmpty {
+                    Text("No NPC stations in this system.")
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(details.stations) { station in
+                        stationRow(station)
+                    }
+                }
+            }
         }
         .navigationTitle(details.name)
         .navigationBarTitleDisplayMode(.inline)
@@ -723,6 +735,18 @@ private struct MapSystemDetailsView: View {
 
     private func detailRow(title: String, value: String) -> some View {
         LabeledContent(title, value: value)
+    }
+
+    private func stationRow(_ station: ECKStation) -> some View {
+        HStack(spacing: 10) {
+            if let imageSource = station.imageSource {
+                ECImage(id: imageSource.id, category: imageSource.category)
+                    .frame(width: 28, height: 28)
+                    .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+            }
+
+            Text(station.stationName ?? "Unknown Station")
+        }
     }
 
     private func sovereigntyRow(name: String) -> some View {

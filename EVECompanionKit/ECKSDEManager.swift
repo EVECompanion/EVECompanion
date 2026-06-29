@@ -237,14 +237,16 @@ public class ECKSDEManager: @unchecked Sendable {
     
     typealias FetchedStation = (stationId: Int,
                                 solarSystemId: Int,
-                                stationName: String)
+                                stationName: String,
+                                typeId: Int?)
     
     static let dummyFetchedStation: FetchedStation = (0,
                                                       0,
-                                                      "Unknown Station")
+                                                      "Unknown Station",
+                                                      nil)
     
     internal func getStation(stationId: Int) -> FetchedStation {
-        let statement = try? connection?.prepare("SELECT stationID, solarSystemID, stationName FROM staStations WHERE stationID = ?",
+        let statement = try? connection?.prepare("SELECT stationID, solarSystemID, stationName, stationTypeID FROM staStations WHERE stationID = ?",
                                                  stationId)
         
         let result = try? statement?.run().makeIterator().failableNext()
@@ -256,14 +258,50 @@ public class ECKSDEManager: @unchecked Sendable {
         
         guard let stationId: Int64 = result[0] as? Int64,
               let solarSystemId: Int64 = result[1] as? Int64,
-              let stationName: String = result[2] as? String else {
+              let stationName: String = result[2] as? String,
+              let stationTypeId: Int64 = result[3] as? Int64 else {
             logger.error("Unexpected station data \(result)")
             return Self.dummyFetchedStation
         }
         
         return (Int(stationId),
                 Int(solarSystemId),
-                stationName)
+                stationName,
+                Int(stationTypeId))
+    }
+
+    public func getStations(solarSystemId: Int) -> [ECKStation] {
+        let statement = try? connection?.prepare(
+            "SELECT stationID, solarSystemID, stationName, stationTypeID FROM staStations WHERE solarSystemID = ? ORDER BY stationName",
+            solarSystemId
+        )
+
+        let result = try? statement?.run()
+
+        guard let result else {
+            logger.warning("No station fetch result when fetching stations for solar system id \(solarSystemId)")
+            return []
+        }
+
+        return result.compactMap { row -> ECKStation? in
+            guard let stationId = row[0] as? Int64,
+                  let solarSystemId = row[1] as? Int64,
+                  let stationName = row[2] as? String,
+                  let stationTypeId = row[3] as? Int64 else {
+                logger.error("Unexpected station data \(row)")
+                return nil
+            }
+
+            return .init(
+                stationData: (
+                    stationId: Int(stationId),
+                    solarSystemId: Int(solarSystemId),
+                    stationName: stationName,
+                    typeId: Int(stationTypeId)
+                ),
+                token: nil
+            )
+        }
     }
     
     typealias FetchedSolarSystem = (regionId: Int,

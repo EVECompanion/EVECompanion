@@ -15,11 +15,13 @@ class StationsTable: SDETable {
     var stationIdColumn = SQLite.Expression<Int64>("stationID")
     var solarSystemIdColumn = SQLite.Expression<Int64>("solarSystemID")
     var stationNameColumn = SQLite.Expression<String>("stationName")
+    var stationTypeIdColumn = SQLite.Expression<Int64>("stationTypeID")
     
     func addColumns(to table: SQLite.TableBuilder) {
         table.column(stationIdColumn)
         table.column(solarSystemIdColumn)
         table.column(stationNameColumn)
+        table.column(stationTypeIdColumn)
     }
     
     func createIndexes(connection: Connection) throws {
@@ -34,7 +36,8 @@ class StationsTable: SDETable {
             table.insert(
                 stationIdColumn <- Int64(id),
                 solarSystemIdColumn <- Int64(data["solarSystemID"] as! Int),
-                stationNameColumn <- data["name"] as! String
+                stationNameColumn <- data["name"] as! String,
+                stationTypeIdColumn <- Int64(data["typeID"] as! Int)
             )
         )
     }

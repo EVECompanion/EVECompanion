@@ -15,6 +15,7 @@ public struct ECKMapSystemDetails: Equatable, Identifiable, Sendable {
     public let regionName: String
     public let constellationName: String
     public let sovereigntyName: String?
+    public let stations: [ECKStation]
     public let characters: [ECKCharacter]
 
     public init(id: Int,
@@ -23,6 +24,7 @@ public struct ECKMapSystemDetails: Equatable, Identifiable, Sendable {
                 regionName: String,
                 constellationName: String,
                 sovereigntyName: String?,
+                stations: [ECKStation] = [],
                 characters: [ECKCharacter]) {
         self.id = id
         self.name = name
@@ -30,11 +32,15 @@ public struct ECKMapSystemDetails: Equatable, Identifiable, Sendable {
         self.regionName = regionName
         self.constellationName = constellationName
         self.sovereigntyName = sovereigntyName
+        self.stations = stations.sorted {
+            ($0.stationName ?? "") < ($1.stationName ?? "")
+        }
         self.characters = characters.sorted(using: KeyPathComparator(\.name))
     }
 
     public init(system: ECKSolarSystem,
                 constellationName: String,
+                stations: [ECKStation] = [],
                 characters: [ECKCharacter]) {
         self.init(
             id: system.id,
@@ -43,6 +49,7 @@ public struct ECKMapSystemDetails: Equatable, Identifiable, Sendable {
             regionName: system.region.name,
             constellationName: constellationName,
             sovereigntyName: system.sovereignty?.displayName,
+            stations: stations,
             characters: characters
         )
     }

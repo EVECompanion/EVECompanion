@@ -7,14 +7,23 @@
 
 public import Combine
 
-public class ECKStation: ObservableObject, Decodable, @unchecked Sendable {
+public class ECKStation: ObservableObject, Decodable, Identifiable, Equatable, @unchecked Sendable {
     
     let stationId: Int
     let token: ECKToken?
+
+    public var id: Int {
+        stationId
+    }
+
     @Published public var solarSystem: ECKSolarSystem?
     @Published public var stationName: String?
     @Published public var typeId: Int?
     public let isStructure: Bool
+
+    public var imageSource: ECKSolarSystemImageSource? {
+        typeId.map { ECKSolarSystemImageSource(id: $0, category: .types) }
+    }
     
     static let unknown: ECKStation = .init()
     static let jita: ECKStation = .init(stationId: 60003760, token: .dummy)
@@ -46,8 +55,18 @@ public class ECKStation: ObservableObject, Decodable, @unchecked Sendable {
             let stationData = ECKSDEManager.shared.getStation(stationId: stationId)
             self.solarSystem = .init(solarSystemId: stationData.solarSystemId)
             self.stationName = stationData.stationName
+            self.typeId = stationData.typeId
             self.isStructure = false
         }
+    }
+
+    init(stationData: ECKSDEManager.FetchedStation, token: ECKToken?) {
+        self.stationId = stationData.stationId
+        self.token = token
+        self.solarSystem = .init(solarSystemId: stationData.solarSystemId)
+        self.stationName = stationData.stationName
+        self.typeId = stationData.typeId
+        self.isStructure = false
     }
     
     @MainActor
@@ -67,6 +86,14 @@ public class ECKStation: ObservableObject, Decodable, @unchecked Sendable {
         self.solarSystem = .init(solarSystemId: structure.solarSystemId)
         self.typeId = structure.typeId
         self.stationName = structure.name
+    }
+
+    public static func == (lhs: ECKStation, rhs: ECKStation) -> Bool {
+        lhs.stationId == rhs.stationId
+        && lhs.solarSystem == rhs.solarSystem
+        && lhs.stationName == rhs.stationName
+        && lhs.typeId == rhs.typeId
+        && lhs.isStructure == rhs.isStructure
     }
     
 }
