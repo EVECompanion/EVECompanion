@@ -742,7 +742,6 @@ struct MapView: View {
     
     private func resetSearchSelection() {
         searchText = ""
-        isSearchFocused = false
         scene?.resetSelectionHighlight()
         hasSearchSelection = false
         selectedSearchResultTitle = nil
@@ -760,8 +759,7 @@ struct MapView: View {
                 .imageScale(.medium)
                 .frame(width: MapSearchLayout.searchControlSize, height: MapSearchLayout.searchControlSize)
         }
-        .mapGlassButtonStyle()
-        .accessibilityLabel("Dismiss keyboard")
+        .foregroundStyle(.primary)
     }
     
     private func resultButton(for result: MapSearchResult) -> some View {
@@ -815,17 +813,6 @@ private extension View {
             glassEffect(.regular, in: RoundedRectangle(cornerRadius: MapSearchLayout.cornerRadius, style: .continuous))
         } else {
             background(.regularMaterial, in: RoundedRectangle(cornerRadius: MapSearchLayout.cornerRadius, style: .continuous))
-        }
-    }
-    
-    @ViewBuilder
-    func mapGlassButtonStyle() -> some View {
-        if #available(iOS 26.0, *) {
-            buttonStyle(.glass)
-                .buttonBorderShape(.capsule)
-        } else {
-            buttonStyle(.bordered)
-                .buttonBorderShape(.capsule)
         }
     }
 
