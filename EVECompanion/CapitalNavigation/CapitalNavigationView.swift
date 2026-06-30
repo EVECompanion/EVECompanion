@@ -16,11 +16,16 @@ struct CapitalNavigationView: View {
         let system: ECKCapitalJumpRoute.SystemEntry
         let nextSystem: ECKSolarSystem
         let jumpRange: Double
+        let routeSystems: [ECKSolarSystem]
     }
-    
-    internal enum NewSolarSystemTarget {
+
+    internal enum NewSolarSystemTarget: Hashable, Identifiable {
         case destination
         case avoidance
+
+        var id: Self {
+            self
+        }
         
         var buttonTitle: String {
             switch self {
@@ -43,19 +48,18 @@ struct CapitalNavigationView: View {
     
     @StateObject var navigationManager: ECKCapitalNavigationManager = .init()
     @EnvironmentObject var routeManager: ECKCapitalRouteManager
-    @State private var isSolarSystemPickerPresented: Bool = false
     @State private var isShipPickerPresented: Bool = false
-    @State private var newSolarSystemTarget: NewSolarSystemTarget = .destination
     @State private var showsSaveAlert: Bool = false
     @State private var saveAlertTextInput: String = ""
+    @State private var solarSystemPickerTarget: NewSolarSystemTarget?
     @State private var alternativeSystemPickerData: AlternativeSystemDataContainer?
     
     var body: some View {
         Form {
             CapitalNavigationInputView(manager: navigationManager,
-                                       newSolarSystemTarget: $newSolarSystemTarget,
-                                       isSolarSystemPickerPresented: $isSolarSystemPickerPresented,
-                                       isShipPickerPresented: $isShipPickerPresented)
+                                       isShipPickerPresented: $isShipPickerPresented) { target in
+                solarSystemPickerTarget = target
+            }
             CapitalNavigationRouteView(manager: navigationManager,
                                        alternativeSystemPickerData: $alternativeSystemPickerData)
         }
@@ -80,9 +84,13 @@ struct CapitalNavigationView: View {
                 }
             }
         }
-        .sheet(isPresented: $isSolarSystemPickerPresented) {
-            CapitalNavigationSolarSystemPickerView(target: newSolarSystemTarget) { system in
-                switch newSolarSystemTarget {
+        .sheet(item: $solarSystemPickerTarget) { target in
+            CapitalNavigationSolarSystemPickerView(target: target,
+                                                   manager: navigationManager,
+                                                   mapOriginSystem: navigationManager.selectedDestinationSystems.last?.system,
+                                                   jumpRange: navigationManager.jumpRange,
+                                                   routeSystems: navigationManager.route?.route?.map(\.system) ?? []) { system in
+                switch target {
                 case .avoidance:
                     navigationManager.selectedAvoidanceSystems.append(.init(system: system))
                 case .destination:
@@ -100,7 +108,8 @@ struct CapitalNavigationView: View {
                                                          previousSystem: data.previousSystem,
                                                          systemToReplace: data.system.system,
                                                          nextSystem: data.nextSystem,
-                                                         jumpRange: data.jumpRange) { pickedSystem in
+                                                         jumpRange: data.jumpRange,
+                                                         routeSystems: data.routeSystems) { pickedSystem in
                 navigationManager.replaceRouteSystem(system: data.system, with: pickedSystem)
             }
         }

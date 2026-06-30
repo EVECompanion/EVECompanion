@@ -81,7 +81,8 @@ struct CapitalNavigationRouteView: View {
                 alternativeSystemPickerData = .init(previousSystem: route[offset - 1].system,
                                                     system: system,
                                                     nextSystem: route[offset + 1].system,
-                                                    jumpRange: manager.jumpRange ?? 0)
+                                                    jumpRange: manager.jumpRange ?? 0,
+                                                    routeSystems: route.map(\.system))
             } label: {
                 Text("Pick Alternative")
             }

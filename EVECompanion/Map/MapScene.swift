@@ -26,11 +26,28 @@ final class MapScene: SKScene {
     
     private enum HighlightStyle {
         static let systemRadius: CGFloat = 34
+        static let rangeSystemRadius: CGFloat = 30
+        static let replacementSystemRadius: CGFloat = 42
         static let constellationInset: CGFloat = 40
         static let regionInset: CGFloat = 40
         static let cornerRadius: CGFloat = 28
         static let lineWidth: CGFloat = 8
+        static let rangeLineWidth: CGFloat = 4
+        static let replacementLineWidth: CGFloat = 6
         static let strokeColor = UIColor.systemTeal
+        static let rangeStrokeColor = UIColor.systemOrange
+        static let rangeFillColor = UIColor.systemOrange.withAlphaComponent(0.12)
+        static let replacementStrokeColor = UIColor.systemRed
+        static let replacementFillColor = UIColor.systemRed.withAlphaComponent(0.12)
+    }
+
+    private enum JumpRouteStyle {
+        static let lineWidth: CGFloat = 7
+        static let destinationRadius: CGFloat = 36
+        static let destinationLineWidth: CGFloat = 5
+        static let strokeColor = UIColor.systemBlue
+        static let fillColor = UIColor.systemBlue.withAlphaComponent(0.12)
+        static let alpha: CGFloat = 0.85
     }
     
     enum MapAreaHighlightInset {
@@ -120,6 +137,10 @@ final class MapScene: SKScene {
     private let systemLabelsLayer = SKNode()
     private let constellationLabelsLayer = SKNode()
     private let regionLabelsLayer = SKNode()
+    private let jumpRouteLayer = SKNode()
+    private let jumpRouteDestinationLayer = SKNode()
+    private let rangeHighlightLayer = SKNode()
+    private let replacementHighlightLayer = SKNode()
     private let selectionHighlightLayer = SKNode()
     private let charactersLayer = SKNode()
     private var characterMarkerNodesById: [Int: SKNode] = [:]
@@ -145,6 +166,9 @@ final class MapScene: SKScene {
     private var lowSecuritySystemTexture: SKTexture?
     private var nullSecuritySystemTexture: SKTexture?
     private var selectionHighlightNode: SKNode?
+    private var rangeHighlightSystemIds: Set<Int> = []
+    private var replacementHighlightSystemId: Int?
+    private var jumpRouteSystemIds: [Int] = []
     var hasSelectionHighlight: Bool {
         selectionHighlightNode?.parent != nil
     }
@@ -177,8 +201,13 @@ final class MapScene: SKScene {
     
     override func didMove(to view: SKView) {
         systemLabelsLayer.zPosition = ECKMapLayerZPosition.mapLabels
+        systemsLayer.zPosition = ECKMapLayerZPosition.mapSystems
         constellationLabelsLayer.zPosition = ECKMapLayerZPosition.mapLabels
         regionLabelsLayer.zPosition = ECKMapLayerZPosition.mapLabels
+        jumpRouteLayer.zPosition = ECKMapLayerZPosition.jumpRoute
+        jumpRouteDestinationLayer.zPosition = ECKMapLayerZPosition.jumpRouteDestinations
+        rangeHighlightLayer.zPosition = ECKMapLayerZPosition.rangeHighlight
+        replacementHighlightLayer.zPosition = ECKMapLayerZPosition.selectionHighlight
         selectionHighlightLayer.zPosition = ECKMapLayerZPosition.selectionHighlight
         charactersLayer.zPosition = ECKMapLayerZPosition.characterMarkers
         constellationLabelsLayer.alpha = 0
@@ -188,6 +217,10 @@ final class MapScene: SKScene {
         addChild(systemLabelsLayer)
         addChild(constellationLabelsLayer)
         addChild(regionLabelsLayer)
+        addChild(jumpRouteLayer)
+        addChild(jumpRouteDestinationLayer)
+        addChild(rangeHighlightLayer)
+        addChild(replacementHighlightLayer)
         addChild(charactersLayer)
         addChild(selectionHighlightLayer)
         view.ignoresSiblingOrder = true
@@ -200,6 +233,9 @@ final class MapScene: SKScene {
         view.showsNodeCount = true
         #endif
         renderSystems()
+        refreshJumpRoute()
+        refreshRangeHighlights()
+        refreshReplacementHighlight()
         renderGates()
         renderConstellations()
         renderRegions()
@@ -797,6 +833,97 @@ final class MapScene: SKScene {
         selectionHighlightLayer.addChild(highlightNode)
         selectionHighlightNode = highlightNode
     }
+
+    func highlightSystems(ids: Set<Int>) {
+        rangeHighlightSystemIds = ids
+        rangeHighlightLayer.removeAllChildren()
+
+        for id in ids.sorted() {
+            guard let systemNode = systemNodes[id] else {
+                continue
+            }
+
+            let highlightNode = SKShapeNode(circleOfRadius: HighlightStyle.rangeSystemRadius)
+            highlightNode.position = systemNode.position
+            highlightNode.strokeColor = appearanceColor(HighlightStyle.rangeStrokeColor)
+            highlightNode.lineWidth = HighlightStyle.rangeLineWidth
+            highlightNode.fillColor = appearanceColor(HighlightStyle.rangeFillColor)
+            highlightNode.isAntialiased = true
+
+            rangeHighlightLayer.addChild(highlightNode)
+        }
+    }
+
+    func drawJumpRoute(systemIds: [Int]) {
+        jumpRouteSystemIds = systemIds
+        jumpRouteLayer.removeAllChildren()
+        jumpRouteDestinationLayer.removeAllChildren()
+
+        let path = CGMutablePath()
+        var hasRenderableSegment = false
+
+        for routeSegment in ECKCapitalJumpMapOverlay.routeSegments(systemIds: systemIds) {
+            guard let startNode = systemNodes[routeSegment.startSystemId],
+                  let destinationNode = systemNodes[routeSegment.destinationSystemId] else {
+                continue
+            }
+
+            path.move(to: startNode.position)
+            path.addLine(to: destinationNode.position)
+            hasRenderableSegment = true
+        }
+
+        guard hasRenderableSegment else {
+            return
+        }
+
+        highlightJumpRouteDestinations(systemIds: ECKCapitalJumpMapOverlay.highlightedRouteSystemIds(systemIds: systemIds))
+
+        let routeNode = SKShapeNode(path: path)
+        routeNode.strokeColor = appearanceColor(JumpRouteStyle.strokeColor)
+        routeNode.lineWidth = JumpRouteStyle.lineWidth
+        routeNode.alpha = JumpRouteStyle.alpha
+        routeNode.lineCap = .round
+        routeNode.lineJoin = .round
+        routeNode.isAntialiased = true
+        jumpRouteLayer.addChild(routeNode)
+    }
+
+    private func highlightJumpRouteDestinations(systemIds: Set<Int>) {
+        for id in systemIds.sorted() {
+            guard let systemNode = systemNodes[id] else {
+                continue
+            }
+
+            let highlightNode = SKShapeNode(circleOfRadius: JumpRouteStyle.destinationRadius)
+            highlightNode.position = systemNode.position
+            highlightNode.strokeColor = appearanceColor(JumpRouteStyle.strokeColor)
+            highlightNode.lineWidth = JumpRouteStyle.destinationLineWidth
+            highlightNode.fillColor = appearanceColor(JumpRouteStyle.fillColor)
+            highlightNode.isAntialiased = true
+
+            jumpRouteDestinationLayer.addChild(highlightNode)
+        }
+    }
+
+    func highlightReplacementSystem(id: Int?) {
+        replacementHighlightSystemId = id
+        replacementHighlightLayer.removeAllChildren()
+
+        guard let id,
+              let systemNode = systemNodes[id] else {
+            return
+        }
+
+        let highlightNode = SKShapeNode(circleOfRadius: HighlightStyle.replacementSystemRadius)
+        highlightNode.position = systemNode.position
+        highlightNode.strokeColor = appearanceColor(HighlightStyle.replacementStrokeColor)
+        highlightNode.lineWidth = HighlightStyle.replacementLineWidth
+        highlightNode.fillColor = appearanceColor(HighlightStyle.replacementFillColor)
+        highlightNode.isAntialiased = true
+
+        replacementHighlightLayer.addChild(highlightNode)
+    }
     
     func highlightConstellation(bounds: CGRect) {
         highlightMapArea(bounds: bounds, inset: HighlightStyle.constellationInset)
@@ -888,9 +1015,30 @@ final class MapScene: SKScene {
         refreshMapAreaLabels()
         refreshGates()
         refreshCharacterMarkers()
+        refreshJumpRoute()
+        refreshRangeHighlights()
+        refreshReplacementHighlight()
         refreshSelectionHighlight()
         updateLabelVisibility(refreshTextures: true)
         view?.setNeedsDisplay()
+    }
+
+    private func refreshJumpRoute() {
+        let systemIds = jumpRouteSystemIds
+        jumpRouteSystemIds = []
+        drawJumpRoute(systemIds: systemIds)
+    }
+
+    private func refreshRangeHighlights() {
+        let systemIds = rangeHighlightSystemIds
+        rangeHighlightSystemIds = []
+        highlightSystems(ids: systemIds)
+    }
+
+    private func refreshReplacementHighlight() {
+        let systemId = replacementHighlightSystemId
+        replacementHighlightSystemId = nil
+        highlightReplacementSystem(id: systemId)
     }
 
     private func updateCharacterLabelVisibility() {

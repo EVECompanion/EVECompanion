@@ -9,6 +9,50 @@ import Foundation
 public import Combine
 public import SwiftUI
 
+public enum ECKCapitalJumpRangeSelector {
+
+    public static func systemIdsInRange(from originSystemId: Int,
+                                        jumpDistances: [Int: [Int: Double]],
+                                        jumpRange: Double,
+                                        excluding excludedSystemIds: Set<Int> = []) -> [Int] {
+        let candidates = jumpDistances[originSystemId] ?? [:]
+
+        return candidates
+            .filter { systemId, distance in
+                distance <= jumpRange && excludedSystemIds.contains(systemId) == false
+            }
+            .map(\.key)
+            .sorted()
+    }
+
+}
+
+public enum ECKCapitalJumpMapOverlay {
+
+    public typealias RouteSegment = (startSystemId: Int, destinationSystemId: Int)
+
+    public static func routeSegments(systemIds: [Int]) -> [RouteSegment] {
+        zip(systemIds.dropLast(), systemIds.dropFirst()).map { routeStep in
+            (startSystemId: routeStep.0, destinationSystemId: routeStep.1)
+        }
+    }
+
+    public static func highlightedRouteSystemIds(systemIds: [Int]) -> Set<Int> {
+        Set(systemIds)
+    }
+
+    public static func focusSystemIds(highlightedSystemIds: Set<Int>,
+                                      replacementSystemId: Int?) -> Set<Int> {
+        var systemIds = highlightedSystemIds
+        if let replacementSystemId {
+            systemIds.insert(replacementSystemId)
+        }
+
+        return systemIds
+    }
+
+}
+
 @MainActor
 public class ECKCapitalNavigationManager: ObservableObject {
     
@@ -116,6 +160,29 @@ public class ECKCapitalNavigationManager: ObservableObject {
                                                    systemToReplace: systemToReplace,
                                                    nextSystem: nextSystem,
                                                    jumpRange: jumpRange)
+    }
+
+    nonisolated(nonsending) public func systemsInRange(
+        from originSystem: ECKSolarSystem,
+        jumpRange: Double
+    ) async -> [ECKSolarSystem] {
+        let pathFinder = self.pathFinder
+
+        return await withCheckedContinuation { continuation in
+            DispatchQueue(label: "CapitalNavigationSystemRangeQueue", qos: .userInteractive).async {
+                let jumpDistances = pathFinder.jumpDistances
+                let systemSortComparator = KeyPathComparator(\ECKSolarSystem.solarSystemName)
+                let systems = ECKCapitalJumpRangeSelector
+                    .systemIdsInRange(from: originSystem.solarSystemId,
+                                      jumpDistances: jumpDistances,
+                                      jumpRange: jumpRange,
+                                      excluding: [originSystem.solarSystemId])
+                    .map({ ECKSolarSystem(solarSystemId: $0) })
+                    .sorted(using: systemSortComparator)
+
+                continuation.resume(returning: systems)
+            }
+        }
     }
     
     public func replaceRouteSystem(system: ECKCapitalJumpRoute.SystemEntry, with newSystem: ECKSolarSystem) {

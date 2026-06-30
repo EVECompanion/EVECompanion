@@ -11,9 +11,8 @@ import EVECompanionKit
 struct CapitalNavigationInputView: View {
     
     @ObservedObject var manager: ECKCapitalNavigationManager
-    @Binding var newSolarSystemTarget: CapitalNavigationView.NewSolarSystemTarget
-    @Binding var isSolarSystemPickerPresented: Bool
     @Binding var isShipPickerPresented: Bool
+    let showSolarSystemPicker: (CapitalNavigationView.NewSolarSystemTarget) -> Void
     
     var body: some View {
         shipSection
@@ -113,8 +112,7 @@ struct CapitalNavigationInputView: View {
     @ViewBuilder
     private func addSystemButton(target: CapitalNavigationView.NewSolarSystemTarget) -> some View {
         Button {
-            newSolarSystemTarget = target
-            isSolarSystemPickerPresented = true
+            showSolarSystemPicker(target)
         } label: {
             Text(target.buttonTitle)
         }
@@ -125,8 +123,6 @@ struct CapitalNavigationInputView: View {
 #Preview {
     Form {
         CapitalNavigationInputView(manager: .init(),
-                                   newSolarSystemTarget: .constant(.destination),
-                                   isSolarSystemPickerPresented: .constant(false),
-                                   isShipPickerPresented: .constant(false))
+                                   isShipPickerPresented: .constant(false)) { _ in }
     }
 }

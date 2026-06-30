@@ -86,6 +86,29 @@ private enum MapSearchLayout {
     static let cornerRadius: CGFloat = 22
 }
 
+struct MapSystemSelectionConfiguration {
+    let selectableSystemIds: Set<Int>
+    let highlightedSystemIds: Set<Int>
+    let replacementSystemId: Int?
+    let jumpRouteSystemIds: [Int]
+    let initialFocusSystem: ECKSolarSystem?
+    let systemSelected: (ECKSolarSystem) -> Void
+
+    init(selectableSystemIds: Set<Int>,
+         highlightedSystemIds: Set<Int>,
+         replacementSystemId: Int? = nil,
+         jumpRouteSystemIds: [Int] = [],
+         initialFocusSystem: ECKSolarSystem?,
+         systemSelected: @escaping (ECKSolarSystem) -> Void) {
+        self.selectableSystemIds = selectableSystemIds
+        self.highlightedSystemIds = highlightedSystemIds
+        self.replacementSystemId = replacementSystemId
+        self.jumpRouteSystemIds = jumpRouteSystemIds
+        self.initialFocusSystem = initialFocusSystem
+        self.systemSelected = systemSelected
+    }
+}
+
 struct MapSearchResetControlState {
     let searchText: String
     let hasSearchSelection: Bool
@@ -120,6 +143,148 @@ private enum MapCharacterLocations {
     static let refreshIntervalNanoseconds: UInt64 = 30 * 1_000_000_000
 }
 
+private enum MapSelectionFocus {
+    static let singleSystemScale: CGFloat = 0.4
+    static let highlightedSystemsPadding: CGFloat = 1.25
+    static let highlightedSystemsInset: CGFloat = 80
+}
+
+private struct MapLoadedData {
+    let systems: [Int: ECKSolarSystem]
+    let gateConnections: [(solarSystemId: Int, destinationSolarSystemId: Int)]
+    let constellationsById: [Int: ECKConstellation]
+    let constellations: [String: CGPoint]
+    let regions: [String: CGPoint]
+    let constellationTargets: [MapAreaSearchTarget]
+    let regionTargets: [MapAreaSearchTarget]
+}
+
+private enum MapDataLoader {
+
+    static func load() async -> MapLoadedData {
+        await withCheckedContinuation { continuation in
+            DispatchQueue(label: "MapDataLoaderQueue", qos: .userInitiated).async {
+                continuation.resume(returning: loadSynchronously())
+            }
+        }
+    }
+
+    private static func loadSynchronously() -> MapLoadedData {
+        let gateConnections = ECKSDEManager.shared.getAllGateConnections()
+        let dbSystems = ECKSDEManager.shared.getAllSolarSystems()
+        let dbConstellations = Dictionary(
+            uniqueKeysWithValues: ECKSDEManager.shared
+                .getAllConstellations()
+                .map { ($0.constellationId, $0) }
+        )
+
+        let groupedConstellations = Dictionary(grouping: dbSystems, by: \.constellationId)
+        let constellationCenters = groupedConstellations.compactMapValues { solarSystems in
+            averagePoint(for: solarSystems)
+        }
+        let constellations: [String: CGPoint] = constellationCenters.reduce(into: [:]) { partialResult, constellationCenter in
+            let (constellationId, center) = constellationCenter
+            guard let constellation = dbConstellations[constellationId] else {
+                return
+            }
+
+            partialResult[constellation.name] = center
+        }
+        let constellationTargets: [MapAreaSearchTarget] = groupedConstellations.compactMap { constellationId, solarSystems in
+            guard let constellation = dbConstellations[constellationId],
+                  let bounds = bounds(for: solarSystems) else {
+                return nil
+            }
+
+            return MapAreaSearchTarget(
+                id: "\(constellation.constellationId)",
+                name: constellation.name,
+                subtitle: "\(constellation.region.name) Constellation",
+                center: center(of: bounds),
+                bounds: bounds
+            )
+        }
+        .sorted { lhs, rhs in
+            lhs.name < rhs.name
+        }
+
+        let groupedRegions = Dictionary(grouping: dbSystems, by: \.region.name)
+        let regions: [String: CGPoint] = groupedRegions.compactMapValues { solarSystems in
+            averagePoint(for: solarSystems)
+        }
+        let regionTargets: [MapAreaSearchTarget] = groupedRegions.compactMap { regionName, solarSystems in
+            guard let center = regions[regionName],
+                  let bounds = bounds(for: solarSystems) else {
+                return nil
+            }
+
+            return MapAreaSearchTarget(
+                id: regionName,
+                name: regionName,
+                subtitle: "Region",
+                center: center,
+                bounds: bounds
+            )
+        }
+        .sorted { lhs, rhs in
+            lhs.name < rhs.name
+        }
+
+        return MapLoadedData(
+            systems: Dictionary(uniqueKeysWithValues: dbSystems.map { ($0.id, $0) }),
+            gateConnections: gateConnections,
+            constellationsById: dbConstellations,
+            constellations: constellations,
+            regions: regions,
+            constellationTargets: constellationTargets,
+            regionTargets: regionTargets
+        )
+    }
+
+    static func averagePoint(for solarSystems: [ECKSolarSystem]) -> CGPoint? {
+        let coordinates = solarSystems
+            .compactMap(\.position2D)
+            .map { CGPoint(x: CGFloat($0.x), y: CGFloat($0.y)) }
+
+        guard coordinates.isEmpty == false else {
+            return nil
+        }
+
+        let totalPoint = coordinates.reduce(CGPoint.zero) { partialResult, coordinate in
+            CGPoint(
+                x: partialResult.x + coordinate.x,
+                y: partialResult.y + coordinate.y
+            )
+        }
+
+        return CGPoint(
+            x: totalPoint.x / CGFloat(coordinates.count),
+            y: totalPoint.y / CGFloat(coordinates.count)
+        )
+    }
+
+    static func bounds(for solarSystems: [ECKSolarSystem]) -> CGRect? {
+        let coordinates = solarSystems
+            .compactMap(\.position2D)
+            .map { CGPoint(x: CGFloat($0.x), y: CGFloat($0.y)) }
+
+        guard let firstCoordinate = coordinates.first else {
+            return nil
+        }
+
+        return coordinates.dropFirst().reduce(
+            CGRect(origin: firstCoordinate, size: .zero)
+        ) { partialResult, coordinate in
+            partialResult.union(CGRect(origin: coordinate, size: .zero))
+        }
+    }
+
+    static func center(of bounds: CGRect) -> CGPoint {
+        CGPoint(x: bounds.midX, y: bounds.midY)
+    }
+
+}
+
 struct MapView: View {
     
     @Environment(\.characterStorage) private var characterStorage
@@ -142,6 +307,12 @@ struct MapView: View {
     @FocusState private var isSearchFocused: Bool
     
     @State private var scene: MapScene?
+
+    private let selectionConfiguration: MapSystemSelectionConfiguration?
+
+    init(selectionConfiguration: MapSystemSelectionConfiguration? = nil) {
+        self.selectionConfiguration = selectionConfiguration
+    }
     
     private var filteredSearchResults: [MapSearchResult] {
         let trimmedSearchText = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -151,6 +322,7 @@ struct MapView: View {
         
         let solarSystemMatches = systems.values
             .filter { $0.solarSystemName.localizedCaseInsensitiveContains(trimmedSearchText) }
+            .filter { isSearchableSolarSystem($0) }
             .sorted(using: KeyPathComparator(\.solarSystemName))
             .prefix(12)
             .map(MapSearchResult.solarSystem)
@@ -188,47 +360,13 @@ struct MapView: View {
             selectedTitle: selectedSearchResultTitle
         )
     }
-    
-    private func averagePoint(for solarSystems: [ECKSolarSystem]) -> CGPoint? {
-        let coordinates = solarSystems
-            .compactMap(\.position2D)
-            .map { CGPoint(x: CGFloat($0.x), y: CGFloat($0.y)) }
-        
-        guard coordinates.isEmpty == false else {
-            return nil
+
+    private func isSearchableSolarSystem(_ system: ECKSolarSystem) -> Bool {
+        guard let selectionConfiguration else {
+            return true
         }
-        
-        let totalPoint = coordinates.reduce(CGPoint.zero) { partialResult, coordinate in
-            CGPoint(
-                x: partialResult.x + coordinate.x,
-                y: partialResult.y + coordinate.y
-            )
-        }
-        
-        return CGPoint(
-            x: totalPoint.x / CGFloat(coordinates.count),
-            y: totalPoint.y / CGFloat(coordinates.count)
-        )
-    }
-    
-    private func bounds(for solarSystems: [ECKSolarSystem]) -> CGRect? {
-        let coordinates = solarSystems
-            .compactMap(\.position2D)
-            .map { CGPoint(x: CGFloat($0.x), y: CGFloat($0.y)) }
-        
-        guard let firstCoordinate = coordinates.first else {
-            return nil
-        }
-        
-        return coordinates.dropFirst().reduce(
-            CGRect(origin: firstCoordinate, size: .zero)
-        ) { partialResult, coordinate in
-            partialResult.union(CGRect(origin: coordinate, size: .zero))
-        }
-    }
-    
-    private func center(of bounds: CGRect) -> CGPoint {
-        CGPoint(x: bounds.midX, y: bounds.midY)
+
+        return selectionConfiguration.selectableSystemIds.contains(system.id)
     }
     
     var body: some View {
@@ -240,81 +378,42 @@ struct MapView: View {
                             .ignoresSafeArea()
                     } else {
                         ProgressView()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                 }
                 .task {
                     guard scene == nil else {
                         return
                     }
-                    
-                    gateConnections = ECKSDEManager.shared.getAllGateConnections()
-                    let dbSystems = ECKSDEManager.shared.getAllSolarSystems()
-                    let dbConstellations = Dictionary(
-                        uniqueKeysWithValues: ECKSDEManager.shared
-                            .getAllConstellations()
-                            .map { ($0.constellationId, $0) }
-                    )
-                    systems = Dictionary(uniqueKeysWithValues: dbSystems.map { ($0.id, $0) })
-                    constellationsById = dbConstellations
-                    
-                    let groupedConstellations = Dictionary(grouping: dbSystems, by: \.constellationId)
-                    let constellationCenters = groupedConstellations.compactMapValues { solarSystems in
-                        averagePoint(for: solarSystems)
+
+                    let loadedData = await MapDataLoader.load()
+                    guard Task.isCancelled == false else {
+                        return
                     }
-                    constellations = constellationCenters.reduce(into: [:]) { partialResult, constellationCenter in
-                        let (constellationId, center) = constellationCenter
-                        guard let constellation = dbConstellations[constellationId] else {
-                            return
-                        }
-                        
-                        partialResult[constellation.name] = center
-                    }
-                    constellationTargets = groupedConstellations.compactMap { constellationId, solarSystems in
-                        guard let constellation = dbConstellations[constellationId],
-                              let bounds = bounds(for: solarSystems) else {
-                            return nil
-                        }
-                        
-                        return MapAreaSearchTarget(
-                            id: "\(constellation.constellationId)",
-                            name: constellation.name,
-                            subtitle: "\(constellation.region.name) Constellation",
-                            center: center(of: bounds),
-                            bounds: bounds
-                        )
-                    }
-                    .sorted(using: KeyPathComparator(\.name))
-                    
-                    let groupedRegions = Dictionary(grouping: dbSystems, by: \.region.name)
-                    regions = groupedRegions.compactMapValues { solarSystems in
-                        averagePoint(for: solarSystems)
-                    }
-                    regionTargets = groupedRegions.compactMap { regionName, solarSystems in
-                        guard let center = regions[regionName],
-                              let bounds = bounds(for: solarSystems) else {
-                            return nil
-                        }
-                        
-                        return MapAreaSearchTarget(
-                            id: regionName,
-                            name: regionName,
-                            subtitle: "Region",
-                            center: center,
-                            bounds: bounds
-                        )
-                    }
-                    .sorted(using: KeyPathComparator(\.name))
-                    
+
+                    gateConnections = loadedData.gateConnections
+                    systems = loadedData.systems
+                    constellationsById = loadedData.constellationsById
+                    constellations = loadedData.constellations
+                    regions = loadedData.regions
+                    constellationTargets = loadedData.constellationTargets
+                    regionTargets = loadedData.regionTargets
+
                     let mapScene = MapScene(
-                        systems: systems,
-                        constellations: constellations,
-                        regions: regions,
-                        gateConnections: gateConnections
+                        systems: loadedData.systems,
+                        constellations: loadedData.constellations,
+                        regions: loadedData.regions,
+                        gateConnections: loadedData.gateConnections
                     )
                     mapScene.systemSelected = { systemId in
                         selectSystem(id: systemId)
                     }
+                    configureSelectionOverlays(in: mapScene)
                     self.scene = mapScene
+                    DispatchQueue.main.async {
+                        configureSelectionOverlays(in: mapScene)
+                        focusOnSelection(in: mapScene)
+                    }
                 }
                 .task(id: scene != nil) {
                     guard scene != nil else {
@@ -413,8 +512,64 @@ struct MapView: View {
     }
 
     private func selectSystem(id systemId: Int) {
+        if let selectionConfiguration {
+            guard selectionConfiguration.selectableSystemIds.contains(systemId),
+                  let system = systems[systemId] else {
+                return
+            }
+
+            selectionConfiguration.systemSelected(system)
+            return
+        }
+
         selectedSystemDetailsDetent = .medium
         selectedSystemDetails = details(for: systemId)
+    }
+
+    private func configureSelectionOverlays(in scene: MapScene) {
+        guard let selectionConfiguration else {
+            return
+        }
+
+        scene.drawJumpRoute(systemIds: selectionConfiguration.jumpRouteSystemIds)
+        scene.highlightSystems(ids: selectionConfiguration.highlightedSystemIds)
+        scene.highlightReplacementSystem(id: selectionConfiguration.replacementSystemId)
+    }
+
+    private func focusOnSelection(in scene: MapScene) {
+        if let selectionConfiguration {
+            let focusSystemIds = ECKCapitalJumpMapOverlay.focusSystemIds(
+                highlightedSystemIds: selectionConfiguration.highlightedSystemIds,
+                replacementSystemId: selectionConfiguration.replacementSystemId
+            )
+            let highlightedSystems = focusSystemIds
+                .compactMap { systems[$0] }
+
+            if let bounds = MapDataLoader.bounds(for: highlightedSystems) {
+                let targetScale: CGFloat
+                if highlightedSystems.count == 1 || bounds.size == .zero {
+                    targetScale = MapSelectionFocus.singleSystemScale
+                } else {
+                    targetScale = scene.targetScaleToFit(
+                        rect: bounds,
+                        padding: MapSelectionFocus.highlightedSystemsPadding,
+                        inset: MapSelectionFocus.highlightedSystemsInset
+                    )
+                }
+
+                scene.focus(on: MapDataLoader.center(of: bounds), targetScale: targetScale, animated: false)
+                return
+            }
+        }
+
+        guard let initialFocusSystem = selectionConfiguration?.initialFocusSystem,
+              let mapPoint = initialFocusSystem.mapPoint else {
+            return
+        }
+
+        scene.focus(on: mapPoint,
+                    targetScale: MapSelectionFocus.singleSystemScale,
+                    animated: false)
     }
 
     private func details(for systemId: Int) -> ECKMapSystemDetails? {
