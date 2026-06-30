@@ -838,19 +838,16 @@ private struct MapSystemDetailsView: View {
                 }
             }
 
-            Section("Characters") {
-                if details.characters.isEmpty {
-                    Text("No authenticated characters currently there.")
-                        .foregroundStyle(.secondary)
-                } else {
+            if details.characters.isEmpty == false {
+                Section("Characters") {
                     ForEach(details.characters) { character in
                         HStack(spacing: 10) {
                             Circle()
                                 .fill(characterStatusColor(character.isOnline))
                                 .frame(width: 8, height: 8)
-
+                            
                             Text(character.name)
-
+                            
                             Spacer()
                         }
                     }
