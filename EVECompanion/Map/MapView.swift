@@ -329,13 +329,17 @@ struct MapView: View {
         
         let regionMatches = regionTargets
             .filter { $0.name.localizedCaseInsensitiveContains(trimmedSearchText) }
-            .sorted(using: KeyPathComparator(\.name))
+            .sorted { lhs, rhs in
+                lhs.name < rhs.name
+            }
             .prefix(12)
             .map(MapSearchResult.region)
         
         let constellationMatches = constellationTargets
             .filter { $0.name.localizedCaseInsensitiveContains(trimmedSearchText) }
-            .sorted(using: KeyPathComparator(\.name))
+            .sorted { lhs, rhs in
+                lhs.name < rhs.name
+            }
             .prefix(12)
             .map(MapSearchResult.constellation)
         

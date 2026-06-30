@@ -260,6 +260,8 @@
 		C9ACE4612FF1BE7400FAD4D1 /* ToolbarMenuIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ACE4602FF1BE7400FAD4D1 /* ToolbarMenuIcon.swift */; };
 		C9ACE4632FF4540E00FAD4D1 /* ECKCapitalJumpRangeSelectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ACE4622FF4540E00FAD4D1 /* ECKCapitalJumpRangeSelectorTests.swift */; };
 		C9ACE4652FF4541500FAD4D1 /* ECKCapitalJumpMapOverlayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ACE4642FF4541500FAD4D1 /* ECKCapitalJumpMapOverlayTests.swift */; };
+		C9BEEF000000000000000001 /* ECKMapGestureRecognitionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEEF000000000000000002 /* ECKMapGestureRecognitionPolicy.swift */; };
+		C9BEEF000000000000000003 /* ECKMapGestureRecognitionPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEEF000000000000000004 /* ECKMapGestureRecognitionPolicyTests.swift */; };
 		C9AD0E312DF782C700E762AC /* ECKESITypeResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AD0E302DF782C700E762AC /* ECKESITypeResource.swift */; };
 		C9AF7D802C2B63FA002EB951 /* AssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AF7D7F2C2B63FA002EB951 /* AssetCell.swift */; };
 		C9B079062C32C0080059785D /* ECKTokenRefreshError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B079052C32C0080059785D /* ECKTokenRefreshError.swift */; };
@@ -728,6 +730,8 @@
 		C9ACE4602FF1BE7400FAD4D1 /* ToolbarMenuIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarMenuIcon.swift; sourceTree = "<group>"; };
 		C9ACE4622FF4540E00FAD4D1 /* ECKCapitalJumpRangeSelectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCapitalJumpRangeSelectorTests.swift; sourceTree = "<group>"; };
 		C9ACE4642FF4541500FAD4D1 /* ECKCapitalJumpMapOverlayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCapitalJumpMapOverlayTests.swift; sourceTree = "<group>"; };
+		C9BEEF000000000000000002 /* ECKMapGestureRecognitionPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMapGestureRecognitionPolicy.swift; sourceTree = "<group>"; };
+		C9BEEF000000000000000004 /* ECKMapGestureRecognitionPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMapGestureRecognitionPolicyTests.swift; sourceTree = "<group>"; };
 		C9AD0E302DF782C700E762AC /* ECKESITypeResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKESITypeResource.swift; sourceTree = "<group>"; };
 		C9AF7D7F2C2B63FA002EB951 /* AssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCell.swift; sourceTree = "<group>"; };
 		C9B079052C32C0080059785D /* ECKTokenRefreshError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKTokenRefreshError.swift; sourceTree = "<group>"; };
@@ -1132,6 +1136,7 @@
 				C99750AB2C148D1000DE5B96 /* ECKRegion.swift */,
 				C9D570A72C5B839600985587 /* ECKSDEVersion.swift */,
 				C9F055A62DE24DCD00340A05 /* ECKServerStatus.swift */,
+				C9BEEF000000000000000002 /* ECKMapGestureRecognitionPolicy.swift */,
 				C9F4A1042FEB000100ABCDEF /* ECKMapLayerZPosition.swift */,
 				C9F4A1002FEB000100ABCDEF /* ECKMapSystemDetails.swift */,
 				C996A5E52BF2B4DF0038277C /* ECKSolarSystem.swift */,
@@ -1629,6 +1634,7 @@
 				C9AA00172FF2000000010017 /* ECKMiningLedgerEntryTests.swift */,
 				C9ACE4642FF4541500FAD4D1 /* ECKCapitalJumpMapOverlayTests.swift */,
 				C9ACE4622FF4540E00FAD4D1 /* ECKCapitalJumpRangeSelectorTests.swift */,
+				C9BEEF000000000000000004 /* ECKMapGestureRecognitionPolicyTests.swift */,
 				C99822AE2F7516740031B439 /* EVECompanionKitTests.xctestplan */,
 			);
 			path = EVECompanionKitTests;
@@ -2636,6 +2642,7 @@
 				C9FD52E72C01D7260084E5E1 /* ECKWalletJournalEntry.swift in Sources */,
 				C91FE09C2D8DA5AE00BA7303 /* ECKSolarSystemSovereignty.swift in Sources */,
 				C9F4A1052FEB000100ABCDEF /* ECKMapLayerZPosition.swift in Sources */,
+				C9BEEF000000000000000001 /* ECKMapGestureRecognitionPolicy.swift in Sources */,
 				C9F4A1012FEB000100ABCDEF /* ECKMapSystemDetails.swift in Sources */,
 				C9FD52F52C02359A0084E5E1 /* ECKLoyaltyPointsResource.swift in Sources */,
 				C98169C62C1219F90033B932 /* ECKCharacterImplantResource.swift in Sources */,
@@ -2650,6 +2657,7 @@
 				C9AA00062FF2000000010006 /* ECKMiningLedgerEntryTests.swift in Sources */,
 				C9ACE4652FF4541500FAD4D1 /* ECKCapitalJumpMapOverlayTests.swift in Sources */,
 				C9ACE4632FF4540E00FAD4D1 /* ECKCapitalJumpRangeSelectorTests.swift in Sources */,
+				C9BEEF000000000000000003 /* ECKMapGestureRecognitionPolicyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

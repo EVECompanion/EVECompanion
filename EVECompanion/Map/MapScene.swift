@@ -248,8 +248,10 @@ final class MapScene: SKScene {
         camera = cameraNode
         addChild(cameraNode)
         let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
+        panRecognizer.delegate = self
         view.addGestureRecognizer(panRecognizer)
         let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(handlePinchGesture))
+        pinchRecognizer.delegate = self
         view.addGestureRecognizer(pinchRecognizer)
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture))
         tapRecognizer.cancelsTouchesInView = false
@@ -1241,6 +1243,16 @@ final class MapScene: SKScene {
         let texture = SKTexture(image: image)
         texture.usesMipmaps = true
         return texture
+    }
+
+}
+
+extension MapScene: UIGestureRecognizerDelegate {
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return ECKMapGestureRecognitionPolicy.shouldRecognizeSimultaneously(gestureRecognizer,
+                                                                           with: otherGestureRecognizer)
     }
 
 }
