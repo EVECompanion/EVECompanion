@@ -307,11 +307,19 @@ struct MapView: View {
     @FocusState private var isSearchFocused: Bool
     
     @State private var scene: MapScene?
+    @State private var viewportSize: CGSize = .zero
+    @State private var didApplyInitialFocus: Bool = false
 
     private let selectionConfiguration: MapSystemSelectionConfiguration?
+    private let showsControls: Bool
+    private let showsCharacterMarkers: Bool
 
-    init(selectionConfiguration: MapSystemSelectionConfiguration? = nil) {
+    init(selectionConfiguration: MapSystemSelectionConfiguration? = nil,
+         showsControls: Bool = true,
+         showsCharacterMarkers: Bool = true) {
         self.selectionConfiguration = selectionConfiguration
+        self.showsControls = showsControls
+        self.showsCharacterMarkers = showsCharacterMarkers
     }
     
     private var filteredSearchResults: [MapSearchResult] {
@@ -374,76 +382,104 @@ struct MapView: View {
     }
     
     var body: some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .bottom) {
-                Group {
-                    if let scene {
-                        SpriteView(scene: scene)
-                            .ignoresSafeArea()
-                    } else {
-                        ProgressView()
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    }
+        ZStack(alignment: .bottom) {
+            Group {
+                if let scene {
+                    SpriteView(scene: scene)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .modifier(MapSafeAreaIgnoringModifier(isEnabled: showsControls))
+                        .onAppear {
+                            attemptInitialFocusIfNeeded()
+                        }
+                } else {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .task {
-                    guard scene == nil else {
-                        return
-                    }
+            }
+            .task {
+                guard scene == nil else {
+                    return
+                }
 
-                    let loadedData = await MapDataLoader.load()
-                    guard Task.isCancelled == false else {
-                        return
-                    }
+                let loadedData = await MapDataLoader.load()
+                guard Task.isCancelled == false else {
+                    return
+                }
 
-                    gateConnections = loadedData.gateConnections
-                    systems = loadedData.systems
-                    constellationsById = loadedData.constellationsById
-                    constellations = loadedData.constellations
-                    regions = loadedData.regions
-                    constellationTargets = loadedData.constellationTargets
-                    regionTargets = loadedData.regionTargets
+                gateConnections = loadedData.gateConnections
+                systems = loadedData.systems
+                constellationsById = loadedData.constellationsById
+                constellations = loadedData.constellations
+                regions = loadedData.regions
+                constellationTargets = loadedData.constellationTargets
+                regionTargets = loadedData.regionTargets
 
-                    let mapScene = MapScene(
-                        systems: loadedData.systems,
-                        constellations: loadedData.constellations,
-                        regions: loadedData.regions,
-                        gateConnections: loadedData.gateConnections
-                    )
-                    mapScene.systemSelected = { systemId in
-                        selectSystem(id: systemId)
-                    }
-                    configureSelectionOverlays(in: mapScene)
-                    self.scene = mapScene
-                    DispatchQueue.main.async {
-                        configureSelectionOverlays(in: mapScene)
-                        focusOnSelection(in: mapScene)
-                    }
+                let mapScene = MapScene(
+                    systems: loadedData.systems,
+                    constellations: loadedData.constellations,
+                    regions: loadedData.regions,
+                    gateConnections: loadedData.gateConnections
+                )
+                mapScene.systemSelected = { systemId in
+                    selectSystem(id: systemId)
                 }
-                .task(id: scene != nil) {
-                    guard scene != nil else {
-                        return
-                    }
+                configureSelectionOverlays(in: mapScene)
+                self.scene = mapScene
+                attemptInitialFocusIfNeeded()
+            }
+            .task(id: scene != nil) {
+                guard scene != nil,
+                      showsCharacterMarkers else {
+                    return
+                }
 
-                    await runCharacterLocationUpdates()
+                await runCharacterLocationUpdates()
+            }
+            .onReceive(characterStorage.$characters) { _ in
+                guard showsCharacterMarkers else {
+                    return
                 }
-                .onReceive(characterStorage.$characters) { _ in
-                    Task {
-                        await refreshCharacterMarkers()
-                    }
+
+                Task {
+                    await refreshCharacterMarkers()
                 }
-                .onChange(of: showCharacterMarkers) { isVisible in
-                    scene?.setCharactersVisible(isVisible)
+            }
+            .onChange(of: showCharacterMarkers) { isVisible in
+                guard showsCharacterMarkers else {
+                    return
                 }
-                .onChange(of: colorScheme) { newColorScheme in
-                    scene?.refreshAppearance(userInterfaceStyle: newColorScheme.userInterfaceStyle)
-                }
-                
-                searchOverlay(in: geometry)
+
+                scene?.setCharactersVisible(isVisible)
+            }
+            .onChange(of: colorScheme) { newColorScheme in
+                scene?.refreshAppearance(userInterfaceStyle: newColorScheme.userInterfaceStyle)
+            }
+
+            if showsControls {
+                searchOverlay(size: viewportSize)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background {
+            GeometryReader { geometry in
+                Color.clear
+                    .onAppear {
+                        updateViewportSize(geometry.size)
+                    }
+                    .onChange(of: geometry.size) { newSize in
+                        updateViewportSize(newSize)
+                    }
+            }
+        }
+        .onAppear {
+            // When reopening the map, ensure selection overlays and focus are reapplied
+            attemptInitialFocusIfNeeded()
+        }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                characterVisibilityButton
+            if showsControls && showsCharacterMarkers {
+                ToolbarItem(placement: .topBarTrailing) {
+                    characterVisibilityButton
+                }
             }
         }
         .sheet(isPresented: isSystemDetailsSheetPresented) {
@@ -530,6 +566,24 @@ struct MapView: View {
         selectedSystemDetails = details(for: systemId)
     }
 
+    private func updateViewportSize(_ newSize: CGSize) {
+        viewportSize = newSize
+        attemptInitialFocusIfNeeded()
+
+        guard let scene,
+              selectionConfiguration != nil else {
+            return
+        }
+
+        let isFiniteSize = newSize.width.isFinite && newSize.height.isFinite && newSize.width > 0 && newSize.height > 0
+        let validViewport: CGSize? = isFiniteSize ? newSize : nil
+
+        // If we've already applied the initial focus, allow dynamic refocus on further size changes
+        if didApplyInitialFocus, let validViewport {
+            focusOnSelection(in: scene, viewportSize: validViewport)
+        }
+    }
+
     private func configureSelectionOverlays(in scene: MapScene) {
         guard let selectionConfiguration else {
             return
@@ -540,40 +594,47 @@ struct MapView: View {
         scene.highlightReplacementSystem(id: selectionConfiguration.replacementSystemId)
     }
 
-    private func focusOnSelection(in scene: MapScene) {
+    @discardableResult
+    private func focusOnSelection(in scene: MapScene, viewportSize: CGSize? = nil) -> Bool {
         if let selectionConfiguration {
             let focusSystemIds = ECKCapitalJumpMapOverlay.focusSystemIds(
                 highlightedSystemIds: selectionConfiguration.highlightedSystemIds,
                 replacementSystemId: selectionConfiguration.replacementSystemId
             )
-            let highlightedSystems = focusSystemIds
-                .compactMap { systems[$0] }
 
-            if let bounds = MapDataLoader.bounds(for: highlightedSystems) {
+            // Prefer highlighted systems; if none, fall back to the route systems
+            var systemsToFocus = focusSystemIds.compactMap { systems[$0] }
+            if systemsToFocus.isEmpty {
+                systemsToFocus = selectionConfiguration.jumpRouteSystemIds.compactMap { systems[$0] }
+            }
+
+            if let bounds = MapDataLoader.bounds(for: systemsToFocus) {
                 let targetScale: CGFloat
-                if highlightedSystems.count == 1 || bounds.size == .zero {
+                if systemsToFocus.count == 1 || bounds.size == .zero {
                     targetScale = MapSelectionFocus.singleSystemScale
                 } else {
                     targetScale = scene.targetScaleToFit(
                         rect: bounds,
                         padding: MapSelectionFocus.highlightedSystemsPadding,
-                        inset: MapSelectionFocus.highlightedSystemsInset
+                        inset: MapSelectionFocus.highlightedSystemsInset,
+                        viewportSize: viewportSize
                     )
                 }
 
                 scene.focus(on: MapDataLoader.center(of: bounds), targetScale: targetScale, animated: false)
-                return
+                return true
             }
         }
 
-        guard let initialFocusSystem = selectionConfiguration?.initialFocusSystem,
-              let mapPoint = initialFocusSystem.mapPoint else {
-            return
+        if let initialFocusSystem = selectionConfiguration?.initialFocusSystem,
+           let mapPoint = initialFocusSystem.mapPoint {
+            scene.focus(on: mapPoint,
+                        targetScale: MapSelectionFocus.singleSystemScale,
+                        animated: false)
+            return true
         }
 
-        scene.focus(on: mapPoint,
-                    targetScale: MapSelectionFocus.singleSystemScale,
-                    animated: false)
+        return false
     }
 
     private func details(for systemId: Int) -> ECKMapSystemDetails? {
@@ -647,9 +708,9 @@ struct MapView: View {
         }
     }
     
-    private func searchOverlay(in geometry: GeometryProxy) -> some View {
+    private func searchOverlay(size: CGSize) -> some View {
         VStack(spacing: MapSearchLayout.stackSpacing) {
-            searchResults(filteredSearchResults, in: geometry)
+            searchResults(filteredSearchResults, availableSize: size)
             searchField
         }
         .padding(.horizontal, MapSearchLayout.horizontalPadding)
@@ -660,9 +721,9 @@ struct MapView: View {
     }
     
     @ViewBuilder
-    private func searchResults(_ results: [MapSearchResult], in geometry: GeometryProxy) -> some View {
+    private func searchResults(_ results: [MapSearchResult], availableSize: CGSize) -> some View {
         if results.isEmpty == false {
-            let maxHeight = searchResultsMaxHeight(in: geometry)
+            let maxHeight = searchResultsMaxHeight(in: availableSize)
             if CGFloat(results.count) * MapSearchLayout.resultRowHeight <= maxHeight {
                 resultsList(results)
                     .mapGlassPanel()
@@ -788,9 +849,9 @@ struct MapView: View {
         .buttonStyle(.plain)
     }
     
-    private func searchResultsMaxHeight(in geometry: GeometryProxy) -> CGFloat {
+    private func searchResultsMaxHeight(in availableSize: CGSize) -> CGFloat {
         let availableHeight =
-            geometry.size.height
+            availableSize.height
             - MapSearchLayout.topSafeAreaInsetAllowance
             - MapSearchLayout.searchFieldHeight
             - MapSearchLayout.stackSpacing
@@ -803,6 +864,38 @@ struct MapView: View {
         return max(MapSearchLayout.resultRowHeight, availableHeight)
     }
     
+    private func attemptInitialFocusIfNeeded() {
+        guard didApplyInitialFocus == false,
+              let scene,
+              selectionConfiguration != nil else {
+            return
+        }
+        // Defer to the next runloop to ensure SpriteView is attached and laid out
+        DispatchQueue.main.async {
+            guard let scene = self.scene else { return }
+            let isFiniteSize = self.viewportSize.width.isFinite && self.viewportSize.height.isFinite && self.viewportSize.width > 0 && self.viewportSize.height > 0
+            let validViewport: CGSize? = isFiniteSize ? self.viewportSize : nil
+            self.configureSelectionOverlays(in: scene)
+            if self.focusOnSelection(in: scene, viewportSize: validViewport) {
+                self.didApplyInitialFocus = true
+            }
+        }
+    }
+    
+}
+
+private struct MapSafeAreaIgnoringModifier: ViewModifier {
+
+    let isEnabled: Bool
+
+    func body(content: Content) -> some View {
+        if isEnabled {
+            content.ignoresSafeArea()
+        } else {
+            content
+        }
+    }
+
 }
 
 private extension View {

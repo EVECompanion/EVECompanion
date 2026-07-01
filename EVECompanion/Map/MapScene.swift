@@ -200,6 +200,10 @@ final class MapScene: SKScene {
     }
     
     override func didMove(to view: SKView) {
+        if view.bounds.size.width > 0, view.bounds.size.height > 0 {
+            size = view.bounds.size
+        }
+
         systemLabelsLayer.zPosition = ECKMapLayerZPosition.mapLabels
         systemsLayer.zPosition = ECKMapLayerZPosition.mapSystems
         constellationLabelsLayer.zPosition = ECKMapLayerZPosition.mapLabels
@@ -953,17 +957,17 @@ final class MapScene: SKScene {
         selectionHighlightNode = highlightNode
     }
 
-    func targetScaleToFit(rect: CGRect, padding: CGFloat = 1.4, inset: CGFloat = 0) -> CGFloat {
+    func targetScaleToFit(rect: CGRect,
+                          padding: CGFloat = 1.4,
+                          inset: CGFloat = 0,
+                          viewportSize: CGSize? = nil) -> CGFloat {
         let normalizedRect = normalize(rect: rect)
             .insetBy(dx: -inset, dy: -inset)
-        
-        guard size.width > 0, size.height > 0 else {
-            return 1
-        }
-        
-        let widthScale = max(normalizedRect.width * padding / size.width, CameraLimits.minimumScale)
-        let heightScale = max(normalizedRect.height * padding / size.height, CameraLimits.minimumScale)
-        return max(widthScale, heightScale)
+
+        return ECKCapitalJumpMapOverlay.targetScaleToFit(normalizedRectSize: normalizedRect.size,
+                                                         viewportSize: viewportSize ?? size,
+                                                         padding: padding,
+                                                         minimumScale: CameraLimits.minimumScale)
     }
 
     private func updateLabelVisibility(refreshTextures: Bool = true) {

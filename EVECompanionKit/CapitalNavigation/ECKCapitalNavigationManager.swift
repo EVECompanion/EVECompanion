@@ -31,6 +31,13 @@ public enum ECKCapitalJumpMapOverlay {
 
     public typealias RouteSegment = (startSystemId: Int, destinationSystemId: Int)
 
+    public struct StaticRoutePresentation: Equatable {
+        public let selectableSystemIds: Set<Int>
+        public let highlightedSystemIds: Set<Int>
+        public let jumpRouteSystemIds: [Int]
+        public let initialFocusSystemId: Int?
+    }
+
     public static func routeSegments(systemIds: [Int]) -> [RouteSegment] {
         zip(systemIds.dropLast(), systemIds.dropFirst()).map { routeStep in
             (startSystemId: routeStep.0, destinationSystemId: routeStep.1)
@@ -49,6 +56,33 @@ public enum ECKCapitalJumpMapOverlay {
         }
 
         return systemIds
+    }
+
+    public static func staticRoutePresentation(systemIds: [Int]) -> StaticRoutePresentation? {
+        guard systemIds.count >= 2 else {
+            return nil
+        }
+
+        return StaticRoutePresentation(
+            selectableSystemIds: [],
+            highlightedSystemIds: highlightedRouteSystemIds(systemIds: systemIds),
+            jumpRouteSystemIds: systemIds,
+            initialFocusSystemId: systemIds.first
+        )
+    }
+
+    public static func targetScaleToFit(normalizedRectSize: CGSize,
+                                        viewportSize: CGSize,
+                                        padding: CGFloat,
+                                        minimumScale: CGFloat) -> CGFloat {
+        guard viewportSize.width > 0,
+              viewportSize.height > 0 else {
+            return 1
+        }
+
+        let widthScale = max(normalizedRectSize.width * padding / viewportSize.width, minimumScale)
+        let heightScale = max(normalizedRectSize.height * padding / viewportSize.height, minimumScale)
+        return max(widthScale, heightScale)
     }
 
 }
