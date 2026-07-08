@@ -310,16 +310,23 @@ struct MapView: View {
     @State private var viewportSize: CGSize = .zero
     @State private var didApplyInitialFocus: Bool = false
 
+    // MARK: - New state variables for proposed alternative system selection
+    @State private var proposedReplacementSystemId: Int? // Tracks proposed alternative system
+    @State private var isProposingSelection: Bool = false // True when previewing alternative
+    
+    // MARK: - New state variable to track previewed jump route with proposed alternative
+    @State private var proposedJumpRouteSystemIds: [Int]?
+
     private let selectionConfiguration: MapSystemSelectionConfiguration?
-    private let showsControls: Bool
     private let showsCharacterMarkers: Bool
+    private let showsSearchBar: Bool
 
     init(selectionConfiguration: MapSystemSelectionConfiguration? = nil,
-         showsControls: Bool = true,
-         showsCharacterMarkers: Bool = true) {
+         showsCharacterMarkers: Bool = true,
+         showsSearchBar: Bool = true) {
         self.selectionConfiguration = selectionConfiguration
-        self.showsControls = showsControls
         self.showsCharacterMarkers = showsCharacterMarkers
+        self.showsSearchBar = showsSearchBar
     }
     
     private var filteredSearchResults: [MapSearchResult] {
@@ -387,7 +394,11 @@ struct MapView: View {
                 if let scene {
                     SpriteView(scene: scene)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .modifier(MapSafeAreaIgnoringModifier(isEnabled: showsControls))
+                        .modifier(
+                            MapSafeAreaIgnoringModifier(
+                                isEnabled: showsSearchBar || isProposingSelection
+                            )
+                        )
                         .onAppear {
                             attemptInitialFocusIfNeeded()
                         }
@@ -455,8 +466,30 @@ struct MapView: View {
                 scene?.refreshAppearance(userInterfaceStyle: newColorScheme.userInterfaceStyle)
             }
 
-            if showsControls {
+            if showsSearchBar {
                 searchOverlay(size: viewportSize)
+            }
+            
+            // MARK: - Confirm selection button
+            if isProposingSelection {
+                VStack {
+                    Spacer()
+                    Button("Confirm") {
+                        guard let selectionConfig = selectionConfiguration,
+                              let id = proposedReplacementSystemId,
+                              let system = systems[id] else { return }
+                        // Confirm the proposed alternative system selection
+                        selectionConfig.systemSelected(system)
+                        isProposingSelection = false
+                        proposedReplacementSystemId = nil
+                        // Reset proposed jump route after confirmation
+                        proposedJumpRouteSystemIds = nil
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .padding()
+                }
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+                .animation(.easeInOut, value: isProposingSelection)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -476,7 +509,7 @@ struct MapView: View {
             attemptInitialFocusIfNeeded()
         }
         .toolbar {
-            if showsControls && showsCharacterMarkers {
+            if showsCharacterMarkers {
                 ToolbarItem(placement: .topBarTrailing) {
                     characterVisibilityButton
                 }
@@ -551,19 +584,65 @@ struct MapView: View {
         }
     }
 
+    // MARK: - Modified selectSystem to handle proposed alternative selection preview
     private func selectSystem(id systemId: Int) {
         if let selectionConfiguration {
-            guard selectionConfiguration.selectableSystemIds.contains(systemId),
-                  let system = systems[systemId] else {
+            // Only highlighted systems are valid alternatives for preview
+            // If systemId is not in highlightedSystemIds, fallback to default selection behavior
+            if proposedReplacementSystemId != systemId && systemId != selectionConfiguration.replacementSystemId {
+                guard selectionConfiguration.highlightedSystemIds.contains(systemId) else {
+                    // Not a highlighted system: do not propose as alternative
+                    // Fall through to default selection behavior below
+                    return
+                }
+                // Set proposed replacement and enter proposing mode
+                proposedReplacementSystemId = systemId
+                isProposingSelection = true
+                
+                // Calculate jump route system IDs for proposed alternative by replacing the original replacement ID with proposed ID in the jump route
+                proposedJumpRouteSystemIds = calculateJumpRoute(for: systemId) ?? selectionConfiguration.jumpRouteSystemIds
+                
+                // Redraw overlays with proposedReplacementSystemId as replacement
+                if let scene = scene {
+                    scene.drawJumpRoute(systemIds: proposedJumpRouteSystemIds ?? [])
+                    scene.highlightSystems(ids: selectionConfiguration.highlightedSystemIds)
+                    scene.highlightReplacementSystem(id: proposedReplacementSystemId)
+                }
                 return
             }
+            
+            // If selecting the same system as current replacement or confirming alternative, fall back to original behavior
+            if !isProposingSelection {
+                guard selectionConfiguration.selectableSystemIds.contains(systemId),
+                      let system = systems[systemId] else {
+                    return
+                }
 
-            selectionConfiguration.systemSelected(system)
-            return
+                selectionConfiguration.systemSelected(system)
+                return
+            }
         }
 
+        // If no selection configuration or not proposing alternative, show system details sheet
         selectedSystemDetailsDetent = .medium
         selectedSystemDetails = details(for: systemId)
+    }
+    
+    /// Calculates a jump route array replacing the original replacement system ID with the proposed system ID.
+    /// Returns the updated jump route system IDs, or the original if no replacement ID is found.
+    private func calculateJumpRoute(for proposedSystemId: Int) -> [Int]? {
+        guard let selectionConfiguration,
+              let replacementId = selectionConfiguration.replacementSystemId else {
+            return nil
+        }
+
+        if let index = selectionConfiguration.jumpRouteSystemIds.firstIndex(of: replacementId) {
+            var updatedRoute = selectionConfiguration.jumpRouteSystemIds
+            updatedRoute[index] = proposedSystemId
+            return updatedRoute
+        }
+
+        return selectionConfiguration.jumpRouteSystemIds
     }
 
     private func updateViewportSize(_ newSize: CGSize) {
@@ -584,14 +663,20 @@ struct MapView: View {
         }
     }
 
+    // MARK: - Modified configureSelectionOverlays to use proposedReplacementSystemId and proposedJumpRouteSystemIds if present
     private func configureSelectionOverlays(in scene: MapScene) {
         guard let selectionConfiguration else {
             return
         }
-
-        scene.drawJumpRoute(systemIds: selectionConfiguration.jumpRouteSystemIds)
+        
+        // Use proposedReplacementSystemId if it exists, otherwise use the original replacementSystemId
+        let replacementIdToUse = proposedReplacementSystemId ?? selectionConfiguration.replacementSystemId
+        // Use proposedJumpRouteSystemIds if set, else fallback to original jumpRouteSystemIds
+        let jumpRouteToUse = proposedJumpRouteSystemIds ?? selectionConfiguration.jumpRouteSystemIds
+        
+        scene.drawJumpRoute(systemIds: jumpRouteToUse)
         scene.highlightSystems(ids: selectionConfiguration.highlightedSystemIds)
-        scene.highlightReplacementSystem(id: selectionConfiguration.replacementSystemId)
+        scene.highlightReplacementSystem(id: replacementIdToUse)
     }
 
     @discardableResult
@@ -1032,3 +1117,4 @@ private extension ColorScheme {
 #Preview {
     MapView()
 }
+

@@ -115,8 +115,8 @@ struct CapitalNavigationRouteView: View {
     private func routeMapContent(systems: [ECKCapitalJumpRoute.SystemEntry]) -> some View {
         if let configuration = routeMapConfiguration(systems: systems) {
             MapView(selectionConfiguration: configuration,
-                    showsControls: false,
-                    showsCharacterMarkers: false)
+                    showsCharacterMarkers: false,
+                    showsSearchBar: false)
                 .frame(maxWidth: .infinity, minHeight: 420, maxHeight: 420)
                 .clipped()
                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))

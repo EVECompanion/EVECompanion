@@ -183,6 +183,8 @@ final class MapScene: SKScene {
         charactersLayer.isHidden
     }
     
+    private var didSetupView: Bool = false
+    
     init(systems: [Int: ECKSolarSystem], constellations: [String: CGPoint], regions: [String: CGPoint], gateConnections: [(solarSystemId: Int, destinationSolarSystemId: Int)]) {
         self.systems = systems
         self.constellations = constellations
@@ -193,6 +195,7 @@ final class MapScene: SKScene {
         self.maxX = CGFloat(systems.values.compactMap(\.position2D?.x).max() ?? 0)
         self.maxY = CGFloat(systems.values.compactMap(\.position2D?.y).max() ?? 0)
         super.init(size: UIScreen.main.bounds.size)
+        setup()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -203,7 +206,26 @@ final class MapScene: SKScene {
         if view.bounds.size.width > 0, view.bounds.size.height > 0 {
             size = view.bounds.size
         }
-
+        
+        view.ignoresSiblingOrder = true
+        view.shouldCullNonVisibleNodes = true
+        view.preferredFramesPerSecond = 60
+#if DEBUG
+        view.showsFPS = true
+        view.showsNodeCount = true
+#endif
+        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
+        panRecognizer.delegate = self
+        view.addGestureRecognizer(panRecognizer)
+        let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(handlePinchGesture))
+        pinchRecognizer.delegate = self
+        view.addGestureRecognizer(pinchRecognizer)
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture))
+        tapRecognizer.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapRecognizer)
+    }
+    
+    private func setup() {
         systemLabelsLayer.zPosition = ECKMapLayerZPosition.mapLabels
         systemsLayer.zPosition = ECKMapLayerZPosition.mapSystems
         constellationLabelsLayer.zPosition = ECKMapLayerZPosition.mapLabels
@@ -227,15 +249,10 @@ final class MapScene: SKScene {
         addChild(replacementHighlightLayer)
         addChild(charactersLayer)
         addChild(selectionHighlightLayer)
-        view.ignoresSiblingOrder = true
-        view.shouldCullNonVisibleNodes = true
-        view.preferredFramesPerSecond = 60
+        
         backgroundColor = appearanceColor(.systemBackground)
         scaleMode = .resizeFill
-        #if DEBUG
-        view.showsFPS = true
-        view.showsNodeCount = true
-        #endif
+        
         renderSystems()
         refreshJumpRoute()
         refreshRangeHighlights()
@@ -251,15 +268,6 @@ final class MapScene: SKScene {
         cameraNode.setScale(CameraLimits.maximumScale)
         camera = cameraNode
         addChild(cameraNode)
-        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
-        panRecognizer.delegate = self
-        view.addGestureRecognizer(panRecognizer)
-        let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(handlePinchGesture))
-        pinchRecognizer.delegate = self
-        view.addGestureRecognizer(pinchRecognizer)
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture))
-        tapRecognizer.cancelsTouchesInView = false
-        view.addGestureRecognizer(tapRecognizer)
         updateLabelVisibility()
     }
     

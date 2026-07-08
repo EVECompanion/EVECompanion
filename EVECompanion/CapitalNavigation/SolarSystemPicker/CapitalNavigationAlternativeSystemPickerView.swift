@@ -88,7 +88,8 @@ struct CapitalNavigationAlternativeSystemPickerView: View {
     @ViewBuilder
     private var mapContent: some View {
         if let configuration = mapSelectionConfiguration {
-            MapView(selectionConfiguration: configuration)
+            MapView(selectionConfiguration: configuration, showsSearchBar: false)
+                .ignoresSafeArea(.all, edges: .vertical)
         } else {
             ProgressView()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -134,9 +135,9 @@ struct CapitalNavigationAlternativeSystemPickerView: View {
         }
 
         alternativeSystems = await manager.alternativeSystems(previousSystem: previousSystem,
-                                                             systemToReplace: systemToReplace,
-                                                             nextSystem: nextSystem,
-                                                             jumpRange: jumpRange)
+                                                              systemToReplace: systemToReplace,
+                                                              nextSystem: nextSystem,
+                                                              jumpRange: jumpRange)
     }
     
 }
