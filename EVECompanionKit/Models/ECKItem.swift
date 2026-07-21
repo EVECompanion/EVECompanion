@@ -88,6 +88,10 @@ public final class ECKItem: Codable, Identifiable, @unchecked Sendable, Hashable
         return 0
     }()
     
+    public private(set) lazy var shipModifiers: [ECKItem] = {
+        return ECKSDEManager.shared.shipModifiers(shipTypeId: typeId)
+    }()
+    
     public lazy var slotType: ECKCharacterFitting.ModuleSlotType? = {
         let effects = ECKSDEManager.shared.getEffects(for: typeId)
         

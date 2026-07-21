@@ -96,6 +96,7 @@ public enum ECKItemLocationFlag: String, Codable, Sendable {
     case SubSystemSlot7
     case Unlocked
     case Wardrobe
+    case ShipTacticalMode
     
     public init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()

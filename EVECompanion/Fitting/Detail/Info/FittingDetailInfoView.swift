@@ -11,10 +11,16 @@ import EVECompanionKit
 struct FittingDetailInfoView: View {
     
     @ObservedObject private var fitting: ECKCharacterFitting
+    let fittingManager: ECKFittingManager
     let character: ECKCharacter
     
-    init(character: ECKCharacter, fitting: ECKCharacterFitting) {
+    init(
+        character: ECKCharacter,
+        fittingManager: ECKFittingManager,
+        fitting: ECKCharacterFitting
+    ) {
         self.character = character
+        self.fittingManager = fittingManager
         self.fitting = fitting
     }
     
@@ -27,6 +33,33 @@ struct FittingDetailInfoView: View {
                             .frame(width: 40, height: 40)
                         
                         Text(fitting.ship.item.name)
+                    }
+                }
+                
+                let modifiers = fitting.ship.item.shipModifiers
+                if modifiers.isEmpty == false {
+                    HStack {
+                        if let selectedTacticalMode = fitting.selectedTacticalMode {
+                            ECImage(
+                                id: selectedTacticalMode.item.id,
+                                category: .types
+                            ).frame(width: 40, height: 40)
+                        }
+                        
+                        Picker("", selection: .init(get: {
+                            fitting.selectedTacticalMode?.item ?? .init(typeId: -1)
+                        }, set: { mode in
+                            fitting.setTacticalMode(
+                                mode: mode,
+                                manager: fittingManager
+                            )
+                        })) {
+                            ForEach(modifiers) { modifier in
+                                Text(modifier.name.replacingOccurrences(of: fitting.ship.item.name, with: "").trimmingCharacters(in: .whitespacesAndNewlines))
+                                    .tag(modifier)
+                            }
+                        }
+                        .pickerStyle(.menu)
                     }
                 }
             }
@@ -158,6 +191,26 @@ struct FittingDetailInfoView: View {
     
 }
 
-#Preview {
-    FittingDetailInfoView(character: .dummy, fitting: .dummyAvatar)
+#Preview("Avatar") {
+    FittingDetailInfoView(
+        character: .dummy,
+        fittingManager: .init(character: .dummy, isPreview: true),
+        fitting: .dummyAvatar
+    )
+}
+
+#Preview("VNI") {
+    FittingDetailInfoView(
+        character: .dummy,
+        fittingManager: .init(character: .dummy, isPreview: true),
+        fitting: .dummyVNI
+    )
+}
+
+#Preview("Confessor") {
+    FittingDetailInfoView(
+        character: .dummy,
+        fittingManager: .init(character: .dummy, isPreview: true),
+        fitting: .dummyConfessor
+    )
 }

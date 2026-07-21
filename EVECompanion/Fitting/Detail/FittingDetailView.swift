@@ -52,6 +52,7 @@ struct FittingDetailView: View {
 
             TabView(selection: $selectedTab) {
                 FittingDetailInfoView(character: character,
+                                      fittingManager: manager,
                                       fitting: fitting)
                     .tag(FittingDetailTab.info)
                 

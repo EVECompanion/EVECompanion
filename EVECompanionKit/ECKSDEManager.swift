@@ -594,6 +594,41 @@ public class ECKSDEManager: @unchecked Sendable {
         }
     }
     
+    internal func shipModifiers(shipTypeId: Int) -> [ECKItem] {
+        do {
+            let statement = try connection?.prepare("""
+                SELECT
+                    modes.typeID,
+                    modes.typeName, 
+                    modes.description, 
+                    modes.mass, 
+                    modes.volume, 
+                    modes.capacity, 
+                    modes.radius, 
+                    modes.iconID
+                FROM
+                    invTypes modes
+                    JOIN invTypes ships ON ships.typeID = ?
+                WHERE
+                    modes.groupID = 1306
+                    AND modes.typeName LIKE '%' || ships.typeName || '%'
+                ORDER BY
+                    modes.typeID
+            """, shipTypeId)
+            
+            guard let result = try statement?.run() else {
+                return []
+            }
+            
+            let fetchedMods = result.map({ parseItem(row: $0) })
+            
+            return fetchedMods.map({ ECKItem(itemData: $0) })
+        } catch {
+            logger.error("Cannot get ship mods for \(shipTypeId): \(error)")
+            return []
+        }
+    }
+    
     public func canUseCharges(typeId: Int) -> Bool {
         do {
             let statement = try connection?.prepare("""

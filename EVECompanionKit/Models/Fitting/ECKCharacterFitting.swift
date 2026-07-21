@@ -28,6 +28,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         case fighters
         case skills
         case implants
+        case selectedTacticalMode
     }
     
     public typealias AttributeID = Int
@@ -122,7 +123,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     public let fittingId: UUID
     public let esiFittingId: Int?
     public var items: [ECKCharacterFittingItem] {
-        return highSlotModules
+        let allItems: [ECKCharacterFittingItem?] = highSlotModules
         + midSlotModules
         + lowSlotModules
         + rigs
@@ -130,6 +131,8 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         + drones
         + fighters
         + implants
+        + [selectedTacticalMode]
+        return allItems.compactMap({ $0 })
     }
 
     private var serializedItems: [ECKCharacterFittingItem] {
@@ -156,6 +159,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     public var fighterBay: [ECKCharacterFittingItem]
     public var fighters: [ECKCharacterFittingItem]
     public var implants: [ECKCharacterFittingItem]
+    public var selectedTacticalMode: ECKCharacterFittingItem?
     
     public var launcherHardPoints: Int {
         return Int(ship.attributes[Self.attributeLauncherHardpointsId]?.value ?? 0)
@@ -493,6 +497,19 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         return fitting
     }()
     
+    public static let dummyConfessor: ECKCharacterFitting = {
+        let fitting = ECKCharacterFitting(fittingId: UUID(),
+                                          description: "Confessor",
+                                          esiFittingId: nil,
+                                          items: [],
+                                          name: "EVECompanion's Confessor",
+                                          ship: .init(typeId: 34317))
+        Task {
+            await fitting.calculateAttributes(skills: .dummy)
+        }
+        return fitting
+    }()
+    
     public var resistances: Resistances? {
         let attributes = ship.attributes
         
@@ -572,6 +589,11 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         self.fighters = try container.decodeIfPresent([ECKCharacterFittingItem].self, forKey: .fighters) ?? []
         self.skills = try container.decode([ECKCharacterFittingItem].self, forKey: .skills)
         self.implants = try container.decodeIfPresent([ECKCharacterFittingItem].self, forKey: .implants) ?? []
+        if let decodedModifier = try container.decodeIfPresent(ECKCharacterFittingItem.self, forKey: .selectedTacticalMode) {
+            self.selectedTacticalMode = decodedModifier
+        } else if let firstAvailableModifier = ship.item.shipModifiers.first {
+            self.selectedTacticalMode = .init(flag: .ShipTacticalMode, quantity: 1, item: firstAvailableModifier)
+        }
     }
     
     internal convenience init(fitting: ESIFitting) {
@@ -727,6 +749,8 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
                 rigs.append(item)
             case .ShipHangar:
                 continue
+            case .ShipTacticalMode:
+                selectedTacticalMode = item
             case .Skill:
                 continue
             case .SpecializedAmmoHold:
@@ -800,6 +824,9 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         self.ship = .init(flag: .ShipHangar,
                           quantity: 1,
                           item: ship)
+        if let firstAvailableModifier = ship.shipModifiers.first {
+            self.selectedTacticalMode = .init(flag: .ShipTacticalMode, quantity: 1, item: firstAvailableModifier)
+        }
     }
     
     public static func == (lhs: ECKCharacterFitting, rhs: ECKCharacterFitting) -> Bool {
@@ -837,6 +864,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         try container.encode(self.fighters, forKey: .fighters)
         try container.encode(self.skills, forKey: .skills)
         try container.encode(self.implants, forKey: .implants)
+        try container.encodeIfPresent(self.selectedTacticalMode, forKey: .selectedTacticalMode)
     }
     
     func copy() -> ECKCharacterFitting {
@@ -1020,6 +1048,18 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         
         await calculateAttributes(skills: nil)
         manager?.saveFitting(self)
+    }
+    
+    public func setTacticalMode(mode: ECKItem, manager: ECKFittingManager) {
+        guard selectedTacticalMode?.item != mode else {
+            return
+        }
+        
+        selectedTacticalMode = .init(flag: .ShipTacticalMode, quantity: 1, item: mode)
+        Task {
+            await calculateAttributes(skills: nil)
+        }
+        manager.saveFitting(self)
     }
     
     public func setName(_ name: String, manager: ECKFittingManager) {

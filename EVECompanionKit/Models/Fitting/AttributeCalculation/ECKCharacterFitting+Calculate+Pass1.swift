@@ -73,7 +73,8 @@ extension ECKCharacterFitting {
                     .SubSystemSlot5,
                     .SubSystemSlot6,
                     .SubSystemSlot7,
-                    .Implant:
+                    .Implant,
+                    .ShipTacticalMode:
                 pass1CollectAttributes(for: item.item, attributesDict: &item.attributes)
                 if let charge = item.charge {
                     pass1CollectAttributes(for: charge.item, attributesDict: &charge.attributes)
