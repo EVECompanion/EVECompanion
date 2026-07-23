@@ -17,7 +17,7 @@ public class ECKCharacter: ObservableObject, Identifiable, Hashable, @unchecked 
     }
     
     public var name: String {
-        return token.characterName
+        return publicInfo?.name ?? token.characterName
     }
     
     @Published public var wallet: Double?
