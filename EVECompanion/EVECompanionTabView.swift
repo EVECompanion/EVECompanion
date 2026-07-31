@@ -34,7 +34,11 @@ struct EVECompanionTabView: View {
             
             CapitalNavigationTabView()
                 .tabItem {
-                    Label("Navigation", systemImage: "point.topright.arrow.triangle.backward.to.point.bottomleft.filled.scurvepath")
+                    if #available(iOS 18.0, *) {
+                        Label("Navigation", systemImage: "point.topright.arrow.triangle.backward.to.point.bottomleft.filled.scurvepath")
+                    } else {
+                        Label("Navigation", systemImage: "app.connected.to.app.below.fill")
+                    }
                 }
             
             CoordinatorView(initialScreen: .universe)
