@@ -22,6 +22,7 @@ struct IndustryJobsView: View {
                         IndustryJobCell(job: job)
                     }
                 }
+                .searchable(text: $industryJobsManager.searchText)
                 .refreshable {
                     await industryJobsManager.loadJobs()
                 }

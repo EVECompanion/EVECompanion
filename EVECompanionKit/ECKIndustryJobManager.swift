@@ -147,10 +147,16 @@ public class ECKIndustryJobManager: ObservableObject, ECKPageLoadable, @unchecke
             UserDefaults.standard.industryJobSortOption = sortOption
         }
     }
+    @Published public var searchText: String = ""
+    
+    private var isSearching: Bool {
+        searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+    }
     
     public var elements: [ECKIndustryJob] {
         jobs
             .filter({ activityFilter.matches($0) })
+            .filter({ isSearching ? $0.matchesSearchText(searchText) : true })
             .sorted { lhs, rhs in
                 switch sortOption {
                 case .startedNewest:

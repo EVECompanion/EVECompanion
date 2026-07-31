@@ -200,4 +200,11 @@ public final class ECKIndustryJob: Decodable, Identifiable, ObservableObject, @u
               status: status)
     }
     
+    internal func matchesSearchText(_ text: String) -> Bool {
+        return activity.name.contains(text)
+        || blueprint.name.contains(text)
+        || product?.name.contains(text) == true
+        || station.stationName?.contains(text) == true
+    }
+    
 }
