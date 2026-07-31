@@ -11,7 +11,7 @@ import EVECompanionKit
 
 struct PlanetaryColonyPinView: View {
     
-    let pin: ECKPlanetaryColonyPin
+    let pin: ECKSimulatedPinState
     
     var body: some View {
         NavigationLink(value: AppScreen.item(pin.item)) {
@@ -87,11 +87,11 @@ struct PlanetaryColonyPinView: View {
                 .padding(.vertical)
             }
             
-            if let contents = pin.contents, contents.isEmpty == false {
+            if pin.contents.isEmpty == false {
                 Text("Storage")
                     .font(.headline)
                 
-                ForEach(contents, id: \.item.typeId) { content in
+                ForEach(pin.contents, id: \.item.typeId) { content in
                     NavigationLink(value: AppScreen.item(content.item)) {
                         HStack {
                             ECImage(id: content.item.typeId,

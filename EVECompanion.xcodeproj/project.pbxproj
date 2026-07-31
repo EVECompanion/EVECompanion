@@ -162,6 +162,8 @@
 		C95977802C28B56E0008F719 /* ECKAssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C959777F2C28B56E0008F719 /* ECKAssetManager.swift */; };
 		C95980C32C2229EE007C9FD9 /* IndustryJobsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95980C22C2229EE007C9FD9 /* IndustryJobsView.swift */; };
 		C95F604E2D860F820007A74A /* ECKCapitalJumpPathFinderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95F604D2D860F820007A74A /* ECKCapitalJumpPathFinderError.swift */; };
+		C95FBA4E30129C5F002795D6 /* ECKPlanetaryColonySimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95FBA4D30129C5F002795D6 /* ECKPlanetaryColonySimulator.swift */; };
+		C95FBA5130129C5F002795D6 /* ECKPlanetaryColonySimulatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95FBA5030129C5F002795D6 /* ECKPlanetaryColonySimulatorTests.swift */; };
 		C96430822CC1AB7500E8D6A6 /* ECKPlanetaryColony.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96430812CC1AB7500E8D6A6 /* ECKPlanetaryColony.swift */; };
 		C96430842CC1AC3700E8D6A6 /* ECKPlanetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96430832CC1AC3700E8D6A6 /* ECKPlanetType.swift */; };
 		C96430862CC1AD3F00E8D6A6 /* ECKPlanetaryColoniesResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96430852CC1AD3F00E8D6A6 /* ECKPlanetaryColoniesResource.swift */; };
@@ -260,8 +262,6 @@
 		C9ACE4612FF1BE7400FAD4D1 /* ToolbarMenuIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ACE4602FF1BE7400FAD4D1 /* ToolbarMenuIcon.swift */; };
 		C9ACE4632FF4540E00FAD4D1 /* ECKCapitalJumpRangeSelectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ACE4622FF4540E00FAD4D1 /* ECKCapitalJumpRangeSelectorTests.swift */; };
 		C9ACE4652FF4541500FAD4D1 /* ECKCapitalJumpMapOverlayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ACE4642FF4541500FAD4D1 /* ECKCapitalJumpMapOverlayTests.swift */; };
-		C9BEEF000000000000000001 /* ECKMapGestureRecognitionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEEF000000000000000002 /* ECKMapGestureRecognitionPolicy.swift */; };
-		C9BEEF000000000000000003 /* ECKMapGestureRecognitionPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEEF000000000000000004 /* ECKMapGestureRecognitionPolicyTests.swift */; };
 		C9AD0E312DF782C700E762AC /* ECKESITypeResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AD0E302DF782C700E762AC /* ECKESITypeResource.swift */; };
 		C9AF7D802C2B63FA002EB951 /* AssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AF7D7F2C2B63FA002EB951 /* AssetCell.swift */; };
 		C9B079062C32C0080059785D /* ECKTokenRefreshError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B079052C32C0080059785D /* ECKTokenRefreshError.swift */; };
@@ -288,6 +288,8 @@
 		C9BCEA0B2EB63D1300357E2D /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = C9BCEA0A2EB63D1300357E2D /* FirebaseCore */; };
 		C9BCEA0D2EB63D1300357E2D /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = C9BCEA0C2EB63D1300357E2D /* FirebaseCrashlytics */; };
 		C9BDB18C2DB3C59C00DA4375 /* CapitalNavigationShipPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BDB18A2DB3C59C00DA4375 /* CapitalNavigationShipPickerView.swift */; };
+		C9BEEF000000000000000001 /* ECKMapGestureRecognitionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEEF000000000000000002 /* ECKMapGestureRecognitionPolicy.swift */; };
+		C9BEEF000000000000000003 /* ECKMapGestureRecognitionPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEEF000000000000000004 /* ECKMapGestureRecognitionPolicyTests.swift */; };
 		C9C566E72DBD674C009293F4 /* PlanetaryColonyWarningsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C566E62DBD674C009293F4 /* PlanetaryColonyWarningsView.swift */; };
 		C9C7C4212DA11C2B0079DF82 /* EVEUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C7C41F2DA11BF60079DF82 /* EVEUnit.swift */; };
 		C9C7C4272DA1AFC40079DF82 /* UIFont+Weight.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C7C4262DA1AFC40079DF82 /* UIFont+Weight.swift */; };
@@ -633,6 +635,8 @@
 		C959777F2C28B56E0008F719 /* ECKAssetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKAssetManager.swift; sourceTree = "<group>"; };
 		C95980C22C2229EE007C9FD9 /* IndustryJobsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndustryJobsView.swift; sourceTree = "<group>"; };
 		C95F604D2D860F820007A74A /* ECKCapitalJumpPathFinderError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCapitalJumpPathFinderError.swift; sourceTree = "<group>"; };
+		C95FBA4D30129C5F002795D6 /* ECKPlanetaryColonySimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKPlanetaryColonySimulator.swift; sourceTree = "<group>"; };
+		C95FBA5030129C5F002795D6 /* ECKPlanetaryColonySimulatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKPlanetaryColonySimulatorTests.swift; sourceTree = "<group>"; };
 		C96430812CC1AB7500E8D6A6 /* ECKPlanetaryColony.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKPlanetaryColony.swift; sourceTree = "<group>"; };
 		C96430832CC1AC3700E8D6A6 /* ECKPlanetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKPlanetType.swift; sourceTree = "<group>"; };
 		C96430852CC1AD3F00E8D6A6 /* ECKPlanetaryColoniesResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKPlanetaryColoniesResource.swift; sourceTree = "<group>"; };
@@ -730,8 +734,6 @@
 		C9ACE4602FF1BE7400FAD4D1 /* ToolbarMenuIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarMenuIcon.swift; sourceTree = "<group>"; };
 		C9ACE4622FF4540E00FAD4D1 /* ECKCapitalJumpRangeSelectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCapitalJumpRangeSelectorTests.swift; sourceTree = "<group>"; };
 		C9ACE4642FF4541500FAD4D1 /* ECKCapitalJumpMapOverlayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCapitalJumpMapOverlayTests.swift; sourceTree = "<group>"; };
-		C9BEEF000000000000000002 /* ECKMapGestureRecognitionPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMapGestureRecognitionPolicy.swift; sourceTree = "<group>"; };
-		C9BEEF000000000000000004 /* ECKMapGestureRecognitionPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMapGestureRecognitionPolicyTests.swift; sourceTree = "<group>"; };
 		C9AD0E302DF782C700E762AC /* ECKESITypeResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKESITypeResource.swift; sourceTree = "<group>"; };
 		C9AF7D7F2C2B63FA002EB951 /* AssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCell.swift; sourceTree = "<group>"; };
 		C9B079052C32C0080059785D /* ECKTokenRefreshError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKTokenRefreshError.swift; sourceTree = "<group>"; };
@@ -754,6 +756,8 @@
 		C9BBEC542C6E9C0B008CB3F2 /* ContentEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentEmptyView.swift; sourceTree = "<group>"; };
 		C9BCEA052EB63B3000357E2D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C9BDB18A2DB3C59C00DA4375 /* CapitalNavigationShipPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalNavigationShipPickerView.swift; sourceTree = "<group>"; };
+		C9BEEF000000000000000002 /* ECKMapGestureRecognitionPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMapGestureRecognitionPolicy.swift; sourceTree = "<group>"; };
+		C9BEEF000000000000000004 /* ECKMapGestureRecognitionPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMapGestureRecognitionPolicyTests.swift; sourceTree = "<group>"; };
 		C9C566E62DBD674C009293F4 /* PlanetaryColonyWarningsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryColonyWarningsView.swift; sourceTree = "<group>"; };
 		C9C7C41F2DA11BF60079DF82 /* EVEUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EVEUnit.swift; sourceTree = "<group>"; };
 		C9C7C4262DA1AFC40079DF82 /* UIFont+Weight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Weight.swift"; sourceTree = "<group>"; };
@@ -1130,6 +1134,7 @@
 				C96430912CC46A0200E8D6A6 /* ECKPlanet.swift */,
 				C96430812CC1AB7500E8D6A6 /* ECKPlanetaryColony.swift */,
 				C964308B2CC449E700E8D6A6 /* ECKPlanetaryColonyDetails.swift */,
+				C95FBA4D30129C5F002795D6 /* ECKPlanetaryColonySimulator.swift */,
 				C964308D2CC4576700E8D6A6 /* ECKPlanetSchematic.swift */,
 				C96430832CC1AC3700E8D6A6 /* ECKPlanetType.swift */,
 				C96F98A42BF017DA00DEC34F /* ECKPublicCharacterInfo.swift */,
@@ -1635,6 +1640,7 @@
 				C9ACE4642FF4541500FAD4D1 /* ECKCapitalJumpMapOverlayTests.swift */,
 				C9ACE4622FF4540E00FAD4D1 /* ECKCapitalJumpRangeSelectorTests.swift */,
 				C9BEEF000000000000000004 /* ECKMapGestureRecognitionPolicyTests.swift */,
+				C95FBA5030129C5F002795D6 /* ECKPlanetaryColonySimulatorTests.swift */,
 				C99822AE2F7516740031B439 /* EVECompanionKitTests.xctestplan */,
 			);
 			path = EVECompanionKitTests;
@@ -2556,6 +2562,7 @@
 				C91FE0A22D8DF2BF00BA7303 /* ECKAllianceManager.swift in Sources */,
 				C9CA6B912C14DBBE0057F290 /* ECKIncursion.swift in Sources */,
 				C9FD52EB2C01E0B00084E5E1 /* ECKCharacterWalletTransactionResource.swift in Sources */,
+				C95FBA4E30129C5F002795D6 /* ECKPlanetaryColonySimulator.swift in Sources */,
 				C91672B12BEA03B3009EC580 /* TimeInterval+To.swift in Sources */,
 				C9511D1A2EDC2AC7001CEED5 /* ECKSkillPlanManager.swift in Sources */,
 				C91672BB2BEA9F4D009EC580 /* ECKToken.swift in Sources */,
@@ -2658,6 +2665,7 @@
 				C9ACE4652FF4541500FAD4D1 /* ECKCapitalJumpMapOverlayTests.swift in Sources */,
 				C9ACE4632FF4540E00FAD4D1 /* ECKCapitalJumpRangeSelectorTests.swift in Sources */,
 				C9BEEF000000000000000003 /* ECKMapGestureRecognitionPolicyTests.swift in Sources */,
+				C95FBA5130129C5F002795D6 /* ECKPlanetaryColonySimulatorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

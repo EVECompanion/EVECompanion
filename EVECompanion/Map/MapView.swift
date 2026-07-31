@@ -951,13 +951,15 @@ struct MapView: View {
     
     private func attemptInitialFocusIfNeeded() {
         guard didApplyInitialFocus == false,
-              let scene,
+              scene != nil,
               selectionConfiguration != nil else {
             return
         }
         // Defer to the next runloop to ensure SpriteView is attached and laid out
         DispatchQueue.main.async {
-            guard let scene = self.scene else { return }
+            guard let scene = self.scene else {
+                return
+            }
             let isFiniteSize = self.viewportSize.width.isFinite && self.viewportSize.height.isFinite && self.viewportSize.width > 0 && self.viewportSize.height > 0
             let validViewport: CGSize? = isFiniteSize ? self.viewportSize : nil
             self.configureSelectionOverlays(in: scene)
@@ -1117,4 +1119,3 @@ private extension ColorScheme {
 #Preview {
     MapView()
 }
-

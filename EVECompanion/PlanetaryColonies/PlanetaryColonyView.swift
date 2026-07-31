@@ -14,7 +14,7 @@ struct PlanetaryColonyView: View {
     
     var body: some View {
         List {
-            ForEach(colony.details.pins, id: \.pinId) { pin in
+            ForEach(colony.details.simulated(using: colony.colony).pins, id: \.self) { pin in
                 Section {
                     PlanetaryColonyPinView(pin: pin)
                 }

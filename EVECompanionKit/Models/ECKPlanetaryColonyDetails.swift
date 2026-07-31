@@ -167,7 +167,7 @@ public final class ECKPlanetaryColonyRoute: Decodable, Sendable {
     
 }
 
-public final class ECKPlanetaryColonyPin: Decodable, @unchecked Sendable {
+public final class ECKPlanetaryColonyPin: Decodable, @unchecked Sendable, Hashable {
     
     enum CodingKeys: String, CodingKey {
         case contents
@@ -335,7 +335,10 @@ public final class ECKPlanetaryColonyPin: Decodable, @unchecked Sendable {
             let sinStuff: Double = max((sinA + sinB + sinC) / 3, 0)
             
             let barHeight: Double = decayValue * (1 + noiseFactor * sinStuff)
-            values.append((date: installTime.addingTimeInterval(TimeInterval(cycleTime * i)), units: Int(barWidth * barHeight)))
+            let output = barWidth * barHeight
+            let roundedOutput = output.rounded(.towardZero)
+            let units = output == roundedOutput ? max(0, Int(roundedOutput) - 1) : Int(roundedOutput)
+            values.append((date: installTime.addingTimeInterval(TimeInterval(cycleTime * i)), units: units))
         }
         
         return values
@@ -382,9 +385,33 @@ public final class ECKPlanetaryColonyPin: Decodable, @unchecked Sendable {
         self.item = item
     }
     
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(contents)
+        hasher.combine(expiryTime)
+        hasher.combine(extractorDetails)
+        hasher.combine(factoryDetails)
+        hasher.combine(installTime)
+        hasher.combine(lastCycleStart)
+        hasher.combine(pinId)
+        hasher.combine(schematic)
+        hasher.combine(item)
+    }
+    
+    public static func == (lhs: ECKPlanetaryColonyPin, rhs: ECKPlanetaryColonyPin) -> Bool {
+        lhs.contents == rhs.contents &&
+        lhs.expiryTime == rhs.expiryTime &&
+        lhs.extractorDetails == rhs.extractorDetails &&
+        lhs.factoryDetails == rhs.factoryDetails &&
+        lhs.installTime == rhs.installTime &&
+        lhs.lastCycleStart == rhs.lastCycleStart &&
+        lhs.pinId == rhs.pinId &&
+        lhs.schematic == rhs.schematic &&
+        lhs.item == rhs.item
+    }
+    
 }
 
-public struct ECKPlanetaryColonyPinContent: Decodable, Sendable {
+public struct ECKPlanetaryColonyPinContent: Decodable, Sendable, Hashable {
     
     enum CodingKeys: String, CodingKey {
         case item = "type_id"
@@ -412,7 +439,7 @@ public struct ECKPlanetaryColonyPinContent: Decodable, Sendable {
     
 }
 
-public final class ECKPlanetaryColonyPinExtractorDetails: Decodable, Sendable {
+public final class ECKPlanetaryColonyPinExtractorDetails: Decodable, Sendable, Hashable {
     
     enum CodingKeys: String, CodingKey {
         case cycleTime = "cycle_time"
@@ -444,9 +471,23 @@ public final class ECKPlanetaryColonyPinExtractorDetails: Decodable, Sendable {
         self.quantityPerCycle = quantityPerCycle
     }
     
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(cycleTime)
+        hasher.combine(headRadius)
+        hasher.combine(product)
+        hasher.combine(quantityPerCycle)
+    }
+    
+    public static func == (lhs: ECKPlanetaryColonyPinExtractorDetails, rhs: ECKPlanetaryColonyPinExtractorDetails) -> Bool {
+        lhs.cycleTime == rhs.cycleTime &&
+        lhs.headRadius == rhs.headRadius &&
+        lhs.product == rhs.product &&
+        lhs.quantityPerCycle == rhs.quantityPerCycle
+    }
+    
 }
 
-public final class ECKPlanetaryColonyPinFactoryDetails: Decodable, Sendable {
+public final class ECKPlanetaryColonyPinFactoryDetails: Decodable, Sendable, Hashable {
 
     enum CodingKeys: String, CodingKey {
         case schematic = "schematic_id"
@@ -461,6 +502,14 @@ public final class ECKPlanetaryColonyPinFactoryDetails: Decodable, Sendable {
     
     init(schematic: ECKPlanetSchematic) {
         self.schematic = schematic
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(schematic)
+    }
+    
+    public static func == (lhs: ECKPlanetaryColonyPinFactoryDetails, rhs: ECKPlanetaryColonyPinFactoryDetails) -> Bool {
+        return lhs.schematic.id == rhs.schematic.id
     }
     
 }

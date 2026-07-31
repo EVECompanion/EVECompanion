@@ -1264,7 +1264,7 @@ extension MapScene: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
                            shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return ECKMapGestureRecognitionPolicy.shouldRecognizeSimultaneously(gestureRecognizer,
-                                                                           with: otherGestureRecognizer)
+                                                                            with: otherGestureRecognizer)
     }
 
 }
