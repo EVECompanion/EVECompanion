@@ -163,7 +163,6 @@
 		C95980C32C2229EE007C9FD9 /* IndustryJobsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95980C22C2229EE007C9FD9 /* IndustryJobsView.swift */; };
 		C95F604E2D860F820007A74A /* ECKCapitalJumpPathFinderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95F604D2D860F820007A74A /* ECKCapitalJumpPathFinderError.swift */; };
 		C95FBA4E30129C5F002795D6 /* ECKPlanetaryColonySimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95FBA4D30129C5F002795D6 /* ECKPlanetaryColonySimulator.swift */; };
-		C95FBA5130129C5F002795D6 /* ECKPlanetaryColonySimulatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95FBA5030129C5F002795D6 /* ECKPlanetaryColonySimulatorTests.swift */; };
 		C96430822CC1AB7500E8D6A6 /* ECKPlanetaryColony.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96430812CC1AB7500E8D6A6 /* ECKPlanetaryColony.swift */; };
 		C96430842CC1AC3700E8D6A6 /* ECKPlanetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96430832CC1AC3700E8D6A6 /* ECKPlanetType.swift */; };
 		C96430862CC1AD3F00E8D6A6 /* ECKPlanetaryColoniesResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96430852CC1AD3F00E8D6A6 /* ECKPlanetaryColoniesResource.swift */; };
@@ -186,6 +185,7 @@
 		C96F98A52BF017DA00DEC34F /* ECKPublicCharacterInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F98A42BF017DA00DEC34F /* ECKPublicCharacterInfo.swift */; };
 		C96F98B02F00000100DEC34F /* ECKMarketOrderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96F98AF2F00000100DEC34F /* ECKMarketOrderManager.swift */; };
 		C96FA2412E905EC00057481C /* FittingDetailModuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96FA2402E905EC00057481C /* FittingDetailModuleView.swift */; };
+		C97556D5301D3441008D68C0 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = C97556D4301D3441008D68C0 /* SwiftSoup */; };
 		C98169C22C11C2FB0033B932 /* ECKCharacterAttributesResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98169C12C11C2FB0033B932 /* ECKCharacterAttributesResource.swift */; };
 		C98169C42C11C34D0033B932 /* ECKCharacterAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98169C32C11C34D0033B932 /* ECKCharacterAttributes.swift */; };
 		C98169C62C1219F90033B932 /* ECKCharacterImplantResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98169C52C1219F90033B932 /* ECKCharacterImplantResource.swift */; };
@@ -636,7 +636,6 @@
 		C95980C22C2229EE007C9FD9 /* IndustryJobsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndustryJobsView.swift; sourceTree = "<group>"; };
 		C95F604D2D860F820007A74A /* ECKCapitalJumpPathFinderError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCapitalJumpPathFinderError.swift; sourceTree = "<group>"; };
 		C95FBA4D30129C5F002795D6 /* ECKPlanetaryColonySimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKPlanetaryColonySimulator.swift; sourceTree = "<group>"; };
-		C95FBA5030129C5F002795D6 /* ECKPlanetaryColonySimulatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKPlanetaryColonySimulatorTests.swift; sourceTree = "<group>"; };
 		C96430812CC1AB7500E8D6A6 /* ECKPlanetaryColony.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKPlanetaryColony.swift; sourceTree = "<group>"; };
 		C96430832CC1AC3700E8D6A6 /* ECKPlanetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKPlanetType.swift; sourceTree = "<group>"; };
 		C96430852CC1AD3F00E8D6A6 /* ECKPlanetaryColoniesResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKPlanetaryColoniesResource.swift; sourceTree = "<group>"; };
@@ -919,6 +918,7 @@
 				C90D50932BF8BBF300DEC0F3 /* Pulse in Frameworks */,
 				C98483FE2D7EDB0C0076016B /* SQLite in Frameworks */,
 				C9DEF2F42C14AEF200815AF0 /* ZipArchive in Frameworks */,
+				C97556D5301D3441008D68C0 /* SwiftSoup in Frameworks */,
 				C9D095092DE7BA8A00715479 /* Yams in Frameworks */,
 				C9EAA52D2C6FED7400ABB30F /* SwiftPriorityQueue in Frameworks */,
 			);
@@ -1640,7 +1640,6 @@
 				C9ACE4642FF4541500FAD4D1 /* ECKCapitalJumpMapOverlayTests.swift */,
 				C9ACE4622FF4540E00FAD4D1 /* ECKCapitalJumpRangeSelectorTests.swift */,
 				C9BEEF000000000000000004 /* ECKMapGestureRecognitionPolicyTests.swift */,
-				C95FBA5030129C5F002795D6 /* ECKPlanetaryColonySimulatorTests.swift */,
 				C99822AE2F7516740031B439 /* EVECompanionKitTests.xctestplan */,
 			);
 			path = EVECompanionKitTests;
@@ -2096,6 +2095,7 @@
 				C9EAA52C2C6FED7400ABB30F /* SwiftPriorityQueue */,
 				C98483FD2D7EDB0C0076016B /* SQLite */,
 				C9D095082DE7BA8A00715479 /* Yams */,
+				C97556D4301D3441008D68C0 /* SwiftSoup */,
 			);
 			productName = EVECompanionKit;
 			productReference = C91EEEEA2BE975D000352175 /* EVECompanionKit.framework */;
@@ -2172,6 +2172,7 @@
 				C9D095072DE7BA8A00715479 /* XCRemoteSwiftPackageReference "Yams" */,
 				C90BD0582E9D8BE600BB0EB9 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
 				C9BCEA072EB63D1300357E2D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				C97556D3301D3441008D68C0 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 			);
 			productRefGroup = C91EEEB82BE9730000352175 /* Products */;
 			projectDirPath = "";
@@ -2665,7 +2666,6 @@
 				C9ACE4652FF4541500FAD4D1 /* ECKCapitalJumpMapOverlayTests.swift in Sources */,
 				C9ACE4632FF4540E00FAD4D1 /* ECKCapitalJumpRangeSelectorTests.swift in Sources */,
 				C9BEEF000000000000000003 /* ECKMapGestureRecognitionPolicyTests.swift in Sources */,
-				C95FBA5130129C5F002795D6 /* ECKPlanetaryColonySimulatorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3264,6 +3264,14 @@
 				minimumVersion = 7.11.0;
 			};
 		};
+		C97556D3301D3441008D68C0 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.13.7;
+			};
+		};
 		C98483FC2D7EDB0C0076016B /* XCRemoteSwiftPackageReference "SQLite.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/stephencelis/SQLite.swift.git";
@@ -3362,6 +3370,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C952BC902BEC12AB0070C504 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		C97556D4301D3441008D68C0 /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C97556D3301D3441008D68C0 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
 		};
 		C98483FD2D7EDB0C0076016B /* SQLite */ = {
 			isa = XCSwiftPackageProductDependency;
