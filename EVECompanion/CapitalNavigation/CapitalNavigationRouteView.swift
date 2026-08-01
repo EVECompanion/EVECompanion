@@ -128,15 +128,24 @@ struct CapitalNavigationRouteView: View {
     }
 
     private func routeMapConfiguration(systems: [ECKCapitalJumpRoute.SystemEntry]) -> MapSystemSelectionConfiguration? {
-        let systemsById = Dictionary(uniqueKeysWithValues: systems.map { ($0.system.id, $0.system) })
-        guard let presentation = ECKCapitalJumpMapOverlay.staticRoutePresentation(systemIds: systems.map(\.system.id)) else {
+        // Preserve all systems, including duplicates, for jumpRouteSystemIds
+        let jumpRouteSystemIds = systems.map { $0.system.id }
+        guard let presentation = ECKCapitalJumpMapOverlay.staticRoutePresentation(systemIds: jumpRouteSystemIds) else {
             return nil
         }
+
+        // Find the first matching system for initialFocusSystemId in the array
+        let initialFocusSystem: ECKSolarSystem? = {
+            guard let focusId = presentation.initialFocusSystemId else {
+                return nil
+            }
+            return systems.first(where: { $0.system.id == focusId })?.system
+        }()
 
         return MapSystemSelectionConfiguration(selectableSystemIds: presentation.selectableSystemIds,
                                                highlightedSystemIds: presentation.highlightedSystemIds,
                                                jumpRouteSystemIds: presentation.jumpRouteSystemIds,
-                                               initialFocusSystem: presentation.initialFocusSystemId.flatMap { systemsById[$0] }) { _ in
+                                               initialFocusSystem: initialFocusSystem) { _ in
             return
         }
     }
