@@ -13,6 +13,7 @@ import Combine
 struct CharacterListView: View {
     
     @Environment(\.webAuthenticationSession) private var webAuthenticationSession
+    @StateObject private var inAppWebAuthenticationSession = InAppWebAuthenticationSession()
     @EnvironmentObject var notificationManager: ECKNotificationManager
     @Environment(\.characterStorage) private var characterStorage
     @Environment(\.scenePhase) var scenePhase
@@ -64,7 +65,9 @@ struct CharacterListView: View {
                     Task {
                         try? await ECKAuthenticationSession.start(target: .character,
                                                                   authenticationHandler: { url, scheme in
-                            return try await webAuthenticationSession.authenticate(using: url, callbackURLScheme: scheme)
+                            return try await inAppWebAuthenticationSession.authenticate(using: url,
+                                                                                callbackURLScheme: scheme,
+                                                                                preferring: webAuthenticationSession)
                         })
                     }
                     
@@ -80,6 +83,7 @@ struct CharacterListView: View {
             selectedCharacter = .empty
             characterStorage.triggerAutomaticReloadIfNecessary()
         }
+        .inAppWebAuthentication(inAppWebAuthenticationSession)
     }
     
 }

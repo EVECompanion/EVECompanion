@@ -150,6 +150,8 @@
 		C952BC8F2BEC10310070C504 /* Notification+Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = C952BC8E2BEC10310070C504 /* Notification+Name.swift */; };
 		C952BC922BEC12AB0070C504 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C952BC912BEC12AB0070C504 /* Kingfisher */; };
 		C952BC952BEC12C80070C504 /* CharacterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C952BC942BEC12C80070C504 /* CharacterListView.swift */; };
+		C95EA1D32E5A0A1D00A1B2C0 /* InAppWebAuthenticationSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95EA1D12E5A0A1D00A1B2C0 /* InAppWebAuthenticationSession.swift */; };
+		C95EA1D42E5A0A1D00A1B2C0 /* InAppWebAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95EA1D22E5A0A1D00A1B2C0 /* InAppWebAuthenticationView.swift */; };
 		C952BC972BEC156B0070C504 /* CharacterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C952BC962BEC156B0070C504 /* CharacterCell.swift */; };
 		C952BCA02BEC1E380070C504 /* ECKCharacterWalletResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C952BC9F2BEC1E380070C504 /* ECKCharacterWalletResource.swift */; };
 		C952BCA22BED26C30070C504 /* ECKCharacterSkillsResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C952BCA12BED26C30070C504 /* ECKCharacterSkillsResource.swift */; };
@@ -623,6 +625,8 @@
 		C952BC862BEB9F220070C504 /* ECKTokenRefreshResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKTokenRefreshResource.swift; sourceTree = "<group>"; };
 		C952BC8E2BEC10310070C504 /* Notification+Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Name.swift"; sourceTree = "<group>"; };
 		C952BC942BEC12C80070C504 /* CharacterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterListView.swift; sourceTree = "<group>"; };
+		C95EA1D12E5A0A1D00A1B2C0 /* InAppWebAuthenticationSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppWebAuthenticationSession.swift; sourceTree = "<group>"; };
+		C95EA1D22E5A0A1D00A1B2C0 /* InAppWebAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppWebAuthenticationView.swift; sourceTree = "<group>"; };
 		C952BC962BEC156B0070C504 /* CharacterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCell.swift; sourceTree = "<group>"; };
 		C952BC9F2BEC1E380070C504 /* ECKCharacterWalletResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterWalletResource.swift; sourceTree = "<group>"; };
 		C952BCA12BED26C30070C504 /* ECKCharacterSkillsResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterSkillsResource.swift; sourceTree = "<group>"; };
@@ -1195,6 +1199,7 @@
 				C9ACC07B2DC9DD0C0000D0FC /* AppDelegate.swift */,
 				C959777C2C28B35F0008F719 /* Assets */,
 				C91EEEBE2BE9730100352175 /* Assets.xcassets */,
+				C95EA1D02E5A0A1D00A1B2C0 /* Authentication */,
 				C98483FF2D7F7CEB0076016B /* CapitalNavigation */,
 				C92F9C972D8A0F5700306DD7 /* CapitalNavigationTab */,
 				C99528CF2BEE0CDB00CA6E06 /* CharacterDetail */,
@@ -1502,6 +1507,15 @@
 				C9E93B142DB0DB2B005458BC /* SkillRequirementsView.swift */,
 			);
 			path = SharedUI;
+			sourceTree = "<group>";
+		};
+		C95EA1D02E5A0A1D00A1B2C0 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				C95EA1D12E5A0A1D00A1B2C0 /* InAppWebAuthenticationSession.swift */,
+				C95EA1D22E5A0A1D00A1B2C0 /* InAppWebAuthenticationView.swift */,
+			);
+			path = Authentication;
 			sourceTree = "<group>";
 		};
 		C952BC932BEC12BD0070C504 /* CharacterList */ = {
@@ -2387,6 +2401,8 @@
 				C9C87AD12D9E783A00EF5D45 /* ItemAttributeCell.swift in Sources */,
 				C9B638C32E088B6200E9F6F4 /* FittingDetailDronesView.swift in Sources */,
 				C952BC952BEC12C80070C504 /* CharacterListView.swift in Sources */,
+				C95EA1D32E5A0A1D00A1B2C0 /* InAppWebAuthenticationSession.swift in Sources */,
+				C95EA1D42E5A0A1D00A1B2C0 /* InAppWebAuthenticationView.swift in Sources */,
 				C9955A2A2C3528370045D925 /* SovereigntyCampaignsView.swift in Sources */,
 				C92B4EBB2ED1DB5500E3D9B4 /* AuthenticatedCorporationCell.swift in Sources */,
 				C98484012D7F7CFB0076016B /* CapitalNavigationView.swift in Sources */,

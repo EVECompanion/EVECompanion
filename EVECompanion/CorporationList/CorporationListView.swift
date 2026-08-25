@@ -12,6 +12,7 @@ import EVECompanionKit
 struct CorporationListView: View {
     
     @Environment(\.webAuthenticationSession) private var webAuthenticationSession
+    @StateObject private var inAppWebAuthenticationSession = InAppWebAuthenticationSession()
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.corporationStorage) private var corporationStorage
     
@@ -40,7 +41,9 @@ struct CorporationListView: View {
                     Task {
                         try? await ECKAuthenticationSession.start(target: .corp,
                                                                   authenticationHandler: { url, scheme in
-                            return try await webAuthenticationSession.authenticate(using: url, callbackURLScheme: scheme)
+                            return try await inAppWebAuthenticationSession.authenticate(using: url,
+                                                                                callbackURLScheme: scheme,
+                                                                                preferring: webAuthenticationSession)
                         })
                     }
                     
@@ -52,6 +55,7 @@ struct CorporationListView: View {
         .onAppear {
             corporationStorage.triggerAutomaticReloadIfNecessary()
         }
+        .inAppWebAuthentication(inAppWebAuthenticationSession)
     }
     
 }

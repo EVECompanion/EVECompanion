@@ -8,6 +8,11 @@
 	<array>
 		<string>de.schlabertz.EVECompanion.refreshTask</string>
 	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>steam</string>
+		<string>steammobile</string>
+	</array>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_pulse._tcp</string>
