@@ -208,26 +208,54 @@ final class ECKWebService: Sendable {
     }
     
     @ECKTokenActor
-    private func refreshToken(oldToken: ECKToken) async throws(ECKWebError) {
-        if let task = oldToken.refreshTask {
+    internal func refreshToken(oldToken: ECKToken) async throws(ECKWebError) {
+        let account = oldToken.storageAccount
+
+        if let existingTask = ECKTokenActor.refreshTask(for: account) {
+            let previousAccessToken = oldToken.accessToken
+            let previousRefreshToken = oldToken.refreshToken
             do {
-                try await task.value
+                try await existingTask.value
+                guard !oldToken.isRemoved else {
+                    throw ECKWebError.unknownError
+                }
+
+                let latestToken = ECKKeychain.getTokens(target: oldToken.tokenTarget).first(where: { $0.characterId == oldToken.characterId })
+                if let latestToken {
+                    oldToken.sync(from: latestToken)
+                }
+
+                let tokenChanged = oldToken.accessToken != previousAccessToken || oldToken.refreshToken != previousRefreshToken
+                let storedTokenChanged = latestToken.map {
+                    $0.accessToken != previousAccessToken || $0.refreshToken != previousRefreshToken
+                } ?? false
+                guard oldToken.isValid, tokenChanged || storedTokenChanged else {
+                    throw ECKWebError.unknownError
+                }
+                return
             } catch let error as ECKWebError {
                 throw error
             } catch {
-                logger.error("Error refreshing token: \(error)")
+                logger.error("Error refreshing token for \(account): \(error)")
                 throw .unknownError
             }
         }
 
+        let taskID = UUID()
         let task: Task<Void, any Error> = Task { @ECKTokenActor in
+            defer {
+                ECKTokenActor.clearRefreshTask(for: account, matching: taskID)
+            }
             try await performTokenRefresh(token: oldToken)
         }
         
-        oldToken.refreshTask = task
+        ECKTokenActor.setRefreshTask(task, for: account, id: taskID)
 
         do {
             try await task.value
+            guard !oldToken.isRemoved else {
+                throw ECKWebError.unknownError
+            }
         } catch let error as ECKWebError {
             throw error
         } catch {
@@ -236,34 +264,44 @@ final class ECKWebService: Sendable {
     }
     
     @ECKTokenActor
-    private func performTokenRefresh(token: ECKToken) async throws {
-        let task: Task<Void, any Error> = Task { @ECKTokenActor in
-            let resource = ECKTokenRefreshResource(token: token, clientId: ECKConstants.clientId)
-            do {
-                let newToken = try await loadResource(resource: resource)
-                token.updateToken(
-                    accessToken: newToken.response.accessToken,
-                    refreshToken: newToken.response.refreshToken
-                )
-            } catch ECKWebError.statusCode(let statusCode, let data) {
-                if statusCode == 400 {
-                    let tokenError = try decoder.decode(ECKTokenRefreshError.self, from: data)
-                    if tokenError.error == "invalid_grant" {
-                        token.markAsInvalid()
+    internal func performTokenRefresh(token: ECKToken) async throws {
+        let resource = ECKTokenRefreshResource(token: token, clientId: ECKConstants.clientId)
+        do {
+            let newToken = try await loadResource(resource: resource)
+            token.updateToken(
+                accessToken: newToken.response.accessToken,
+                refreshToken: newToken.response.refreshToken
+            )
+        } catch ECKWebError.statusCode(let statusCode, let data) {
+            if statusCode == 400 {
+                let tokenError = try? decoder.decode(ECKTokenRefreshError.self, from: data)
+                if tokenError?.error == "invalid_grant" {
+                    if syncIfNewerTokenExists(for: token) {
+                        return
                     }
+                    token.markAsInvalid()
                 }
-                
-                throw ECKWebError.statusCode(statusCode, data)
-            } catch {
-                logger.error("Error refreshing token: \(error)")
             }
             
-            token.refreshTask = nil
+            throw ECKWebError.statusCode(statusCode, data)
+        } catch {
+            logger.error("Error refreshing token: \(error)")
+            throw error
         }
-        
-        token.refreshTask = task
-        
-        try await task.value
+    }
+
+    @ECKTokenActor
+    internal func syncIfNewerTokenExists(for token: ECKToken) -> Bool {
+        let currentTokens = ECKKeychain.getTokens(target: token.tokenTarget)
+        guard let storedToken = currentTokens.first(where: { $0.characterId == token.characterId }),
+              storedToken.refreshToken != token.refreshToken,
+              storedToken.isValid else {
+            return false
+        }
+
+        logger.info("Ignoring invalid_grant for stale refresh token \(token.characterId). Keychain already has newer valid token.")
+        token.sync(from: storedToken)
+        return true
     }
     
 }

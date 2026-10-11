@@ -294,22 +294,39 @@ internal struct ECKKeychain {
     }
 
     private static func preferredToken(between existingToken: ECKToken, and incomingToken: ECKToken) -> ECKToken {
-        if incomingToken.refreshToken == existingToken.refreshToken {
-            return incomingToken
-        }
-
         if incomingToken.isValid != existingToken.isValid {
-            return incomingToken.isValid ? incomingToken : existingToken
+            if incomingToken.isValid {
+                return incomingToken
+            } else {
+                // A matching refresh token means this invalidation applies to the
+                // stored credential too, even if its access token expires later.
+                if incomingToken.refreshToken == existingToken.refreshToken {
+                    return incomingToken
+                }
+
+                let existingExpiry = existingToken.accessTokenExpirationDate ?? .distantPast
+                let incomingExpiry = incomingToken.accessTokenExpirationDate ?? .distantPast
+                if existingExpiry > incomingExpiry || !existingToken.refreshToken.isEmpty {
+                    return existingToken
+                }
+                return incomingToken
+            }
         }
 
+        // Prefer the token with the later access-token expiry
         let existingExpiry = existingToken.accessTokenExpirationDate ?? .distantPast
         let incomingExpiry = incomingToken.accessTokenExpirationDate ?? .distantPast
-
-        if incomingExpiry >= existingExpiry {
-            return incomingToken
-        } else {
-            return existingToken
+        if incomingExpiry != existingExpiry {
+            return incomingExpiry > existingExpiry ? incomingToken : existingToken
         }
+
+        // Tie-breaker: if access tokens differ, prefer incoming as fresher
+        if incomingToken.accessToken != existingToken.accessToken {
+            return incomingToken
+        }
+
+        // Final fallback: keep incoming
+        return incomingToken
     }
     
 }

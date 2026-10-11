@@ -11,8 +11,31 @@ import JWTDecode
 @globalActor
 internal actor ECKTokenActor {
     static let shared = ECKTokenActor()
-    
+
+    @ECKTokenActor
+    private static var ongoingRefreshTasks: [String: (id: UUID, task: Task<Void, any Error>)] = [:]
+
     private init() { }
+
+    @ECKTokenActor
+    static func refreshTask(for account: String) -> Task<Void, any Error>? {
+        return ongoingRefreshTasks[account]?.task
+    }
+
+    @ECKTokenActor
+    static func setRefreshTask(_ task: Task<Void, any Error>?, for account: String, id: UUID = UUID()) {
+        if let task {
+            ongoingRefreshTasks[account] = (id: id, task: task)
+        } else {
+            ongoingRefreshTasks[account] = nil
+        }
+    }
+
+    @ECKTokenActor
+    static func clearRefreshTask(for account: String, matching id: UUID) {
+        guard ongoingRefreshTasks[account]?.id == id else { return }
+        ongoingRefreshTasks[account] = nil
+    }
 }
 
 internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unchecked Sendable {
@@ -34,8 +57,19 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unch
     private(set) internal var isRemoved: Bool = false
     internal var tokenTarget: ECKAuthenticationTarget = .character
     
+    internal var storageAccount: String {
+        return "\(characterId)-\(tokenTarget.rawValue)"
+    }
+
     @ECKTokenActor
-    internal var refreshTask: Task<Void, any Error>?
+    internal var refreshTask: Task<Void, any Error>? {
+        get {
+            ECKTokenActor.refreshTask(for: storageAccount)
+        }
+        set {
+            ECKTokenActor.setRefreshTask(newValue, for: storageAccount)
+        }
+    }
     
     static let dummy: ECKToken = .init()
     
@@ -132,8 +166,18 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unch
 
         self.accessToken = accessToken
         self.refreshToken = refreshToken
+        self.isValid = true
         self.accessTokenExpiredFlag = false
         ECKKeychain.add(token: self)
+    }
+
+    @ECKTokenActor
+    internal func sync(from otherToken: ECKToken) {
+        guard isRemoved == false else { return }
+        self.accessToken = otherToken.accessToken
+        self.refreshToken = otherToken.refreshToken
+        self.isValid = otherToken.isValid
+        self.accessTokenExpiredFlag = otherToken.accessTokenExpiredFlag
     }
     
     @ECKTokenActor
@@ -162,8 +206,11 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unch
     @ECKTokenActor
     internal func prepareForRemoval() {
         isRemoved = true
-        refreshTask?.cancel()
-        refreshTask = nil
+        let account = storageAccount
+        if let task = ECKTokenActor.refreshTask(for: account) {
+            task.cancel()
+            ECKTokenActor.setRefreshTask(nil, for: account)
+        }
     }
     
     @MainActor
