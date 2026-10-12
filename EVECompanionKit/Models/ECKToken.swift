@@ -39,6 +39,12 @@ internal actor ECKTokenActor {
 }
 
 internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unchecked Sendable {
+
+    internal enum RefreshUpdateResult: Equatable {
+        case updated
+        case superseded
+        case missing
+    }
     
     enum CodingKeys: String, CodingKey {
         case accessToken = "access_token"
@@ -158,10 +164,27 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unch
     }
     
     @ECKTokenActor
-    internal func updateToken(accessToken: String, refreshToken: String) {
+    internal func updateToken(
+        accessToken: String,
+        refreshToken: String,
+        replacingAccessToken expectedAccessToken: String,
+        refreshToken expectedRefreshToken: String
+    ) -> RefreshUpdateResult {
         guard isRemoved == false else {
             logger.info("Skipping token update for removed token \(characterId)-\(tokenTarget.rawValue)")
-            return
+            return .missing
+        }
+
+        guard let storedToken = ECKKeychain.getTokens(target: tokenTarget).first(where: { $0.characterId == characterId }) else {
+            logger.info("Skipping token update because stored token is missing for \(characterId)-\(tokenTarget.rawValue)")
+            return .missing
+        }
+
+        guard storedToken.accessToken == expectedAccessToken,
+              storedToken.refreshToken == expectedRefreshToken else {
+            logger.info("Skipping stale token update for \(characterId)-\(tokenTarget.rawValue); syncing from keychain")
+            sync(from: storedToken)
+            return .superseded
         }
 
         self.accessToken = accessToken
@@ -169,6 +192,7 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unch
         self.isValid = true
         self.accessTokenExpiredFlag = false
         ECKKeychain.add(token: self)
+        return .updated
     }
 
     @ECKTokenActor

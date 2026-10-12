@@ -377,6 +377,76 @@ struct ECKTokenStressTests {
     }
 
     @Test
+    func testStaleRefreshResponseCannotOverwriteNewerKeychainToken() async throws {
+        let characterId = 30002
+        let initialAccessToken = makeJWT(characterId: characterId, tag: "initial", exp: 2524608000)
+        let initialToken = try makeTestToken(
+            characterId: characterId,
+            accessToken: initialAccessToken,
+            refreshToken: "ref_initial"
+        )
+        let staleRefreshToken = try makeTestToken(
+            characterId: characterId,
+            accessToken: initialAccessToken,
+            refreshToken: "ref_initial"
+        )
+        await ECKKeychain.add(token: initialToken)
+
+        let newerAccessToken = makeJWT(characterId: characterId, tag: "newer", exp: 2524694400)
+        let newerToken = try makeTestToken(
+            characterId: characterId,
+            accessToken: newerAccessToken,
+            refreshToken: "ref_newer"
+        )
+        await ECKKeychain.add(token: newerToken)
+
+        let staleResponseAccessToken = makeJWT(characterId: characterId, tag: "stale-response", exp: 2524780800)
+        let result = await staleRefreshToken.updateToken(
+            accessToken: staleResponseAccessToken,
+            refreshToken: "ref_stale-response",
+            replacingAccessToken: initialAccessToken,
+            refreshToken: "ref_initial"
+        )
+
+        let savedTokens = await ECKKeychain.getTokens(target: .character)
+        let savedToken = try #require(savedTokens.first(where: { $0.characterId == characterId }))
+        #expect(result == .superseded)
+        #expect(savedToken.accessToken == newerAccessToken)
+        #expect(savedToken.refreshToken == "ref_newer")
+        let syncedAccessToken = await staleRefreshToken.accessToken
+        #expect(syncedAccessToken == newerAccessToken)
+        await ECKKeychain.remove(token: savedToken)
+    }
+
+    @Test
+    func testRefreshResponseUpdatesTokenWhenStartingCredentialIsStillCurrent() async throws {
+        let characterId = 30003
+        let initialAccessToken = makeJWT(characterId: characterId, tag: "initial", exp: 2524608000)
+        let initialToken = try makeTestToken(
+            characterId: characterId,
+            accessToken: initialAccessToken,
+            refreshToken: "ref_initial"
+        )
+        await ECKKeychain.add(token: initialToken)
+
+        let refreshedAccessToken = makeJWT(characterId: characterId, tag: "refreshed", exp: 2524694400)
+        let result = await initialToken.updateToken(
+            accessToken: refreshedAccessToken,
+            refreshToken: "ref_refreshed",
+            replacingAccessToken: initialAccessToken,
+            refreshToken: "ref_initial"
+        )
+
+        let savedTokens = await ECKKeychain.getTokens(target: .character)
+        let savedToken = try #require(savedTokens.first(where: { $0.characterId == characterId }))
+        #expect(result == .updated)
+        #expect(savedToken.accessToken == refreshedAccessToken)
+        #expect(savedToken.refreshToken == "ref_refreshed")
+        #expect(savedToken.isValid == true)
+        await ECKKeychain.remove(token: savedToken)
+    }
+
+    @Test
     func testTokenSyncIgnoresRemovedToken() async throws {
         let jwt1 = makeJWT(characterId: 40001, tag: "v1")
         let jwt2 = makeJWT(characterId: 40001, tag: "v2")

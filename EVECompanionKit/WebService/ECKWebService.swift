@@ -265,13 +265,23 @@ final class ECKWebService: Sendable {
     
     @ECKTokenActor
     internal func performTokenRefresh(token: ECKToken) async throws {
+        let expectedAccessToken = token.accessToken
+        let expectedRefreshToken = token.refreshToken
         let resource = ECKTokenRefreshResource(token: token, clientId: ECKConstants.clientId)
         do {
             let newToken = try await loadResource(resource: resource)
-            token.updateToken(
+            let updateResult = token.updateToken(
                 accessToken: newToken.response.accessToken,
-                refreshToken: newToken.response.refreshToken
+                refreshToken: newToken.response.refreshToken,
+                replacingAccessToken: expectedAccessToken,
+                refreshToken: expectedRefreshToken
             )
+            if updateResult == .missing {
+                throw ECKWebError.unknownError
+            }
+            if updateResult == .superseded, !token.isValid {
+                throw ECKWebError.unknownError
+            }
         } catch ECKWebError.statusCode(let statusCode, let data) {
             if statusCode == 400 {
                 let tokenError = try? decoder.decode(ECKTokenRefreshError.self, from: data)
