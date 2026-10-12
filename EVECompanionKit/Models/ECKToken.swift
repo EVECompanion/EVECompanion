@@ -23,12 +23,12 @@ internal actor ECKTokenActor {
     }
 
     @ECKTokenActor
-    static func setRefreshTask(_ task: Task<Void, any Error>?, for account: String, id: UUID = UUID()) {
-        if let task {
-            ongoingRefreshTasks[account] = (id: id, task: task)
-        } else {
-            ongoingRefreshTasks[account] = nil
+    static func registerRefreshTask(_ task: Task<Void, any Error>, for account: String, id: UUID) -> Task<Void, any Error>? {
+        guard ongoingRefreshTasks[account] == nil else {
+            return ongoingRefreshTasks[account]?.task
         }
+        ongoingRefreshTasks[account] = (id: id, task: task)
+        return nil
     }
 
     @ECKTokenActor
@@ -39,6 +39,12 @@ internal actor ECKTokenActor {
 }
 
 internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unchecked Sendable {
+
+    internal enum RefreshUpdateResult: Equatable {
+        case updated
+        case superseded
+        case missing
+    }
     
     enum CodingKeys: String, CodingKey {
         case accessToken = "access_token"
@@ -61,16 +67,6 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unch
         return "\(characterId)-\(tokenTarget.rawValue)"
     }
 
-    @ECKTokenActor
-    internal var refreshTask: Task<Void, any Error>? {
-        get {
-            ECKTokenActor.refreshTask(for: storageAccount)
-        }
-        set {
-            ECKTokenActor.setRefreshTask(newValue, for: storageAccount)
-        }
-    }
-    
     static let dummy: ECKToken = .init()
     
     @MainActor
@@ -158,17 +154,56 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unch
     }
     
     @ECKTokenActor
-    internal func updateToken(accessToken: String, refreshToken: String) {
+    internal func updateToken(
+        accessToken: String,
+        refreshToken: String,
+        replacingAccessToken expectedAccessToken: String,
+        refreshToken expectedRefreshToken: String
+    ) -> RefreshUpdateResult {
         guard isRemoved == false else {
             logger.info("Skipping token update for removed token \(characterId)-\(tokenTarget.rawValue)")
-            return
+            return .missing
         }
 
+        guard let storedToken = ECKKeychain.getTokens(target: tokenTarget).first(where: { $0.characterId == characterId }) else {
+            logger.info("Skipping token update because stored token is missing for \(characterId)-\(tokenTarget.rawValue)")
+            return .missing
+        }
+
+        guard storedToken.accessToken == expectedAccessToken,
+              storedToken.refreshToken == expectedRefreshToken else {
+            logger.info("Skipping stale token update for \(characterId)-\(tokenTarget.rawValue); syncing from keychain")
+            sync(from: storedToken)
+            return .superseded
+        }
+
+        let wasValid = self.isValid
         self.accessToken = accessToken
         self.refreshToken = refreshToken
         self.isValid = true
         self.accessTokenExpiredFlag = false
-        ECKKeychain.add(token: self)
+        guard ECKKeychain.replace(
+            token: self,
+            replacingAccessToken: expectedAccessToken,
+            refreshToken: expectedRefreshToken
+        ) else {
+            if let latestToken = ECKKeychain.getTokens(target: tokenTarget).first(where: { $0.characterId == characterId }) {
+                if latestToken.accessToken != expectedAccessToken || latestToken.refreshToken != expectedRefreshToken {
+                    sync(from: latestToken)
+                    return .superseded
+                }
+
+                self.isValid = latestToken.isValid
+            } else {
+                self.isValid = wasValid
+            }
+
+            self.accessToken = expectedAccessToken
+            self.refreshToken = expectedRefreshToken
+            self.accessTokenExpiredFlag = true
+            return .missing
+        }
+        return .updated
     }
 
     @ECKTokenActor
@@ -182,14 +217,34 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unch
     
     @ECKTokenActor
     internal func markAsInvalid() {
+        _ = markAsInvalid(expectedAccessToken: accessToken, expectedRefreshToken: refreshToken)
+    }
+
+    @ECKTokenActor
+    internal func markAsInvalid(expectedAccessToken: String, expectedRefreshToken: String) -> Bool {
         guard isRemoved == false else {
             logger.info("Skipping token invalidation for removed token \(characterId)-\(tokenTarget.rawValue)")
-            return
+            return false
+        }
+
+        guard let storedToken = ECKKeychain.getTokens(target: tokenTarget).first(where: { $0.characterId == characterId }) else {
+            logger.info("Skipping token invalidation because stored token is missing for \(characterId)-\(tokenTarget.rawValue)")
+            return false
+        }
+
+        guard accessToken == expectedAccessToken,
+              refreshToken == expectedRefreshToken,
+              storedToken.accessToken == expectedAccessToken,
+              storedToken.refreshToken == expectedRefreshToken else {
+            logger.info("Skipping stale token invalidation for \(characterId)-\(tokenTarget.rawValue); syncing from keychain")
+            sync(from: storedToken)
+            return false
         }
 
         self.isValid = false
         self.accessTokenExpiredFlag = true
         ECKKeychain.add(token: self)
+        return true
     }
     
     @ECKTokenActor
@@ -200,7 +255,6 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unch
         }
 
         self.accessTokenExpiredFlag = true
-        ECKKeychain.add(token: self)
     }
 
     @ECKTokenActor
@@ -209,7 +263,8 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unch
         let account = storageAccount
         if let task = ECKTokenActor.refreshTask(for: account) {
             task.cancel()
-            ECKTokenActor.setRefreshTask(nil, for: account)
+            // Keep the account registered until the task's defer clears it.
+            // Cancellation does not end the URLSession continuation immediately.
         }
     }
     

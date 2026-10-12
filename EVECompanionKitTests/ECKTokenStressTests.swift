@@ -9,6 +9,33 @@ import Foundation
 import Testing
 @testable import EVECompanionKit
 
+private actor ECKTokenRefreshTestGate {
+    private var continuation: CheckedContinuation<Void, Never>?
+    private var startedContinuation: CheckedContinuation<Void, Never>?
+    private var isPaused = false
+
+    func pause() async {
+        await withCheckedContinuation { continuation in
+            self.continuation = continuation
+            isPaused = true
+            startedContinuation?.resume()
+            startedContinuation = nil
+        }
+    }
+
+    func waitUntilPaused() async {
+        guard isPaused == false else { return }
+        await withCheckedContinuation { continuation in
+            startedContinuation = continuation
+        }
+    }
+
+    func open() {
+        continuation?.resume()
+        continuation = nil
+    }
+}
+
 struct ECKTokenStressTests {
 
     /// Helper to generate valid JWT strings containing standard SSO claims
@@ -140,6 +167,67 @@ struct ECKTokenStressTests {
         await ECKKeychain.remove(token: savedToken)
     }
 
+    @Test
+    func testSuccessfulRefreshReplacesRotatedCredentialEvenWithEarlierExpiry() async throws {
+        let characterId = 60004
+        let storedAccessToken = makeJWT(characterId: characterId, tag: "stored", exp: 2524694400)
+        let token = try makeTestToken(
+            characterId: characterId,
+            accessToken: storedAccessToken,
+            refreshToken: "ref_before_refresh"
+        )
+        await ECKKeychain.add(token: token)
+
+        let refreshedAccessToken = makeJWT(characterId: characterId, tag: "refreshed", exp: 2524608000)
+        let updateResult = await token.updateToken(
+            accessToken: refreshedAccessToken,
+            refreshToken: "ref_after_refresh",
+            replacingAccessToken: storedAccessToken,
+            refreshToken: "ref_before_refresh"
+        )
+        let tokens = await ECKKeychain.getTokens(target: .character)
+        let savedToken = try #require(tokens.first(where: { $0.characterId == characterId }))
+
+        #expect(updateResult == .updated)
+        #expect(savedToken.accessToken == refreshedAccessToken)
+        #expect(savedToken.refreshToken == "ref_after_refresh")
+        await ECKKeychain.remove(token: savedToken)
+    }
+
+    @Test
+    func testStaleSuccessfulRefreshCannotReplaceNewerKeychainCredential() async throws {
+        let characterId = 60005
+        let staleAccessToken = makeJWT(characterId: characterId, tag: "stale", exp: 2524608000)
+        let staleToken = try makeTestToken(
+            characterId: characterId,
+            accessToken: staleAccessToken,
+            refreshToken: "ref_stale"
+        )
+        await ECKKeychain.add(token: staleToken)
+
+        let latestAccessToken = makeJWT(characterId: characterId, tag: "latest", exp: 2524694400)
+        let latestToken = try makeTestToken(
+            characterId: characterId,
+            accessToken: latestAccessToken,
+            refreshToken: "ref_latest"
+        )
+        await ECKKeychain.add(token: latestToken)
+
+        let updateResult = await staleToken.updateToken(
+            accessToken: makeJWT(characterId: characterId, tag: "late_response", exp: 2524780800),
+            refreshToken: "ref_late_response",
+            replacingAccessToken: staleAccessToken,
+            refreshToken: "ref_stale"
+        )
+        let tokens = await ECKKeychain.getTokens(target: .character)
+        let savedToken = try #require(tokens.first(where: { $0.characterId == characterId }))
+
+        #expect(updateResult == .superseded)
+        #expect(savedToken.accessToken == latestAccessToken)
+        #expect(savedToken.refreshToken == "ref_latest")
+        await ECKKeychain.remove(token: savedToken)
+    }
+
     // MARK: - 2. Stale 400 invalid_grant Response Handling Tests
     // (Tests Bug #3: 400 invalid_grant on stale token syncs from Keychain instead of invalidating character)
 
@@ -169,6 +257,80 @@ struct ECKTokenStressTests {
         await ECKKeychain.remove(token: freshKeychainToken)
     }
 
+    @Test
+    func testStaleInvalidGrantWithUnchangedRefreshTokenSyncsNewerAccessToken() async throws {
+        let characterId = 70002
+        let latestAccessToken = makeJWT(characterId: characterId, tag: "latest", exp: 2524694400)
+        let latestToken = try makeTestToken(
+            characterId: characterId,
+            accessToken: latestAccessToken,
+            refreshToken: "ref_unchanged"
+        )
+        let staleAccessToken = makeJWT(characterId: characterId, tag: "stale", exp: 2524608000)
+        let staleToken = try makeTestToken(
+            characterId: characterId,
+            accessToken: staleAccessToken,
+            refreshToken: "ref_unchanged"
+        )
+        await ECKKeychain.add(token: latestToken)
+
+        let didSync = await ECKWebService().syncIfNewerTokenExists(for: staleToken)
+        let syncedAccessToken = await staleToken.accessToken
+        let syncedValidity = await staleToken.isValid
+
+        #expect(didSync)
+        #expect(syncedAccessToken == latestAccessToken)
+        #expect(syncedValidity)
+        await ECKKeychain.remove(token: latestToken)
+    }
+
+    @Test
+    func testInvalidGrantStillInvalidatesTheCurrentCredential() async throws {
+        let characterId = 70003
+        let token = try makeTestToken(characterId: characterId, refreshToken: "ref_current")
+        await ECKKeychain.add(token: token)
+        let accessToken = await token.accessToken
+        let refreshToken = await token.refreshToken
+
+        let didInvalidate = await token.markAsInvalid(
+            expectedAccessToken: accessToken,
+            expectedRefreshToken: refreshToken
+        )
+        let storedTokens = await ECKKeychain.getTokens(target: .character)
+        let storedToken = try #require(storedTokens.first(where: { $0.characterId == characterId }))
+
+        #expect(didInvalidate)
+        #expect(storedToken.isValid == false)
+        await ECKKeychain.remove(token: storedToken)
+    }
+
+    @Test
+    func testExpiredResponseFromStaleTokenCannotRewriteKeychainCredential() async throws {
+        let characterId = 70004
+        let latestAccessToken = makeJWT(characterId: characterId, tag: "latest", exp: 2524694400)
+        let latestToken = try makeTestToken(
+            characterId: characterId,
+            accessToken: latestAccessToken,
+            refreshToken: "ref_latest"
+        )
+        let staleToken = try makeTestToken(
+            characterId: characterId,
+            accessToken: makeJWT(characterId: characterId, tag: "stale", exp: 2524608000),
+            refreshToken: "ref_stale"
+        )
+        await ECKKeychain.add(token: latestToken)
+
+        await staleToken.markAccessTokenExpired()
+
+        let staleTokenExpired = await staleToken.isExpired
+        let storedTokens = await ECKKeychain.getTokens(target: .character)
+        let storedToken = try #require(storedTokens.first(where: { $0.characterId == characterId }))
+        #expect(staleTokenExpired)
+        #expect(storedToken.accessToken == latestAccessToken)
+        #expect(storedToken.refreshToken == "ref_latest")
+        await ECKKeychain.remove(token: storedToken)
+    }
+
     // MARK: - 3. ECKWebService refreshToken Coalescing & Control Flow Tests
     // (Tests Bug #1: Missing return statement in refreshToken causing Task 2 to fall through to ESI)
 
@@ -176,6 +338,7 @@ struct ECKTokenStressTests {
     func testWebServiceRefreshTokenCoalescingEarlyReturn() async throws {
         let characterId = 80001
         let account = "\(characterId)-character"
+        let taskID = UUID()
 
         let tokenB = try makeTestToken(characterId: characterId, refreshToken: "ref_b", isValid: true)
 
@@ -184,7 +347,8 @@ struct ECKTokenStressTests {
             try await Task.sleep(nanoseconds: 50_000_000) // 50ms
         }
 
-        await ECKTokenActor.setRefreshTask(inFlightTask, for: account)
+        let registeredTask = await ECKTokenActor.registerRefreshTask(inFlightTask, for: account, id: taskID)
+        #expect(registeredTask == nil)
 
         // Store refreshed token in Keychain (simulating Task 1 completing successfully)
         let refreshedToken = try makeTestToken(characterId: characterId, refreshToken: "ref_refreshed", isValid: true)
@@ -203,7 +367,7 @@ struct ECKTokenStressTests {
         #expect(tokenBValid == true)
 
         // Clean up
-        await ECKTokenActor.setRefreshTask(nil, for: account)
+        await ECKTokenActor.clearRefreshTask(for: account, matching: taskID)
         await ECKKeychain.remove(token: refreshedToken)
     }
 
@@ -211,9 +375,11 @@ struct ECKTokenStressTests {
     func testCoalescedRefreshFailsWhenSharedTaskDoesNotProduceNewToken() async throws {
         let characterId = 80002
         let account = "\(characterId)-character"
+        let taskID = UUID()
         let expiredToken = try makeTestToken(characterId: characterId, refreshToken: "ref_expired", exp: 1)
         let completedTask = Task<Void, any Error> { @ECKTokenActor in }
-        await ECKTokenActor.setRefreshTask(completedTask, for: account)
+        let registeredTask = await ECKTokenActor.registerRefreshTask(completedTask, for: account, id: taskID)
+        #expect(registeredTask == nil)
 
         var didThrow = false
         do {
@@ -223,20 +389,22 @@ struct ECKTokenStressTests {
         }
 
         #expect(didThrow)
-        await ECKTokenActor.setRefreshTask(nil, for: account)
+        await ECKTokenActor.clearRefreshTask(for: account, matching: taskID)
     }
 
     @Test
     func testCoalescedRefreshFailsWhenTokenIsRemovedWhileWaiting() async throws {
         let characterId = 80003
         let account = "\(characterId)-character"
+        let taskID = UUID()
         let oldToken = try makeTestToken(characterId: characterId, refreshToken: "ref_old")
         let refreshedToken = try makeTestToken(characterId: characterId, refreshToken: "ref_new")
         await ECKKeychain.add(token: refreshedToken)
 
         await oldToken.prepareForRemoval()
         let completedTask = Task<Void, any Error> { @ECKTokenActor in }
-        await ECKTokenActor.setRefreshTask(completedTask, for: account)
+        let registeredTask = await ECKTokenActor.registerRefreshTask(completedTask, for: account, id: taskID)
+        #expect(registeredTask == nil)
 
         var didThrow = false
         do {
@@ -246,8 +414,88 @@ struct ECKTokenStressTests {
         }
 
         #expect(didThrow)
-        await ECKTokenActor.setRefreshTask(nil, for: account)
+        await ECKTokenActor.clearRefreshTask(for: account, matching: taskID)
         await ECKKeychain.remove(token: refreshedToken)
+    }
+
+    @Test
+    func testRefreshSyncsLatestKeychainCredentialBeforeSendingRequest() async throws {
+        let characterId = 80005
+        let staleToken = try makeTestToken(
+            characterId: characterId,
+            accessToken: makeJWT(characterId: characterId, tag: "stale", exp: 1),
+            refreshToken: "ref_stale"
+        )
+        let latestAccessToken = makeJWT(characterId: characterId, tag: "latest", exp: 2524694400)
+        let latestToken = try makeTestToken(
+            characterId: characterId,
+            accessToken: latestAccessToken,
+            refreshToken: "ref_latest"
+        )
+        await ECKKeychain.add(token: latestToken)
+
+        // The latest token is still valid, so refreshToken must sync and return
+        // without submitting the stale refresh token to EVE SSO.
+        try await ECKWebService().refreshToken(oldToken: staleToken)
+
+        let syncedAccessToken = await staleToken.accessToken
+        let syncedRefreshToken = await staleToken.refreshToken
+        #expect(syncedAccessToken == latestAccessToken)
+        #expect(syncedRefreshToken == "ref_latest")
+        await ECKKeychain.remove(token: latestToken)
+    }
+
+    @Test
+    func testRefreshPreflightLeavesCurrentCredentialUnchanged() async throws {
+        let characterId = 80006
+        let currentToken = try makeTestToken(characterId: characterId, refreshToken: "ref_current")
+        await ECKKeychain.add(token: currentToken)
+        let originalAccessToken = currentToken.accessToken
+
+        let didSync = await ECKWebService().syncWithLatestKeychainToken(for: currentToken)
+        let accessToken = currentToken.accessToken
+        let refreshToken = currentToken.refreshToken
+        #expect(didSync == false)
+        #expect(accessToken == originalAccessToken)
+        #expect(refreshToken == "ref_current")
+        await ECKKeychain.remove(token: currentToken)
+    }
+
+    @Test
+    func testRemovingTokenKeepsRefreshRegisteredUntilTaskFinishes() async throws {
+        let characterId = 80004
+        let account = "\(characterId)-character"
+        let token = try makeTestToken(characterId: characterId, refreshToken: "ref_in_flight")
+        let gate = ECKTokenRefreshTestGate()
+        let taskID = UUID()
+        let otherAccount = "\(characterId + 1)-corp"
+        let otherTaskID = UUID()
+        let otherTask: Task<Void, any Error> = Task { @ECKTokenActor in }
+        try await otherTask.value
+        let registeredOtherTask = await ECKTokenActor.registerRefreshTask(otherTask, for: otherAccount, id: otherTaskID)
+        #expect(registeredOtherTask == nil)
+
+        let inFlightTask: Task<Void, any Error> = Task { @ECKTokenActor in
+            defer {
+                ECKTokenActor.clearRefreshTask(for: account, matching: taskID)
+            }
+            await gate.pause()
+        }
+        let registeredInFlightTask = await ECKTokenActor.registerRefreshTask(inFlightTask, for: account, id: taskID)
+        #expect(registeredInFlightTask == nil)
+        await gate.waitUntilPaused()
+
+        await token.prepareForRemoval()
+        let registeredTaskAfterRemoval = await ECKTokenActor.refreshTask(for: account)
+        let otherAccountTask = await ECKTokenActor.refreshTask(for: otherAccount)
+        #expect(registeredTaskAfterRemoval != nil)
+        #expect(otherAccountTask != nil)
+
+        await gate.open()
+        _ = try? await inFlightTask.value
+        let registeredTaskAfterCompletion = await ECKTokenActor.refreshTask(for: account)
+        #expect(registeredTaskAfterCompletion == nil)
+        await ECKTokenActor.clearRefreshTask(for: otherAccount, matching: otherTaskID)
     }
 
     // MARK: - 4. Task Coalescing & Concurrent Refresh Stress Tests
@@ -255,20 +503,16 @@ struct ECKTokenStressTests {
 
     @Test
     func testConcurrentRefreshTaskCoalescingForSameAccount() async throws {
-        let account = "10001-character"
-
-        // Ensure clean initial state for test account
-        await ECKTokenActor.setRefreshTask(nil, for: account)
-
-        let initialTaskCount = await ECKTokenActor.refreshTask(for: account)
-        #expect(initialTaskCount == nil)
+        let account = "10001-character-\(UUID().uuidString)"
+        let taskID = UUID()
 
         // Create a long-running mock refresh task
         let refreshTask: Task<Void, any Error> = Task { @ECKTokenActor in
             try await Task.sleep(nanoseconds: 100_000_000) // 100ms
         }
 
-        await ECKTokenActor.setRefreshTask(refreshTask, for: account)
+        let existingTask = await ECKTokenActor.registerRefreshTask(refreshTask, for: account, id: taskID)
+        #expect(existingTask == nil)
 
         // Launch 50 concurrent caller tasks asking for the refresh task
         await withTaskGroup(of: Task<Void, any Error>?.self) { group in
@@ -285,41 +529,61 @@ struct ECKTokenStressTests {
 
         // Wait for task to finish and clean up
         _ = try? await refreshTask.value
-        await ECKTokenActor.setRefreshTask(nil, for: account)
+        await ECKTokenActor.clearRefreshTask(for: account, matching: taskID)
+    }
+
+    @Test
+    func testRefreshTaskRegistrationRejectsSecondTaskForSameAccount() async throws {
+        let account = "refresh-register-\(UUID().uuidString)"
+        let firstTaskID = UUID()
+        let secondTaskID = UUID()
+        let firstTask: Task<Void, any Error> = Task { @ECKTokenActor in
+            try await Task.sleep(nanoseconds: 60_000_000_000)
+        }
+        let secondTask: Task<Void, any Error> = Task { @ECKTokenActor in }
+
+        let existingBeforeRegistration = await ECKTokenActor.registerRefreshTask(firstTask, for: account, id: firstTaskID)
+        let existingAfterSecondRegistration = await ECKTokenActor.registerRefreshTask(secondTask, for: account, id: secondTaskID)
+        let registeredTask = await ECKTokenActor.refreshTask(for: account)
+
+        #expect(existingBeforeRegistration == nil)
+        #expect(existingAfterSecondRegistration != nil)
+        #expect(registeredTask != nil)
+        firstTask.cancel()
+        secondTask.cancel()
+        _ = try? await firstTask.value
+        await ECKTokenActor.clearRefreshTask(for: account, matching: firstTaskID)
     }
 
     @Test
     func testMultiAccountConcurrentRefreshIsolation() async throws {
         let characterIds = [20001, 20002, 20003, 20004, 20005]
-
-        // Clear tasks
-        for cid in characterIds {
-            await ECKTokenActor.setRefreshTask(nil, for: "\(cid)-character")
-        }
+        let accounts = characterIds.map { "\($0)-character-\(UUID().uuidString)" }
 
         // Launch concurrent refresh task registrations across 5 different characters
         await withTaskGroup(of: Void.self) { group in
-            for cid in characterIds {
-                let account = "\(cid)-character"
+            for account in accounts {
                 group.addTask {
+                    let taskID = UUID()
                     let task: Task<Void, any Error> = Task { @ECKTokenActor in
                         try await Task.sleep(nanoseconds: 50_000_000)
                     }
-                    await ECKTokenActor.setRefreshTask(task, for: account)
+                    let existingTask = await ECKTokenActor.registerRefreshTask(task, for: account, id: taskID)
+                    #expect(existingTask == nil)
 
                     // Verify task registered specifically for this account
                     let retrievedTask = await ECKTokenActor.refreshTask(for: account)
                     #expect(retrievedTask != nil)
                     
                     _ = try? await task.value
-                    await ECKTokenActor.setRefreshTask(nil, for: account)
+                    await ECKTokenActor.clearRefreshTask(for: account, matching: taskID)
                 }
             }
         }
 
         // Verify clean teardown for all accounts
-        for cid in characterIds {
-            let task = await ECKTokenActor.refreshTask(for: "\(cid)-character")
+        for account in accounts {
+            let task = await ECKTokenActor.refreshTask(for: account)
             #expect(task == nil)
         }
     }
@@ -336,8 +600,13 @@ struct ECKTokenStressTests {
             throw NSError(domain: "new-refresh", code: 2)
         }
 
-        await ECKTokenActor.setRefreshTask(oldTask, for: account, id: oldID)
-        await ECKTokenActor.setRefreshTask(newTask, for: account, id: newID)
+        let registeredOldTask = await ECKTokenActor.registerRefreshTask(oldTask, for: account, id: oldID)
+        #expect(registeredOldTask == nil)
+
+        // Simulate the old task finishing, then allow a new generation to register.
+        await ECKTokenActor.clearRefreshTask(for: account, matching: oldID)
+        let registeredNewTask = await ECKTokenActor.registerRefreshTask(newTask, for: account, id: newID)
+        #expect(registeredNewTask == nil)
 
         // A completing old task must not remove the newer account registration.
         await ECKTokenActor.clearRefreshTask(for: account, matching: oldID)
@@ -374,6 +643,76 @@ struct ECKTokenStressTests {
         #expect(accessTokenA == jwt2)
         #expect(refreshTokenA == "ref_v2")
         #expect(isValidA == true)
+    }
+
+    @Test
+    func testStaleRefreshResponseCannotOverwriteNewerKeychainToken() async throws {
+        let characterId = 30002
+        let initialAccessToken = makeJWT(characterId: characterId, tag: "initial", exp: 2524608000)
+        let initialToken = try makeTestToken(
+            characterId: characterId,
+            accessToken: initialAccessToken,
+            refreshToken: "ref_initial"
+        )
+        let staleRefreshToken = try makeTestToken(
+            characterId: characterId,
+            accessToken: initialAccessToken,
+            refreshToken: "ref_initial"
+        )
+        await ECKKeychain.add(token: initialToken)
+
+        let newerAccessToken = makeJWT(characterId: characterId, tag: "newer", exp: 2524694400)
+        let newerToken = try makeTestToken(
+            characterId: characterId,
+            accessToken: newerAccessToken,
+            refreshToken: "ref_newer"
+        )
+        await ECKKeychain.add(token: newerToken)
+
+        let staleResponseAccessToken = makeJWT(characterId: characterId, tag: "stale-response", exp: 2524780800)
+        let result = await staleRefreshToken.updateToken(
+            accessToken: staleResponseAccessToken,
+            refreshToken: "ref_stale-response",
+            replacingAccessToken: initialAccessToken,
+            refreshToken: "ref_initial"
+        )
+
+        let savedTokens = await ECKKeychain.getTokens(target: .character)
+        let savedToken = try #require(savedTokens.first(where: { $0.characterId == characterId }))
+        #expect(result == .superseded)
+        #expect(savedToken.accessToken == newerAccessToken)
+        #expect(savedToken.refreshToken == "ref_newer")
+        let syncedAccessToken = await staleRefreshToken.accessToken
+        #expect(syncedAccessToken == newerAccessToken)
+        await ECKKeychain.remove(token: savedToken)
+    }
+
+    @Test
+    func testRefreshResponseUpdatesTokenWhenStartingCredentialIsStillCurrent() async throws {
+        let characterId = 30003
+        let initialAccessToken = makeJWT(characterId: characterId, tag: "initial", exp: 2524608000)
+        let initialToken = try makeTestToken(
+            characterId: characterId,
+            accessToken: initialAccessToken,
+            refreshToken: "ref_initial"
+        )
+        await ECKKeychain.add(token: initialToken)
+
+        let refreshedAccessToken = makeJWT(characterId: characterId, tag: "refreshed", exp: 2524694400)
+        let result = await initialToken.updateToken(
+            accessToken: refreshedAccessToken,
+            refreshToken: "ref_refreshed",
+            replacingAccessToken: initialAccessToken,
+            refreshToken: "ref_initial"
+        )
+
+        let savedTokens = await ECKKeychain.getTokens(target: .character)
+        let savedToken = try #require(savedTokens.first(where: { $0.characterId == characterId }))
+        #expect(result == .updated)
+        #expect(savedToken.accessToken == refreshedAccessToken)
+        #expect(savedToken.refreshToken == "ref_refreshed")
+        #expect(savedToken.isValid == true)
+        await ECKKeychain.remove(token: savedToken)
     }
 
     @Test

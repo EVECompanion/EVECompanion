@@ -68,6 +68,31 @@ internal struct ECKKeychain {
             NotificationCenter.default.post(name: .tokensDidChange, object: nil)
         }
     }
+
+    @ECKTokenActor
+    static func replace(
+        token: ECKToken,
+        replacingAccessToken expectedAccessToken: String,
+        refreshToken expectedRefreshToken: String
+    ) -> Bool {
+        tokenLock.lock()
+        defer {
+            tokenLock.unlock()
+        }
+
+        guard token.isRemoved == false,
+              let existingToken = getTokens().first(where: { storageAccount(for: $0) == storageAccount(for: token) }),
+              existingToken.accessToken == expectedAccessToken,
+              existingToken.refreshToken == expectedRefreshToken else {
+            return false
+        }
+
+        guard set(token: token) else { return false }
+        if existingToken.isValid == false && token.isValid {
+            NotificationCenter.default.post(name: .tokensDidChange, object: nil)
+        }
+        return true
+    }
     
     @ECKTokenActor
     static func remove(token: ECKToken) {
@@ -171,7 +196,7 @@ internal struct ECKKeychain {
     }
     
     @ECKTokenActor
-    private static func set(token: ECKToken) {
+    private static func set(token: ECKToken) -> Bool {
         do {
             let data = try jsonEncoder.encode(token)
             let tokenStorageAccount = storageAccount(for: token)
@@ -187,14 +212,18 @@ internal struct ECKKeychain {
                 let addStatus = SecItemAdd(addQuery as CFDictionary, nil)
                 if addStatus != errSecSuccess {
                     logger.error("Could not add token \(tokenStorageAccount). Status: \(addStatus)")
+                    return false
                 }
             } else if updateStatus != errSecSuccess {
                 logger.error("Could not update token \(tokenStorageAccount). Status: \(updateStatus)")
+                return false
             }
             
             removeObsoleteAccounts(Set(knownAccounts(for: token).filter { $0 != tokenStorageAccount }))
+            return true
         } catch {
             logger.error("Cannot encode token \(storageAccount(for: token)): \(error)")
+            return false
         }
     }
     
