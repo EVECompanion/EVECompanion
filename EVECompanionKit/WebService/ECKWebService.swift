@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CryptoKit
 
 final class ECKWebService: Sendable {
     
@@ -23,6 +24,13 @@ final class ECKWebService: Sendable {
     
     static var tokenCodingUserInfoKey: CodingUserInfoKey {
         return CodingUserInfoKey(rawValue: "token")!
+    }
+
+    internal static func requestBodyLogDescription(for url: URL, body: Data?) -> String {
+        guard url.host == "login.eveonline.com", url.path == "/v2/oauth/token" else {
+            return String(data: body ?? Data(), encoding: .utf8) ?? "EMPTY"
+        }
+        return "<redacted OAuth token request body>"
     }
     
     let timeout = TimeInterval.fromSeconds(seconds: 15)
@@ -188,7 +196,8 @@ final class ECKWebService: Sendable {
                         }
                         
                         guard response.statusCode <= 299 else {
-                            logger.error("Received status code \(response.statusCode) for \(url). Character: \(String(describing: characterId)). Request: \(String(describing: String(data: body ?? Data(), encoding: .utf8))) Response: \(String(data: data, encoding: .utf8) ?? "EMPTY")")
+                            let requestBodyDescription = Self.requestBodyLogDescription(for: url, body: body)
+                            logger.error("Received status code \(response.statusCode) for \(url). Character: \(String(describing: characterId)). Request: \(requestBodyDescription) Response: \(String(data: data, encoding: .utf8) ?? "EMPTY")")
                             continuation.resume(throwing: ECKWebError.statusCode(response.statusCode, data))
                             return
                         }
@@ -337,6 +346,12 @@ final class ECKWebService: Sendable {
     private func performTokenRefresh(token: ECKToken) async throws {
         let expectedAccessToken = token.accessToken
         let expectedRefreshToken = token.refreshToken
+        let attemptID = String(UUID().uuidString.prefix(8))
+        let submittedCredentialFingerprint = credentialFingerprint(
+            accessToken: expectedAccessToken,
+            refreshToken: expectedRefreshToken
+        )
+        logger.info("Token refresh \(attemptID) started for \(token.storageAccount), credential \(submittedCredentialFingerprint)")
         let resource = ECKTokenRefreshResource(token: token, clientId: ECKConstants.clientId)
         do {
             let newToken = try await loadResource(resource: resource)
@@ -346,6 +361,7 @@ final class ECKWebService: Sendable {
                 replacingAccessToken: expectedAccessToken,
                 refreshToken: expectedRefreshToken
             )
+            logger.info("Token refresh \(attemptID) completed for \(token.storageAccount) with result \(updateResult); returned credential \(credentialFingerprint(accessToken: newToken.response.accessToken, refreshToken: newToken.response.refreshToken))")
             if updateResult == .missing {
                 throw ECKWebError.unknownError
             }
@@ -356,6 +372,15 @@ final class ECKWebService: Sendable {
             if statusCode == 400 {
                 let tokenError = try? decoder.decode(ECKTokenRefreshError.self, from: data)
                 if tokenError?.error == "invalid_grant" {
+                    let storedToken = ECKKeychain.getTokens(target: token.tokenTarget)
+                        .first(where: { $0.characterId == token.characterId })
+                    let storedCredentialFingerprint = storedToken.map {
+                        credentialFingerprint(accessToken: $0.accessToken, refreshToken: $0.refreshToken)
+                    } ?? "missing"
+                    let storedCredentialMatches = storedToken.map {
+                        $0.accessToken == expectedAccessToken && $0.refreshToken == expectedRefreshToken
+                    } ?? false
+                    logger.error("Token refresh \(attemptID) received invalid_grant for \(token.storageAccount); submitted credential \(submittedCredentialFingerprint), stored credential \(storedCredentialFingerprint), stored pair matches: \(storedCredentialMatches)")
                     if syncIfNewerTokenExists(
                         for: token,
                         expectedAccessToken: expectedAccessToken,
@@ -395,6 +420,14 @@ final class ECKWebService: Sendable {
         logger.info("Ignoring invalid_grant for stale refresh token \(token.characterId). Keychain already has newer valid token.")
         token.sync(from: storedToken)
         return true
+    }
+
+    private func credentialFingerprint(accessToken: String, refreshToken: String) -> String {
+        let value = Data("\(accessToken)\u{0}\(refreshToken)".utf8)
+        return SHA256.hash(data: value)
+            .prefix(8)
+            .map { String(format: "%02x", $0) }
+            .joined()
     }
     
 }

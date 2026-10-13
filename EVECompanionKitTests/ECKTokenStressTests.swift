@@ -462,6 +462,16 @@ struct ECKTokenStressTests {
     }
 
     @Test
+    func testOAuthTokenRequestBodiesAreRedactedWhileOtherRequestBodiesRemainVisible() throws {
+        let sensitiveBody = Data("grant_type=refresh_token&refresh_token=secret-value".utf8)
+        let tokenURL = try #require(URL(string: "https://login.eveonline.com/v2/oauth/token"))
+        let esiURL = try #require(URL(string: "https://esi.evetech.net/latest/characters/1/"))
+
+        #expect(ECKWebService.requestBodyLogDescription(for: tokenURL, body: sensitiveBody) == "<redacted OAuth token request body>")
+        #expect(ECKWebService.requestBodyLogDescription(for: esiURL, body: sensitiveBody) == String(decoding: sensitiveBody, as: UTF8.self))
+    }
+
+    @Test
     func testRemovingTokenKeepsRefreshRegisteredUntilTaskFinishes() async throws {
         let characterId = 80004
         let account = "\(characterId)-character"

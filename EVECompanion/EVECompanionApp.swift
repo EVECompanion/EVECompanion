@@ -41,6 +41,7 @@ struct EVECompanionApp: App {
                     
                     switch newPhase {
                     case .active:
+                        logger.info("Application scene became active.")
                         characterStorage.triggerAutomaticReloadIfNecessary()
                     case .background:
                         ECKBackgroundTaskManager.shared.scheduleAppRefreshTask()
