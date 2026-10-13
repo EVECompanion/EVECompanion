@@ -80,6 +80,8 @@
 		C91FE0A42D8E07CB00BA7303 /* ECKGlobals.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91FE0A32D8E07CB00BA7303 /* ECKGlobals.swift */; };
 		C91FE0A62D8EBF5600BA7303 /* CapitalNavigationAlternativeSystemPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91FE0A52D8EBF5600BA7303 /* CapitalNavigationAlternativeSystemPickerView.swift */; };
 		C920A6A72ED3526F00868D58 /* ECKCorporationRole.swift in Sources */ = {isa = PBXBuildFile; fileRef = C920A6A62ED3526F00868D58 /* ECKCorporationRole.swift */; };
+		C921A2BA307EA00C00F28D46 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = C7A1F3D92F61110000A1B2C3 /* Alamofire */; };
+		C921A2BC307EAB7E00F28D46 /* ECKTokenFormEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C921A2BB307EAB7E00F28D46 /* ECKTokenFormEncoder.swift */; };
 		C92B4EB32ED101D200E3D9B4 /* CorporationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92B4EB22ED101D200E3D9B4 /* CorporationListView.swift */; };
 		C92B4EB52ED102F200E3D9B4 /* ECKAuthenticationTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92B4EB42ED102F200E3D9B4 /* ECKAuthenticationTarget.swift */; };
 		C92B4EB72ED1C53500E3D9B4 /* ECKCorporationStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92B4EB62ED1C53500E3D9B4 /* ECKCorporationStorage.swift */; };
@@ -553,6 +555,7 @@
 		C91FE0A32D8E07CB00BA7303 /* ECKGlobals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKGlobals.swift; sourceTree = "<group>"; };
 		C91FE0A52D8EBF5600BA7303 /* CapitalNavigationAlternativeSystemPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalNavigationAlternativeSystemPickerView.swift; sourceTree = "<group>"; };
 		C920A6A62ED3526F00868D58 /* ECKCorporationRole.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCorporationRole.swift; sourceTree = "<group>"; };
+		C921A2BB307EAB7E00F28D46 /* ECKTokenFormEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKTokenFormEncoder.swift; sourceTree = "<group>"; };
 		C92373D12BEE66B500EEE639 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C92B4EB22ED101D200E3D9B4 /* CorporationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorporationListView.swift; sourceTree = "<group>"; };
 		C92B4EB42ED102F200E3D9B4 /* ECKAuthenticationTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKAuthenticationTarget.swift; sourceTree = "<group>"; };
@@ -915,6 +918,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C921A2BA307EA00C00F28D46 /* Alamofire in Frameworks */,
 				C952BC8D2BEC0BE40070C504 /* JWTDecode in Frameworks */,
 				C9DEF2F12C14AECC00815AF0 /* SwiftyBeaver in Frameworks */,
 				C90D50932BF8BBF300DEC0F3 /* Pulse in Frameworks */,
@@ -1347,6 +1351,7 @@
 			children = (
 				C91672B52BEA9CC0009EC580 /* ECKCreateTokenResource.swift */,
 				C952BC862BEB9F220070C504 /* ECKTokenRefreshResource.swift */,
+				C921A2BB307EAB7E00F28D46 /* ECKTokenFormEncoder.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -2584,6 +2589,7 @@
 				C9DEF2EE2C14AEA000815AF0 /* ECKLogger.swift in Sources */,
 				C983AABD2BF64F34002EDECB /* ECKFetchMailBodyResource.swift in Sources */,
 				C90D50902BF8B22400DEC0F3 /* ECKCharacter+Mail.swift in Sources */,
+				C921A2BC307EAB7E00F28D46 /* ECKTokenFormEncoder.swift in Sources */,
 				C9A806812FA15133008D32BC /* ECKCorporationDivision.swift in Sources */,
 				C91FE0A02D8DA73600BA7303 /* ECKSovereigntyManager.swift in Sources */,
 				C9CA6B992C14DE500057F290 /* ECKFaction.swift in Sources */,
