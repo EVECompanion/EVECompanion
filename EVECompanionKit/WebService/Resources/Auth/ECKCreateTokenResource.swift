@@ -14,11 +14,11 @@ class ECKCreateTokenResource: ECKWebResource<ECKToken>, @unchecked Sendable {
         headers["Content-Type"] = "application/x-www-form-urlencoded"
         headers["Host"] = "login.eveonline.com"
         
-        let body = ECKFormURLEncoder.encode([
-            (name: "grant_type", value: "authorization_code"),
-            (name: "code", value: code),
-            (name: "client_id", value: clientId),
-            (name: "code_verifier", value: codeVerifier)
+        let body = ECKOAuthTokenFormEncoder.encode([
+            "grant_type": "authorization_code",
+            "code": code,
+            "client_id": clientId,
+            "code_verifier": codeVerifier
         ])
         
         super.init(host: .eveLogin,

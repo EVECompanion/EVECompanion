@@ -477,18 +477,24 @@ struct ECKTokenStressTests {
         let resource = ECKTokenRefreshResource(token: token, clientId: "client-id")
         let body = try #require(resource.body as? Data)
 
-        #expect(String(decoding: body, as: UTF8.self) == "grant_type=refresh_token&refresh_token=a%2Bb%2Fc%3Dd+e%26%25%23&client_id=client-id")
+        #expect(String(decoding: body, as: UTF8.self) == "client_id=client-id&grant_type=refresh_token&refresh_token=a%2Bb/c%3Dd+e%26%25%23")
     }
 
     @Test
-    func testOAuthFormEncodingLeavesSafeRefreshTokenCharactersUnchanged() {
-        let body = ECKFormURLEncoder.encode([
-            (name: "grant_type", value: "refresh_token"),
-            (name: "refresh_token", value: "Az09-._*"),
-            (name: "client_id", value: "client-id")
-        ])
+    func testOAuthFormEncodingLeavesSafeRefreshTokenCharactersUnchanged() throws {
+        let token = try makeTestToken(characterId: 80008, refreshToken: "Az09-._")
+        let resource = ECKTokenRefreshResource(token: token, clientId: "client-id")
+        let body = try #require(resource.body as? Data)
 
-        #expect(String(decoding: body, as: UTF8.self) == "grant_type=refresh_token&refresh_token=Az09-._*&client_id=client-id")
+        #expect(String(decoding: body, as: UTF8.self) == "client_id=client-id&grant_type=refresh_token&refresh_token=Az09-._")
+    }
+
+    @Test
+    func testAuthorizationCodeExchangeUsesFormEncoding() throws {
+        let resource = ECKCreateTokenResource(clientId: "client-id", codeVerifier: "verifier", code: "a+b&c")
+        let body = try #require(resource.body as? Data)
+
+        #expect(String(decoding: body, as: UTF8.self) == "client_id=client-id&code=a%2Bb%26c&code_verifier=verifier&grant_type=authorization_code")
     }
 
     @Test

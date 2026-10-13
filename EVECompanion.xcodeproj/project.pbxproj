@@ -2091,6 +2091,7 @@
 			);
 			name = EVECompanionKit;
 			packageProductDependencies = (
+				C7A1F3D92F61110000A1B2C3 /* Alamofire */,
 				C952BC8C2BEC0BE40070C504 /* JWTDecode */,
 				C90D50922BF8BBF300DEC0F3 /* Pulse */,
 				C9DEF2F02C14AECC00815AF0 /* SwiftyBeaver */,
@@ -2164,6 +2165,7 @@
 			);
 			mainGroup = C91EEEAE2BE9730000352175;
 			packageReferences = (
+				C7A1F3D82F61110000A1B2C3 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				C952BC8B2BEC0BE40070C504 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */,
 				C952BC902BEC12AB0070C504 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				C90D50912BF8BBF300DEC0F3 /* XCRemoteSwiftPackageReference "Pulse" */,
@@ -3238,6 +3240,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		C7A1F3D82F61110000A1B2C3 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = revision;
+				revision = 56ce89783d7ebd67444d09d7a0aa20ffa7aa55af;
+			};
+		};
 		C90BD0582E9D8BE600BB0EB9 /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
@@ -3337,6 +3347,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C7A1F3D92F61110000A1B2C3 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C7A1F3D82F61110000A1B2C3 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
 		C906BAB42EAA207700A9E3F3 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C952BC902BEC12AB0070C504 /* XCRemoteSwiftPackageReference "Kingfisher" */;
