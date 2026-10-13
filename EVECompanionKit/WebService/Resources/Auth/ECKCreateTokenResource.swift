@@ -14,14 +14,12 @@ class ECKCreateTokenResource: ECKWebResource<ECKToken>, @unchecked Sendable {
         headers["Content-Type"] = "application/x-www-form-urlencoded"
         headers["Host"] = "login.eveonline.com"
         
-        var queryItems: [URLQueryItem] = []
-        queryItems.append(.init(name: "grant_type", value: "authorization_code"))
-        queryItems.append(.init(name: "code", value: code))
-        queryItems.append(.init(name: "client_id", value: clientId))
-        queryItems.append(.init(name: "code_verifier", value: codeVerifier))
-        
-        var urlComponents = URLComponents()
-        urlComponents.queryItems = queryItems
+        let body = ECKFormURLEncoder.encode([
+            (name: "grant_type", value: "authorization_code"),
+            (name: "code", value: code),
+            (name: "client_id", value: clientId),
+            (name: "code_verifier", value: codeVerifier)
+        ])
         
         super.init(host: .eveLogin,
                    endpoint: "/v2/oauth/token",
@@ -29,7 +27,7 @@ class ECKCreateTokenResource: ECKWebResource<ECKToken>, @unchecked Sendable {
                    requiredCorpRoles: [],
                    headers: headers,
                    method: .post,
-                   body: urlComponents.query?.data(using: .utf8))
+                   body: body)
     }
     
 }

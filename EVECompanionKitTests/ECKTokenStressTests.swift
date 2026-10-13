@@ -472,6 +472,26 @@ struct ECKTokenStressTests {
     }
 
     @Test
+    func testOAuthFormEncodingEscapesReservedRefreshTokenCharacters() throws {
+        let token = try makeTestToken(characterId: 80007, refreshToken: "a+b/c=d e&%#")
+        let resource = ECKTokenRefreshResource(token: token, clientId: "client-id")
+        let body = try #require(resource.body as? Data)
+
+        #expect(String(decoding: body, as: UTF8.self) == "grant_type=refresh_token&refresh_token=a%2Bb%2Fc%3Dd+e%26%25%23&client_id=client-id")
+    }
+
+    @Test
+    func testOAuthFormEncodingLeavesSafeRefreshTokenCharactersUnchanged() {
+        let body = ECKFormURLEncoder.encode([
+            (name: "grant_type", value: "refresh_token"),
+            (name: "refresh_token", value: "Az09-._*"),
+            (name: "client_id", value: "client-id")
+        ])
+
+        #expect(String(decoding: body, as: UTF8.self) == "grant_type=refresh_token&refresh_token=Az09-._*&client_id=client-id")
+    }
+
+    @Test
     func testRemovingTokenKeepsRefreshRegisteredUntilTaskFinishes() async throws {
         let characterId = 80004
         let account = "\(characterId)-character"
