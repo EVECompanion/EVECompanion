@@ -198,6 +198,7 @@ platform :ios do
             project: PROJECT_FILE,
             scheme: APP_SCHEME,
             clean: true,
+            xcargs: "INFOPLIST_KEY_CFBundleDisplayName='#{displayName}'",
             export_method: "app-store"
         )
         
