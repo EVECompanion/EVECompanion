@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 import EVECompanionKit
 
 struct FittingsListView: View {
@@ -18,6 +19,7 @@ struct FittingsListView: View {
         
         case shipSelection
         case esiImport
+        case eftImport
     }
     
     enum AlertItem: Identifiable {
@@ -119,8 +121,13 @@ struct FittingsListView: View {
         })
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    presentedSheet = .esiImport
+                Menu {
+                    Button("From EVE Online", systemImage: "person.crop.circle") {
+                        presentedSheet = .esiImport
+                    }
+                    Button("From EFT Text", systemImage: "doc.on.clipboard") {
+                        presentedSheet = .eftImport
+                    }
                 } label: {
                     Text("Import")
                 }
@@ -143,6 +150,10 @@ struct FittingsListView: View {
             case .esiImport:
                 FittingESIImportView(fittingManager: .init(character: fittingManager.character,
                                                            isPreview: fittingManager.isPreview)) { fitting in
+                    fittingManager.importFitting(fitting)
+                }
+            case .eftImport:
+                FittingEFTImportView { fitting in
                     fittingManager.importFitting(fitting)
                 }
             }
@@ -188,6 +199,52 @@ struct FittingsListView: View {
             changeNameInput = fitting.name
         } label: {
             Text("Cancel")
+        }
+    }
+}
+
+private struct FittingEFTImportView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var text = UIPasteboard.general.string ?? ""
+    @State private var errorMessage: String?
+    let doneHandler: (ECKCharacterFitting) -> Void
+
+    var body: some View {
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Paste an EFT fitting copied from EVE Online or another fitting tool.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                TextEditor(text: $text)
+                    .font(.system(.body, design: .monospaced))
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(.quaternary))
+                if let errorMessage {
+                    Text(errorMessage).font(.footnote).foregroundStyle(.red)
+                }
+            }
+            .padding()
+            .navigationTitle("Import EFT Fitting")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Import") { importText() }.disabled(text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Paste") { text = UIPasteboard.general.string ?? "" }
+                }
+            }
+        }
+    }
+
+    private func importText() {
+        do {
+            doneHandler(try ECKEFTFormat.importFitting(from: text))
+            dismiss()
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 import EVECompanionKit
 
 struct FittingDetailView: View {
@@ -83,6 +84,21 @@ struct FittingDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(fitting.name)
         .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    ShareLink(item: ECKEFTFormat.export(fitting)) {
+                        Label("Share EFT Text", systemImage: "square.and.arrow.up")
+                    }
+                    Button {
+                        UIPasteboard.general.string = ECKEFTFormat.export(fitting)
+                    } label: {
+                        Label("Copy EFT Text", systemImage: "doc.on.doc")
+                    }
+                } label: {
+                    Image(systemName: "square.and.arrow.up")
+                }
+                .accessibilityLabel("Export fitting")
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     showChangeNameAlert = true

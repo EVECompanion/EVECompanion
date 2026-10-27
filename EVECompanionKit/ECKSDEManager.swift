@@ -453,6 +453,25 @@ public class ECKSDEManager: @unchecked Sendable {
         
         return parseItem(row: result)
     }
+
+    /// Returns the published item whose type name exactly matches the supplied name.
+    public func item(named name: String) -> ECKItem? {
+        do {
+            let statement = try connection?.prepare("""
+                SELECT typeID, typeName, description, mass, volume, capacity, radius, iconID
+                FROM invTypes
+                WHERE typeName = ? AND published = 1
+                LIMIT 1
+                """, name)
+            guard let row = try statement?.run().makeIterator().failableNext() else {
+                return nil
+            }
+            return ECKItem(itemData: parseItem(row: row))
+        } catch {
+            logger.error("Cannot find item named \(name): \(error)")
+            return nil
+        }
+    }
     
     public func getImplants(for implantSlot: Int, text: String?) -> [ECKItem] {
         do {

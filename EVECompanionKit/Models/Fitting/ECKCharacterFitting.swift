@@ -26,6 +26,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         case drones
         case fighterBay
         case fighters
+        case cargoItems
         case skills
         case implants
         case selectedTacticalMode
@@ -136,7 +137,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     }
 
     private var serializedItems: [ECKCharacterFittingItem] {
-        return items + fighterBay
+        return items + fighterBay + cargoItems
     }
     @Published public var name: String
     public let ship: ECKCharacterFittingItem
@@ -158,6 +159,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     public var drones: [ECKCharacterFittingItem]
     public var fighterBay: [ECKCharacterFittingItem]
     public var fighters: [ECKCharacterFittingItem]
+    public var cargoItems: [ECKCharacterFittingItem]
     public var implants: [ECKCharacterFittingItem]
     public var selectedTacticalMode: ECKCharacterFittingItem?
     
@@ -587,6 +589,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         self.drones = try container.decode([ECKCharacterFittingItem].self, forKey: .drones)
         self.fighterBay = try container.decodeIfPresent([ECKCharacterFittingItem].self, forKey: .fighterBay) ?? []
         self.fighters = try container.decodeIfPresent([ECKCharacterFittingItem].self, forKey: .fighters) ?? []
+        self.cargoItems = try container.decodeIfPresent([ECKCharacterFittingItem].self, forKey: .cargoItems) ?? []
         self.skills = try container.decode([ECKCharacterFittingItem].self, forKey: .skills)
         self.implants = try container.decodeIfPresent([ECKCharacterFittingItem].self, forKey: .implants) ?? []
         if let decodedModifier = try container.decodeIfPresent(ECKCharacterFittingItem.self, forKey: .selectedTacticalMode) {
@@ -632,6 +635,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         var drones: [ECKCharacterFittingItem] = []
         var fighterBay: [ECKCharacterFittingItem] = []
         var fighters: [ECKCharacterFittingItem] = []
+        var cargo: [ECKCharacterFittingItem] = []
         var implants: [ECKCharacterFittingItem] = []
         for item in items.sorted(by: { $0.flag.rawValue < $1.flag.rawValue }) {
             switch item.flag {
@@ -644,7 +648,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
             case .BoosterBay:
                 continue
             case .Cargo:
-                continue
+                cargo.append(item)
             case .CorporationGoalDeliveries:
                 continue
             case .CorpseBay:
@@ -819,6 +823,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         self.drones = drones
         self.fighterBay = fighterBay
         self.fighters = fighters
+        self.cargoItems = cargo
         self.name = name
         self.implants = implants
         self.ship = .init(flag: .ShipHangar,
@@ -862,6 +867,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         try container.encode(self.drones, forKey: .drones)
         try container.encode(self.fighterBay, forKey: .fighterBay)
         try container.encode(self.fighters, forKey: .fighters)
+        try container.encode(self.cargoItems, forKey: .cargoItems)
         try container.encode(self.skills, forKey: .skills)
         try container.encode(self.implants, forKey: .implants)
         try container.encodeIfPresent(self.selectedTacticalMode, forKey: .selectedTacticalMode)
