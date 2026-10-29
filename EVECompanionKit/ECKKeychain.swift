@@ -87,7 +87,9 @@ internal struct ECKKeychain {
             return false
         }
 
-        guard set(token: token) else { return false }
+        guard set(token: token) else {
+            return false
+        }
         if existingToken.isValid == false && token.isValid {
             NotificationCenter.default.post(name: .tokensDidChange, object: nil)
         }
@@ -196,6 +198,7 @@ internal struct ECKKeychain {
     }
     
     @ECKTokenActor
+    @discardableResult
     private static func set(token: ECKToken) -> Bool {
         do {
             let data = try jsonEncoder.encode(token)

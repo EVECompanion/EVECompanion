@@ -271,6 +271,7 @@
 		C9AF7D802C2B63FA002EB951 /* AssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AF7D7F2C2B63FA002EB951 /* AssetCell.swift */; };
 		C9B005000000000000000001 /* FittingDetailBoostersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B005000000000000000002 /* FittingDetailBoostersView.swift */; };
 		C9B005000000000000000003 /* ECKFittingBoosterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B005000000000000000004 /* ECKFittingBoosterTests.swift */; };
+		D9F055D00000000000000003 /* ECKFittingCapacitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F055D00000000000000004 /* ECKFittingCapacitorTests.swift */; };
 		C9B079062C32C0080059785D /* ECKTokenRefreshError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B079052C32C0080059785D /* ECKTokenRefreshError.swift */; };
 		C9B079082C32C9A00059785D /* ECKTokenExpired.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B079072C32C9A00059785D /* ECKTokenExpired.swift */; };
 		C9B258532E264FA9009A14DB /* FittingDamageProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B258522E264FA9009A14DB /* FittingDamageProfileView.swift */; };
@@ -749,6 +750,7 @@
 		C9AF7D7F2C2B63FA002EB951 /* AssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCell.swift; sourceTree = "<group>"; };
 		C9B005000000000000000002 /* FittingDetailBoostersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDetailBoostersView.swift; sourceTree = "<group>"; };
 		C9B005000000000000000004 /* ECKFittingBoosterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKFittingBoosterTests.swift; sourceTree = "<group>"; };
+		D9F055D00000000000000004 /* ECKFittingCapacitorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKFittingCapacitorTests.swift; sourceTree = "<group>"; };
 		C9B079052C32C0080059785D /* ECKTokenRefreshError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKTokenRefreshError.swift; sourceTree = "<group>"; };
 		C9B079072C32C9A00059785D /* ECKTokenExpired.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKTokenExpired.swift; sourceTree = "<group>"; };
 		C9B258522E264FA9009A14DB /* FittingDamageProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDamageProfileView.swift; sourceTree = "<group>"; };
@@ -1666,6 +1668,7 @@
 				C9AA00172FF2000000010017 /* ECKMiningLedgerEntryTests.swift */,
 				C9EF70000000000000000002 /* ECKEFTFormatTests.swift */,
 				C9B005000000000000000004 /* ECKFittingBoosterTests.swift */,
+				D9F055D00000000000000004 /* ECKFittingCapacitorTests.swift */,
 				C9EF70000000000000000004 /* ECKCharacterFittingCargoTests.swift */,
 				C9AA00192FF2000000010019 /* ECKTokenStressTests.swift */,
 				C9AA001A2FF200000001001A /* ECKUnitTestHTTPBlockerTests.swift */,
@@ -2703,6 +2706,7 @@
 				C9AA00062FF2000000010006 /* ECKMiningLedgerEntryTests.swift in Sources */,
 				C9EF70000000000000000001 /* ECKEFTFormatTests.swift in Sources */,
 				C9B005000000000000000003 /* ECKFittingBoosterTests.swift in Sources */,
+				D9F055D00000000000000003 /* ECKFittingCapacitorTests.swift in Sources */,
 				C9AA00082FF2000000010008 /* ECKTokenStressTests.swift in Sources */,
 				C9AA00092FF2000000010009 /* ECKUnitTestHTTPBlockerTests.swift in Sources */,
 				C9ACE4652FF4541500FAD4D1 /* ECKCapitalJumpMapOverlayTests.swift in Sources */,

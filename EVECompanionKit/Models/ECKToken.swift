@@ -33,7 +33,9 @@ internal actor ECKTokenActor {
 
     @ECKTokenActor
     static func clearRefreshTask(for account: String, matching id: UUID) {
-        guard ongoingRefreshTasks[account]?.id == id else { return }
+        guard ongoingRefreshTasks[account]?.id == id else {
+            return
+        }
         ongoingRefreshTasks[account] = nil
     }
 }
@@ -208,7 +210,9 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unch
 
     @ECKTokenActor
     internal func sync(from otherToken: ECKToken) {
-        guard isRemoved == false else { return }
+        guard isRemoved == false else {
+            return
+        }
         self.accessToken = otherToken.accessToken
         self.refreshToken = otherToken.refreshToken
         self.isValid = otherToken.isValid
@@ -221,6 +225,7 @@ internal final class ECKToken: Hashable, Equatable, Codable, Identifiable, @unch
     }
 
     @ECKTokenActor
+    @discardableResult
     internal func markAsInvalid(expectedAccessToken: String, expectedRefreshToken: String) -> Bool {
         guard isRemoved == false else {
             logger.info("Skipping token invalidation for removed token \(characterId)-\(tokenTarget.rawValue)")

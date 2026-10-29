@@ -7,7 +7,117 @@
 
 import Foundation
 
+private struct CapacitorDrain {
+    let cycleMilliseconds: Float
+    let activationCost: Float
+    let quantity: Int
+
+    var usePerSecond: Float {
+        activationCost * Float(quantity) * 1_000 / cycleMilliseconds
+    }
+}
+
 extension ECKCharacterFitting {
+
+    // MARK: - Capacitor
+
+    public struct CapacitorStability {
+        public let isStable: Bool
+        public let timeToEmpty: TimeInterval?
+
+        public init(isStable: Bool, timeToEmpty: TimeInterval?) {
+            self.isStable = isStable
+            self.timeToEmpty = timeToEmpty
+        }
+    }
+
+    public var capacitorStability: CapacitorStability? {
+        guard let capacity = ship.attributes[Self.attributeCapacitorCapacityId].map({ $0.value ?? $0.baseValue }),
+              let rechargeMilliseconds = ship.attributes[Self.attributeCapacitorRechargeTimeId].map({ $0.value ?? $0.baseValue }),
+              capacity > 0,
+              rechargeMilliseconds > 0 else {
+            return nil
+        }
+
+        let drains = items.compactMap { item -> CapacitorDrain? in
+            guard item.state.rawValue >= ECKDogmaEffect.Category.active.rawValue,
+                  let activationCost = item.attributes[Self.attributeCapacitorUseId].map({ $0.value ?? $0.baseValue }) else {
+                return nil
+            }
+
+            let cycleMilliseconds = [Self.attributeRoFId,
+                                     Self.attributeActivationTimeId,
+                                     Self.attributeActivationTimeHighIsGoodId]
+                .compactMap { item.attributes[$0].map({ $0.value ?? $0.baseValue }) }
+                .max() ?? 0
+            guard cycleMilliseconds > 0, activationCost > 0 else {
+                return nil
+            }
+            return .init(cycleMilliseconds: cycleMilliseconds,
+                         activationCost: activationCost,
+                         quantity: max(item.quantity, 1))
+        }
+
+        let capacitorUsePerSecond = drains.reduce(Float.zero) { $0 + $1.usePerSecond }
+        let rechargeTime = rechargeMilliseconds / 1_000
+        let peakRecharge = capacity * 2.5 / rechargeTime
+        guard capacitorUsePerSecond > peakRecharge else {
+            return .init(isStable: true, timeToEmpty: nil)
+        }
+
+        var remainingCapacitor = capacity
+        var elapsed: Float = 0
+        var nextActivations = Array(repeating: Float.zero, count: drains.count)
+        var activationCount = 0
+        while remainingCapacitor > 0 {
+            guard let nextActivation = nextActivations.min() else {
+                break
+            }
+            let elapsedSinceLastActivation = nextActivation - elapsed
+            if elapsedSinceLastActivation > 0 {
+                let chargeFraction = max(remainingCapacitor / capacity, 0)
+                let rechargeFactor = exp(-5 * elapsedSinceLastActivation / rechargeTime)
+                remainingCapacitor = capacity * pow(1 + (sqrt(chargeFraction) - 1) * rechargeFactor, 2)
+                elapsed = nextActivation
+            }
+
+            var activationCost: Float = 0
+            for index in drains.indices where nextActivations[index] == nextActivation {
+                activationCost += drains[index].activationCost * Float(drains[index].quantity)
+                nextActivations[index] += drains[index].cycleMilliseconds / 1_000
+            }
+            remainingCapacitor -= activationCost
+            activationCount += 1
+
+            if activationCount >= 100_000 {
+                return .init(isStable: false,
+                             timeToEmpty: TimeInterval(elapsed + Self.estimatedDepletionTime(capacitor: max(remainingCapacitor, 0),
+                                                                                             capacity: capacity,
+                                                                                             rechargeTime: rechargeTime,
+                                                                                             capacitorUsePerSecond: capacitorUsePerSecond)))
+            }
+        }
+        return .init(isStable: false, timeToEmpty: TimeInterval(elapsed))
+    }
+
+    private static func estimatedDepletionTime(capacitor: Float,
+                                               capacity: Float,
+                                               rechargeTime: Float,
+                                               capacitorUsePerSecond: Float) -> Float {
+        var remainingCapacitor = capacitor
+        var elapsed: Float = 0
+        let step: Float = 1
+        while remainingCapacitor > 0 {
+            let fraction = remainingCapacitor / capacity
+            let recharge = capacity * 10 / rechargeTime * (sqrt(fraction) - fraction)
+            remainingCapacitor = max(0, remainingCapacitor - (capacitorUsePerSecond - recharge) * step)
+            elapsed += step
+        }
+        return elapsed
+    }
+
+    static let attributeCapacitorUseId = 6
+    static let attributeCapacitorRechargeTimeId = 55
     
     // MARK: - Resistances
     

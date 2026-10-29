@@ -20,8 +20,8 @@ struct ECKFittingBoosterTests {
                                              quantity: 1,
                                              item: Self.item(typeId: 3, name: "Test Module"))
         let charge = ECKCharacterFittingItem(flag: .HiSlot0,
-                                              quantity: 1,
-                                              item: Self.item(typeId: 4, name: "Test Charge"))
+                                             quantity: 1,
+                                             item: Self.item(typeId: 4, name: "Test Charge"))
         module.charge = charge
         let fitting = ECKCharacterFitting(fittingId: UUID(),
                                           description: "",

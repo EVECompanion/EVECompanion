@@ -259,7 +259,7 @@ fileprivate extension ECKCharacterFittingItem {
                 continue
             }
             
-            if case .item(_) = object, domain == .otherId {
+            if case .item = object, domain == .otherId {
                 continue
             }
             

@@ -30,7 +30,9 @@ final class ECKUnitTestHTTPBlocker: URLProtocol {
     }
 
     override static func canInit(with request: URLRequest) -> Bool {
-        guard let scheme = request.url?.scheme?.lowercased() else { return false }
+        guard let scheme = request.url?.scheme?.lowercased() else {
+            return false
+        }
         return scheme == "http" || scheme == "https"
     }
 

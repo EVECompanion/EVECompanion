@@ -152,9 +152,15 @@ public enum ECKEFTFormat {
         try importFitting(from: text,
                           resolveItem: { ECKSDEManager.shared.item(named: $0) },
                           classifyItem: { item in
-            if let slotType = item.slotType { return .module(slotType) }
-            if item.isDrone { return .drone }
-            if item.isFighter { return .fighter }
+            if let slotType = item.slotType {
+                return .module(slotType)
+            }
+            if item.isDrone {
+                return .drone
+            }
+            if item.isFighter {
+                return .fighter
+            }
             return .other
         })
     }

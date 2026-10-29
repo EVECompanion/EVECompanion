@@ -24,7 +24,9 @@ private actor ECKTokenRefreshTestGate {
     }
 
     func waitUntilPaused() async {
-        guard isPaused == false else { return }
+        guard isPaused == false else {
+            return
+        }
         await withCheckedContinuation { continuation in
             startedContinuation = continuation
         }
@@ -246,8 +248,8 @@ struct ECKTokenStressTests {
         let webService = ECKWebService()
         let didSync = await webService.syncIfNewerTokenExists(for: staleTokenInstance)
 
-        let isStillValid = await staleTokenInstance.isValid
-        let updatedRefToken = await staleTokenInstance.refreshToken
+        let isStillValid = staleTokenInstance.isValid
+        let updatedRefToken = staleTokenInstance.refreshToken
 
         #expect(didSync == true)
         #expect(isStillValid == true)
@@ -275,8 +277,8 @@ struct ECKTokenStressTests {
         await ECKKeychain.add(token: latestToken)
 
         let didSync = await ECKWebService().syncIfNewerTokenExists(for: staleToken)
-        let syncedAccessToken = await staleToken.accessToken
-        let syncedValidity = await staleToken.isValid
+        let syncedAccessToken = staleToken.accessToken
+        let syncedValidity = staleToken.isValid
 
         #expect(didSync)
         #expect(syncedAccessToken == latestAccessToken)
@@ -289,8 +291,8 @@ struct ECKTokenStressTests {
         let characterId = 70003
         let token = try makeTestToken(characterId: characterId, refreshToken: "ref_current")
         await ECKKeychain.add(token: token)
-        let accessToken = await token.accessToken
-        let refreshToken = await token.refreshToken
+        let accessToken = token.accessToken
+        let refreshToken = token.refreshToken
 
         let didInvalidate = await token.markAsInvalid(
             expectedAccessToken: accessToken,
@@ -360,8 +362,8 @@ struct ECKTokenStressTests {
         try await webService.refreshToken(oldToken: tokenB)
 
         // VERIFY: tokenB was synced from Keychain and isValid == true
-        let tokenBRef = await tokenB.refreshToken
-        let tokenBValid = await tokenB.isValid
+        let tokenBRef = tokenB.refreshToken
+        let tokenBValid = tokenB.isValid
 
         #expect(tokenBRef == "ref_refreshed")
         #expect(tokenBValid == true)
@@ -438,8 +440,8 @@ struct ECKTokenStressTests {
         // without submitting the stale refresh token to EVE SSO.
         try await ECKWebService().refreshToken(oldToken: staleToken)
 
-        let syncedAccessToken = await staleToken.accessToken
-        let syncedRefreshToken = await staleToken.refreshToken
+        let syncedAccessToken = staleToken.accessToken
+        let syncedRefreshToken = staleToken.refreshToken
         #expect(syncedAccessToken == latestAccessToken)
         #expect(syncedRefreshToken == "ref_latest")
         await ECKKeychain.remove(token: latestToken)
@@ -672,9 +674,9 @@ struct ECKTokenStressTests {
 
         await tokenA.sync(from: tokenB)
 
-        let accessTokenA = await tokenA.accessToken
-        let refreshTokenA = await tokenA.refreshToken
-        let isValidA = await tokenA.isValid
+        let accessTokenA = tokenA.accessToken
+        let refreshTokenA = tokenA.refreshToken
+        let isValidA = tokenA.isValid
 
         #expect(accessTokenA == jwt2)
         #expect(refreshTokenA == "ref_v2")
@@ -718,7 +720,7 @@ struct ECKTokenStressTests {
         #expect(result == .superseded)
         #expect(savedToken.accessToken == newerAccessToken)
         #expect(savedToken.refreshToken == "ref_newer")
-        let syncedAccessToken = await staleRefreshToken.accessToken
+        let syncedAccessToken = staleRefreshToken.accessToken
         #expect(syncedAccessToken == newerAccessToken)
         await ECKKeychain.remove(token: savedToken)
     }

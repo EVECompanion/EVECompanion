@@ -1035,7 +1035,9 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     }
 
     public func addCargoItem(_ item: ECKItem, quantity: Int = 1, manager: ECKFittingManager?) {
-        guard quantity > 0 else { return }
+        guard quantity > 0 else {
+            return
+        }
         objectWillChange.send()
         if let existingItem = cargoItems.first(where: { $0.item.typeId == item.typeId }) {
             existingItem.quantity += quantity
@@ -1048,7 +1050,9 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     public func setCargoItemQuantity(_ cargoItem: ECKCharacterFittingItem,
                                      quantity: Int,
                                      manager: ECKFittingManager?) {
-        guard cargoItems.contains(where: { $0.id == cargoItem.id }) else { return }
+        guard cargoItems.contains(where: { $0.id == cargoItem.id }) else {
+            return
+        }
         if quantity > 0 {
             cargoItem.quantity = quantity
         } else {
@@ -1059,7 +1063,9 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
     }
 
     public func removeCargoItem(_ cargoItem: ECKCharacterFittingItem, manager: ECKFittingManager?) {
-        guard cargoItems.contains(where: { $0.id == cargoItem.id }) else { return }
+        guard cargoItems.contains(where: { $0.id == cargoItem.id }) else {
+            return
+        }
         objectWillChange.send()
         cargoItems.removeAll { $0.id == cargoItem.id }
         manager?.saveFitting(self)

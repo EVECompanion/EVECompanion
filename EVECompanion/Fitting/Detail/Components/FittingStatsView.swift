@@ -81,6 +81,28 @@ struct FittingStatsView: View {
                 }
                 .gridCellColumns(2)
             }
+
+            if let capacitorStability = fitting.capacitorStability {
+                GridRow {
+                    HStack {
+                        Image("Fitting/capacitor")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+
+                        Text("Capacitor")
+                            .font(.footnote)
+
+                        Spacer()
+
+                        Text(capacitorStability.isStable
+                             ? "Stable"
+                             : "Empty in \(ECFormatters.remainingTime(remainingTime: capacitorStability.timeToEmpty ?? 0))")
+                            .font(.footnote)
+                            .foregroundStyle(capacitorStability.isStable ? Color.green : Color.red)
+                    }
+                    .gridCellColumns(2)
+                }
+            }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 5)
