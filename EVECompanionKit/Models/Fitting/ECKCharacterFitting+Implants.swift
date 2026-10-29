@@ -33,5 +33,27 @@ extension ECKCharacterFitting {
         }
         manager.saveFitting(self)
     }
+
+    public func addBooster(newBooster: ECKItem, manager: ECKFittingManager) {
+        if let boosterSlot = ECKSDEManager.shared.boosterSlot(for: newBooster.typeId) {
+            boosters.removeAll(where: {
+                ECKSDEManager.shared.boosterSlot(for: $0.item.typeId) == boosterSlot
+            })
+        }
+
+        boosters.append(.init(flag: .BoosterBay, quantity: 1, item: newBooster))
+        Task {
+            await calculateAttributes(skills: nil)
+        }
+        manager.saveFitting(self)
+    }
+
+    public func removeBooster(_ booster: ECKCharacterFittingItem, manager: ECKFittingManager) {
+        boosters.removeAll(where: { $0.id == booster.id })
+        Task {
+            await calculateAttributes(skills: nil)
+        }
+        manager.saveFitting(self)
+    }
     
 }

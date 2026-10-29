@@ -508,6 +508,38 @@ public class ECKSDEManager: @unchecked Sendable {
             return []
         }
     }
+
+    public func getBoosters(text: String?) -> [ECKItem] {
+        do {
+            let statement = try connection?.prepare("""
+            SELECT invTypes.typeID, typeName, description, mass, volume, capacity, radius, iconID
+            FROM invTypes
+            LEFT OUTER JOIN dgmTypeAttributes ON invTypes.typeID = dgmTypeAttributes.typeID
+            WHERE dgmTypeAttributes.attributeID = 1087
+                AND invTypes.published = 1
+                \(text != nil && text?.isEmpty == false ? "AND typeName LIKE '%\(text!)%'" : "")
+            ORDER BY invTypes.typeName
+            """)
+
+            guard let result = try statement?.run() else {
+                return []
+            }
+
+            return result.map({ parseItem(row: $0) }).map({ ECKItem(itemData: $0) })
+        } catch {
+            logger.error("Cannot get boosters with search string \(String(describing: text)): \(error)")
+            return []
+        }
+    }
+
+    public func boosterSlot(for typeId: Int) -> Int? {
+        guard let value = itemAttribute(attributeId: 1087, typeId: typeId)?.value,
+              value > 0 else {
+            return nil
+        }
+
+        return Int(value)
+    }
     
     internal func itemSearch(text: String, groupIdFilter: Int? = nil, marketGroupIdFilter: Int? = nil, effectIdFilter: Int? = nil) -> [ECKItem] {
         do {

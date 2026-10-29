@@ -13,9 +13,7 @@ extension ECKCharacterFitting {
     
     private class AttributesCache {
         var ship: [Int: Float] = [:]
-        var items: [Int: [Int: Float]] = [:]
-        var charge: [Int: [Int: Float]] = [:]
-        var skills: [Int: [Int: Float]] = [:]
+        var objects: [ObjectIdentifier: [Int: Float]] = [:]
         var target: [Int: Float] = [:]
         var character: [Int: Float] = [:]
         var structure: [Int: Float] = [:]
@@ -25,42 +23,55 @@ extension ECKCharacterFitting {
     
     internal func pass3() async {
         let cache = AttributesCache()
+        let fittedItems = items
+        let fittedBoosters = boosters
+        let fittedSkills = skills
         
-        for (index, skill) in self.skills.enumerated() {
-            cache.skills[index]?[Self.attributeSkillLevelId] = skill.attributes[Self.attributeSkillLevelId]?.baseValue
+        for skill in fittedSkills {
+            if let skillLevel = skill.attributes[Self.attributeSkillLevelId]?.baseValue {
+                cache.objects[ObjectIdentifier(skill)] = [Self.attributeSkillLevelId: skillLevel]
+            }
         }
         
         await calculateValues(item: ship, ship: ship, itemObject: .ship, cache: cache)
         await calculateValues(item: structure, ship: ship, itemObject: .structure, cache: cache)
         await calculateValues(item: target, ship: ship, itemObject: .target, cache: cache)
         await calculateValues(item: character, ship: ship, itemObject: .character, cache: cache)
-        // TODO: Boosters
-        for (index, item) in items.enumerated() {
-            await calculateValues(item: item, ship: ship, itemObject: .item(index: index), cache: cache)
+        for booster in fittedBoosters {
+            await calculateValues(item: booster, ship: ship, itemObject: .booster(.init(booster)), cache: cache)
+        }
+        for item in fittedItems {
+            await calculateValues(item: item, ship: ship, itemObject: .item(.init(item)), cache: cache)
             if let charge = item.charge {
-                await calculateValues(item: charge, ship: ship, itemObject: .charge(index: index), cache: cache)
+                await calculateValues(item: charge,
+                                      ship: ship,
+                                      itemObject: .charge(parent: .init(item), item: .init(charge)),
+                                      cache: cache)
             }
         }
         
-        for (index, skill) in self.skills.enumerated() {
+        for skill in fittedSkills {
             await calculateValues(item: skill,
                                   ship: ship,
-                                  itemObject: .skill(index: index),
+                                  itemObject: .skill(.init(skill)),
                                   cache: cache)
         }
         
+        for booster in fittedBoosters {
+            await storeCachedValues(for: booster, cache: cache.objects[ObjectIdentifier(booster)] ?? [:])
+        }
         await storeCachedValues(for: ship, cache: cache.ship)
         await storeCachedValues(for: structure, cache: cache.structure)
         await storeCachedValues(for: target, cache: cache.target)
-        for (index, item) in items.enumerated() {
-            await storeCachedValues(for: item, cache: cache.items[index] ?? [:])
+        for item in fittedItems {
+            await storeCachedValues(for: item, cache: cache.objects[ObjectIdentifier(item)] ?? [:])
             if let charge = item.charge {
-                await storeCachedValues(for: charge, cache: cache.charge[index] ?? [:])
+                await storeCachedValues(for: charge, cache: cache.objects[ObjectIdentifier(charge)] ?? [:])
             }
         }
         
-        for (index, skill) in self.skills.enumerated() {
-            await storeCachedValues(for: skill, cache: cache.skills[index] ?? [:])
+        for skill in fittedSkills {
+            await storeCachedValues(for: skill, cache: cache.objects[ObjectIdentifier(skill)] ?? [:])
         }
     }
     
@@ -113,12 +124,8 @@ extension ECKCharacterFitting {
             cacheValue = cache.ship[attributeId]
         case .character:
             cacheValue = cache.character[attributeId]
-        case .charge(index: let index):
-            cacheValue = cache.charge[index]?[attributeId]
-        case .item(index: let index):
-            cacheValue = cache.items[index]?[attributeId]
-        case .skill(index: let index):
-            cacheValue = cache.skills[index]?[attributeId]
+        case .charge(_, let reference), .booster(let reference), .item(let reference), .skill(let reference):
+            cacheValue = cache.objects[reference.identifier]?[attributeId]
         case .structure:
             cacheValue = cache.structure[attributeId]
         case .target:
@@ -146,16 +153,9 @@ extension ECKCharacterFitting {
                     source = ship
                 case .character:
                     source = character
-                case .charge(index: let index):
-                    guard let charge = items[index].charge else {
-                        continue
-                    }
-                    
-                    source = charge
-                case .item(index: let index):
-                    source = items[index]
-                case .skill(index: let index):
-                    source = skills[index]
+                case .charge(_, let reference), .booster(let reference), .item(let reference), .skill(let reference):
+                    guard let item = reference.item else { continue }
+                    source = item
                 case .structure:
                     source = self.structure
                 case .target:
@@ -267,24 +267,8 @@ extension ECKCharacterFitting {
             cache.ship[attributeId] = currentValue
         case .character:
             cache.character[attributeId] = currentValue
-        case .charge(let index):
-            if cache.charge[index] != nil {
-                cache.charge[index]?[attributeId] = currentValue
-            } else {
-                cache.charge[index] = [attributeId: currentValue]
-            }
-        case .item(let index):
-            if cache.items[index] != nil {
-                cache.items[index]?[attributeId] = currentValue
-            } else {
-                cache.items[index] = [attributeId: currentValue]
-            }
-        case .skill(let index):
-            if cache.skills[index] != nil {
-                cache.skills[index]?[attributeId] = currentValue
-            } else {
-                cache.skills[index] = [attributeId: currentValue]
-            }
+        case .charge(_, let reference), .booster(let reference), .item(let reference), .skill(let reference):
+            cache.objects[reference.identifier, default: [:]][attributeId] = currentValue
         case .structure:
             cache.structure[attributeId] = currentValue
         case .target:

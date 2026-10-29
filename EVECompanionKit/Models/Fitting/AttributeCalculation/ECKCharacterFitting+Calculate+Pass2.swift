@@ -11,6 +11,9 @@ extension ECKCharacterFitting {
     
     internal func pass2() async {
         var effects: [ECKPass2Effect] = []
+        let fittedItems = items
+        let fittedBoosters = boosters
+        let fittedSkills = skills
         
         if let velocityBonusEffect = ECKSDEManager.shared.getEffect(effectId: -1) {
             self.ship.collectEffect(effect: velocityBonusEffect, object: .ship, into: &effects)
@@ -20,16 +23,18 @@ extension ECKCharacterFitting {
         self.target.collectEffects(object: .target, into: &effects)
         self.structure.collectEffects(object: .structure, into: &effects)
         self.character.collectEffects(object: .character, into: &effects)
-        // TODO: Boosters
-        for (index, item) in items.enumerated() {
-            item.collectEffects(object: .item(index: index), into: &effects)
+        for booster in fittedBoosters {
+            booster.collectEffects(object: .booster(.init(booster)), into: &effects)
+        }
+        for item in fittedItems {
+            item.collectEffects(object: .item(.init(item)), into: &effects)
             if let charge = item.charge {
-                charge.collectEffects(object: .charge(index: index), into: &effects)
+                charge.collectEffects(object: .charge(parent: .init(item), item: .init(charge)), into: &effects)
             }
         }
         
-        for (index, skill) in skills.enumerated() {
-            skill.collectEffects(object: .skill(index: index), into: &effects)
+        for skill in fittedSkills {
+            skill.collectEffects(object: .skill(.init(skill)), into: &effects)
         }
         
         for effect in effects {
@@ -42,15 +47,22 @@ extension ECKCharacterFitting {
                 sourceTypeId = ship.item.typeId
             case .character:
                 categoryId = 1373
-            case .charge(index: let index):
-                categoryId = items[index].charge!.item.itemCategory.categoryId
-                sourceTypeId = items[index].charge!.item.typeId
-            case .item(index: let index):
-                categoryId = items[index].item.itemCategory.categoryId
-                sourceTypeId = items[index].item.typeId
-            case .skill(index: let index):
-                categoryId = skills[index].item.itemCategory.categoryId
-                sourceTypeId = skills[index].item.typeId
+            case .charge(_, let charge):
+                guard let charge = charge.item else { continue }
+                categoryId = charge.item.itemCategory.categoryId
+                sourceTypeId = charge.item.typeId
+            case .booster(let booster):
+                guard let booster = booster.item else { continue }
+                categoryId = booster.item.itemCategory.categoryId
+                sourceTypeId = booster.item.typeId
+            case .item(let item):
+                guard let item = item.item else { continue }
+                categoryId = item.item.itemCategory.categoryId
+                sourceTypeId = item.item.typeId
+            case .skill(let skill):
+                guard let skill = skill.item else { continue }
+                categoryId = skill.item.itemCategory.categoryId
+                sourceTypeId = skill.item.typeId
             case .structure:
                 continue
             case .target:
@@ -65,12 +77,18 @@ extension ECKCharacterFitting {
                     target = ship
                 case .character:
                     target = character
-                case .charge(index: let index):
-                    target = items[index].charge!
-                case .item(index: let index):
-                    target = items[index]
-                case .skill(index: let index):
-                    target = skills[index]
+                case .charge(_, let charge):
+                    guard let charge = charge.item else { continue }
+                    target = charge
+                case .booster(let booster):
+                    guard let booster = booster.item else { continue }
+                    target = booster
+                case .item(let item):
+                    guard let item = item.item else { continue }
+                    target = item
+                case .skill(let skill):
+                    guard let skill = skill.item else { continue }
+                    target = skill
                 case .structure:
                     target = self.structure
                 case .target:
@@ -87,7 +105,7 @@ extension ECKCharacterFitting {
                                          effect: effect)
                 }
                 
-                for item in items {
+                for item in fittedItems {
                     if item.item.itemCategory.groupId == groupId {
                         await item.addEffect(attributeId: effect.targetAttributeId,
                                              sourceCategoryId: categoryId,
@@ -106,7 +124,7 @@ extension ECKCharacterFitting {
                                      sourceCategoryId: categoryId,
                                      effect: effect)
                 
-                for item in items {
+                for item in fittedItems {
                     await item.addEffect(attributeId: effect.targetAttributeId,
                                          sourceCategoryId: categoryId,
                                          effect: effect)
@@ -137,7 +155,7 @@ extension ECKCharacterFitting {
                                              effect: effect)
                     }
                     
-                    for item in items {
+                    for item in fittedItems {
                         if let attribute = item.attributes[attributeId],
                            Int(attribute.baseValue) == actualSkillId {
                             await item.addEffect(attributeId: effect.targetAttributeId,
@@ -179,7 +197,8 @@ fileprivate extension ECKCharacterFittingItem {
             8,  // Charge
             16, // Skill
             20, // Implant
-            32  // Subsystem
+            32, // Subsystem
+            35  // Booster
         ]
     }
     
@@ -240,7 +259,7 @@ fileprivate extension ECKCharacterFittingItem {
                 continue
             }
             
-            if case .item = object, domain == .otherId {
+            if case .item(_) = object, domain == .otherId {
                 continue
             }
             
@@ -255,10 +274,14 @@ fileprivate extension ECKCharacterFittingItem {
                 target = .character
             case .otherId:
                 switch object {
-                case .item(index: let index):
-                    target = .charge(index: index)
-                case .charge(index: let index):
-                    target = .item(index: index)
+                case .item(let item):
+                    guard let item = item.item,
+                          let charge = item.charge else {
+                        continue
+                    }
+                    target = .charge(parent: .init(item), item: .init(charge))
+                case .charge(let parent, _):
+                    target = .item(parent)
                 default:
                     logger.error("Unexpected target for other id \(object)")
                     continue

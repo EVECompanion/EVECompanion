@@ -103,12 +103,24 @@ extension ECKCharacterFitting {
         case ownerRequiredSkillModifier(skillId: Int)
     }
     
+    // Effects retain stable identity without retaining their owning item graphs.
+    final class ItemReference: @unchecked Sendable {
+        weak var item: ECKCharacterFittingItem?
+        let identifier: ObjectIdentifier
+
+        init(_ item: ECKCharacterFittingItem) {
+            self.item = item
+            self.identifier = ObjectIdentifier(item)
+        }
+    }
+
     enum ItemObject {
         case ship
         case character
-        case charge(index: Int)
-        case item(index: Int)
-        case skill(index: Int)
+        case charge(parent: ItemReference, item: ItemReference)
+        case booster(ItemReference)
+        case item(ItemReference)
+        case skill(ItemReference)
         case structure
         case target
     }

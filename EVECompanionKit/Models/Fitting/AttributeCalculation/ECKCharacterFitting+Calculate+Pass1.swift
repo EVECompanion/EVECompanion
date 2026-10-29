@@ -23,6 +23,10 @@ extension ECKCharacterFitting {
             
             self.skills.append(item)
         }
+
+        for booster in boosters {
+            pass1CollectAttributes(for: booster.item, attributesDict: &booster.attributes)
+        }
         
         for item in items {
             switch item.flag {

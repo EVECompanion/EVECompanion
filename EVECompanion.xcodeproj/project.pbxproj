@@ -105,6 +105,8 @@
 		C92F9C9B2D8AA71200306DD7 /* ECKJumpCapableShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F9C9A2D8AA71200306DD7 /* ECKJumpCapableShip.swift */; };
 		C92F9C9D2D8AA72700306DD7 /* ECKCapitalJumpRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F9C9C2D8AA72700306DD7 /* ECKCapitalJumpRoute.swift */; };
 		C9318D7E2E9984B400B1AD5D /* FittingDetailImplantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9318D7D2E9984B400B1AD5D /* FittingDetailImplantsView.swift */; };
+		C9B005000000000000000001 /* FittingDetailBoostersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B005000000000000000002 /* FittingDetailBoostersView.swift */; };
+		C9B005000000000000000003 /* ECKFittingBoosterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B005000000000000000004 /* ECKFittingBoosterTests.swift */; };
 		C9318D802E9ADC2800B1AD5D /* FittingImplantSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9318D7F2E9ADC2800B1AD5D /* FittingImplantSearchView.swift */; };
 		C9318D822E9AE78600B1AD5D /* ECKCharacterFitting+Implants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9318D812E9AE78600B1AD5D /* ECKCharacterFitting+Implants.swift */; };
 		C93337BE2FBA3F0F00DAF4B9 /* ECKSearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93337BD2FBA3F0F00DAF4B9 /* ECKSearchResponse.swift */; };
@@ -583,6 +585,7 @@
 		C92F9C9A2D8AA71200306DD7 /* ECKJumpCapableShip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKJumpCapableShip.swift; sourceTree = "<group>"; };
 		C92F9C9C2D8AA72700306DD7 /* ECKCapitalJumpRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCapitalJumpRoute.swift; sourceTree = "<group>"; };
 		C9318D7D2E9984B400B1AD5D /* FittingDetailImplantsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDetailImplantsView.swift; sourceTree = "<group>"; };
+		C9B005000000000000000002 /* FittingDetailBoostersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingDetailBoostersView.swift; sourceTree = "<group>"; };
 		C9318D7F2E9ADC2800B1AD5D /* FittingImplantSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittingImplantSearchView.swift; sourceTree = "<group>"; };
 		C9318D812E9AE78600B1AD5D /* ECKCharacterFitting+Implants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECKCharacterFitting+Implants.swift"; sourceTree = "<group>"; };
 		C93337BD2FBA3F0F00DAF4B9 /* ECKSearchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSearchResponse.swift; sourceTree = "<group>"; };
@@ -847,6 +850,7 @@
 		C9EC4BA62BF5580D00D46CC4 /* UniverseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniverseView.swift; sourceTree = "<group>"; };
 		C9EC4BA82BF558B700D46CC4 /* EVECompanionTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EVECompanionTabView.swift; sourceTree = "<group>"; };
 		C9EF70000000000000000002 /* ECKEFTFormatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKEFTFormatTests.swift; sourceTree = "<group>"; };
+		C9B005000000000000000004 /* ECKFittingBoosterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKFittingBoosterTests.swift; sourceTree = "<group>"; };
 		C9EF70000000000000000004 /* ECKCharacterFittingCargoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKCharacterFittingCargoTests.swift; sourceTree = "<group>"; };
 		C9F055A62DE24DCD00340A05 /* ECKServerStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKServerStatus.swift; sourceTree = "<group>"; };
 		C9F055AA2DE24EA400340A05 /* ECKServerStatusManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKServerStatusManager.swift; sourceTree = "<group>"; };
@@ -1420,6 +1424,7 @@
 			isa = PBXGroup;
 			children = (
 				C9318D7D2E9984B400B1AD5D /* FittingDetailImplantsView.swift */,
+				C9B005000000000000000002 /* FittingDetailBoostersView.swift */,
 				C9318D7F2E9ADC2800B1AD5D /* FittingImplantSearchView.swift */,
 			);
 			path = Implants;
@@ -1658,6 +1663,7 @@
 				C99822AD2F7516740031B439 /* ECKSkillPlanReorderingTests.swift */,
 				C9AA00172FF2000000010017 /* ECKMiningLedgerEntryTests.swift */,
 				C9EF70000000000000000002 /* ECKEFTFormatTests.swift */,
+				C9B005000000000000000004 /* ECKFittingBoosterTests.swift */,
 				C9EF70000000000000000004 /* ECKCharacterFittingCargoTests.swift */,
 				C9AA00192FF2000000010019 /* ECKTokenStressTests.swift */,
 				C9ACE4642FF4541500FAD4D1 /* ECKCapitalJumpMapOverlayTests.swift */,
@@ -2453,6 +2459,7 @@
 				C9955A2C2C35297D0045D925 /* SovereigntyCampaignCell.swift in Sources */,
 				C93337CB2FBA5EFC00DAF4B9 /* MailRecipientIconView.swift in Sources */,
 				C9318D7E2E9984B400B1AD5D /* FittingDetailImplantsView.swift in Sources */,
+				C9B005000000000000000001 /* FittingDetailBoostersView.swift in Sources */,
 				C959777E2C28B3680008F719 /* AssetsListView.swift in Sources */,
 				C952624F2BFA7B680014B5F5 /* MailCreateView.swift in Sources */,
 				C9B638C62E08920C00E9F6F4 /* FittingResistancesView.swift in Sources */,
@@ -2692,6 +2699,7 @@
 				C99822B02F7516740031B439 /* ECKSkillPlanReorderingTests.swift in Sources */,
 				C9AA00062FF2000000010006 /* ECKMiningLedgerEntryTests.swift in Sources */,
 				C9EF70000000000000000001 /* ECKEFTFormatTests.swift in Sources */,
+				C9B005000000000000000003 /* ECKFittingBoosterTests.swift in Sources */,
 				C9AA00082FF2000000010008 /* ECKTokenStressTests.swift in Sources */,
 				C9ACE4652FF4541500FAD4D1 /* ECKCapitalJumpMapOverlayTests.swift in Sources */,
 				C9ACE4632FF4540E00FAD4D1 /* ECKCapitalJumpRangeSelectorTests.swift in Sources */,

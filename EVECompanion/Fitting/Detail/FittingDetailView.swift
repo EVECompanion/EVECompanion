@@ -16,6 +16,7 @@ struct FittingDetailView: View {
         case modules
         case drones
         case implants
+        case boosters
         case cargo
     }
     
@@ -46,6 +47,7 @@ struct FittingDetailView: View {
                     Text(fitting.canUseDrones && fitting.canUseFighters ? "Launchables" : (fitting.canUseFighters ? "Fighters" : "Drones")).tag(FittingDetailTab.drones)
                 }
                 Text("Implants").tag(FittingDetailTab.implants)
+                Text("Boosters").tag(FittingDetailTab.boosters)
                 Text("Cargo").tag(FittingDetailTab.cargo)
             }
             .pickerStyle(.segmented)
@@ -71,6 +73,9 @@ struct FittingDetailView: View {
                 FittingDetailImplantsView(fitting: fitting,
                                           fittingManager: manager)
                     .tag(FittingDetailTab.implants)
+
+                FittingDetailBoostersView(fitting: fitting, fittingManager: manager)
+                    .tag(FittingDetailTab.boosters)
 
                 FittingDetailCargoView(fitting: fitting, manager: manager)
                     .tag(FittingDetailTab.cargo)
