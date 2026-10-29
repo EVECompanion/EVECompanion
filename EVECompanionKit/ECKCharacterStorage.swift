@@ -30,6 +30,8 @@ public class ECKCharacterStorage: ObservableObject, @unchecked Sendable {
             self.characters = [.dummy]
             return
         }
+
+        ECKUnitTestHTTPBlocker.installIfRunningUnderUnitTests()
         
         #if DEBUG
         Experimental.swizzleURLSession()

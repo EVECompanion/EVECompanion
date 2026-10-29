@@ -94,6 +94,7 @@ public class ECKSDEUpdater: NSObject, ObservableObject {
     private func downloadSDE() async throws -> (version: Int, url: URL) {
         return try await withCheckedThrowingContinuation { continuation in
             let sessionConfig = URLSessionConfiguration.ephemeral
+            ECKUnitTestHTTPBlocker.addToTestConfiguration(sessionConfig)
             let session = URLSession(configuration: sessionConfig)
             
             let request = URLRequest(url: URL(string: "https://\(Host.evecompanionAPI.value)/v2/sde")!)

@@ -262,6 +262,7 @@
 		C9AA00062FF2000000010006 /* ECKMiningLedgerEntryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA00172FF2000000010017 /* ECKMiningLedgerEntryTests.swift */; };
 		C9AA00072FF2000000010007 /* Date+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA00182FF2000000010018 /* Date+Parsing.swift */; };
 		C9AA00082FF2000000010008 /* ECKTokenStressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA00192FF2000000010019 /* ECKTokenStressTests.swift */; };
+		C9AA00092FF2000000010009 /* ECKUnitTestHTTPBlockerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA001A2FF200000001001A /* ECKUnitTestHTTPBlockerTests.swift */; };
 		C9ACC0782DC9612D0000D0FC /* ECKSkillCompletedNotificationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ACC0772DC9612D0000D0FC /* ECKSkillCompletedNotificationRequest.swift */; };
 		C9ACC0792DC962270000D0FC /* ECFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93FE8372BED29F200729DD8 /* ECFormatters.swift */; };
 		C9ACC07C2DC9DD0C0000D0FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ACC07B2DC9DD0C0000D0FC /* AppDelegate.swift */; };
@@ -739,6 +740,7 @@
 		C9AA00172FF2000000010017 /* ECKMiningLedgerEntryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKMiningLedgerEntryTests.swift; sourceTree = "<group>"; };
 		C9AA00182FF2000000010018 /* Date+Parsing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Parsing.swift"; sourceTree = "<group>"; };
 		C9AA00192FF2000000010019 /* ECKTokenStressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKTokenStressTests.swift; sourceTree = "<group>"; };
+		C9AA001A2FF200000001001A /* ECKUnitTestHTTPBlockerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKUnitTestHTTPBlockerTests.swift; sourceTree = "<group>"; };
 		C9ACC0772DC9612D0000D0FC /* ECKSkillCompletedNotificationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKSkillCompletedNotificationRequest.swift; sourceTree = "<group>"; };
 		C9ACC07B2DC9DD0C0000D0FC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C9ACE4602FF1BE7400FAD4D1 /* ToolbarMenuIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarMenuIcon.swift; sourceTree = "<group>"; };
@@ -1666,6 +1668,7 @@
 				C9B005000000000000000004 /* ECKFittingBoosterTests.swift */,
 				C9EF70000000000000000004 /* ECKCharacterFittingCargoTests.swift */,
 				C9AA00192FF2000000010019 /* ECKTokenStressTests.swift */,
+				C9AA001A2FF200000001001A /* ECKUnitTestHTTPBlockerTests.swift */,
 				C9ACE4642FF4541500FAD4D1 /* ECKCapitalJumpMapOverlayTests.swift */,
 				C9ACE4622FF4540E00FAD4D1 /* ECKCapitalJumpRangeSelectorTests.swift */,
 				C9BEEF000000000000000004 /* ECKMapGestureRecognitionPolicyTests.swift */,
@@ -2701,6 +2704,7 @@
 				C9EF70000000000000000001 /* ECKEFTFormatTests.swift in Sources */,
 				C9B005000000000000000003 /* ECKFittingBoosterTests.swift in Sources */,
 				C9AA00082FF2000000010008 /* ECKTokenStressTests.swift in Sources */,
+				C9AA00092FF2000000010009 /* ECKUnitTestHTTPBlockerTests.swift in Sources */,
 				C9ACE4652FF4541500FAD4D1 /* ECKCapitalJumpMapOverlayTests.swift in Sources */,
 				C9ACE4632FF4540E00FAD4D1 /* ECKCapitalJumpRangeSelectorTests.swift in Sources */,
 				C9BEEF000000000000000003 /* ECKMapGestureRecognitionPolicyTests.swift in Sources */,

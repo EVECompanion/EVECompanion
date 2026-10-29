@@ -8,6 +8,48 @@
 import Foundation
 import CryptoKit
 
+/// Stops URLSession-based HTTP traffic from escaping the process during unit tests.
+/// The global registration covers library-owned sessions; explicitly adding the
+/// protocol to app-owned configurations also covers sessions with custom stacks.
+final class ECKUnitTestHTTPBlocker: URLProtocol {
+    static let errorDomain = "ECKUnitTestHTTPBlocker"
+
+    static func installIfRunningUnderUnitTests() {
+        guard ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil else {
+            return
+        }
+        URLProtocol.registerClass(Self.self)
+    }
+
+    static func addToTestConfiguration(_ configuration: URLSessionConfiguration) {
+        installIfRunningUnderUnitTests()
+        guard ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil else {
+            return
+        }
+        configuration.protocolClasses = [Self.self] + (configuration.protocolClasses ?? [])
+    }
+
+    override static func canInit(with request: URLRequest) -> Bool {
+        guard let scheme = request.url?.scheme?.lowercased() else { return false }
+        return scheme == "http" || scheme == "https"
+    }
+
+    override static func canonicalRequest(for request: URLRequest) -> URLRequest {
+        request
+    }
+
+    override func startLoading() {
+        let error = NSError(
+            domain: Self.errorDomain,
+            code: 1,
+            userInfo: [NSLocalizedDescriptionKey: "HTTP requests are disabled during unit tests."]
+        )
+        client?.urlProtocol(self, didFailWithError: error)
+    }
+
+    override func stopLoading() { }
+}
+
 final class ECKWebService: Sendable {
     
     private let decoder: JSONDecoder = {
@@ -37,6 +79,7 @@ final class ECKWebService: Sendable {
     
     static let urlSession: URLSession = {
         let configuration = URLSessionConfiguration.ephemeral
+        ECKUnitTestHTTPBlocker.addToTestConfiguration(configuration)
         return URLSession(configuration: configuration)
     }()
     
