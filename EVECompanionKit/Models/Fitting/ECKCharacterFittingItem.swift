@@ -23,6 +23,10 @@ public final class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Obs
     public var flag: ECKItemLocationFlag
     @Published public var quantity: Int
     public let item: ECKItem
+
+    public var totalVolume: Float {
+        (item.volume ?? 0) * Float(quantity)
+    }
     
     public internal(set) var charge: ECKCharacterFittingItem?
     

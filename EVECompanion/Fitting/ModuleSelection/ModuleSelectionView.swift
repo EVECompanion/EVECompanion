@@ -16,6 +16,7 @@ struct ModuleSelectionView: View {
         case module(ECKCharacterFitting.ModuleSlotType)
         case drone
         case fighter(ECKCharacterFitting.FighterType)
+        case cargo
         
         var id: String {
             switch self {
@@ -29,6 +30,8 @@ struct ModuleSelectionView: View {
                 "drone"
             case .fighter(let fighterType):
                 "fighter-\(fighterType.rawValue)"
+            case .cargo:
+                "cargo"
             }
         }
         
@@ -52,6 +55,8 @@ struct ModuleSelectionView: View {
             case .drone:
                 return 157
             case .fighter:
+                return nil
+            case .cargo:
                 return nil
             }
         }
@@ -79,6 +84,8 @@ struct ModuleSelectionView: View {
                 return "Drone Selection"
             case .fighter(let fighterType):
                 return "\(fighterType.title) Fighter Selection"
+            case .cargo:
+                return "Cargo Item Selection"
             }
         }
         
@@ -91,6 +98,8 @@ struct ModuleSelectionView: View {
             case .drone:
                 return nil
             case .fighter:
+                return nil
+            case .cargo:
                 return nil
             case .module(let moduleSlotType):
                 switch moduleSlotType {

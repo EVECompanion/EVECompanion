@@ -46,7 +46,7 @@ struct FittingDetailView: View {
                     Text(fitting.canUseDrones && fitting.canUseFighters ? "Launchables" : (fitting.canUseFighters ? "Fighters" : "Drones")).tag(FittingDetailTab.drones)
                 }
                 Text("Implants").tag(FittingDetailTab.implants)
-//                Text("Cargo").tag(FittingDetailTab.cargo)
+                Text("Cargo").tag(FittingDetailTab.cargo)
             }
             .pickerStyle(.segmented)
             .padding(.horizontal, 10)
@@ -71,6 +71,9 @@ struct FittingDetailView: View {
                 FittingDetailImplantsView(fitting: fitting,
                                           fittingManager: manager)
                     .tag(FittingDetailTab.implants)
+
+                FittingDetailCargoView(fitting: fitting, manager: manager)
+                    .tag(FittingDetailTab.cargo)
             }
             .background(Color(uiColor: UIColor.secondarySystemBackground))
             .animation(.spring, value: selectedTab)
@@ -78,7 +81,7 @@ struct FittingDetailView: View {
             .animation(.spring, value: fitting.canUseFighters)
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
-        .task {
+        .task(id: fitting.id) {
             await fitting.calculateAttributes(skills: character.skills ?? .empty)
         }
         .navigationBarTitleDisplayMode(.inline)

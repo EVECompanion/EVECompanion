@@ -240,7 +240,7 @@ enum AppScreen: Hashable {
             hasher.combine(manager.character)
         case .fittingDetail(let manager, let fitting):
             hasher.combine(manager.character)
-            hasher.combine(fitting)
+            hasher.combine(fitting.id)
         case .skillPlanList(let manager):
             hasher.combine(manager)
         case .skillPlanDetail(let skillPlan, let character):
