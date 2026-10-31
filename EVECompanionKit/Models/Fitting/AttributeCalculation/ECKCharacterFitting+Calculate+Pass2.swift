@@ -238,8 +238,11 @@ fileprivate extension ECKCharacterFittingItem {
     }
     
     func collectEffect(effect: ECKDogmaEffect, object: ECKCharacterFitting.ItemObject, into collectedEffects: inout [ECKPass2Effect]) {
-        if effect.category.rawValue > self.maxState.rawValue {
-            self.maxState = effect.category
+        if let maximumState = ECKDogmaEffect.Category.maximumModuleState(for: effect.category),
+           let currentRank = self.maxState.stateRank,
+           let maximumRank = maximumState.stateRank,
+           maximumRank > currentRank {
+            self.maxState = maximumState
         }
         
         for modifierInfo in effect.modifierInfo {

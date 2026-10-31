@@ -43,12 +43,12 @@ public final class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Obs
     }
     
     public var userSettableStates: [ECKDogmaEffect.Category] {
-        if maxState == .online {
-            return [.offline, .online]
-        } else {
-            return [.offline, .online, .active, .overload].filter { category in
-                return category.rawValue <= maxState.rawValue
+        [.offline, .online, .active, .overload].filter { state in
+            guard let maximumRank = maxState.stateRank,
+                  let stateRank = state.stateRank else {
+                return false
             }
+            return stateRank <= maximumRank
         }
     }
     
@@ -67,7 +67,7 @@ public final class ECKCharacterFittingItem: Codable, Hashable, Identifiable, Obs
     }()
     
     public var damageProfile: ECKCharacterFitting.DamageProfile? {
-        guard self.state.rawValue >= ECKDogmaEffect.Category.active.rawValue else {
+        guard self.state.isRunningState else {
             return nil
         }
         

@@ -21,6 +21,57 @@ public class ECKDogmaEffect {
         case overload = 5
         case dungeon = 6
         case system = 7
+
+        /// Whether this effect category is enabled at the selected module state.
+        /// Dogma effect category values are identifiers, not an ordering of module states.
+        func isEnabled(in state: Category) -> Bool {
+            switch state {
+            case .offline:
+                return self == .offline
+            case .passive:
+                return self == .passive
+            case .online:
+                return self == .passive || self == .online
+            case .active:
+                return self == .passive || self == .online || self == .active || self == .target || self == .area
+            case .overload:
+                return self == .passive || self == .online || self == .active || self == .target || self == .area || self == .overload
+            case .target, .area, .dungeon, .system:
+                return false
+            }
+        }
+
+        var isRunningState: Bool {
+            self == .active || self == .overload
+        }
+
+        var stateRank: Int? {
+            switch self {
+            case .offline:
+                return 0
+            case .online:
+                return 1
+            case .active:
+                return 2
+            case .overload:
+                return 3
+            case .passive, .target, .area, .dungeon, .system:
+                return nil
+            }
+        }
+
+        static func maximumModuleState(for effectCategory: Category) -> Category? {
+            switch effectCategory {
+            case .online:
+                return .online
+            case .active, .target, .area:
+                return .active
+            case .overload:
+                return .overload
+            case .offline, .passive, .dungeon, .system:
+                return nil
+            }
+        }
         
         public var id: Int {
             return self.rawValue

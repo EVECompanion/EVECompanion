@@ -33,6 +33,19 @@ struct ECKFittingCapacitorTests {
     }
 
     @Test
+    func capacitorDrainOnlyAppliesToRunningModules() throws {
+        let online = Self.fitting(capacitorUse: 10, state: .online)
+        let onlineStatus = try #require(online.capacitorStability)
+        #expect(onlineStatus.isStable)
+        #expect(onlineStatus.timeToEmpty == nil)
+
+        let overloaded = Self.fitting(capacitorUse: 10, state: .overload)
+        let overloadedStatus = try #require(overloaded.capacitorStability)
+        #expect(overloadedStatus.isStable == false)
+        #expect((overloadedStatus.timeToEmpty ?? 0) > 0)
+    }
+
+    @Test
     func offlineModulesDoNotChangeCapacitorStabilityOrAdjacentStats() throws {
         let fitting = Self.fitting(capacitorUse: 10, state: .offline)
         let powerLoad = ECKCharacterFitting.FittingAttribute(id: ECKCharacterFitting.attributePowerLoadId,

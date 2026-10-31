@@ -244,6 +244,9 @@ extension ECKCharacterFitting {
                 self.character.attributes.removeAll()
                 self.target.attributes.removeAll()
                 self.structure.attributes.removeAll()
+                self.boosters.forEach {
+                    $0.attributes.removeAll()
+                }
                 self.items.forEach({
                     $0.attributes.removeAll()
                     $0.charge?.attributes.removeAll()

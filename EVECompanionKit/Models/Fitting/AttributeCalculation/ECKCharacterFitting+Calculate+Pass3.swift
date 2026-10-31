@@ -111,7 +111,8 @@ extension ECKCharacterFitting {
                                 itemObject: ECKCharacterFitting.ItemObject,
                                 cache: AttributesCache) async -> Float {
         
-        var currentValue = attribute.baseValue
+        // Keep dogma operations in Double precision: `1 / mass - 1` rounds to -1 in Float for ship-scale masses.
+        var currentValue = Double(attribute.baseValue)
         
         if let value = attribute.value {
             return value
@@ -137,9 +138,9 @@ extension ECKCharacterFitting {
         }
         
         for operation in ECKCharacterFitting.ModifierOperation.allCases {
-            var nonPenaltyValues: [Float] = []
-            var positivePenaltyValues: [Float] = []
-            var negativePenaltyValues: [Float] = []
+            var nonPenaltyValues: [Double] = []
+            var positivePenaltyValues: [Double] = []
+            var negativePenaltyValues: [Double] = []
             
             for effect in attribute.effects {
                 guard effect.operation == operation else {
@@ -162,24 +163,24 @@ extension ECKCharacterFitting {
                     source = self.target
                 }
                 
-                if effect.sourceCategory.rawValue > source.state.rawValue {
+                if effect.sourceCategory.isEnabled(in: source.state) == false {
                     continue
                 }
                 
-                var sourceValue: Float
+                var sourceValue: Double
                 
                 if let sourceAttribute = source.attributes[effect.sourceAttributeId] {
-                    sourceValue = await calculateValue(for: sourceAttribute,
-                                                       ship: ship,
-                                                       attributeId: effect.sourceAttributeId,
-                                                       itemObject: effect.source,
-                                                       cache: cache)
+                    sourceValue = Double(await calculateValue(for: sourceAttribute,
+                                                              ship: ship,
+                                                              attributeId: effect.sourceAttributeId,
+                                                              itemObject: effect.source,
+                                                              cache: cache))
                 } else {
                     guard let defaultValue = await ECKAttributeDefaultValueCache.shared.getDefaultValue(for: effect.sourceAttributeId) else {
                         continue
                     }
                     
-                    sourceValue = defaultValue
+                    sourceValue = Double(defaultValue)
                 }
                 
                 switch operation {
@@ -245,13 +246,13 @@ extension ECKCharacterFitting {
                 positivePenaltyValues.reverse()
                 
                 for (index, value) in positivePenaltyValues.enumerated() {
-                    currentValue *= 1.0 + value * exp(-pow(Float(index) / 2.67, 2.0))
+                    currentValue *= 1.0 + value * exp(-pow(Double(index) / 2.67, 2.0))
                 }
                 
                 negativePenaltyValues.sort()
                 
                 for (index, value) in negativePenaltyValues.enumerated() {
-                    currentValue *= 1.0 + value * exp(-pow(Float(index) / 2.67, 2.0))
+                    currentValue *= 1.0 + value * exp(-pow(Double(index) / 2.67, 2.0))
                 }
                 
             case .modAdd,
@@ -262,20 +263,22 @@ extension ECKCharacterFitting {
             }
         }
         
+        let result = Float(currentValue)
+
         switch itemObject {
         case .ship:
-            cache.ship[attributeId] = currentValue
+            cache.ship[attributeId] = result
         case .character:
-            cache.character[attributeId] = currentValue
+            cache.character[attributeId] = result
         case .charge(_, let reference), .booster(let reference), .item(let reference), .skill(let reference):
-            cache.objects[reference.identifier, default: [:]][attributeId] = currentValue
+            cache.objects[reference.identifier, default: [:]][attributeId] = result
         case .structure:
-            cache.structure[attributeId] = currentValue
+            cache.structure[attributeId] = result
         case .target:
-            cache.target[attributeId] = currentValue
+            cache.target[attributeId] = result
         }
         
-        return currentValue
+        return result
     }
     
 }

@@ -40,7 +40,7 @@ extension ECKCharacterFitting {
         }
 
         let drains = items.compactMap { item -> CapacitorDrain? in
-            guard item.state.rawValue >= ECKDogmaEffect.Category.active.rawValue,
+            guard item.state.isRunningState,
                   let activationCost = item.attributes[Self.attributeCapacitorUseId].map({ $0.value ?? $0.baseValue }) else {
                 return nil
             }

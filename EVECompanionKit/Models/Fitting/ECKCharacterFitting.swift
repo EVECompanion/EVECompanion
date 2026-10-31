@@ -306,7 +306,7 @@ public class ECKCharacterFitting: Codable, Identifiable, Hashable, ObservableObj
         var result: Float = 0
         
         for drone in drones {
-            guard drone.state.rawValue >= ECKDogmaEffect.Category.active.rawValue else {
+            guard drone.state.isRunningState else {
                 continue
             }
             
